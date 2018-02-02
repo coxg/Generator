@@ -515,8 +515,8 @@ namespace Generator
                 Despawn();
 
                 // Assing new attributes for object
-                X = Globals.Mod(X + DeltaX, Globals.Grid.GetLength(0));
-                Y = Globals.Mod(Y + DeltaY, Globals.Grid.GetLength(1));
+                X = (int)Globals.Mod(X + DeltaX, Globals.Grid.GetLength(0));
+                Y = (int)Globals.Mod(Y + DeltaY, Globals.Grid.GetLength(1));
 
                 // Assign all new locations
                 Spawn();

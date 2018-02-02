@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace Generator
 {
@@ -8,22 +9,51 @@ namespace Generator
         public static void GetInput(GameObject player)
         {
 
-            // Move the player
+            // Get direction from input
+            // TODO: Once I'm using a controller this can be a lot easier
+            // Once I have that then I'll need to incorperate up-left/up-right whatever
+            // Maybe even free movement, then lock to a grid when you stop? That feels bad man
+            float? MoveDirection = null;
             if (Keyboard.GetState().IsKeyDown(Keys.Up))
             {
-                player.Move("Up");
+                MoveDirection = 0f;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Down))
             {
-                player.Move("Down");
+                MoveDirection = (float)Math.PI;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-                player.Move("Left");
+                MoveDirection = 1.5f * (float)Math.PI;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
-                player.Move("Right");
+                MoveDirection = .5f * (float)Math.PI;
+            }
+
+            // Convert input direction into movement direction
+            if (MoveDirection != null)
+            {
+                Globals.Log("Movement direction: " + MoveDirection.ToString());
+
+                MoveDirection -= (float)Globals.MapRotation;
+                MoveDirection = Globals.Mod((float)MoveDirection, 2f * (float)Math.PI);
+                if (1.75f * (float)Math.PI < MoveDirection || MoveDirection <= 0.25f * (float)Math.PI)
+                {
+                    player.Move("Up");
+                }
+                else if (.25f * (float)Math.PI < MoveDirection && MoveDirection <= .75f * (float)Math.PI)
+                {
+                    player.Move("Right");
+                }
+                else if (.75f * (float)Math.PI < MoveDirection && MoveDirection <= 1.25f * (float)Math.PI)
+                {
+                    player.Move("Down");
+                }
+                else if (1.25f * (float)Math.PI < MoveDirection && MoveDirection <= 1.75f * (float)Math.PI)
+                {
+                    player.Move("Left");
+                }
             }
 
             // Attack

@@ -46,13 +46,17 @@ namespace Generator
             // "Getter"
             public static GameObject GetObject(int XVal, int YVal)
             {
-                return _grid[Mod(XVal, _grid.GetLength(0)), Mod(YVal, _grid.GetLength(1))];
+                return _grid[
+                    (int)Mod(XVal, _grid.GetLength(0)), 
+                    (int)Mod(YVal, _grid.GetLength(1))];
             }
 
             // "Setter"
             public static void SetObject(int XVal, int YVal, GameObject gameObject)
             {
-                _grid[Mod(XVal, _grid.GetLength(0)), Mod(YVal, _grid.GetLength(1))] = gameObject;
+                _grid[
+                    (int)Mod(XVal, _grid.GetLength(0)), 
+                    (int)Mod(YVal, _grid.GetLength(1))] = gameObject;
             }
 
             // GetLength
@@ -63,9 +67,9 @@ namespace Generator
         }
 
         // Because % is remainder, not mod
-        public static int Mod(int Number, int Modulo)
+        public static float Mod(float Number, float Modulo)
         {
-            int Remainder = Number % Modulo;
+            float Remainder = Number % Modulo;
             return Remainder < 0 ? Remainder + Modulo : Remainder;
         }
 
