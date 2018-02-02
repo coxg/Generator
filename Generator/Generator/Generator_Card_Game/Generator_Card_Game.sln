@@ -1,0 +1,35 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{D306DEE4-6408-C935-2876-F6F8DA55BAD9}") = "Generator_Card_Game", "Assembly-CSharp.csproj", "{04889A56-2344-9A0A-3E11-AB36E5E0F21B}"
+EndProject
+Project("{D306DEE4-6408-C935-2876-F6F8DA55BAD9}") = "Generator_Card_Game", "Assembly-CSharp-Editor.csproj", "{4FC21F78-68C4-8688-EAA3-33F32D0F3EC5}"
+EndProject
+Project("{D306DEE4-6408-C935-2876-F6F8DA55BAD9}") = "Generator_Card_Game", "Assembly-UnityScript.unityproj", "{4B512018-EFF8-70A7-3A62-E2D8364431F1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{04889A56-2344-9A0A-3E11-AB36E5E0F21B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04889A56-2344-9A0A-3E11-AB36E5E0F21B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04889A56-2344-9A0A-3E11-AB36E5E0F21B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04889A56-2344-9A0A-3E11-AB36E5E0F21B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FC21F78-68C4-8688-EAA3-33F32D0F3EC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FC21F78-68C4-8688-EAA3-33F32D0F3EC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FC21F78-68C4-8688-EAA3-33F32D0F3EC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FC21F78-68C4-8688-EAA3-33F32D0F3EC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B512018-EFF8-70A7-3A62-E2D8364431F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B512018-EFF8-70A7-3A62-E2D8364431F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B512018-EFF8-70A7-3A62-E2D8364431F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B512018-EFF8-70A7-3A62-E2D8364431F1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
