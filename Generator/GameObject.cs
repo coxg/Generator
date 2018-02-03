@@ -464,39 +464,55 @@ namespace Generator
             int distance = 1
         )
         /*
-        Attempts to move the object in a direction.
+        Attempts to move the object in a cardinal direction.
         */
         {
-            string first_char = direction.Substring(0, 1).ToLower();
+            // Convert from cardinal direction to X/Y deltas
             int DeltaX = 0;
             int DeltaY = 0;
-
-            // Trying to move up
-            if (first_char == "n" || first_char == "u")
+            if (direction == "North")
             {
                 DeltaY = distance;
                 Direction = 0f;
             }
-
-            // Trying to move down
-            else if (first_char == "s" || first_char == "d")
+            else if (direction == "Northeast")
             {
-                DeltaY = -distance;
-                Direction = (float)Math.PI;
+                DeltaX = distance;
+                DeltaY = distance;
+                Direction = .25f * (float)Math.PI; ;
             }
-
-            // Trying to move to the right
-            else if (first_char == "e" || first_char == "r")
+            else if (direction == "East")
             {
                 DeltaX = distance;
                 Direction = .5f * (float)Math.PI; ;
             }
-
-            // Trying to move to the left
-            else if (first_char == "w" || first_char == "l")
+            else if (direction == "Southeast")
+            {
+                DeltaX = distance;
+                DeltaY = -distance;
+                Direction = .75f * (float)Math.PI; ;
+            }
+            else if (direction == "South")
+            {
+                DeltaY = -distance;
+                Direction = (float)Math.PI;
+            }
+            else if (direction == "Southwest")
+            {
+                DeltaX = -distance;
+                DeltaY = -distance;
+                Direction = 1.25f * (float)Math.PI; ;
+            }
+            else if (direction == "West")
             {
                 DeltaX = -distance;
                 Direction = 1.5f * (float)Math.PI; ;
+            }
+            else if (direction == "Northwest")
+            {
+                DeltaX = -distance;
+                DeltaY = distance;
+                Direction = 1.75f * (float)Math.PI; ;
             }
 
             // See if you can move to the location

@@ -122,7 +122,7 @@ namespace Generator
                         + current_object.Height * Globals.SquareSize / 2);
 
                 // Rotate
-                ObjectCoordinates = Globals.GetRotatedCoordinates(ObjectCoordinates);
+                ObjectCoordinates = Globals.RotateAroundCenterOfScreen(ObjectCoordinates);
 
                 // Double check that we need to draw grid lines
                 if (ObjectCoordinates.X > 0
@@ -238,7 +238,7 @@ namespace Generator
                 xValue < (int)(1.5 * BiggerResolution / Globals.SquareSize + Math.Abs(Globals.MapOffset.X)); 
                 xValue ++)
             {
-                Vector2 RotatedCoordinates = Globals.GetRotatedCoordinates(
+                Vector2 RotatedCoordinates = Globals.RotateAroundCenterOfScreen(
                     new Vector2(
                         ((float)Math.Truncate(Globals.MapOffset.X) + xValue) * Globals.SquareSize, 
                         .5f * Globals.Resolution.Y - (float)Math.Truncate(Globals.MapOffset.Y) * Globals.SquareSize));
@@ -266,7 +266,7 @@ namespace Generator
                 yValue < (int)(1.5 * BiggerResolution / Globals.SquareSize + Math.Abs(Globals.MapOffset.Y));
                 yValue++)
             {
-                Vector2 RotatedCoordinates = Globals.GetRotatedCoordinates(
+                Vector2 RotatedCoordinates = Globals.RotateAroundCenterOfScreen(
                     new Vector2(
                         .5f * Globals.Resolution.X + (float)Math.Truncate(Globals.MapOffset.X) * Globals.SquareSize,
                         (-(float)Math.Truncate(Globals.MapOffset.Y) + yValue) * Globals.SquareSize 

@@ -29,7 +29,7 @@ namespace Generator
                 MoveHorizontalOffset += 1;
             }
 
-            // Convert from intended movement input to actual movement direction
+            // Convert from intended movement input to cardinal direction
             if (MoveHorizontalOffset != 0 || MoveVerticalOffset != 0)
             {
                 // Convert from intended movement input to intended movement direction
@@ -38,73 +38,69 @@ namespace Generator
                 {
                     MoveDirection = 0f;
                 }
-                else if (MoveVerticalOffset == -1 && MoveHorizontalOffset == 0) // Move down
+                else if (MoveVerticalOffset == 1 && MoveHorizontalOffset == 1) // Move up-right
                 {
-                    MoveDirection = (float)Math.PI;
-                }
-                else if (MoveVerticalOffset == 0 && MoveHorizontalOffset == -1) // Move left
-                {
-                    MoveDirection = 1.5f * (float)Math.PI;
+                    MoveDirection = .25f * (float)Math.PI;
                 }
                 else if (MoveVerticalOffset == 0 && MoveHorizontalOffset == 1) // Move right
                 {
                     MoveDirection = .5f * (float)Math.PI;
                 }
-                else if (MoveVerticalOffset == 1 && MoveHorizontalOffset == -1) // Move up-left
+                else if (MoveVerticalOffset == -1 && MoveHorizontalOffset == 1) // Move down-right
                 {
-                    MoveDirection = 1.75f * (float)Math.PI;
+                    MoveDirection = .75f * (float)Math.PI;
                 }
-                else if (MoveVerticalOffset == 1 && MoveHorizontalOffset == 1) // Move up-right
+                else if (MoveVerticalOffset == -1 && MoveHorizontalOffset == 0) // Move down
                 {
-                    MoveDirection = .25f * (float)Math.PI;
+                    MoveDirection = (float)Math.PI;
                 }
                 else if (MoveVerticalOffset == -1 && MoveHorizontalOffset == -1) // Move down-left
                 {
                     MoveDirection = 1.25f * (float)Math.PI;
                 }
-                else if (MoveVerticalOffset == -1 && MoveHorizontalOffset == 1) // Move down-right
+                else if (MoveVerticalOffset == 0 && MoveHorizontalOffset == -1) // Move left
                 {
-                    MoveDirection = .75f * (float)Math.PI;
+                    MoveDirection = 1.5f * (float)Math.PI;
+                }
+                else if (MoveVerticalOffset == 1 && MoveHorizontalOffset == -1) // Move up-left
+                {
+                    MoveDirection = 1.75f * (float)Math.PI;
                 }
 
-                // Convert from intended direction to actual movement direction
+                // Convert from intended movement direction to cardinal direction
                 MoveDirection -= (float)Globals.MapRotation;
                 MoveDirection = Globals.Mod((float)MoveDirection, 2f * (float)Math.PI);
                 if (1.875f * (float)Math.PI < MoveDirection || MoveDirection <= 0.125f * (float)Math.PI)
                 {
-                    player.Move("Up");
+                    player.Move("North");
                 }
                 else if (.125f * (float)Math.PI < MoveDirection && MoveDirection <= .375f * (float)Math.PI)
                 {
-                    player.Move("Up");
-                    player.Move("Right");
+                    player.Move("Northeast");
                 }
                 else if (.375f * (float)Math.PI < MoveDirection && MoveDirection <= .625f * (float)Math.PI)
                 {
-                    player.Move("Right");
+                    player.Move("East");
                 }
                 else if (.625f * (float)Math.PI < MoveDirection && MoveDirection <= .875f * (float)Math.PI)
                 {
-                    player.Move("Right");
-                    player.Move("Down");
+                    player.Move("Southeast");
                 }
                 else if (.875f * (float)Math.PI < MoveDirection && MoveDirection <= 1.125f * (float)Math.PI)
                 {
-                    player.Move("Down");
+                    player.Move("South");
                 }
                 else if (1.125f * (float)Math.PI < MoveDirection && MoveDirection <= 1.375f * (float)Math.PI)
                 {
-                    player.Move("Down");
-                    player.Move("Left");
+                    player.Move("Southwest");
                 }
                 else if (1.375f * (float)Math.PI < MoveDirection && MoveDirection <= 1.625f * (float)Math.PI)
                 {
-                    player.Move("Left");
+                    player.Move("West");
                 }
                 else if (1.625f * (float)Math.PI < MoveDirection && MoveDirection <= 1.875f * (float)Math.PI)
                 {
-                    player.Move("Left");
-                    player.Move("Up");
+                    player.Move("Northwest");
                 }
             }
 
