@@ -9,50 +9,102 @@ namespace Generator
         public static void GetInput(GameObject player)
         {
 
-            // Get direction from input
-            // TODO: Once I'm using a controller this can be a lot easier
-            // Once I have that then I'll need to incorperate up-left/up-right whatever
-            // Maybe even free movement, then lock to a grid when you stop? That feels bad man
-            float? MoveDirection = null;
+            // Convert from actual movement input to intended movement input
+            int MoveVerticalOffset = 0;
+            int MoveHorizontalOffset = 0;
             if (Keyboard.GetState().IsKeyDown(Keys.Up))
             {
-                MoveDirection = 0f;
+                MoveVerticalOffset += 1;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Down))
             {
-                MoveDirection = (float)Math.PI;
+                MoveVerticalOffset -= 1;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-                MoveDirection = 1.5f * (float)Math.PI;
+                MoveHorizontalOffset -= 1;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
-                MoveDirection = .5f * (float)Math.PI;
+                MoveHorizontalOffset += 1;
             }
 
-            // Convert input direction into movement direction
-            if (MoveDirection != null)
+            // Convert from intended movement input to actual movement direction
+            if (MoveHorizontalOffset != 0 || MoveVerticalOffset != 0)
             {
-                Globals.Log("Movement direction: " + MoveDirection.ToString());
+                // Convert from intended movement input to intended movement direction
+                float MoveDirection = 0f;
+                if (MoveVerticalOffset == 1 && MoveHorizontalOffset == 0) // Move up
+                {
+                    MoveDirection = 0f;
+                }
+                else if (MoveVerticalOffset == -1 && MoveHorizontalOffset == 0) // Move down
+                {
+                    MoveDirection = (float)Math.PI;
+                }
+                else if (MoveVerticalOffset == 0 && MoveHorizontalOffset == -1) // Move left
+                {
+                    MoveDirection = 1.5f * (float)Math.PI;
+                }
+                else if (MoveVerticalOffset == 0 && MoveHorizontalOffset == 1) // Move right
+                {
+                    MoveDirection = .5f * (float)Math.PI;
+                }
+                else if (MoveVerticalOffset == 1 && MoveHorizontalOffset == -1) // Move up-left
+                {
+                    MoveDirection = 1.75f * (float)Math.PI;
+                }
+                else if (MoveVerticalOffset == 1 && MoveHorizontalOffset == 1) // Move up-right
+                {
+                    MoveDirection = .25f * (float)Math.PI;
+                }
+                else if (MoveVerticalOffset == -1 && MoveHorizontalOffset == -1) // Move down-left
+                {
+                    MoveDirection = 1.25f * (float)Math.PI;
+                }
+                else if (MoveVerticalOffset == -1 && MoveHorizontalOffset == 1) // Move down-right
+                {
+                    MoveDirection = .75f * (float)Math.PI;
+                }
 
+                // Convert from intended direction to actual movement direction
                 MoveDirection -= (float)Globals.MapRotation;
                 MoveDirection = Globals.Mod((float)MoveDirection, 2f * (float)Math.PI);
-                if (1.75f * (float)Math.PI < MoveDirection || MoveDirection <= 0.25f * (float)Math.PI)
+                if (1.875f * (float)Math.PI < MoveDirection || MoveDirection <= 0.125f * (float)Math.PI)
                 {
                     player.Move("Up");
                 }
-                else if (.25f * (float)Math.PI < MoveDirection && MoveDirection <= .75f * (float)Math.PI)
+                else if (.125f * (float)Math.PI < MoveDirection && MoveDirection <= .375f * (float)Math.PI)
+                {
+                    player.Move("Up");
+                    player.Move("Right");
+                }
+                else if (.375f * (float)Math.PI < MoveDirection && MoveDirection <= .625f * (float)Math.PI)
                 {
                     player.Move("Right");
                 }
-                else if (.75f * (float)Math.PI < MoveDirection && MoveDirection <= 1.25f * (float)Math.PI)
+                else if (.625f * (float)Math.PI < MoveDirection && MoveDirection <= .875f * (float)Math.PI)
+                {
+                    player.Move("Right");
+                    player.Move("Down");
+                }
+                else if (.875f * (float)Math.PI < MoveDirection && MoveDirection <= 1.125f * (float)Math.PI)
                 {
                     player.Move("Down");
                 }
-                else if (1.25f * (float)Math.PI < MoveDirection && MoveDirection <= 1.75f * (float)Math.PI)
+                else if (1.125f * (float)Math.PI < MoveDirection && MoveDirection <= 1.375f * (float)Math.PI)
+                {
+                    player.Move("Down");
+                    player.Move("Left");
+                }
+                else if (1.375f * (float)Math.PI < MoveDirection && MoveDirection <= 1.625f * (float)Math.PI)
                 {
                     player.Move("Left");
+                }
+                else if (1.625f * (float)Math.PI < MoveDirection && MoveDirection <= 1.875f * (float)Math.PI)
+                {
+                    player.Move("Left");
+                    player.Move("Up");
                 }
             }
 
