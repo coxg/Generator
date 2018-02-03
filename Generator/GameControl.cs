@@ -144,6 +144,12 @@ namespace Generator
                 Drawing.GetRectanglesNonParallel(spriteBatch, queue, Drawing.SubmitToSpriteBatch);
             }
 
+            // Draw grid lines
+            if (Globals.GridAlpha > 0)
+            {
+                Drawing.DrawGridLines(spriteBatch);
+            }
+
             // Draw everything in the queue
             spriteBatch.End();
             base.Draw(gameTime);

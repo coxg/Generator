@@ -135,7 +135,7 @@ namespace Generator
             MapRotation = 0.0;
             GridAlpha = 50;
             _grid = new GameObject[100, 100];
-            Multithreaded = true;
+            Multithreaded = false;
 
             // Data storage
             ObjectDict = new Dictionary<string, GameObject>();

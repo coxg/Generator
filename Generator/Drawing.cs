@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using System.Linq;
 using System.Collections;
 using System.Threading.Tasks;
+using System;
 
 namespace Generator
 {
@@ -107,62 +108,6 @@ namespace Generator
             int xValue, int yValue, DrawingFunction drawingFunction,
             Queue queue, SpriteBatch spriteBatch)
         {
-            // See if we need to draw grid lines
-            if (Globals.GridAlpha > 0)
-            {
-                // Get coordinates of the square
-                Vector2 SquareCoordinates = new Vector2(
-                    xValue * Globals.SquareSize,
-                    Globals.Resolution.Y - yValue * Globals.SquareSize);
-
-                // Rotate
-                SquareCoordinates = Globals.GetRotatedCoordinates(SquareCoordinates);
-
-                // Double check that we need to draw grid lines
-                if (SquareCoordinates.X > 0
-                    && SquareCoordinates.X < Globals.Resolution.X + Globals.SquareSize
-                    && SquareCoordinates.Y > 0
-                    && SquareCoordinates.Y < Globals.Resolution.Y + Globals.SquareSize)
-                {
-                    // Submit the horizontal line
-                    drawingFunction(
-                        Globals.WhiteDot,
-                        new Rectangle(
-                            (int)SquareCoordinates.X,
-                            (int)SquareCoordinates.Y,
-                            Globals.SquareSize,
-                            1),
-                        null,
-                        Color.FromNonPremultiplied(Globals.GridAlpha, 100, 100, 100),
-                        (float)Globals.MapRotation,
-                        new Vector2(
-                            Globals.WhiteDot.Width,
-                            Globals.WhiteDot.Height),
-                        SpriteEffects.None,
-                        1,
-                        queue,
-                        spriteBatch);
-
-                    // Submit the vertical line
-                    drawingFunction(
-                        Globals.WhiteDot,
-                        new Rectangle(
-                            (int)SquareCoordinates.X,
-                            (int)SquareCoordinates.Y,
-                            1,
-                            Globals.SquareSize),
-                        null,
-                        Color.FromNonPremultiplied(Globals.GridAlpha, 100, 100, 100),
-                        (float)Globals.MapRotation,
-                        new Vector2(
-                            Globals.WhiteDot.Width,
-                            Globals.WhiteDot.Height),
-                        SpriteEffects.None,
-                        1,
-                        queue,
-                        spriteBatch);
-                }
-            }
 
             // See if we need to draw an object
             var current_object = Globals.Grid.GetObject(xValue, yValue);
@@ -226,7 +171,8 @@ namespace Generator
             }
         }
 
-        public static void GetRectanglesParallel(SpriteBatch spriteBatch, Queue queue, DrawingFunction drawingFunction)
+        public static void GetRectanglesParallel(
+            SpriteBatch spriteBatch, Queue queue, DrawingFunction drawingFunction)
         {
             // Loop through each element in the grid... in parallel!
             Parallel.ForEach(Enumerable.Range(
@@ -244,7 +190,8 @@ namespace Generator
             });
         }
 
-        public static void GetRectanglesNonParallel(SpriteBatch spriteBatch, Queue queue, DrawingFunction drawingFunction)
+        public static void GetRectanglesNonParallel(
+            SpriteBatch spriteBatch, Queue queue, DrawingFunction drawingFunction)
         {
             // Loop through each element in the grid
             for (
@@ -279,5 +226,69 @@ namespace Generator
                     currentObject.Height);
             }
         }
+
+        public static void DrawGridLines(SpriteBatch spriteBatch)
+        // Because we don't want to calculate each square individually
+        {
+            int BiggerResolution = Math.Max((int)Globals.Resolution.X, (int)Globals.Resolution.Y);
+
+            // Get vertical lines
+            for (
+                int xValue = -(int)(.5 * BiggerResolution / Globals.SquareSize + Math.Abs(Globals.MapOffset.X)); 
+                xValue < (int)(1.5 * BiggerResolution / Globals.SquareSize + Math.Abs(Globals.MapOffset.X)); 
+                xValue ++)
+            {
+                Vector2 RotatedCoordinates = Globals.GetRotatedCoordinates(
+                    new Vector2(
+                        ((float)Math.Truncate(Globals.MapOffset.X) + xValue) * Globals.SquareSize, 
+                        .5f * Globals.Resolution.Y - (float)Math.Truncate(Globals.MapOffset.Y) * Globals.SquareSize));
+
+                spriteBatch.Draw(
+                    Globals.WhiteDot,
+                    new Rectangle(
+                        (int)RotatedCoordinates.X,
+                        (int)RotatedCoordinates.Y,
+                        1,
+                        (int)(1.5 * BiggerResolution)),
+                    null,
+                    Color.FromNonPremultiplied(Globals.GridAlpha, 100, 100, 100),
+                    (float)Globals.MapRotation,
+                    new Vector2(
+                        Globals.WhiteDot.Width / 2,
+                        Globals.WhiteDot.Height / 2),
+                    SpriteEffects.None,
+                    1);
+            }
+
+            // Get horizontal lines
+            for (
+                int yValue = -(int)(.5 * BiggerResolution / Globals.SquareSize + Math.Abs(Globals.MapOffset.Y));
+                yValue < (int)(1.5 * BiggerResolution / Globals.SquareSize + Math.Abs(Globals.MapOffset.Y));
+                yValue++)
+            {
+                Vector2 RotatedCoordinates = Globals.GetRotatedCoordinates(
+                    new Vector2(
+                        .5f * Globals.Resolution.X + (float)Math.Truncate(Globals.MapOffset.X) * Globals.SquareSize,
+                        (-(float)Math.Truncate(Globals.MapOffset.Y) + yValue) * Globals.SquareSize 
+                            + Globals.Mod(Globals.Resolution.Y, Globals.SquareSize)));
+
+                spriteBatch.Draw(
+                    Globals.WhiteDot,
+                    new Rectangle(
+                        (int)RotatedCoordinates.X,
+                        (int)RotatedCoordinates.Y,
+                        (int)(1.5 * BiggerResolution),
+                        1),
+                    null,
+                    Color.FromNonPremultiplied(Globals.GridAlpha, 100, 100, 100),
+                    (float)Globals.MapRotation,
+                    new Vector2(
+                        Globals.WhiteDot.Width / 2,
+                        Globals.WhiteDot.Height / 2),
+                    SpriteEffects.None,
+                    1);
+            }
+        }
+
     }
 }
