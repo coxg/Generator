@@ -36,9 +36,8 @@ namespace Generator
 
         // Primary Attributes
         public Attribute Strength { get; set; }
-        public Attribute Intellect { get; set; }
-        public Attribute Speed { get; set; }
         public Attribute Perception { get; set; }
+        public Attribute Speed { get; set; }
         public Attribute Weight { get; set; } // Roughly in pounds
 
         // ...Other Attributes
@@ -66,9 +65,8 @@ namespace Generator
 
                 // Attributes
                 Strength.CurrentValue += value.Strength - equippedWeapon.Strength;
-                Intellect.CurrentValue += value.Intellect - equippedWeapon.Intellect;
-                Speed.CurrentValue += value.Speed - equippedWeapon.Speed;
                 Perception.CurrentValue += value.Perception - equippedWeapon.Perception;
+                Speed.CurrentValue += value.Speed - equippedWeapon.Speed;
                 equippedWeapon = value;
             }
         }
@@ -90,7 +88,6 @@ namespace Generator
 
                 // Attributes
                 Strength.CurrentValue += value.Strength - equippedOffHand.Strength;
-                Intellect.CurrentValue += value.Intellect - equippedOffHand.Intellect;
                 Speed.CurrentValue += value.Speed - equippedOffHand.Speed;
                 Perception.CurrentValue += value.Perception - equippedOffHand.Perception;
                 equippedOffHand = value;
@@ -114,7 +111,6 @@ namespace Generator
 
                 // Attributes
                 Strength.CurrentValue += value.Strength - equippedArmor.Strength;
-                Intellect.CurrentValue += value.Intellect - equippedArmor.Intellect;
                 Speed.CurrentValue += value.Speed - equippedArmor.Speed;
                 Perception.CurrentValue += value.Perception - equippedArmor.Perception;
                 equippedArmor = value;
@@ -138,7 +134,6 @@ namespace Generator
 
                 // Attributes
                 Strength.CurrentValue += value.Strength - equippedGenerator.Strength;
-                Intellect.CurrentValue += value.Intellect - equippedGenerator.Intellect;
                 Speed.CurrentValue += value.Speed - equippedGenerator.Speed;
                 Perception.CurrentValue += value.Perception - equippedGenerator.Perception;
                 equippedGenerator = value;
@@ -162,7 +157,6 @@ namespace Generator
 
                 // Attributes
                 Strength.CurrentValue += value.Strength - equippedAccessory.Strength;
-                Intellect.CurrentValue += value.Intellect - equippedAccessory.Intellect;
                 Speed.CurrentValue += value.Speed - equippedAccessory.Speed;
                 Perception.CurrentValue += value.Perception - equippedAccessory.Perception;
                 equippedAccessory = value;
@@ -235,7 +229,6 @@ namespace Generator
 
             // Primary Attributes
             Strength = new Attribute(strength);
-            Intellect = new Attribute(intellect);
             Speed = new Attribute(speed);
             Perception = new Attribute(perception);
             Weight = new Attribute(weight); // Roughly in pounds

@@ -26,7 +26,6 @@ namespace Generator
 
         // Primary Attributes
         public int Strength { get; set; }
-        public int Intellect { get; set; }
         public int Speed { get; set; }
         public int Perception { get; set; }
 
@@ -70,7 +69,6 @@ namespace Generator
 
             // Primary Attributes
             Strength = strength;
-            Intellect = intellect;
             Speed = speed;
             Perception = perception;
         }

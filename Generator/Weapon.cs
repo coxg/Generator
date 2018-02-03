@@ -39,7 +39,6 @@ namespace Generator
 
             // Primary Attributes
             int strength = 0,
-            int intellect = 0,
             int speed = 0,
             int perception = 0
             )
@@ -64,7 +63,6 @@ namespace Generator
 
             // Primary Attributes
             Strength = strength;
-            Intellect = intellect;
             Speed = speed;
             Perception = perception;
 
