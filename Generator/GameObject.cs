@@ -340,20 +340,15 @@ namespace Generator
             
         }
 
-        public void Attack(float direction = -1, int range = 1)
+        public void Attack(int range = 1)
         // Attack in a given direction
         {
-            // Get direction if not provided
-            if (direction == -1)
-            {
-                direction = Direction;
-            }
 
             // TODO: Play attack animation
 
             // Figure out which one you hit
             // TODO: Different types of attacks
-            GameObject target = GetTarget(direction, range);
+            GameObject target = GetTarget(range);
             if (target == null)
             {
                 Globals.Log(this + " attacks and misses.");
@@ -372,28 +367,54 @@ namespace Generator
 
         }
 
-        public GameObject GetTarget(float direction, int range)
+        public GameObject GetTarget(int range)
         {
-            // TODO: Rewrite all of this, should make it based on sprite collision
-            if (direction == 0f)
+            // North
+            if (1.875f * (float)Math.PI < this.Direction || this.Direction <= 0.125f * (float)Math.PI)
             {
                 return Globals.Grid.GetObject(X, Y + 1);
             }
-            else if (direction == 90f)
+
+            // Northeast
+            else if (.125f * (float)Math.PI < this.Direction && this.Direction <= .375f * (float)Math.PI)
+            {
+                return Globals.Grid.GetObject(X + 1, Y + 1);
+            }
+
+            // East
+            else if (.375f * (float)Math.PI < this.Direction && this.Direction <= .625f * (float)Math.PI)
             {
                 return Globals.Grid.GetObject(X + 1, Y);
             }
-            else if (direction == 180f)
+
+            // Southeast
+            else if (.625f * (float)Math.PI < this.Direction && this.Direction <= .875f * (float)Math.PI)
+            {
+                return Globals.Grid.GetObject(X + 1, Y - 1);
+            }
+
+            // South
+            else if (.875f * (float)Math.PI < this.Direction && this.Direction <= 1.125f * (float)Math.PI)
             {
                 return Globals.Grid.GetObject(X, Y - 1);
             }
-            else if (direction == 270f)
+
+            // Southwest
+            else if (1.125f * (float)Math.PI < this.Direction && this.Direction <= 1.375f * (float)Math.PI)
+            {
+                return Globals.Grid.GetObject(X - 1, Y - 1);
+            }
+
+            // West
+            else if (1.375f * (float)Math.PI < this.Direction && this.Direction <= 1.625f * (float)Math.PI)
             {
                 return Globals.Grid.GetObject(X - 1, Y);
             }
+
+            // Northwest
             else
             {
-                return null;
+                return Globals.Grid.GetObject(X - 1, Y + 1);
             }
         }
 
