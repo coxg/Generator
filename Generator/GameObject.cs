@@ -455,12 +455,13 @@ namespace Generator
         )
         // Attempts to move the object in a direction (radians).
         {
-            Direction = radians;
-
             // Convert from cardinal direction to X/Y offsets
             Vector2 Offsets = Globals.OffsetFromRadians(radians);
             int NewX = X + (int)Math.Round(distance * Offsets.X);
             int NewY = Y + (int)Math.Round(distance * Offsets.Y);
+
+            // Set direction to the square you're aiming at
+            Direction = (float)Math.Atan2(NewX - X, NewY - Y);
 
             // See if you can move to the location
             Globals.Log(Name + " currently at:      " + X.ToString() + ", " + Y.ToString());
