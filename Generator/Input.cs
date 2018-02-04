@@ -40,7 +40,7 @@ namespace Generator
                 RadianDirection = Globals.Mod((float)RadianDirection, 2f * (float)Math.PI);
 
                 // Convert from radian direction to cardinal direction
-                player.Move(RadianDirection);
+                player.Move(RadianDirection, 1.4f);
             }
 
             // Attack

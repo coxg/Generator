@@ -451,7 +451,7 @@ namespace Generator
 
         public void Move(
             float radians = 0,
-            int distance = 1
+            float distance = 1
         )
         // Attempts to move the object in a direction (radians).
         {
