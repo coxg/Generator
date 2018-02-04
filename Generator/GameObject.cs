@@ -348,7 +348,7 @@ namespace Generator
 
             // Figure out which one you hit
             // TODO: Different types of attacks
-            GameObject target = GetTarget(range);
+            GameObject target = GetTargetAtRange(range);
             if (target == null)
             {
                 Globals.Log(this + " attacks and misses.");
@@ -363,66 +363,35 @@ namespace Generator
             {
                 DealDamage(target, EquippedWeapon.Damage + Strength.CurrentValue);
             }
-
-
         }
 
-        public GameObject GetTarget(int range)
+        public GameObject GetTargetAtRange(int range = 1)
+        // Gets whichever object is [distance] away in the current direction
         {
-            // North
-            if (1.875f * (float)Math.PI < this.Direction || this.Direction <= 0.125f * (float)Math.PI)
-            {
-                return Globals.Grid.GetObject(X, Y + 1);
-            }
+            Vector2 Offsets = Globals.OffsetFromRadians(Direction);
+            GameObject TargettedObject = Globals.Grid.GetObject(
+                X + range * (int)Math.Round(Offsets.X), 
+                Y + range * (int)Math.Round(Offsets.Y));
+            return TargettedObject;
+        }
 
-            // Northeast
-            else if (.125f * (float)Math.PI < this.Direction && this.Direction <= .375f * (float)Math.PI)
-            {
-                return Globals.Grid.GetObject(X + 1, Y + 1);
-            }
+        public GameObject GetTargetInRange(int range = 1)
+        // Gets whichever object is [distance] away or closer in the current direction
+        {
+            GameObject ReturnObject = null;
+            int TargetRange = 1;
 
-            // East
-            else if (.375f * (float)Math.PI < this.Direction && this.Direction <= .625f * (float)Math.PI)
+            // Loop from 1 to [range], seeing if anything is in the way
+            while (ReturnObject == null && TargetRange <= range)
             {
-                return Globals.Grid.GetObject(X + 1, Y);
+                ReturnObject = GetTargetAtRange(TargetRange);
+                range++;
             }
-
-            // Southeast
-            else if (.625f * (float)Math.PI < this.Direction && this.Direction <= .875f * (float)Math.PI)
-            {
-                return Globals.Grid.GetObject(X + 1, Y - 1);
-            }
-
-            // South
-            else if (.875f * (float)Math.PI < this.Direction && this.Direction <= 1.125f * (float)Math.PI)
-            {
-                return Globals.Grid.GetObject(X, Y - 1);
-            }
-
-            // Southwest
-            else if (1.125f * (float)Math.PI < this.Direction && this.Direction <= 1.375f * (float)Math.PI)
-            {
-                return Globals.Grid.GetObject(X - 1, Y - 1);
-            }
-
-            // West
-            else if (1.375f * (float)Math.PI < this.Direction && this.Direction <= 1.625f * (float)Math.PI)
-            {
-                return Globals.Grid.GetObject(X - 1, Y);
-            }
-
-            // Northwest
-            else
-            {
-                return Globals.Grid.GetObject(X - 1, Y + 1);
-            }
+            return ReturnObject;
         }
 
         public bool CanMoveTo(int x, int y)
-        /*
-        Sees if the GameObject can move to the specified location unimpeded.
-        Note that x and y refer to the top left square of the object.
-        */
+        // Sees if the GameObject can move to the specified location unimpeded.
         {
             // Loop through each x coordinate you're trying to move to
             for (int MoveToX = x; MoveToX < x + Width; MoveToX++)
@@ -481,72 +450,29 @@ namespace Generator
         }
 
         public void Move(
-            string direction,
+            float radians = 0,
             int distance = 1
         )
-        /*
-        Attempts to move the object in a cardinal direction.
-        */
+        // Attempts to move the object in a direction (radians).
         {
-            // Convert from cardinal direction to X/Y deltas
-            int DeltaX = 0;
-            int DeltaY = 0;
-            if (direction == "North")
-            {
-                DeltaY = distance;
-                Direction = 0f;
-            }
-            else if (direction == "Northeast")
-            {
-                DeltaX = distance;
-                DeltaY = distance;
-                Direction = .25f * (float)Math.PI; ;
-            }
-            else if (direction == "East")
-            {
-                DeltaX = distance;
-                Direction = .5f * (float)Math.PI; ;
-            }
-            else if (direction == "Southeast")
-            {
-                DeltaX = distance;
-                DeltaY = -distance;
-                Direction = .75f * (float)Math.PI; ;
-            }
-            else if (direction == "South")
-            {
-                DeltaY = -distance;
-                Direction = (float)Math.PI;
-            }
-            else if (direction == "Southwest")
-            {
-                DeltaX = -distance;
-                DeltaY = -distance;
-                Direction = 1.25f * (float)Math.PI; ;
-            }
-            else if (direction == "West")
-            {
-                DeltaX = -distance;
-                Direction = 1.5f * (float)Math.PI; ;
-            }
-            else if (direction == "Northwest")
-            {
-                DeltaX = -distance;
-                DeltaY = distance;
-                Direction = 1.75f * (float)Math.PI; ;
-            }
+            Direction = radians;
+
+            // Convert from cardinal direction to X/Y offsets
+            Vector2 Offsets = Globals.OffsetFromRadians(radians);
+            int NewX = X + (int)Math.Round(distance * Offsets.X);
+            int NewY = Y + (int)Math.Round(distance * Offsets.Y);
 
             // See if you can move to the location
             Globals.Log(Name + " currently at:      " + X.ToString() + ", " + Y.ToString());
-            Globals.Log(Name + " trying to move to: " + (X + DeltaX).ToString() + ", " + (Y + DeltaY).ToString());
-            if (CanMoveTo(X + DeltaX, Y + DeltaY))
+            Globals.Log(Name + " trying to move to: " + NewX + ", " + NewY);
+            if (CanMoveTo(NewX, NewY))
             {
                 // Null out all previous locations
                 Despawn();
 
                 // Assing new attributes for object
-                X = (int)Globals.Mod(X + DeltaX, Globals.Grid.GetLength(0));
-                Y = (int)Globals.Mod(Y + DeltaY, Globals.Grid.GetLength(1));
+                X = (int)Globals.Mod(NewX, Globals.Grid.GetLength(0));
+                Y = (int)Globals.Mod(NewY, Globals.Grid.GetLength(1));
 
                 // Assign all new locations
                 Spawn();

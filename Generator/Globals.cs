@@ -66,15 +66,29 @@ namespace Generator
             }
         }
 
-        // Because % is remainder, not mod
         public static float Mod(float Number, float Modulo)
+        // Because % is remainder, not mod
         {
             float Remainder = Number % Modulo;
             return Remainder < 0 ? Remainder + Modulo : Remainder;
         }
 
-        // Map rotation logic
+        public static Dictionary<TValue, TKey> Flip<TKey, TValue>(this IDictionary<TKey, TValue> OriginDict)
+        // Lets me create reversed dictionaries
+        {
+            Dictionary<TValue, TKey> FlippedDict = new Dictionary<TValue, TKey>();
+            foreach (var DictItem in OriginDict)
+            {
+                if (!FlippedDict.ContainsKey(DictItem.Value))
+                {
+                    FlippedDict.Add(DictItem.Value, DictItem.Key);
+                }
+            }
+            return FlippedDict;
+        }
+
         public static Vector2 RotateAroundCenterOfScreen(Vector2 coordinates)
+        // Map rotation logic
         {
             int XOffsetInPixels = (int)(Globals.MapOffset.X * (double)Globals.SquareSize);
             int YOffsetInPixels = (int)(Globals.MapOffset.Y * (double)Globals.SquareSize);
@@ -97,10 +111,16 @@ namespace Generator
             return coordinates;
         }
 
+        public static Vector2 OffsetFromRadians(float radians)
+        // Converts from radians to an offset
+        {
+            return new Vector2((float)Math.Sin(radians), (float)Math.Cos(radians));
+        }
+
         [System.Runtime.CompilerServices.MethodImpl(
          System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
         public static void Log(string text = "")
-        // Logs a line with debugging information
+        // Logs to console with debugging information
         {
             if (Logging)
             {

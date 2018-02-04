@@ -9,7 +9,7 @@ namespace Generator
         public static void GetInput(GameObject player)
         {
 
-            // Convert from actual movement input to intended movement input
+            // Convert from actual movement input to direction offsets
             int MoveVerticalOffset = 0;
             int MoveHorizontalOffset = 0;
             if (Keyboard.GetState().IsKeyDown(Keys.Up))
@@ -29,79 +29,18 @@ namespace Generator
                 MoveHorizontalOffset += 1;
             }
 
-            // Convert from intended movement input to cardinal direction
+            // Convert from direction offsets to radian direction
             if (MoveHorizontalOffset != 0 || MoveVerticalOffset != 0)
             {
-                // Convert from intended movement input to intended movement direction
-                float MoveDirection = 0f;
-                if (MoveVerticalOffset == 1 && MoveHorizontalOffset == 0) // Move up
-                {
-                    MoveDirection = 0f;
-                }
-                else if (MoveVerticalOffset == 1 && MoveHorizontalOffset == 1) // Move up-right
-                {
-                    MoveDirection = .25f * (float)Math.PI;
-                }
-                else if (MoveVerticalOffset == 0 && MoveHorizontalOffset == 1) // Move right
-                {
-                    MoveDirection = .5f * (float)Math.PI;
-                }
-                else if (MoveVerticalOffset == -1 && MoveHorizontalOffset == 1) // Move down-right
-                {
-                    MoveDirection = .75f * (float)Math.PI;
-                }
-                else if (MoveVerticalOffset == -1 && MoveHorizontalOffset == 0) // Move down
-                {
-                    MoveDirection = (float)Math.PI;
-                }
-                else if (MoveVerticalOffset == -1 && MoveHorizontalOffset == -1) // Move down-left
-                {
-                    MoveDirection = 1.25f * (float)Math.PI;
-                }
-                else if (MoveVerticalOffset == 0 && MoveHorizontalOffset == -1) // Move left
-                {
-                    MoveDirection = 1.5f * (float)Math.PI;
-                }
-                else if (MoveVerticalOffset == 1 && MoveHorizontalOffset == -1) // Move up-left
-                {
-                    MoveDirection = 1.75f * (float)Math.PI;
-                }
+                // Convert from offsets to radians
+                float RadianDirection = (float)Math.Atan2(MoveHorizontalOffset, MoveVerticalOffset);
 
-                // Convert from intended movement direction to cardinal direction
-                MoveDirection -= (float)Globals.MapRotation;
-                MoveDirection = Globals.Mod((float)MoveDirection, 2f * (float)Math.PI);
-                if (1.875f * (float)Math.PI < MoveDirection || MoveDirection <= 0.125f * (float)Math.PI)
-                {
-                    player.Move("North");
-                }
-                else if (.125f * (float)Math.PI < MoveDirection && MoveDirection <= .375f * (float)Math.PI)
-                {
-                    player.Move("Northeast");
-                }
-                else if (.375f * (float)Math.PI < MoveDirection && MoveDirection <= .625f * (float)Math.PI)
-                {
-                    player.Move("East");
-                }
-                else if (.625f * (float)Math.PI < MoveDirection && MoveDirection <= .875f * (float)Math.PI)
-                {
-                    player.Move("Southeast");
-                }
-                else if (.875f * (float)Math.PI < MoveDirection && MoveDirection <= 1.125f * (float)Math.PI)
-                {
-                    player.Move("South");
-                }
-                else if (1.125f * (float)Math.PI < MoveDirection && MoveDirection <= 1.375f * (float)Math.PI)
-                {
-                    player.Move("Southwest");
-                }
-                else if (1.375f * (float)Math.PI < MoveDirection && MoveDirection <= 1.625f * (float)Math.PI)
-                {
-                    player.Move("West");
-                }
-                else if (1.625f * (float)Math.PI < MoveDirection && MoveDirection <= 1.875f * (float)Math.PI)
-                {
-                    player.Move("Northwest");
-                }
+                // Apply offset from map rotation
+                RadianDirection -= (float)Globals.MapRotation;
+                RadianDirection = Globals.Mod((float)RadianDirection, 2f * (float)Math.PI);
+
+                // Convert from radian direction to cardinal direction
+                player.Move(RadianDirection);
             }
 
             // Attack
