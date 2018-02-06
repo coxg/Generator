@@ -21,7 +21,7 @@ namespace Generator
         public Texture2D MovingSprite { get; set; }
         public Texture2D AimingSprite { get; set; }
         public Texture2D DeadSprite { get; set; }
-        public Texture2D DyingSprite { get; set; }
+        public Texture2D Avatar { get; set; }
 
         // Grid logic
         public int Width { get; set; }
@@ -45,8 +45,11 @@ namespace Generator
         public int Level { get; set; }
         public int Experience { get; set; }
         public float Direction { get; set; }
+
+        // Interaction
         public string Disposition { get; set; } // {"Party", "Neutral", "Enemy", "Terrain"}
         public bool Passable { get; set; } // If true, passable to all objects. If false, passable to objects of same disposition.
+        public Action Activate { get; set; }
 
         // Weapon
         private Weapon equippedWeapon;
@@ -168,10 +171,7 @@ namespace Generator
 
             // Sprites
             string standingSpriteFile = "Sprites/face",
-            string movingSpriteFile = "Sprites/face",
-            string aimingSpriteFile = "Sprites/face",
-            string deadSpriteFile = "Sprites/face",
-            string dyingSpriteFile = "Sprites/face",
+            string avatarFile = null,
 
             // Grid logic
             int width = 1,
@@ -192,10 +192,12 @@ namespace Generator
             int weight = 150, // Roughly in pounds
 
             // ...Other Attributes
-            string name = "",
+            string name = null,
             int level = 1,
             int experience = 0,
             float direction = 0f,
+
+            // Interaction
             string disposition = "Terrain", // {"Party", "Neutral", "Enemy", "Terrain"}
             bool passable = false, // If true, passable to all objects. If false, passable to objects of same disposition.
 
@@ -210,10 +212,14 @@ namespace Generator
         {
             // Sprites
             StandingSprite = Globals.Content.Load<Texture2D>(standingSpriteFile);
-            MovingSprite = Globals.Content.Load<Texture2D>(movingSpriteFile);
-            AimingSprite = Globals.Content.Load<Texture2D>(aimingSpriteFile);
-            DeadSprite = Globals.Content.Load<Texture2D>(deadSpriteFile);
-            DyingSprite = Globals.Content.Load<Texture2D>(dyingSpriteFile);
+            if (avatarFile != null)
+            {
+                Avatar = Globals.Content.Load<Texture2D>(avatarFile);
+            }
+            else
+            {
+                Avatar = null;
+            }
 
             // Grid logic
             Width = width;
@@ -238,8 +244,17 @@ namespace Generator
             Level = level;
             Experience = experience;
             Direction = direction;
+
+            // Interaction
             Disposition = disposition; // {"Party", "Neutral", "Enemy", "Terrain"}
             Passable = passable; // If true, passable to all objects. If false, passable to objects of same disposition.
+            Activate = delegate () // What happens when you try to talk to it
+            {
+                if (Name != null)
+                {
+                    Say("This is just a " + Name + ".");
+                }
+            };
 
             // Equipment
             equippedWeapon = weapon ?? new Weapon();
@@ -265,7 +280,7 @@ namespace Generator
         public override string ToString()
         // Return name, useful for debugging.
         {
-            if(Name == "")
+            if(Name == null)
             {
                 return "Unnamed GameObject";
             }
@@ -337,7 +352,6 @@ namespace Generator
                 Health.Current = 0;
                 Die();
             }
-            
         }
 
         public void Attack(int range = 1)
@@ -348,7 +362,7 @@ namespace Generator
 
             // Figure out which one you hit
             // TODO: Different types of attacks
-            GameObject target = GetTargetAtRange(range);
+            GameObject target = GetTarget(range);
             if (target == null)
             {
                 Globals.Log(this + " attacks and misses.");
@@ -365,13 +379,13 @@ namespace Generator
             }
         }
 
-        public GameObject GetTargetAtRange(int range = 1)
+        public GameObject GetTarget(float range = 1.4f)
         // Gets whichever object is [distance] away in the current direction
         {
             Vector2 Offsets = Globals.OffsetFromRadians(Direction);
             GameObject TargettedObject = Globals.Grid.GetObject(
-                X + range * (int)Math.Round(Offsets.X), 
-                Y + range * (int)Math.Round(Offsets.Y));
+                X + (int)Math.Round(range * Offsets.X), 
+                Y + (int)Math.Round(range * Offsets.Y));
             return TargettedObject;
         }
 
@@ -384,7 +398,7 @@ namespace Generator
             // Loop from 1 to [range], seeing if anything is in the way
             while (ReturnObject == null && TargetRange <= range)
             {
-                ReturnObject = GetTargetAtRange(TargetRange);
+                ReturnObject = GetTarget(TargetRange);
                 range++;
             }
             return ReturnObject;
@@ -451,7 +465,7 @@ namespace Generator
 
         public void Move(
             float radians = 0,
-            float distance = 1
+            float distance = 1.4f
         )
         // Attempts to move the object in a direction (radians).
         {
@@ -478,6 +492,13 @@ namespace Generator
                 // Assign all new locations
                 Spawn();
             }
+        }
+
+        public void Say(string Message)
+        // Submit message to the screen with icon
+        {
+            Globals.DisplayTextQueue.Enqueue(Message);
+            Globals.TalkingObjectQueue.Enqueue(this);
         }
     }
 }

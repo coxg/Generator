@@ -124,7 +124,7 @@ namespace Generator
                 // Rotate
                 ObjectCoordinates = Globals.RotateAroundCenterOfScreen(ObjectCoordinates);
 
-                // Double check that we need to draw grid lines
+                // Make sure we want to draw the object
                 if (ObjectCoordinates.X > 0
                     && ObjectCoordinates.X < Globals.Resolution.X + Globals.SquareSize
                     && ObjectCoordinates.Y > 0
@@ -227,6 +227,59 @@ namespace Generator
             }
         }
 
+        public static void DrawTextBox(SpriteBatch spriteBatch)
+        // Use this for text displayed at the bottom of the screen
+        {
+            int TextBoxHeight = 256;
+            int Margin = 16;
+
+            // Draw the background
+            spriteBatch.Draw(
+                Globals.WhiteDot,
+                new Rectangle(
+                    0,
+                    (int)Globals.Resolution.Y - TextBoxHeight,
+                    (int)Globals.Resolution.X,
+                    TextBoxHeight),
+                null,
+                Color.FromNonPremultiplied(0, 0, 0, 200),
+                0f,
+                new Vector2(0, 0),
+                SpriteEffects.None,
+                .05f);
+
+            // Draw the sprite
+            int SpriteWidthAndExtraMargin = 0;
+            if (Globals.DisplayTextQueue.Count != 0 
+                && Globals.TalkingObjectQueue.Count != 0
+                && Globals.TalkingObjectQueue.Peek().Avatar != null)
+            {
+                spriteBatch.Draw(
+                    Globals.TalkingObjectQueue.Peek().Avatar,
+                    new Rectangle(
+                        Margin,
+                        (int)Globals.Resolution.Y - TextBoxHeight + Margin,
+                        TextBoxHeight - 2 * Margin,
+                        TextBoxHeight - 2 * Margin),
+                    null,
+                    Color.White,
+                    0,
+                    new Vector2(0, 0),
+                    SpriteEffects.None,
+                    .04f);
+                SpriteWidthAndExtraMargin = TextBoxHeight - Margin;
+            }
+
+            // Draw the text itself
+            spriteBatch.DrawString(
+                Globals.Font, 
+                Globals.DisplayTextQueue.Peek(), 
+                new Vector2(
+                    Margin + SpriteWidthAndExtraMargin, 
+                    Globals.Resolution.Y - (TextBoxHeight - Margin)), 
+                Color.White);
+        }
+
         public static void DrawGridLines(SpriteBatch spriteBatch)
         // Because we don't want to calculate each square individually
         {
@@ -238,11 +291,13 @@ namespace Generator
                 xValue < (int)(1.5 * BiggerResolution / Globals.SquareSize + Math.Abs(Globals.MapOffset.X)); 
                 xValue ++)
             {
+                // Rotate the center coordinate
                 Vector2 RotatedCoordinates = Globals.RotateAroundCenterOfScreen(
                     new Vector2(
                         ((float)Math.Truncate(Globals.MapOffset.X) + xValue) * Globals.SquareSize, 
                         .5f * Globals.Resolution.Y - (float)Math.Truncate(Globals.MapOffset.Y) * Globals.SquareSize));
 
+                // Draw the line
                 spriteBatch.Draw(
                     Globals.WhiteDot,
                     new Rectangle(
@@ -251,13 +306,13 @@ namespace Generator
                         1,
                         (int)(1.5 * BiggerResolution)),
                     null,
-                    Color.FromNonPremultiplied(Globals.GridAlpha, 100, 100, 100),
+                    Color.FromNonPremultiplied(0, 0, 0, Globals.GridAlpha),
                     (float)Globals.MapRotation,
                     new Vector2(
                         Globals.WhiteDot.Width / 2,
                         Globals.WhiteDot.Height / 2),
                     SpriteEffects.None,
-                    1);
+                    .99f);
             }
 
             // Get horizontal lines
@@ -266,12 +321,14 @@ namespace Generator
                 yValue < (int)(1.5 * BiggerResolution / Globals.SquareSize + Math.Abs(Globals.MapOffset.Y));
                 yValue++)
             {
+                // Rotate the center coordinate
                 Vector2 RotatedCoordinates = Globals.RotateAroundCenterOfScreen(
                     new Vector2(
                         .5f * Globals.Resolution.X + (float)Math.Truncate(Globals.MapOffset.X) * Globals.SquareSize,
                         (-(float)Math.Truncate(Globals.MapOffset.Y) + yValue) * Globals.SquareSize 
                             + Globals.Mod(Globals.Resolution.Y, Globals.SquareSize)));
 
+                // Draw the line
                 spriteBatch.Draw(
                     Globals.WhiteDot,
                     new Rectangle(
@@ -280,13 +337,13 @@ namespace Generator
                         (int)(1.5 * BiggerResolution),
                         1),
                     null,
-                    Color.FromNonPremultiplied(Globals.GridAlpha, 100, 100, 100),
+                    Color.FromNonPremultiplied(0, 0, 0, Globals.GridAlpha),
                     (float)Globals.MapRotation,
                     new Vector2(
                         Globals.WhiteDot.Width / 2,
                         Globals.WhiteDot.Height / 2),
                     SpriteEffects.None,
-                    1);
+                    .99f);
             }
         }
 

@@ -94,6 +94,36 @@ namespace Generator
             {
                 Globals.SquareSize /= 2;
             }
+
+            // The "Activate" button
+            if (Keyboard.GetState().IsKeyDown(Keys.F))
+            {
+                // To make sure you're not holding it down
+                if (!Globals.ActivateButtonWasDown)
+                {
+                    Globals.ActivateButtonWasDown = true;
+
+                    // If you're trying to progress a message
+                    if (Globals.DisplayTextQueue.Count != 0)
+                    {
+                        Globals.DisplayTextQueue.Dequeue();
+                        Globals.TalkingObjectQueue.Dequeue();
+                    }
+
+                    // If you're trying to activate the object in front of you
+                    else
+                    {
+                        if (player.GetTarget() != null)
+                        {
+                            player.GetTarget().Activate();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Globals.ActivateButtonWasDown = false;
+            }
         }
     }
 }

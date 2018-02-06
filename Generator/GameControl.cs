@@ -14,9 +14,6 @@ namespace Generator
         // Generics
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        
-        // Fonts
-        private SpriteFont font;
 
         // Player
         private GameObject player;
@@ -65,7 +62,7 @@ namespace Generator
             Globals.WhiteDot = Content.Load<Texture2D>("Sprites/white_dot");
 
             // Load in the fonts
-            font = Content.Load<SpriteFont>("Fonts/Score");
+            Globals.Font = Content.Load<SpriteFont>("Fonts/Score");
 
             Globals.Content = Content;
 
@@ -86,10 +83,19 @@ namespace Generator
                     spriteFile: "Sprites/sword"));
 
             // Create terrain
-            terrain1 = new GameObject(disposition: "Party", x: 5, y: 6, name:"terrain1", width:1);
-            terrain2 = new GameObject(disposition: "Party", x: 5, y: 9, name:"terrain2", width:2, height:2);
-
-            // TODO: use this.Content to load your game content here
+            terrain1 = new GameObject(disposition: "Party", x: 5, y: 6, name: "angry terrain", width:1, avatarFile: "Sprites/angry");
+            terrain1.Activate = delegate ()
+            {
+                terrain1.Say("Check it out I do something weird");
+                terrain1.Say("Did you see how weird that was?!");
+                GameObject terrain3 = new GameObject(disposition: "Party", x: 10, y: 10, name: "big terrain", width: 5, height: 5);
+                terrain3.Activate = delegate ()
+                {
+                    terrain3.Say("I don't do anything weird.");
+                    terrain3.Say("...I'm just really fat.");
+                };
+            };
+            terrain2 = new GameObject(disposition: "Party", x: 5, y: 9, name:"small terrain", width:2, height:2);
         }
 
         /// <summary>
@@ -148,6 +154,12 @@ namespace Generator
             if (Globals.GridAlpha > 0)
             {
                 Drawing.DrawGridLines(spriteBatch);
+            }
+
+            // Draw text box
+            if (Globals.DisplayTextQueue.Count != 0)
+            {
+                Drawing.DrawTextBox(spriteBatch);
             }
 
             // Draw everything in the queue

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -20,8 +21,18 @@ namespace Generator
         public static Vector2 MapOffset { get; set; }
         public static int Clock { get; set; }
         public static int GridAlpha { get; set; }
-        public static Texture2D WhiteDot { get; set; }
         public static bool Multithreaded { get; set; }
+
+        // For better controls
+        public static bool ActivateButtonWasDown { get; set; }
+
+        // For displaying talking stuff
+        public static Queue<string> DisplayTextQueue { get; set; }
+        public static Queue<GameObject> TalkingObjectQueue { get; set; }
+
+        // Loading assets
+        public static Texture2D WhiteDot { get; set; }
+        public static SpriteFont Font { get; set; }
 
         // Map rotation values
         private static double currentSin;
@@ -145,8 +156,8 @@ namespace Generator
         // Population
         public static void Populate()
         {
-            // Variables
-            Resolution = new Vector2(1920, 1080);
+            // Regular old variables
+            Resolution = new Vector2(1800, 1000);
             SquareSize = 64;
             Logging = true;
             MapOffset = new Vector2(0, 0);
@@ -155,6 +166,13 @@ namespace Generator
             GridAlpha = 50;
             _grid = new GameObject[100, 100];
             Multithreaded = false;
+
+            // For better control
+            ActivateButtonWasDown = false;
+
+            // For displaying talking stuff
+            DisplayTextQueue = new Queue<string>();
+            TalkingObjectQueue = new Queue<GameObject>();
 
             // Data storage
             ObjectDict = new Dictionary<string, GameObject>();
