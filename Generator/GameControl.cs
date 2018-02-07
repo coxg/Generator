@@ -95,7 +95,7 @@ namespace Generator
                     terrain3.Say("...I'm just really fat.");
                 };
             };
-            terrain2 = new GameObject(disposition: "Party", x: 5, y: 9, name:"small terrain", width:2, height:2);
+            terrain2 = new GameObject(disposition: "Party", x: 5, y: 9, name:"medium terrain", width:2, height:2);
         }
 
         /// <summary>

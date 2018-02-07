@@ -59,6 +59,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Ability.cs" />
     <Compile Include="Accessory.cs" />
     <Compile Include="Armor.cs" />
     <Compile Include="Attribute.cs" />
