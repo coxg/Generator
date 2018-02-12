@@ -267,6 +267,9 @@ namespace Generator
             EquippedArmor = equippedArmor;
             EquippedGenerator = equippedGenerator;
             EquippedAccessory = equippedAccessory;
+
+            // Make yourself accessible
+            Globals.ObjectDict[Name] = this;
         }
 
         public void Update()

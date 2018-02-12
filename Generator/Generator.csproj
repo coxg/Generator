@@ -63,6 +63,7 @@
     <Compile Include="Accessory.cs" />
     <Compile Include="Armor.cs" />
     <Compile Include="Attribute.cs" />
+    <Compile Include="Camera.cs" />
     <Compile Include="Drawing.cs" />
     <Compile Include="Equipment.cs" />
     <Compile Include="GameControl.cs" />

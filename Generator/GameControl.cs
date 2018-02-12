@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Generator
 {
@@ -12,13 +13,16 @@ namespace Generator
     public class GameControl : Game
     {
         // Generics
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        public static GraphicsDeviceManager graphics;
+        public SpriteBatch spriteBatch;
 
         // Player
         private GameObject player;
         private GameObject terrain1;
         private GameObject terrain2;
+
+        // For drawing... stuff
+        public static Camera camera;
 
         public GameControl()
         {
@@ -44,8 +48,9 @@ namespace Generator
         /// </summary>
         protected override void Initialize()
         {
-            // Initialization logic here
+            camera = new Camera(new Vector3(20, -40, 20));
 
+            // We’ll be assigning texture values later
             base.Initialize();
         }
 
@@ -60,6 +65,7 @@ namespace Generator
 
             // Load in the sprites
             Globals.WhiteDot = Content.Load<Texture2D>("Sprites/white_dot");
+            Globals.Checker = Content.Load<Texture2D>("Sprites/checkerboard");
 
             // Load in the fonts
             Globals.Font = Content.Load<SpriteFont>("Fonts/Score");
@@ -68,22 +74,22 @@ namespace Generator
 
             // Create player
             player = new GameObject(
-                disposition: "Party", 
-                x:-20, 
-                y:3, 
-                name:"Niels", 
-                width:1, 
-                height:1, 
-                strength:10, 
-                standingSpriteFile:"Sprites/face",
+                disposition: "Party",
+                x: 1,
+                y: 3,
+                name: "Niels",
+                width: 1,
+                height: 1,
+                strength: 10,
+                standingSpriteFile: "Sprites/face",
                 weapon: new Weapon(
-                    name: "Sword", 
-                    type: "Cut", 
-                    damage: 10, 
+                    name: "Sword",
+                    type: "Cut",
+                    damage: 10,
                     spriteFile: "Sprites/sword"));
 
             // Create terrain
-            terrain1 = new GameObject(disposition: "Party", x: 5, y: 6, name: "angry terrain", width:1, avatarFile: "Sprites/angry");
+            terrain1 = new GameObject(disposition: "Party", x: 5, y: 6, name: "angry terrain", width: 1, avatarFile: "Sprites/angry");
             terrain1.Activate = delegate ()
             {
                 terrain1.Say("Check it out I do something weird");
@@ -95,7 +101,7 @@ namespace Generator
                     terrain3.Say("...I'm just really fat.");
                 };
             };
-            terrain2 = new GameObject(disposition: "Party", x: 5, y: 9, name:"medium terrain", width:2, height:2);
+            terrain2 = new GameObject(disposition: "Party", x: 5, y: 9, name: "medium terrain", width: 2, height: 2);
         }
 
         /// <summary>
@@ -131,30 +137,12 @@ namespace Generator
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            // Initialize
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            Queue queue = new Queue();
-            queue = Queue.Synchronized(queue);
-            spriteBatch.Begin(SpriteSortMode.BackToFront, null);
 
-            // Multithreaded mode
-            if (Globals.Multithreaded)
-            {
-                Drawing.GetRectanglesParallel(spriteBatch, queue, Drawing.SubmitToQueue);
-                Drawing.DrawFromBatch(spriteBatch, queue);
-            }
-
-            // Singlethreaded mode
-            else
-            {
-                Drawing.GetRectanglesNonParallel(spriteBatch, queue, Drawing.SubmitToSpriteBatch);
-            }
-
-            // Draw grid lines
-            if (Globals.GridAlpha > 0)
-            {
-                Drawing.DrawGridLines(spriteBatch);
-            }
+            spriteBatch.Begin(
+                SpriteSortMode.BackToFront, 
+                null, 
+                samplerState: SamplerState.LinearWrap);
 
             // Draw text box
             if (Globals.DisplayTextQueue.Count != 0)
@@ -162,8 +150,24 @@ namespace Generator
                 Drawing.DrawTextBox(spriteBatch);
             }
 
-            // Draw everything in the queue
+            // Draw the grid
+            Drawing.DrawTile(
+                Globals.Checker,
+                new Vector2(0, 0),
+                new Vector2(Globals.Grid.GetLength(0), Globals.Grid.GetLength(1)),
+                Globals.Grid.GetLength(0));
+
+            // Draw the GameObjects
+            foreach (KeyValuePair<string, GameObject> Object in Globals.ObjectDict)
+            {
+                Drawing.DrawSprite(
+                    Object.Value.StandingSprite,
+                    new Vector3(Object.Value.X, Object.Value.Y, 0),
+                    new Vector3(Object.Value.Width, Object.Value.Height, Object.Value.Height));
+            }
+
             spriteBatch.End();
+
             base.Draw(gameTime);
         }
     }

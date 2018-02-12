@@ -49,50 +49,90 @@ namespace Generator
                 player.Attack();
             }
 
-            // Rotate the map
-            if (Keyboard.GetState().IsKeyDown(Keys.Q))
-            {
-                Globals.MapRotation += .1f;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.E))
-            {
-                Globals.MapRotation -= .1f;
-            }
-
-            // Move the screen
+            // Pan the camera
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
-                Globals.MapOffset = new Vector2(
-                    (float)(Globals.MapOffset.X - Globals.CurrentSin),
-                    (float)(Globals.MapOffset.Y + Globals.CurrentCos));
+                GameControl.camera.Position = new Vector3(
+                    GameControl.camera.Position.X,
+                    GameControl.camera.Position.Y + 1,
+                    GameControl.camera.Position.Z);
+                GameControl.camera.Target = new Vector3(
+                    GameControl.camera.Target.X,
+                    GameControl.camera.Target.Y + 1,
+                    GameControl.camera.Target.Z);
             }
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
-                Globals.MapOffset = new Vector2(
-                    (float)(Globals.MapOffset.X + Globals.CurrentSin),
-                    (float)(Globals.MapOffset.Y - Globals.CurrentCos));
+                GameControl.camera.Position = new Vector3(
+                    GameControl.camera.Position.X,
+                    GameControl.camera.Position.Y - 1,
+                    GameControl.camera.Position.Z);
+                GameControl.camera.Target = new Vector3(
+                    GameControl.camera.Target.X,
+                    GameControl.camera.Target.Y - 1,
+                    GameControl.camera.Target.Z);
             }
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                Globals.MapOffset = new Vector2(
-                    (float)(Globals.MapOffset.X - Globals.CurrentCos),
-                    (float)(Globals.MapOffset.Y - Globals.CurrentSin));
+                GameControl.camera.Position = new Vector3(
+                    GameControl.camera.Position.X - 1,
+                    GameControl.camera.Position.Y,
+                    GameControl.camera.Position.Z);
+                GameControl.camera.Target = new Vector3(
+                    GameControl.camera.Target.X - 1,
+                    GameControl.camera.Target.Y,
+                    GameControl.camera.Target.Z);
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
-                Globals.MapOffset = new Vector2(
-                    (float)(Globals.MapOffset.X + Globals.CurrentCos),
-                    (float)(Globals.MapOffset.Y + Globals.CurrentSin));
+                GameControl.camera.Position = new Vector3(
+                    GameControl.camera.Position.X + 1,
+                    GameControl.camera.Position.Y,
+                    GameControl.camera.Position.Z);
+                GameControl.camera.Target = new Vector3(
+                    GameControl.camera.Target.X + 1,
+                    GameControl.camera.Target.Y,
+                    GameControl.camera.Target.Z);
+            }
+
+            // Map rotation
+            if (Keyboard.GetState().IsKeyDown(Keys.Q))
+            {
+                GameControl.camera.Position = new Vector3(
+                    GameControl.camera.Position.X - 1,
+                    GameControl.camera.Position.Y,
+                    GameControl.camera.Position.Z);
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.E))
+            {
+                GameControl.camera.Position = new Vector3(
+                    GameControl.camera.Position.X + 1,
+                    GameControl.camera.Position.Y,
+                    GameControl.camera.Position.Z);
             }
 
             // Zoom in/out
-            if (Keyboard.GetState().IsKeyDown(Keys.OemPlus) && Globals.SquareSize < 256)
+            if (Keyboard.GetState().IsKeyDown(Keys.OemPlus))
             {
-                Globals.SquareSize *= 2;
+                GameControl.camera.Position = new Vector3(
+                    GameControl.camera.Position.X,
+                    GameControl.camera.Position.Y,
+                    GameControl.camera.Position.Z - 1);
+                GameControl.camera.Target = new Vector3(
+                    GameControl.camera.Target.X,
+                    GameControl.camera.Target.Y,
+                    GameControl.camera.Target.Z - 1);
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.OemMinus) && Globals.SquareSize > 16)
+            if (Keyboard.GetState().IsKeyDown(Keys.OemMinus))
             {
-                Globals.SquareSize /= 2;
+                GameControl.camera.Position = new Vector3(
+                    GameControl.camera.Position.X,
+                    GameControl.camera.Position.Y,
+                    GameControl.camera.Position.Z + 1);
+                GameControl.camera.Target = new Vector3(
+                    GameControl.camera.Target.X,
+                    GameControl.camera.Target.Y,
+                    GameControl.camera.Target.Z + 1);
             }
 
             // The "Activate" button

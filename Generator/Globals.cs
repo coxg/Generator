@@ -33,6 +33,7 @@ namespace Generator
         // Loading assets
         public static Texture2D WhiteDot { get; set; }
         public static SpriteFont Font { get; set; }
+        public static Texture2D Checker { get; set; }
 
         // Map rotation values
         private static double currentSin;
@@ -84,44 +85,6 @@ namespace Generator
             return Remainder < 0 ? Remainder + Modulo : Remainder;
         }
 
-        public static Dictionary<TValue, TKey> Flip<TKey, TValue>(this IDictionary<TKey, TValue> OriginDict)
-        // Lets me create reversed dictionaries
-        {
-            Dictionary<TValue, TKey> FlippedDict = new Dictionary<TValue, TKey>();
-            foreach (var DictItem in OriginDict)
-            {
-                if (!FlippedDict.ContainsKey(DictItem.Value))
-                {
-                    FlippedDict.Add(DictItem.Value, DictItem.Key);
-                }
-            }
-            return FlippedDict;
-        }
-
-        public static Vector2 RotateAroundCenterOfScreen(Vector2 coordinates)
-        // Map rotation logic
-        {
-            int XOffsetInPixels = (int)(Globals.MapOffset.X * (double)Globals.SquareSize);
-            int YOffsetInPixels = (int)(Globals.MapOffset.Y * (double)Globals.SquareSize);
-            Vector2 MapCenter = new Vector2(
-                Globals.Resolution.X / 2 + XOffsetInPixels, 
-                Globals.Resolution.Y / 2 - YOffsetInPixels);
-
-            // Rotate around the center of the screen
-            coordinates.X -= MapCenter.X;
-            coordinates.Y -= MapCenter.Y;
-            double newXCoordinate = coordinates.X * Globals.CurrentCos - coordinates.Y * Globals.CurrentSin;
-            double newYCoordinate = coordinates.X * Globals.CurrentSin + coordinates.Y * Globals.CurrentCos;
-            coordinates.X = (int)newXCoordinate + MapCenter.X;
-            coordinates.Y = (int)newYCoordinate + MapCenter.Y;
-
-            // Apply map translation
-            coordinates.X -= XOffsetInPixels;
-            coordinates.Y += YOffsetInPixels;
-
-            return coordinates;
-        }
-
         public static Vector2 OffsetFromRadians(float radians)
         // Converts from radians to an offset
         {
@@ -158,11 +121,8 @@ namespace Generator
         {
             // Regular old variables
             Resolution = new Vector2(1800, 1000);
-            SquareSize = 64;
             Logging = true;
-            MapOffset = new Vector2(0, 0);
             Clock = 0;
-            MapRotation = 0.0;
             GridAlpha = 50;
             _grid = new GameObject[100, 100];
             Multithreaded = false;
