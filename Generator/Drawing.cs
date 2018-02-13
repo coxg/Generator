@@ -114,11 +114,11 @@ namespace Generator
             vertices[5].Position = vertices[2].Position;
 
             // Generate the texture coordinates
-            vertices[0].TextureCoordinate = new Vector2(0, 0);
-            vertices[1].TextureCoordinate = new Vector2(0, 1);
-            vertices[2].TextureCoordinate = new Vector2(1, 0);
+            vertices[0].TextureCoordinate = new Vector2(1, 1);
+            vertices[1].TextureCoordinate = new Vector2(1, 0);
+            vertices[2].TextureCoordinate = new Vector2(0, 1);
             vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
-            vertices[4].TextureCoordinate = new Vector2(1, 1);
+            vertices[4].TextureCoordinate = new Vector2(0, 0);
             vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
 
             BasicEffect effect = new BasicEffect(GameControl.graphics.GraphicsDevice)
@@ -153,11 +153,11 @@ namespace Generator
             vertices[5].Position = vertices[2].Position;
 
             // Generate the texture coordinates
-            vertices[0].TextureCoordinate = new Vector2(0, 0);
-            vertices[1].TextureCoordinate = new Vector2(0, repetitions);
-            vertices[2].TextureCoordinate = new Vector2(repetitions, 0);
+            vertices[0].TextureCoordinate = new Vector2(repetitions, repetitions);
+            vertices[1].TextureCoordinate = new Vector2(repetitions, 0);
+            vertices[2].TextureCoordinate = new Vector2(0, repetitions);
             vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
-            vertices[4].TextureCoordinate = new Vector2(repetitions, repetitions);
+            vertices[4].TextureCoordinate = new Vector2(0, 0);
             vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
 
             BasicEffect effect = new BasicEffect(GameControl.graphics.GraphicsDevice)
