@@ -12,9 +12,27 @@ namespace Generator
         public Vector3 Position { get; set; }
         public Vector3 Target { get; set; }
         public Vector3 Up { get; set; }
-        public float Rotation { get; set; }
+
+        // Rotation stuff
+        private float rotation;
+        public float Rotation {
+            get
+            {
+                return rotation;
+            }
+
+            set
+            {
+                Position = Vector3.Transform(
+                    Position - Target,
+                    Matrix.CreateFromAxisAngle(new Vector3(0, 0, 1), value)
+                ) + Target;
+                rotation = value;
+            }
+        }
 
         public Matrix View
+        // Get the look at vector
         {
             get
             {
@@ -23,6 +41,7 @@ namespace Generator
         }
 
         public Matrix Projection
+        // Field of view stuff
         {
             get
             {

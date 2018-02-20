@@ -98,17 +98,13 @@ namespace Generator
             // Map rotation
             if (Keyboard.GetState().IsKeyDown(Keys.Q))
             {
-                GameControl.camera.Position = new Vector3(
-                    GameControl.camera.Position.X - 1,
-                    GameControl.camera.Position.Y,
-                    GameControl.camera.Position.Z);
+                GameControl.camera.Rotation = .1f;
+                Globals.MapRotation += .1f;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.E))
             {
-                GameControl.camera.Position = new Vector3(
-                    GameControl.camera.Position.X + 1,
-                    GameControl.camera.Position.Y,
-                    GameControl.camera.Position.Z);
+                GameControl.camera.Rotation = -.1f;
+                Globals.MapRotation -= .1f;
             }
 
             // Zoom in/out
