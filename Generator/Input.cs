@@ -100,11 +100,17 @@ namespace Generator
             {
                 GameControl.camera.Rotation = .1f;
                 Globals.MapRotation += .1f;
+                Globals.Log("Map rotation: " + Globals.MapRotation);
+                Globals.Log("Sin: " + Globals.CurrentSin);
+                Globals.Log("Cos: " + Globals.CurrentCos);
             }
             if (Keyboard.GetState().IsKeyDown(Keys.E))
             {
                 GameControl.camera.Rotation = -.1f;
                 Globals.MapRotation -= .1f;
+                Globals.Log("Map rotation: " + Globals.MapRotation);
+                Globals.Log("Sin: " + Globals.CurrentSin);
+                Globals.Log("Cos: " + Globals.CurrentCos);
             }
 
             // Zoom in/out

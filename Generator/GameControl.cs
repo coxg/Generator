@@ -34,8 +34,8 @@ namespace Generator
             {
                 PreferredBackBufferHeight = (int)Globals.Resolution.Y,
                 PreferredBackBufferWidth = (int)Globals.Resolution.X,
+                IsFullScreen = false
             };
-            graphics.IsFullScreen = false;
             Content.RootDirectory = "Content";
         }
 
@@ -137,6 +137,7 @@ namespace Generator
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
             spriteBatch.Begin(
                 SpriteSortMode.BackToFront, 
