@@ -96,22 +96,26 @@ namespace Generator
         {
             // Generate the vertices
             VertexPositionTexture[] vertices = new VertexPositionTexture[6];
+            
             // Bottom left
             vertices[0].Position = new Vector3(
                 bottomLeft.X,
                 bottomLeft.Y - size.Y + 1,
                 bottomLeft.Z);
+            
             // Top left
             vertices[1].Position = new Vector3(
                 bottomLeft.X,
                 bottomLeft.Y + (float)Math.Sqrt(2) * size.Y / 2 - size.Y + 1,
                 bottomLeft.Z + (float)Math.Sqrt(2) * size.Z / 2);
+            
             // Bottom Right
             vertices[2].Position = new Vector3(
                 bottomLeft.X + size.X,
                 bottomLeft.Y - size.Y + 1,
                 bottomLeft.Z);
             vertices[3].Position = vertices[1].Position;
+            
             // Top right
             vertices[4].Position = new Vector3(
                 bottomLeft.X + size.X,
@@ -153,10 +157,18 @@ namespace Generator
         {
             // Generate the vertices
             VertexPositionTexture[] vertices = new VertexPositionTexture[6];
+
+            // Bottom left
             vertices[0].Position = new Vector3(bottomLeft.X, bottomLeft.Y, 0);
+
+            // Top left
             vertices[1].Position = new Vector3(bottomLeft.X, bottomLeft.Y + size.Y, 0);
+
+            // Bottom right
             vertices[2].Position = new Vector3(bottomLeft.X + size.X, bottomLeft.Y, 0);
             vertices[3].Position = vertices[1].Position;
+
+            // Top right
             vertices[4].Position = new Vector3(bottomLeft.X + size.X, bottomLeft.Y + size.Y, 0);
             vertices[5].Position = vertices[2].Position;
 
