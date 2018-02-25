@@ -77,9 +77,10 @@ namespace Generator
                 x: 1,
                 y: 3,
                 name: "Niels",
-                width: 1,
-                height: 1,
                 strength: 10,
+                perception: 10,
+                speed: 10,
+                stamina: 100,
                 standingSpriteFile: "Sprites/face",
                 weapon: new Weapon(
                     name: "Sword",
@@ -93,14 +94,14 @@ namespace Generator
             {
                 terrain1.Say("Check it out I do something weird");
                 terrain1.Say("Did you see how weird that was?!");
-                GameObject terrain3 = new GameObject(disposition: "Party", x: 10, y: 10, name: "big terrain", width: 5, height: 5);
+                GameObject terrain3 = new GameObject(disposition: "Party", x: 10, y: 10, name: "big terrain", width: 5, length: 5, height: 5);
                 terrain3.Activate = delegate ()
                 {
                     terrain3.Say("I don't do anything weird.");
                     terrain3.Say("...I'm just really fat.");
                 };
             };
-            terrain2 = new GameObject(disposition: "Party", x: 5, y: 9, name: "medium terrain", width: 2, height: 2);
+            terrain2 = new GameObject(disposition: "Party", x: 5, y: 9, name: "medium terrain", width: 2, length: 2, height: 2);
         }
 
         /// <summary>
@@ -123,9 +124,26 @@ namespace Generator
             // This should happen before anything else
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            Globals.Clock += 1;
 
             // Get input for character
             Input.GetInput(player);
+
+            // Update the GameObjects
+            foreach (KeyValuePair<string, GameObject> Object in Globals.ObjectDict)
+            {
+                Object.Value.Update();
+            }
+
+            // Log stuff
+            // TODO: Remove this once we have a better way to display it
+            if (Globals.Mod(Globals.Clock, 2 * Globals.RefreshRate) == 0)
+            {
+                Globals.Log(
+                    "\nHealth: " + player.Health.Current
+                    + "\nStamina: " + player.Stamina.Current
+                    + "\nElectricity: " + player.Electricity.Current);
+            }
 
             base.Update(gameTime);
         }
@@ -162,8 +180,8 @@ namespace Generator
             {
                 Drawing.DrawSprite(
                     Object.Value.StandingSprite,
-                    new Vector3(Object.Value.X, Object.Value.Y, 0),
-                    new Vector3(Object.Value.Width, Object.Value.Height, Object.Value.Height));
+                    new Vector3(Object.Value.Position.X, Object.Value.Position.Y, Object.Value.Position.Z),
+                    new Vector3(Object.Value.Dimensions.X, Object.Value.Dimensions.Y, Object.Value.Dimensions.Z));
             }
 
             spriteBatch.End();

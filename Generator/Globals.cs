@@ -21,6 +21,7 @@ namespace Generator
         public static int Clock { get; set; }
         public static int GridAlpha { get; set; }
         public static bool Multithreaded { get; set; }
+        public static int RefreshRate { get; set; }
 
         // For better controls
         public static bool ActivateButtonWasDown { get; set; }
@@ -125,6 +126,7 @@ namespace Generator
             GridAlpha = 50;
             _grid = new GameObject[100, 100];
             Multithreaded = false;
+            RefreshRate = 30;
 
             // For better control
             ActivateButtonWasDown = false;

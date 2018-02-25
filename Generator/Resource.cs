@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Graphics;
-
-namespace Generator
+﻿namespace Generator
 {
     public class Resource
     // Health, stamina, and capacity
@@ -27,8 +20,8 @@ namespace Generator
             }
         }
 
-        private int current;
-        public int Current
+        private float current;
+        public float Current
         // Current value. 0 < Current < Max
         {
             get { return current; }
@@ -78,7 +71,7 @@ namespace Generator
             }
         }
 
-        // How quickly this stat regenerates per turn
+        // How quickly this stat regenerates per second
         public int Regeneration { get; set; }
 
         // Constructor
@@ -93,6 +86,12 @@ namespace Generator
             Current = baseValue;
             Max = baseValue;
             Regeneration = regeneration;
+        }
+
+        // Each frame
+        public void Update()
+        {
+            Current += (float)Regeneration / Globals.RefreshRate;
         }
     }
 }

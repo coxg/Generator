@@ -19,16 +19,14 @@ namespace Generator
         public Texture2D DeadSprite { get; set; }
         public Texture2D Avatar { get; set; }
 
-        // Grid logic
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
+        // Location
+        public Vector3 Dimensions { get; set; }
+        public Vector3 Position { get; set; }
 
         // Resources
         public Resource Health { get; set; }
         public Resource Stamina { get; set; }
-        public Resource Capacity { get; set; }
+        public Resource Electricity { get; set; }
 
         // Primary Attributes
         public Attribute Strength { get; set; }
@@ -41,6 +39,7 @@ namespace Generator
         public int Level { get; set; }
         public int Experience { get; set; }
         public float Direction { get; set; }
+        public bool IsSprinting { get; set; }
 
         // Interaction
         public string Disposition { get; set; } // {"Party", "Neutral", "Enemy", "Terrain"}
@@ -60,7 +59,7 @@ namespace Generator
                 // Resources
                 Health.Max += value.Health - equippedWeapon.Health;
                 Stamina.Max += value.Stamina - equippedWeapon.Stamina;
-                Capacity.Max += value.Capacity - equippedWeapon.Capacity;
+                Electricity.Max += value.Capacity - equippedWeapon.Capacity;
 
                 // Attributes
                 Strength.CurrentValue += value.Strength - equippedWeapon.Strength;
@@ -83,7 +82,7 @@ namespace Generator
                 // Resources
                 Health.Max += value.Health - equippedOffHand.Health;
                 Stamina.Max += value.Stamina - equippedOffHand.Stamina;
-                Capacity.Max += value.Capacity - equippedOffHand.Capacity;
+                Electricity.Max += value.Capacity - equippedOffHand.Capacity;
 
                 // Attributes
                 Strength.CurrentValue += value.Strength - equippedOffHand.Strength;
@@ -106,7 +105,7 @@ namespace Generator
                 // Resources
                 Health.Max += value.Health - equippedArmor.Health;
                 Stamina.Max += value.Stamina - equippedArmor.Stamina;
-                Capacity.Max += value.Capacity - equippedArmor.Capacity;
+                Electricity.Max += value.Capacity - equippedArmor.Capacity;
 
                 // Attributes
                 Strength.CurrentValue += value.Strength - equippedArmor.Strength;
@@ -129,7 +128,7 @@ namespace Generator
                 // Resources
                 Health.Max += value.Health - equippedGenerator.Health;
                 Stamina.Max += value.Stamina - equippedGenerator.Stamina;
-                Capacity.Max += value.Capacity - equippedGenerator.Capacity;
+                Electricity.Max += value.Capacity - equippedGenerator.Capacity;
 
                 // Attributes
                 Strength.CurrentValue += value.Strength - equippedGenerator.Strength;
@@ -152,7 +151,7 @@ namespace Generator
                 // Resources
                 Health.Max += value.Health - equippedAccessory.Health;
                 Stamina.Max += value.Stamina - equippedAccessory.Stamina;
-                Capacity.Max += value.Capacity - equippedAccessory.Capacity;
+                Electricity.Max += value.Capacity - equippedAccessory.Capacity;
 
                 // Attributes
                 Strength.CurrentValue += value.Strength - equippedAccessory.Strength;
@@ -170,15 +169,17 @@ namespace Generator
             string avatarFile = null,
 
             // Grid logic
-            int width = 1,
-            int height = 1,
-            int x = 0,
-            int y = 0,
+            float width = 1,
+            float length = 1,
+            float height = 1,
+            float x = 0,
+            float y = 0,
+            float z = 0,
 
             // Resources
             int health = 100,
             int stamina = 0,
-            int capacity = 0,
+            int electricity = 0,
 
             // Primary Attributes
             int strength = 0,
@@ -218,16 +219,14 @@ namespace Generator
             }
 
             // Grid logic
-            Width = width;
-            Height = height;
-            X = x;
-            Y = y;
+            Dimensions = new Vector3(width, length, height);
+            Position = new Vector3(x, y, z);
             Spawn();
 
             // Resources
             Health = new Resource("Health", health);
-            Stamina = new Resource("Stamina", stamina);
-            Capacity = new Resource("Capacity", capacity);
+            Stamina = new Resource("Stamina", stamina, 10);
+            Electricity = new Resource("Electricity", electricity);
 
             // Primary Attributes
             Strength = new Attribute(strength);
@@ -240,6 +239,7 @@ namespace Generator
             Level = level;
             Experience = experience;
             Direction = direction;
+            IsSprinting = false;
 
             // Interaction
             Disposition = disposition; // {"Party", "Neutral", "Enemy", "Terrain"}
@@ -269,11 +269,17 @@ namespace Generator
         }
 
         public void Update()
-        /*
-        TODO: Use this for animated sprites.
-        */
+        // What to do on each frame
         {
-            
+            Health.Update();
+            Stamina.Update();
+            Electricity.Update();
+
+            // TODO: Turn sprinting into a channeled ability
+            if (IsSprinting)
+            {
+                Stamina.Current -= 1;
+            }
         }
 
         public override string ToString()
@@ -292,9 +298,9 @@ namespace Generator
         public void Spawn()
         // Populates grid with self. This DOES NOT add sprite.
         {
-            for (int EachX = X; EachX < X + Width; EachX++)
+            for (int EachX = (int)Math.Floor(Position.X); EachX <= Math.Ceiling(Position.X + Dimensions.X - 1); EachX++)
             {
-                for (int EachY = Y; EachY > Y - Height; EachY--)
+                for (int EachY = (int)Math.Floor(Position.Y); EachY <= Math.Ceiling(Position.Y + Dimensions.Y - 1); EachY++)
                 {
                     Globals.Grid.SetObject(EachX, EachY, this);
                 }
@@ -304,9 +310,9 @@ namespace Generator
         public void Despawn()
         // Removes self from grid. This DOES NOT remove sprite.
         {
-            for (int EachX = X; EachX < X + Width; EachX++)
+            for (int EachX = (int)Math.Floor(Position.X); EachX <= Math.Ceiling(Position.X + Dimensions.X - 1); EachX++)
             {
-                for (int EachY = Y; EachY > Y - Height; EachY--)
+                for (int EachY = (int)Math.Floor(Position.Y); EachY <= Math.Ceiling(Position.Y + Dimensions.Y - 1); EachY++)
                 {
                     Globals.Grid.SetObject(EachX, EachY, null);
                 }
@@ -360,36 +366,33 @@ namespace Generator
             // TODO: Play attack animation
 
             // Figure out which one you hit
-            // TODO: Different types of attacks
             GameObject target = GetTarget(range);
-            if (target == null)
-            {
-                Globals.Log(this + " attacks and misses.");
-            }
-            else
-            {
-                Globals.Log(this + " attacks, hitting " + target + ".");
-            }
 
             // Deal damage
             if (target != null)
             {
+                Globals.Log(this + " attacks, hitting " + target + ".");
                 DealDamage(target, EquippedWeapon.Damage + Strength.CurrentValue);
+            }
+            else
+            {
+                Globals.Log(this + " attacks and misses.");
             }
         }
 
-        public GameObject GetTarget(float range = 1.4f)
+        public GameObject GetTarget(float range = 1)
         // Gets whichever object is [distance] away in the current direction
         {
             Vector2 Offsets = Globals.OffsetFromRadians(Direction);
             GameObject TargettedObject = Globals.Grid.GetObject(
-                X + (int)Math.Round(range * Offsets.X), 
-                Y + (int)Math.Round(range * Offsets.Y));
+                (int)Math.Round(Position.X + (range + Dimensions.X / 2) * Offsets.X),
+                (int)Math.Round(Position.Y + (range + Dimensions.Y / 2) * Offsets.Y));
             return TargettedObject;
         }
 
         public GameObject GetTargetInRange(int range = 1)
         // Gets whichever object is [distance] away or closer in the current direction
+        // TODO: Fix this. I'm pretty sure it crashes the game.
         {
             GameObject ReturnObject = null;
             int TargetRange = 1;
@@ -403,15 +406,15 @@ namespace Generator
             return ReturnObject;
         }
 
-        public bool CanMoveTo(int x, int y)
+        public bool CanMoveTo(Vector3 position)
         // Sees if the GameObject can move to the specified location unimpeded.
         {
             // Loop through each x coordinate you're trying to move to
-            for (int MoveToX = x; MoveToX < x + Width; MoveToX++)
+            for (int MoveToX = (int)Math.Floor(position.X); MoveToX < (int)Math.Ceiling(position.X + Dimensions.X); MoveToX++)
             {
 
                 // Loop through each y coordinate you're trying to move to
-                for (int MoveToY = y; MoveToY > y - Height; MoveToY--)
+                for (int MoveToY = (int)Math.Floor(position.Y); MoveToY < (int)Math.Ceiling(position.Y + Dimensions.Y); MoveToY++)
                 {
 
                     // If location is not empty or self
@@ -423,38 +426,6 @@ namespace Generator
                             " is not empty or self: " + Globals.Grid.GetObject(MoveToX, MoveToY).ToString());
                         return false;
                     }
-
-                    // If any of the locations along the x-axis are blocked
-                    for (
-                        int MoveThroughX = Math.Min(X, MoveToX) + 1; 
-                        MoveThroughX < Math.Min(X, MoveToX); 
-                        MoveThroughX++)
-                    {
-                        // Position is not empty, passable, or friendly
-                        if (Globals.Grid.GetObject(MoveThroughX, Y) != null 
-                            && !Globals.Grid.GetObject(MoveThroughX, Y).Passable 
-                            && !(Globals.Grid.GetObject(MoveThroughX, Y).Disposition == Disposition))
-                        {
-                            Globals.Log("Location on x-axis blocked");
-                            return false;
-                        }
-                    }
-
-                    // If any of the locations along the y-axis are blocked
-                    for (
-                        int MoveThroughY = Math.Min(Y, MoveToY) + 1; 
-                        MoveThroughY < Math.Max(Y, MoveToY); 
-                        MoveThroughY++)
-                    {
-                        // Position is not empty, passable, or friendly
-                        if (Globals.Grid.GetObject(X, MoveThroughY) != null 
-                            && !Globals.Grid.GetObject(X, MoveThroughY).Passable 
-                            && !(Globals.Grid.GetObject(X, MoveThroughY).Disposition == Disposition))
-                        {
-                            Globals.Log("Location on y-axis blocked");
-                            return false;
-                        }
-                    }
                 }
             }
 
@@ -464,29 +435,42 @@ namespace Generator
 
         public void Move(
             float radians = 0,
-            float distance = 1.4f
+            float? speed = null
         )
         // Attempts to move the object in a direction (radians).
         {
-            // Convert from cardinal direction to X/Y offsets
+
+            // Get distance
+            if (speed == null)
+            {
+                speed = (float)Math.Sqrt(Speed.CurrentValue);
+            }
+            float distance = (float)speed / Globals.RefreshRate;
+
+            // Convert from radian direction to X/Y offsets
             Vector2 Offsets = Globals.OffsetFromRadians(radians);
-            int NewX = X + (int)Math.Round(distance * Offsets.X);
-            int NewY = Y + (int)Math.Round(distance * Offsets.Y);
+            Vector3 NewPosition = new Vector3(
+                Position.X + distance * Offsets.X,
+                Position.Y + distance * Offsets.Y,
+                Position.Z);
 
             // Set direction to the square you're aiming at
-            Direction = (float)Math.Atan2(NewX - X, NewY - Y);
+            Direction = (float)Math.Atan2(NewPosition.X - Position.X, NewPosition.Y - Position.Y);
 
             // See if you can move to the location
-            Globals.Log(Name + " currently at:      " + X.ToString() + ", " + Y.ToString());
-            Globals.Log(Name + " trying to move to: " + NewX + ", " + NewY);
-            if (CanMoveTo(NewX, NewY))
+            Globals.Log(Name + " currently at:      " + Position.X.ToString() 
+                + ", " + Position.Y.ToString());
+            Globals.Log(Name + " trying to move to: " + NewPosition.X + ", " + NewPosition.Y);
+            if (CanMoveTo(NewPosition))
             {
                 // Null out all previous locations
                 Despawn();
 
                 // Assing new attributes for object
-                X = (int)Globals.Mod(NewX, Globals.Grid.GetLength(0));
-                Y = (int)Globals.Mod(NewY, Globals.Grid.GetLength(1));
+                Position = new Vector3(
+                    Globals.Mod(NewPosition.X, Globals.Grid.GetLength(0)),
+                    Globals.Mod(NewPosition.Y, Globals.Grid.GetLength(1)),
+                    Position.Z);
 
                 // Assign all new locations
                 Spawn();
