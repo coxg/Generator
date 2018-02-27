@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace Generator
 {
@@ -39,11 +40,16 @@ namespace Generator
         public int Level { get; set; }
         public int Experience { get; set; }
         public float Direction { get; set; }
-        public bool IsSprinting { get; set; }
+
+        // Abilities
+        public List<Ability> Abilities { get; set; }
+        public Ability Ability1 { get; set; }
+        public Ability Ability2 { get; set; }
+        public Ability Ability3 { get; set; }
+        public Ability Ability4 { get; set; }
 
         // Interaction
-        public string Disposition { get; set; } // {"Party", "Neutral", "Enemy", "Terrain"}
-        public bool Passable { get; set; } // If true, passable to all objects. If false, passable to objects of same disposition.
+        public bool InParty { get; set; }
         public Action Activate { get; set; }
 
         // Weapon
@@ -194,9 +200,11 @@ namespace Generator
             int experience = 0,
             float direction = 0f,
 
+            // Abilities
+            List<Ability> abilities = null,
+
             // Interaction
-            string disposition = "Terrain", // {"Party", "Neutral", "Enemy", "Terrain"}
-            bool passable = false, // If true, passable to all objects. If false, passable to objects of same disposition.
+            bool inParty = false,
 
             // Equipment
             Weapon weapon = null,
@@ -239,18 +247,6 @@ namespace Generator
             Level = level;
             Experience = experience;
             Direction = direction;
-            IsSprinting = false;
-
-            // Interaction
-            Disposition = disposition; // {"Party", "Neutral", "Enemy", "Terrain"}
-            Passable = passable; // If true, passable to all objects. If false, passable to objects of same disposition.
-            Activate = delegate () // What happens when you try to talk to it
-            {
-                if (Name != null)
-                {
-                    Say("This is just a " + Name + ".");
-                }
-            };
 
             // Equipment
             equippedWeapon = weapon ?? new Weapon();
@@ -264,6 +260,93 @@ namespace Generator
             EquippedGenerator = equippedGenerator;
             EquippedAccessory = equippedAccessory;
 
+            // Abilities
+            if (abilities == null)
+            {
+                abilities = new List<Ability>
+                {
+                    new Ability(
+                        name: "Sprint",
+                        sourceObject: this,
+                        staminaCost: 1,
+                        isChanneled: true,
+                        start: delegate ()
+                        {
+                            Speed.CurrentValue *= 4;
+                        },
+                        stop: delegate ()
+                        {
+                            Speed.CurrentValue /= 4;
+                        }),
+                    new Ability(
+                        name: "Attack",
+                        sourceObject: this,
+                        staminaCost: EquippedWeapon.Weight + 10,
+                        animation: delegate ()
+                        {
+                            // TODO: This
+                        },
+                        start: delegate ()
+                        {
+
+                            // Figure out which one you hit
+                            GameObject target = GetTarget(EquippedWeapon.Range);
+
+                            // Deal damage
+                            if (target != null)
+                            {
+                                Globals.Log(this + " attacks, hitting " + target + ".");
+                                DealDamage(target, EquippedWeapon.Damage + Strength.CurrentValue);
+                            }
+                            else
+                            {
+                                Globals.Log(this + " attacks and misses.");
+                            }
+                        }
+                    ),
+                    new Ability(
+                        name: "Always Sprint",
+                        sourceObject: this,
+                        staminaCost: 1,
+                        isToggleable: true,
+                        start: delegate ()
+                        {
+                            Speed.CurrentValue *= 4;
+                        },
+                        stop: delegate ()
+                        {
+                            Speed.CurrentValue /= 4;
+                        }),
+                };
+                Abilities = abilities;
+                if (Abilities.Count >= 1)
+                {
+                    Ability1 = Abilities[0];
+                }
+                if (Abilities.Count >= 2)
+                {
+                    Ability2 = Abilities[1];
+                }
+                if (Abilities.Count >= 3)
+                {
+                    Ability3 = Abilities[2];
+                }
+                if (Abilities.Count >= 4)
+                {
+                    Ability4 = Abilities[3];
+                }
+            }
+
+            // Interaction
+            InParty = inParty;
+            Activate = delegate () // What happens when you try to talk to it
+            {
+                if (Name != null)
+                {
+                    Say("This is just a " + Name + ".");
+                }
+            };
+
             // Make yourself accessible
             Globals.ObjectDict[Name] = this;
         }
@@ -271,14 +354,15 @@ namespace Generator
         public void Update()
         // What to do on each frame
         {
+            // Update resources
             Health.Update();
             Stamina.Update();
             Electricity.Update();
 
-            // TODO: Turn sprinting into a channeled ability
-            if (IsSprinting)
+            // Use abilities
+            foreach (Ability ability in Abilities)
             {
-                Stamina.Current -= 1;
+                ability.Update();
             }
         }
 
@@ -356,27 +440,6 @@ namespace Generator
             {
                 Health.Current = 0;
                 Die();
-            }
-        }
-
-        public void Attack(int range = 1)
-        // Attack in a given direction
-        {
-
-            // TODO: Play attack animation
-
-            // Figure out which one you hit
-            GameObject target = GetTarget(range);
-
-            // Deal damage
-            if (target != null)
-            {
-                Globals.Log(this + " attacks, hitting " + target + ".");
-                DealDamage(target, EquippedWeapon.Damage + Strength.CurrentValue);
-            }
-            else
-            {
-                Globals.Log(this + " attacks and misses.");
             }
         }
 

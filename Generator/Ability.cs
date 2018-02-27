@@ -4,40 +4,235 @@ namespace Generator
 {
     public class Ability
     {
+        // Ability name
+        public string Name { get; set; }
+
+        // What's using the ability
+        public GameObject SourceObject { get; set; }
+
         // Resource costs
         public int HealthCost { get; set; }
         public int StaminaCost { get; set; }
         public int ElectricityCost { get; set; }
 
-        // If it's channeled... duh
-        public bool Channeled { get; set; }
+        // How it works
+        public bool IsChanneled { get; set; }
+        public bool IsToggleable { get; set; }
+        private bool IsActive { get; set; }
+        private bool WasPressed { get; set; }
+        private bool _isPressed { get; set; }
+        public bool IsPressed
+        {
+            get
+            {
+                return _isPressed;
+            }
+            set
+            {
+                WasPressed = _isPressed;
+                _isPressed = value;
+            }
+        }
 
-        // What's using the ability
-        public GameObject SourceObject { get; set; }
-
-        // TODO: I might need to make an animation class
-        public Action WeaponAnimation { get; set; }
-
-        // What actually happens when the ability is used
-        public Action Script { get; set; }
+        // What it does
+        public Action Start { get; set; }
+        public Action OnUpdate { get; set; }
+        public Action Stop { get; set; }
 
         // Constructor
         public Ability(
+
+            // Ability name
+            string name,
+
+            // What's using the ability
+            GameObject sourceObject,
+
+            // Resource costs
             int healthCost = 0,
             int staminaCost = 0,
             int electricityCost = 0,
-            bool channeled = false,
-            GameObject sourceObject = null,
-            Action weaponAnimation = null,
-            Action script = null)
+
+            // How it works
+            bool isChanneled = false,
+            bool isToggleable = false,
+
+            // Ability animation
+            Action animation = null,
+
+            // What it does
+            Action start = null,
+            Action onUpdate = null,
+            Action stop = null)
         {
+            // Ability name
+            Name = name;
+
+            // Resource costs
             HealthCost = healthCost;
             StaminaCost = staminaCost;
             ElectricityCost = electricityCost;
-            Channeled = channeled;
+
+            // How the ability works
+            IsChanneled = isChanneled;
+            IsToggleable = isToggleable;
+            IsActive = false;
+
+            // What's using the ability
             SourceObject = sourceObject;
-            WeaponAnimation = weaponAnimation;
-            Script = script;
+
+            // What it does
+            if (start == null)
+            {
+                start = delegate () { };
+            }
+            Start = start;
+            if (onUpdate == null)
+            {
+                onUpdate = delegate () { };
+            }
+            OnUpdate = onUpdate;
+            if (stop == null)
+            {
+                stop = delegate () { };
+            }
+            Stop = stop;
+        }
+
+        public override string ToString()
+        // Return name, useful for debugging.
+        {
+            return Name;
+        }
+
+        public bool CanUse()
+        // Can the SourceObject use the ability?
+        {
+            return SourceObject.Health.Current >= HealthCost
+                && SourceObject.Stamina.Current >= StaminaCost
+                && SourceObject.Electricity.Current >= ElectricityCost;
+        }
+
+        public void Use()
+        // This is what happens when the ability is used.
+        {
+            if (CanUse())
+            {
+                Globals.Log(SourceObject + " uses " + this);
+
+                // If toggle and on, turn off
+                if (IsToggleable && IsActive)
+                {
+                    IsActive = false;
+                }
+
+                // If you can use it
+                else if (IsChanneled || IsToggleable)
+                {
+                    IsActive = true;
+                }
+                else
+                {
+                    // Use resources
+                    SourceObject.Health.Current -= HealthCost;
+                    SourceObject.Stamina.Current -= StaminaCost;
+                    SourceObject.Electricity.Current -= ElectricityCost;
+
+                    // Perform the ability
+                    Start();
+                }
+            }
+            else
+            {
+                Globals.Log(SourceObject + " can't use " + this);
+            }
+
+        }
+
+        public void Update()
+        // This is what happens on each update.
+        {
+            // See if it was active
+            bool WasActive = IsActive;
+
+            // See if we are now active
+            bool IsNowActive = false;
+            
+            // Toggled abilities
+            if (IsToggleable)
+            {
+                // It was already active
+                if (WasActive && CanUse())
+                {
+                    IsNowActive = true;
+                }
+                
+                // Activating now
+                else if (!WasActive && !WasPressed && IsPressed && CanUse())
+                {
+                    IsNowActive = true;
+                }
+
+                // Turning off now
+                else if (WasActive && !WasPressed && IsPressed && CanUse())
+                {
+                    IsNowActive = false;
+                }
+            }
+
+            // Channeled abilities
+            else if (IsChanneled)
+            {
+                // It was already active
+                if (WasActive && IsPressed && CanUse())
+                {
+                    IsNowActive = true;
+                }
+
+                // Activating now
+                else if (!WasActive && !WasPressed && IsPressed && CanUse())
+                {
+                    IsNowActive = true;
+                }
+            }
+
+            // Activated abilities
+            else
+            {
+                if (!WasActive && !WasPressed && IsPressed && CanUse())
+                {
+                    IsNowActive = true;
+                }
+            }
+
+            // What happens when we start
+            if (!WasActive && IsNowActive)
+            {
+                Start();
+            }
+
+            // What happens when we stop
+            else if (WasActive && !IsNowActive)
+            {
+                Stop();
+            }
+
+            // What happens when we stay on
+            else if (WasActive && IsNowActive)
+            {
+                OnUpdate();
+            }
+
+            // Update variable
+            IsActive = IsNowActive;
+
+            // Use resources
+            if (IsActive)
+            {
+                SourceObject.Health.Current -= HealthCost;
+                SourceObject.Stamina.Current -= StaminaCost;
+                SourceObject.Electricity.Current -= ElectricityCost;
+            }
         }
     }
 }

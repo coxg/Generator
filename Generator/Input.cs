@@ -29,16 +29,6 @@ namespace Generator
                 MoveHorizontalOffset += 1;
             }
 
-            // See if we're sprinting
-            if (Keyboard.GetState().IsKeyDown(Keys.LeftShift) && player.Stamina.Current > 1)
-            {
-                player.IsSprinting = true;
-            }
-            else
-            {
-                player.IsSprinting = false;
-            }
-
             // Convert from direction offsets to radian direction
             if (MoveHorizontalOffset != 0 || MoveVerticalOffset != 0)
             {
@@ -51,17 +41,25 @@ namespace Generator
 
                 // Convert from radian direction to cardinal direction
                 float speed = (float)Math.Sqrt(player.Speed.CurrentValue);
-                if (player.IsSprinting)
-                {
-                    speed *= 2;
-                }
                 player.Move(RadianDirection, speed);
             }
 
-            // Attack
-            if (Keyboard.GetState().IsKeyDown(Keys.R))
+            // Abilities
+            if (player.Ability1 != null)
             {
-                player.Attack();
+                player.Ability1.IsPressed = Keyboard.GetState().IsKeyDown(Keys.D1);
+            }
+            if (player.Ability2 != null)
+            {
+                player.Ability2.IsPressed = Keyboard.GetState().IsKeyDown(Keys.D2);
+            }
+            if (player.Ability3 != null)
+            {
+                player.Ability3.IsPressed = Keyboard.GetState().IsKeyDown(Keys.D3);
+            }
+            if (player.Ability4 != null)
+            {
+                player.Ability4.IsPressed = Keyboard.GetState().IsKeyDown(Keys.D4);
             }
 
             // Pan the camera

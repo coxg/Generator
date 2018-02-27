@@ -11,10 +11,10 @@ namespace Generator
     // Weapons, equipped by GameObjects
     {
         // Stats
-        int Range { get; set; }
-        string Type { get; set; } // {"Bash", "Cut", "Shoot"}
-        float Spread { get; set; }
-        int Area { get; set; }
+        public int Range { get; set; }
+        public string Type { get; set; } // {"Bash", "Cut", "Shoot"}
+        public float Spread { get; set; }
+        public int Area { get; set; }
 
         // Constructor
         public Weapon(

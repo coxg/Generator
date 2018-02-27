@@ -73,7 +73,7 @@ namespace Generator
 
             // Create player
             player = new GameObject(
-                disposition: "Party",
+                inParty: true,
                 x: 1,
                 y: 3,
                 name: "Niels",
@@ -89,19 +89,19 @@ namespace Generator
                     spriteFile: "Sprites/sword"));
 
             // Create terrain
-            terrain1 = new GameObject(disposition: "Party", x: 5, y: 6, name: "angry terrain", width: 1, avatarFile: "Sprites/angry");
+            terrain1 = new GameObject(x: 5, y: 6, name: "angry terrain", width: 1, avatarFile: "Sprites/angry");
             terrain1.Activate = delegate ()
             {
                 terrain1.Say("Check it out I do something weird");
                 terrain1.Say("Did you see how weird that was?!");
-                GameObject terrain3 = new GameObject(disposition: "Party", x: 10, y: 10, name: "big terrain", width: 5, length: 5, height: 5);
+                GameObject terrain3 = new GameObject(x: 10, y: 10, name: "big terrain", width: 5, length: 5, height: 5);
                 terrain3.Activate = delegate ()
                 {
                     terrain3.Say("I don't do anything weird.");
                     terrain3.Say("...I'm just really fat.");
                 };
             };
-            terrain2 = new GameObject(disposition: "Party", x: 5, y: 9, name: "medium terrain", width: 2, length: 2, height: 2);
+            terrain2 = new GameObject(x: 5, y: 9, name: "medium terrain", width: 2, length: 2, height: 2);
         }
 
         /// <summary>
