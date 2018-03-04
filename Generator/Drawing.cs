@@ -103,6 +103,7 @@ namespace Generator
             vertices[4].TextureCoordinate = new Vector2(0, 0);
             vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
 
+            // Draw it
             BasicEffect effect = new BasicEffect(GameControl.graphics.GraphicsDevice)
             {
                 View = GameControl.camera.View,
@@ -110,13 +111,13 @@ namespace Generator
                 TextureEnabled = true,
                 Texture = sprite
             };
-
             foreach (var pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
                     PrimitiveType.TriangleList, vertices, 0, 2);
             }
+            effect.Dispose();
         }
 
         public static void DrawTile(
@@ -152,6 +153,7 @@ namespace Generator
             vertices[4].TextureCoordinate = new Vector2(0, 0);
             vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
 
+            // Draw it
             BasicEffect effect = new BasicEffect(GameControl.graphics.GraphicsDevice)
             {
                 View = GameControl.camera.View,
@@ -159,13 +161,13 @@ namespace Generator
                 TextureEnabled = true,
                 Texture = sprite
             };
-
             foreach (var pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
                     PrimitiveType.TriangleList, vertices, 0, 2);
             }
+            effect.Dispose();
         }
     }
 }
