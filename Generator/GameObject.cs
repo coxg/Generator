@@ -11,18 +11,34 @@ namespace Generator
     Used as a basis for terrain, playable characters, and enemies.
     */
     {
-
         // Sprites
         // TODO: Make sure this can be an AnimatedSprite
-        public Texture2D StandingSprite { get; set; }
-        public Texture2D MovingSprite { get; set; }
-        public Texture2D AimingSprite { get; set; }
-        public Texture2D DeadSprite { get; set; }
+        public Texture2D Sprite { get; set; }
         public Texture2D Avatar { get; set; }
 
         // Location
         public Vector3 Dimensions { get; set; }
-        public Vector3 Position { get; set; }
+        private Vector3 _position { get; set; }
+        public Vector3 Position {
+            get
+            {
+                return _position;
+            }
+            set
+            {
+                // Null out all previous locations
+                Despawn();
+
+                // Assing new attributes for object
+                _position = new Vector3(
+                    Globals.Mod(value.X, Globals.Grid.GetLength(0)),
+                    Globals.Mod(value.Y, Globals.Grid.GetLength(1)),
+                    value.Z);
+
+                // Assign all new locations
+                Spawn();
+            }
+        }
 
         // Resources
         public Resource Health { get; set; }
@@ -171,7 +187,7 @@ namespace Generator
         public GameObject(
 
             // Sprites
-            string standingSpriteFile = "Sprites/face",
+            string spriteFile = "Sprites/face",
             string avatarFile = null,
 
             // Grid logic
@@ -216,7 +232,7 @@ namespace Generator
             )
         {
             // Sprites
-            StandingSprite = Globals.Content.Load<Texture2D>(standingSpriteFile);
+            Sprite = Globals.Content.Load<Texture2D>(spriteFile);
             if (avatarFile != null)
             {
                 Avatar = Globals.Content.Load<Texture2D>(avatarFile);
@@ -265,11 +281,16 @@ namespace Generator
             {
                 abilities = new List<Ability>
                 {
+                    // TODO: We should create a dictionary for these in Globals
                     new Ability(
                         name: "Sprint",
-                        sourceObject: this,
                         staminaCost: 1,
                         isChanneled: true,
+                        animation: new Animation(
+                            updateFrames: new Frames(
+                                offsets: new List<Vector3> {
+                                    new Vector3(0, 0, .2f) },
+                                duration: .5f)),
                         start: delegate ()
                         {
                             Speed.CurrentValue *= 4;
@@ -280,12 +301,7 @@ namespace Generator
                         }),
                     new Ability(
                         name: "Attack",
-                        sourceObject: this,
                         staminaCost: EquippedWeapon.Weight + 10,
-                        animation: delegate ()
-                        {
-                            // TODO: This
-                        },
                         start: delegate ()
                         {
 
@@ -306,7 +322,6 @@ namespace Generator
                     ),
                     new Ability(
                         name: "Always Sprint",
-                        sourceObject: this,
                         staminaCost: 1,
                         isToggleable: true,
                         start: delegate ()
@@ -316,8 +331,27 @@ namespace Generator
                         stop: delegate ()
                         {
                             Speed.CurrentValue /= 4;
-                        }),
+                        },
+                        animation: new Animation(
+                            startFrames: new Frames(
+                                offsets: new List<Vector3> {
+                                    new Vector3(0, 0, 1) },
+                                duration: 1),
+                            updateFrames: new Frames(
+                                offsets: new List<Vector3> {
+                                    new Vector3(-.2f, 0, 0),
+                                    new Vector3(.2f, 0, 0)
+                                },
+                                duration: .5f),
+                            stopFrames: new Frames(
+                                offsets: new List<Vector3> {
+                                    new Vector3(0, 0, 1) },
+                                duration: 1.0f))),
                 };
+                foreach(Ability ability in abilities)
+                {
+                    ability.SourceObject = this;
+                }
                 Abilities = abilities;
                 if (Abilities.Count >= 1)
                 {
@@ -496,7 +530,7 @@ namespace Generator
             return true;
         }
 
-        public void Move(
+        public void MoveInDirection(
             float radians = 0,
             float? speed = null
         )
@@ -521,22 +555,9 @@ namespace Generator
             Direction = (float)Math.Atan2(NewPosition.X - Position.X, NewPosition.Y - Position.Y);
 
             // See if you can move to the location
-            Globals.Log(Name + " currently at:      " + Position.X.ToString() 
-                + ", " + Position.Y.ToString());
-            Globals.Log(Name + " trying to move to: " + NewPosition.X + ", " + NewPosition.Y);
             if (CanMoveTo(NewPosition))
             {
-                // Null out all previous locations
-                Despawn();
-
-                // Assing new attributes for object
-                Position = new Vector3(
-                    Globals.Mod(NewPosition.X, Globals.Grid.GetLength(0)),
-                    Globals.Mod(NewPosition.Y, Globals.Grid.GetLength(1)),
-                    Position.Z);
-
-                // Assign all new locations
-                Spawn();
+                Position = NewPosition;
             }
         }
 

@@ -24,7 +24,7 @@ namespace Generator
                 }
                 catch (Exception e)
                 {
-                    Globals.Log(e.ToString());
+                    Globals.Log(e);
                     Globals.Log("Hit an error. Please hit enter to continue.");
                     Console.ReadLine();
                     throw;

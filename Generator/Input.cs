@@ -36,12 +36,12 @@ namespace Generator
                 float RadianDirection = (float)Math.Atan2(MoveHorizontalOffset, MoveVerticalOffset);
 
                 // Apply offset from map rotation
-                RadianDirection -= (float)Globals.MapRotation;
+                RadianDirection -= GameControl.camera.Rotation;
                 RadianDirection = Globals.Mod((float)RadianDirection, 2f * (float)Math.PI);
 
                 // Convert from radian direction to cardinal direction
                 float speed = (float)Math.Sqrt(player.Speed.CurrentValue);
-                player.Move(RadianDirection, speed);
+                player.MoveInDirection(RadianDirection, speed);
             }
 
             // Abilities
@@ -112,18 +112,10 @@ namespace Generator
             if (Keyboard.GetState().IsKeyDown(Keys.Q))
             {
                 GameControl.camera.Rotation = .1f;
-                Globals.MapRotation += .1f;
-                Globals.Log("Map rotation: " + Globals.MapRotation);
-                Globals.Log("Sin: " + Globals.CurrentSin);
-                Globals.Log("Cos: " + Globals.CurrentCos);
             }
             if (Keyboard.GetState().IsKeyDown(Keys.E))
             {
                 GameControl.camera.Rotation = -.1f;
-                Globals.MapRotation -= .1f;
-                Globals.Log("Map rotation: " + Globals.MapRotation);
-                Globals.Log("Sin: " + Globals.CurrentSin);
-                Globals.Log("Cos: " + Globals.CurrentCos);
             }
 
             // Zoom in/out

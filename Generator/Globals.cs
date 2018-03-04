@@ -20,7 +20,6 @@ namespace Generator
         public static Vector2 MapOffset { get; set; }
         public static int Clock { get; set; }
         public static int GridAlpha { get; set; }
-        public static bool Multithreaded { get; set; }
         public static int RefreshRate { get; set; }
 
         // For better controls
@@ -34,22 +33,6 @@ namespace Generator
         public static Texture2D WhiteDot { get; set; }
         public static SpriteFont Font { get; set; }
         public static Texture2D Checker { get; set; }
-
-        // Map rotation values
-        private static double currentSin;
-        public static double CurrentSin { get { return currentSin; } }
-        private static double currentCos;
-        public static double CurrentCos { get { return currentCos; } }
-        private static double mapRotation;
-        public static double MapRotation {
-            get { return mapRotation; }
-            set
-            {
-                currentSin = Math.Sin(value);
-                currentCos = Math.Cos(value);
-                mapRotation = value;
-            }
-        }
 
         // Grid logic
         private static GameObject[,] _grid { get; set; }
@@ -85,15 +68,66 @@ namespace Generator
             return Remainder < 0 ? Remainder + Modulo : Remainder;
         }
 
+        public static int[] Range(int first, int? second=null)
+        // Because C# doesn't have a Range function. Seriously, C#?
+        {
+            // Get start and end values
+            int start;
+            int end;
+            if (second == null)
+            {
+                start = 0;
+                end = first;
+            }
+            else
+            {
+                start = first;
+                end = (int)second;
+            }
+
+            // Get the range
+            IEnumerable<int> enumerableRange = Enumerable.Range(start, end - start);
+            int[] range = enumerableRange.ToArray();
+            return range;
+        }
+
+        public static float[] FloatRange(int first, int? second = null)
+        // Like range, but returns float. Because I won't remember how to do this.
+        {
+            int[] range = Range(first, second);
+            float[] floatRange = Array.ConvertAll(range, rangeVal => (float)rangeVal);
+            return floatRange;
+        }
+
         public static Vector2 OffsetFromRadians(float radians)
         // Converts from radians to an offset
         {
             return new Vector2((float)Math.Sin(radians), (float)Math.Cos(radians));
         }
 
+        public static Vector3 PointRotatedAroundPoint(
+            Vector3 RotatedPoint, Vector3 AroundPoint, float Radians)
+        // Rotates a point around another point
+        {
+            // Translate point
+            RotatedPoint -= AroundPoint;
+
+            // Rotate point
+            float Sin = (float)Math.Sin(Radians);
+            float Cos = (float)Math.Cos(Radians);
+            RotatedPoint = new Vector3(
+                RotatedPoint.X * Cos - RotatedPoint.Y * Sin,
+                RotatedPoint.X * Sin + RotatedPoint.Y * Cos,
+                RotatedPoint.Z);
+
+            // Translate point back
+            RotatedPoint += AroundPoint;
+            return RotatedPoint;
+        }
+
         [System.Runtime.CompilerServices.MethodImpl(
          System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        public static void Log(string text = "")
+        public static void Log(object text = null)
         // Logs to console with debugging information
         {
             if (Logging)
@@ -104,7 +138,7 @@ namespace Generator
                     + CallingFrame.GetFileLineNumber().ToString() + ", in " 
                     + CallingFrame.GetMethod().ToString().Split(" ".ToCharArray())
                       [1].Split("(".ToCharArray()).First() + ": " 
-                    + text);
+                    + text.ToString());
             }
         }
 
@@ -125,7 +159,6 @@ namespace Generator
             Clock = 0;
             GridAlpha = 50;
             _grid = new GameObject[100, 100];
-            Multithreaded = false;
             RefreshRate = 30;
 
             // For better control

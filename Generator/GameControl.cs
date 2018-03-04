@@ -81,7 +81,7 @@ namespace Generator
                 perception: 10,
                 speed: 10,
                 stamina: 100,
-                standingSpriteFile: "Sprites/face",
+                spriteFile: "Sprites/face",
                 weapon: new Weapon(
                     name: "Sword",
                     type: "Cut",
@@ -179,7 +179,7 @@ namespace Generator
             foreach (KeyValuePair<string, GameObject> Object in Globals.ObjectDict)
             {
                 Drawing.DrawSprite(
-                    Object.Value.StandingSprite,
+                    Object.Value.Sprite,
                     new Vector3(Object.Value.Position.X, Object.Value.Position.Y, Object.Value.Position.Z),
                     new Vector3(Object.Value.Dimensions.X, Object.Value.Dimensions.Y, Object.Value.Dimensions.Z));
             }

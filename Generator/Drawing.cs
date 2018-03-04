@@ -59,30 +59,6 @@ namespace Generator
                 Color.White);
         }
 
-        public static Vector2 RotateAroundPoint(Vector2 coordinates)
-        // Map rotation logic
-        {
-            int XOffsetInPixels = (int)(Globals.MapOffset.X * (double)Globals.SquareSize);
-            int YOffsetInPixels = (int)(Globals.MapOffset.Y * (double)Globals.SquareSize);
-            Vector2 MapCenter = new Vector2(
-                Globals.Resolution.X / 2 + XOffsetInPixels,
-                Globals.Resolution.Y / 2 - YOffsetInPixels);
-
-            // Rotate around the center of the screen
-            coordinates.X -= MapCenter.X;
-            coordinates.Y -= MapCenter.Y;
-            double newXCoordinate = coordinates.X * Globals.CurrentCos - coordinates.Y * Globals.CurrentSin;
-            double newYCoordinate = coordinates.X * Globals.CurrentSin + coordinates.Y * Globals.CurrentCos;
-            coordinates.X = (int)newXCoordinate + MapCenter.X;
-            coordinates.Y = (int)newYCoordinate + MapCenter.Y;
-
-            // Apply map translation
-            coordinates.X -= XOffsetInPixels;
-            coordinates.Y += YOffsetInPixels;
-
-            return coordinates;
-        }
-
         public static void DrawSprite(
             Texture2D sprite,
             Vector3 bottomLeft,

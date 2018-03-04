@@ -8,7 +8,23 @@ namespace Generator
         public string Name { get; set; }
 
         // What's using the ability
-        public GameObject SourceObject { get; set; }
+        private GameObject _sourceObject { get; set; }
+        public GameObject SourceObject
+        {
+            get
+            {
+                return _sourceObject;
+            }
+
+            set
+            {
+                _sourceObject = value;
+                if (Animation != null)
+                {
+                    Animation.SourceObject = SourceObject;
+                }
+            }
+        }
 
         // Resource costs
         public int HealthCost { get; set; }
@@ -34,6 +50,28 @@ namespace Generator
             }
         }
 
+        // What it looks like
+        private Animation _animation { get; set; }
+        public Animation Animation {
+            get
+            {
+                return _animation;
+            }
+
+            set
+            {
+                _animation = value;
+                if (_animation != null)
+                {
+                    _animation.SourceObject = SourceObject;
+                    if (_animation.Name == "")
+                    {
+                        _animation.Name = Name;
+                    }
+                }
+            }
+        }
+
         // What it does
         public Action Start { get; set; }
         public Action OnUpdate { get; set; }
@@ -46,7 +84,7 @@ namespace Generator
             string name,
 
             // What's using the ability
-            GameObject sourceObject,
+            GameObject sourceObject = null,
 
             // Resource costs
             int healthCost = 0,
@@ -57,8 +95,8 @@ namespace Generator
             bool isChanneled = false,
             bool isToggleable = false,
 
-            // Ability animation
-            Action animation = null,
+            // What it looks like
+            Animation animation = null,
 
             // What it does
             Action start = null,
@@ -80,6 +118,9 @@ namespace Generator
 
             // What's using the ability
             SourceObject = sourceObject;
+
+            // What it looks like
+            Animation = animation;
 
             // What it does
             if (start == null)
@@ -157,7 +198,7 @@ namespace Generator
 
             // See if we are now active
             bool IsNowActive = false;
-            
+
             // Toggled abilities
             if (IsToggleable)
             {
@@ -174,7 +215,7 @@ namespace Generator
                 }
 
                 // Turning off now
-                else if (WasActive && !WasPressed && IsPressed && CanUse())
+                if (WasActive && !WasPressed && IsPressed && CanUse())
                 {
                     IsNowActive = false;
                 }
@@ -208,19 +249,33 @@ namespace Generator
             // What happens when we start
             if (!WasActive && IsNowActive)
             {
+                Globals.Log(SourceObject + " uses " + this);
                 Start();
+                if (Animation != null)
+                {
+                    Animation.Start();
+                }
             }
 
             // What happens when we stop
             else if (WasActive && !IsNowActive)
             {
+                Globals.Log(SourceObject + " stops using " + this);
                 Stop();
+                if (Animation != null)
+                {
+                    Animation.Stop();
+                }
             }
 
             // What happens when we stay on
             else if (WasActive && IsNowActive)
             {
                 OnUpdate();
+                if (Animation != null)
+                {
+                    Animation.OnUpdate();
+                }
             }
 
             // Update variable
@@ -232,6 +287,12 @@ namespace Generator
                 SourceObject.Health.Current -= HealthCost;
                 SourceObject.Stamina.Current -= StaminaCost;
                 SourceObject.Electricity.Current -= ElectricityCost;
+            }
+
+            // Play the animation
+            if (Animation != null)
+            {
+                Animation.Update();
             }
         }
     }
