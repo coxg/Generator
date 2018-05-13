@@ -66,6 +66,13 @@ namespace Generator
         // This should be used to draw characters.
         // These should be able to move, rotate, etc.
         {
+            // Find the angle of the sprite relative to the camera
+            Vector3 SpriteCenter = bottomLeft + size / 2;
+			float Angle = (float)Math.Atan2(
+                GameControl.camera.Target.Y - GameControl.camera.Position.Y,
+                SpriteCenter.X - GameControl.camera.Position.X);
+            Angle -= MathHelper.PiOver2;
+
             // Generate the vertices
             VertexPositionTexture[] vertices = new VertexPositionTexture[6];
             
@@ -74,26 +81,34 @@ namespace Generator
                 bottomLeft.X,
                 bottomLeft.Y,
                 bottomLeft.Z);
-            
+            vertices[0].Position = Globals.PointRotatedAroundPoint(
+                vertices[0].Position, SpriteCenter, Angle);
+
             // Top left
             vertices[1].Position = new Vector3(
                 bottomLeft.X,
-                bottomLeft.Y + (float)Math.Sqrt(2) * size.Y / 2,
-                bottomLeft.Z + (float)Math.Sqrt(2) * size.Z / 2);
-            
+                bottomLeft.Y,
+                bottomLeft.Z + size.Z);
+            vertices[1].Position = Globals.PointRotatedAroundPoint(
+                vertices[1].Position, SpriteCenter, Angle);
+            vertices[3].Position = vertices[1].Position;
+
             // Bottom Right
             vertices[2].Position = new Vector3(
                 bottomLeft.X + size.X,
                 bottomLeft.Y,
                 bottomLeft.Z);
-            vertices[3].Position = vertices[1].Position;
-            
+            vertices[2].Position = Globals.PointRotatedAroundPoint(
+                vertices[2].Position, SpriteCenter, Angle);
+            vertices[5].Position = vertices[2].Position;
+
             // Top right
             vertices[4].Position = new Vector3(
                 bottomLeft.X + size.X,
-                bottomLeft.Y + (float)Math.Sqrt(2) * size.Y / 2,
-                bottomLeft.Z + (float)Math.Sqrt(2) * size.Z / 2);
-            vertices[5].Position = vertices[2].Position;
+                bottomLeft.Y,
+                bottomLeft.Z + size.Z);
+            vertices[4].Position = Globals.PointRotatedAroundPoint(
+                vertices[4].Position, SpriteCenter, Angle);
 
             // Generate the texture coordinates
             vertices[0].TextureCoordinate = new Vector2(1, 1);
