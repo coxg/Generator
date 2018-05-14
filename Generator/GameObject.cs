@@ -65,7 +65,7 @@ namespace Generator
         public Ability Ability4 { get; set; }
 
         // Interaction
-        public bool InParty { get; set; }
+        public int PartyNumber { get; set; }
         public Action Activate { get; set; }
 
         // Weapon
@@ -220,7 +220,7 @@ namespace Generator
             List<Ability> abilities = null,
 
             // Interaction
-            bool inParty = false,
+            int partyNumber = -1,
 
             // Equipment
             Weapon weapon = null,
@@ -372,7 +372,7 @@ namespace Generator
             }
 
             // Interaction
-            InParty = inParty;
+            PartyNumber = partyNumber;
             Activate = delegate () // What happens when you try to talk to it
             {
                 if (Name != null)

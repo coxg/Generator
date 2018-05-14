@@ -59,6 +59,45 @@ namespace Generator
                 Color.White);
         }
 
+        public static void DrawResource(SpriteBatch spriteBatch, Resource resource, int partyNumber)
+        // Draw a single resource bar
+        {
+            // Figure out the resource specific information
+            int margin = 16;
+            int barHeight = 20;
+            Vector3 barColor = new Vector3(0, 0, 0);
+            int height = margin + partyNumber * 3 * (margin + barHeight);
+            if (resource.Name == "Health")
+            {
+                barColor = new Vector3(255, 0, 0);
+            }
+            else if (resource.Name == "Stamina")
+            {
+                barColor = new Vector3(0, 255, 0);
+                height += margin + barHeight;
+            }
+            else if (resource.Name == "Electricity")
+            {
+                barColor = new Vector3(0, 0, 255);
+                height += 2 * (margin + barHeight);
+            }
+
+            // Draw the bar
+            spriteBatch.Draw(
+                Globals.WhiteDot,
+                new Rectangle(
+                    margin,
+                    height,
+                    (int)(256 * resource.Current / resource.Max),
+                    barHeight),
+                null,
+                Color.FromNonPremultiplied((int)barColor.X, (int)barColor.Y, (int)barColor.Z, 255),
+                0f,
+                new Vector2(0, 0),
+                SpriteEffects.None,
+                .05f);
+        }
+
         public static void DrawSprite(
             Texture2D sprite,
             Vector3 bottomLeft,

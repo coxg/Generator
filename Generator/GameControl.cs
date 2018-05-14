@@ -73,7 +73,7 @@ namespace Generator
 
             // Create player
             player = new GameObject(
-                inParty: true,
+                partyNumber: 0, // TODO: This shouldn't be hard coded
                 x: 1,
                 y: 3,
                 name: "Niels",
@@ -182,6 +182,20 @@ namespace Generator
                     Object.Value.Sprite,
                     new Vector3(Object.Value.Position.X, Object.Value.Position.Y, Object.Value.Position.Z),
                     new Vector3(Object.Value.Dimensions.X, Object.Value.Dimensions.Y, Object.Value.Dimensions.Z));
+
+                // Draw resource bars if they're in the party
+                if (Object.Value.PartyNumber >= 0)
+                {
+                    Drawing.DrawResource(spriteBatch, Object.Value.Health, Object.Value.PartyNumber);
+                    if (Object.Value.Stamina.Max > 0)
+                    {
+                        Drawing.DrawResource(spriteBatch, Object.Value.Stamina, Object.Value.PartyNumber);
+                    }
+                    if (Object.Value.Electricity.Max > 0)
+                    {
+                        Drawing.DrawResource(spriteBatch, Object.Value.Electricity, Object.Value.PartyNumber);
+                    }
+                }
             }
 
             spriteBatch.End();

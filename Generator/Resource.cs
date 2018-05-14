@@ -3,7 +3,7 @@
     public class Resource
     // Health, stamina, and capacity
     {
-        // Only for the sake of changing health floor to 1
+        // One of "Health", "Stamina", "Electricity"
         public string Name { get; set; }
 
         private int baseValue;
