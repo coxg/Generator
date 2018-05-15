@@ -130,9 +130,14 @@ namespace Generator
             Input.GetInput(player);
 
             // Update the GameObjects
+            Globals.DeathList = new List<string>();
             foreach (KeyValuePair<string, GameObject> Object in Globals.ObjectDict)
             {
                 Object.Value.Update();
+            }
+            foreach (string Name in Globals.DeathList)
+            {
+                Globals.ObjectDict.Remove(Name);
             }
 
             // Log stuff

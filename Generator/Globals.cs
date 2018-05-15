@@ -29,6 +29,9 @@ namespace Generator
         public static Queue<string> DisplayTextQueue { get; set; }
         public static Queue<GameObject> TalkingObjectQueue { get; set; }
 
+        // For making characters despawm
+        public static List<string> DeathList = new List<string>();
+
         // Loading assets
         public static Texture2D WhiteDot { get; set; }
         public static SpriteFont Font { get; set; }
