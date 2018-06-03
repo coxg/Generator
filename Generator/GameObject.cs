@@ -286,6 +286,7 @@ namespace Generator
                         name: "Sprint",
                         staminaCost: 1,
                         isChanneled: true,
+                        additionalRequirements: Globals.IsMoving,
                         animation: new Animation(
                             updateFrames: new Frames(
                                 offsets: new List<Vector3> {

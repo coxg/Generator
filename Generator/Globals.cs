@@ -179,5 +179,8 @@ namespace Generator
             GeneratorDict = new Dictionary<string, Generation>();
             AccessoryDict = new Dictionary<string, Accessory>();
         }
+
+        //pls work
+        public static bool IsMoving { get; set; }
     }
 }

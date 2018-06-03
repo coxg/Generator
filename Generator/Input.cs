@@ -42,6 +42,13 @@ namespace Generator
                 // Convert from radian direction to cardinal direction
                 float speed = (float)Math.Sqrt(player.Speed.CurrentValue);
                 player.MoveInDirection(RadianDirection, speed);
+                Globals.IsMoving = true;
+                Globals.Log("Globals.isMoving: " + Globals.IsMoving);
+            }
+
+            else
+            {
+                Globals.IsMoving = false;
             }
 
             // Abilities

@@ -4,6 +4,8 @@ namespace Generator
 {
     public class Ability
     {
+        public bool AdditionalRequirements { get; set; }
+
         // Ability name
         public string Name { get; set; }
 
@@ -77,6 +79,7 @@ namespace Generator
         public Action OnUpdate { get; set; }
         public Action Stop { get; set; }
 
+
         // Constructor
         public Ability(
 
@@ -94,6 +97,7 @@ namespace Generator
             // How it works
             bool isChanneled = false,
             bool isToggleable = false,
+            bool additionalRequirements = true,
 
             // What it looks like
             Animation animation = null,
@@ -115,6 +119,7 @@ namespace Generator
             IsChanneled = isChanneled;
             IsToggleable = isToggleable;
             IsActive = false;
+            AdditionalRequirements = additionalRequirements;
 
             // What's using the ability
             SourceObject = sourceObject;
@@ -151,7 +156,8 @@ namespace Generator
         {
             return SourceObject.Health.Current >= HealthCost
                 && SourceObject.Stamina.Current >= StaminaCost
-                && SourceObject.Electricity.Current >= ElectricityCost;
+                && SourceObject.Electricity.Current >= ElectricityCost
+                && AdditionalRequirements;
         }
 
         public void Use()
@@ -159,7 +165,7 @@ namespace Generator
         {
             if (CanUse())
             {
-                Globals.Log(SourceObject + " uses " + this);
+                Globals.Log(SourceObject + " can use " + this);
 
                 // If toggle and on, turn off
                 if (IsToggleable && IsActive)
