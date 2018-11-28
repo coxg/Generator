@@ -3,17 +3,10 @@
 namespace Generator
 {
     public class Weapon : Equipment
-    // Weapons, equipped by GameObjects
+        // Weapons, equipped by GameObjects
     {
-        // Stats
-        public int Range { get; set; }
-        public string Type { get; set; } // {"Bash", "Cut", "Shoot"}
-        public float Spread { get; set; }
-        public int Area { get; set; }
-
         // Constructor
         public Weapon(
-
             // Sprite
             string spriteFile = "Sprites/black_dot",
 
@@ -36,7 +29,7 @@ namespace Generator
             int strength = 0,
             int speed = 0,
             int perception = 0
-            )
+        )
         {
             // Sprite
             Sprite = Globals.Content.Load<Texture2D>(spriteFile);
@@ -64,5 +57,11 @@ namespace Generator
             // Populate relevant dictionary
             Globals.WeaponsDict[name] = this;
         }
+
+        // Stats
+        public int Range { get; set; }
+        public string Type { get; set; } // {"Bash", "Cut", "Shoot"}
+        public float Spread { get; set; }
+        public int Area { get; set; }
     }
 }

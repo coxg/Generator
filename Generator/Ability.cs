@@ -4,82 +4,8 @@ namespace Generator
 {
     public class Ability
     {
-        // Ability name
-        public string Name { get; set; }
-
-        // What's using the ability
-        private GameObject _sourceObject { get; set; }
-        public GameObject SourceObject
-        {
-            get
-            {
-                return _sourceObject;
-            }
-
-            set
-            {
-                _sourceObject = value;
-                if (Animation != null)
-                {
-                    Animation.SourceObject = SourceObject;
-                }
-            }
-        }
-
-        // Resource costs
-        public int HealthCost { get; set; }
-        public int StaminaCost { get; set; }
-        public int ElectricityCost { get; set; }
-
-        // How it works
-        public bool IsChanneled { get; set; }
-        public bool IsToggleable { get; set; }
-        private bool IsActive { get; set; }
-        private bool WasPressed { get; set; }
-        private bool _isPressed { get; set; }
-        public bool IsPressed
-        {
-            get
-            {
-                return _isPressed;
-            }
-            set
-            {
-                WasPressed = _isPressed;
-                _isPressed = value;
-            }
-        }
-
-        // What it looks like
-        private Animation _animation { get; set; }
-        public Animation Animation {
-            get
-            {
-                return _animation;
-            }
-
-            set
-            {
-                _animation = value;
-                if (_animation != null)
-                {
-                    _animation.SourceObject = SourceObject;
-                    if (_animation.Name == "")
-                    {
-                        _animation.Name = Name;
-                    }
-                }
-            }
-        }
-
-        // What it does
-        public Action Start { get; set; }
-        public Action OnUpdate { get; set; }
-        public Action Stop { get; set; }
-
         // Constructor
         public Ability(
-
             // Ability name
             string name,
 
@@ -123,39 +49,92 @@ namespace Generator
             Animation = animation;
 
             // What it does
-            if (start == null)
-            {
-                start = delegate () { };
-            }
+            if (start == null) start = delegate { };
             Start = start;
-            if (onUpdate == null)
-            {
-                onUpdate = delegate () { };
-            }
+            if (onUpdate == null) onUpdate = delegate { };
             OnUpdate = onUpdate;
-            if (stop == null)
-            {
-                stop = delegate () { };
-            }
+            if (stop == null) stop = delegate { };
             Stop = stop;
         }
 
+        // Ability name
+        public string Name { get; set; }
+
+        // What's using the ability
+        private GameObject _sourceObject { get; set; }
+
+        public GameObject SourceObject
+        {
+            get => _sourceObject;
+
+            set
+            {
+                _sourceObject = value;
+                if (Animation != null) Animation.SourceObject = SourceObject;
+            }
+        }
+
+        // Resource costs
+        public int HealthCost { get; set; }
+        public int StaminaCost { get; set; }
+        public int ElectricityCost { get; set; }
+
+        // How it works
+        public bool IsChanneled { get; set; }
+        public bool IsToggleable { get; set; }
+        private bool IsActive { get; set; }
+        private bool WasPressed { get; set; }
+        private bool _isPressed { get; set; }
+
+        public bool IsPressed
+        {
+            get => _isPressed;
+            set
+            {
+                WasPressed = _isPressed;
+                _isPressed = value;
+            }
+        }
+
+        // What it looks like
+        private Animation _animation { get; set; }
+
+        public Animation Animation
+        {
+            get => _animation;
+
+            set
+            {
+                _animation = value;
+                if (_animation != null)
+                {
+                    _animation.SourceObject = SourceObject;
+                    if (_animation.Name == "") _animation.Name = Name;
+                }
+            }
+        }
+
+        // What it does
+        public Action Start { get; set; }
+        public Action OnUpdate { get; set; }
+        public Action Stop { get; set; }
+
         public override string ToString()
-        // Return name, useful for debugging.
+            // Return name, useful for debugging.
         {
             return Name;
         }
 
         public bool CanUse()
-        // Can the SourceObject use the ability?
+            // Can the SourceObject use the ability?
         {
             return SourceObject.Health.Current >= HealthCost
-                && SourceObject.Stamina.Current >= StaminaCost
-                && SourceObject.Electricity.Current >= ElectricityCost;
+                   && SourceObject.Stamina.Current >= StaminaCost
+                   && SourceObject.Electricity.Current >= ElectricityCost;
         }
 
         public void Use()
-        // This is what happens when the ability is used.
+            // This is what happens when the ability is used.
         {
             if (CanUse())
             {
@@ -187,38 +166,29 @@ namespace Generator
             {
                 Globals.Log(SourceObject + " can't use " + this);
             }
-
         }
 
         public void Update()
-        // This is what happens on each update.
+            // This is what happens on each update.
         {
             // See if it was active
-            bool WasActive = IsActive;
+            var WasActive = IsActive;
 
             // See if we are now active
-            bool IsNowActive = false;
+            var IsNowActive = false;
 
             // Toggled abilities
             if (IsToggleable)
             {
                 // It was already active
                 if (WasActive && CanUse())
-                {
                     IsNowActive = true;
-                }
-                
+
                 // Activating now
-                else if (!WasActive && !WasPressed && IsPressed && CanUse())
-                {
-                    IsNowActive = true;
-                }
+                else if (!WasActive && !WasPressed && IsPressed && CanUse()) IsNowActive = true;
 
                 // Turning off now
-                if (WasActive && !WasPressed && IsPressed && CanUse())
-                {
-                    IsNowActive = false;
-                }
+                if (WasActive && !WasPressed && IsPressed && CanUse()) IsNowActive = false;
             }
 
             // Channeled abilities
@@ -226,24 +196,16 @@ namespace Generator
             {
                 // It was already active
                 if (WasActive && IsPressed && CanUse())
-                {
                     IsNowActive = true;
-                }
 
                 // Activating now
-                else if (!WasActive && !WasPressed && IsPressed && CanUse())
-                {
-                    IsNowActive = true;
-                }
+                else if (!WasActive && !WasPressed && IsPressed && CanUse()) IsNowActive = true;
             }
 
             // Activated abilities
             else
             {
-                if (!WasActive && !WasPressed && IsPressed && CanUse())
-                {
-                    IsNowActive = true;
-                }
+                if (!WasActive && !WasPressed && IsPressed && CanUse()) IsNowActive = true;
             }
 
             // What happens when we start
@@ -251,10 +213,7 @@ namespace Generator
             {
                 Globals.Log(SourceObject + " uses " + this);
                 Start();
-                if (Animation != null)
-                {
-                    Animation.Start();
-                }
+                if (Animation != null) Animation.Start();
             }
 
             // What happens when we stop
@@ -262,20 +221,14 @@ namespace Generator
             {
                 Globals.Log(SourceObject + " stops using " + this);
                 Stop();
-                if (Animation != null)
-                {
-                    Animation.Stop();
-                }
+                if (Animation != null) Animation.Stop();
             }
 
             // What happens when we stay on
             else if (WasActive && IsNowActive)
             {
                 OnUpdate();
-                if (Animation != null)
-                {
-                    Animation.OnUpdate();
-                }
+                if (Animation != null) Animation.OnUpdate();
             }
 
             // Update variable
@@ -290,10 +243,7 @@ namespace Generator
             }
 
             // Play the animation
-            if (Animation != null)
-            {
-                Animation.Update();
-            }
+            if (Animation != null) Animation.Update();
         }
     }
 }

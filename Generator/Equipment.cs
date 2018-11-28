@@ -3,30 +3,10 @@
 namespace Generator
 {
     public class Equipment
-    // Weapons, equipped by GameObjects
+        // Weapons, equipped by GameObjects
     {
-        // Sprite
-        public Texture2D Sprite { get; set; }
-
-        // Stats
-        public string Name { get; set; }
-        public int Damage { get; set; }
-        public int Defense { get; set; }
-        public int Weight { get; set; }
-
-        // Resources
-        public int Health { get; set; }
-        public int Stamina { get; set; }
-        public int Capacity { get; set; }
-
-        // Primary Attributes
-        public int Strength { get; set; }
-        public int Speed { get; set; }
-        public int Perception { get; set; }
-
         // Constructor
         public Equipment(
-
             // Sprite
             string spriteFile = "Sprites/black_dot",
 
@@ -46,7 +26,7 @@ namespace Generator
             int intellect = 0,
             int speed = 0,
             int perception = 0
-            )
+        )
         {
             // Sprite
             Sprite = Globals.Content.Load<Texture2D>(spriteFile);
@@ -67,5 +47,24 @@ namespace Generator
             Speed = speed;
             Perception = perception;
         }
+
+        // Sprite
+        public Texture2D Sprite { get; set; }
+
+        // Stats
+        public string Name { get; set; }
+        public int Damage { get; set; }
+        public int Defense { get; set; }
+        public int Weight { get; set; }
+
+        // Resources
+        public int Health { get; set; }
+        public int Stamina { get; set; }
+        public int Capacity { get; set; }
+
+        // Primary Attributes
+        public int Strength { get; set; }
+        public int Speed { get; set; }
+        public int Perception { get; set; }
     }
 }

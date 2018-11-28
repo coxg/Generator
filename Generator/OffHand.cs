@@ -3,12 +3,10 @@
 namespace Generator
 {
     public class OffHand : Equipment
-    // Weapons, equipped by GameObjects
+        // Weapons, equipped by GameObjects
     {
-
         // Constructor
         public OffHand(
-
             // Sprite
             string spriteFile = "Sprites/black_dot",
 
@@ -27,7 +25,7 @@ namespace Generator
             int strength = 0,
             int speed = 0,
             int perception = 0
-            )
+        )
         {
             // Sprite
             Sprite = Globals.Content.Load<Texture2D>(spriteFile);

@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 
 namespace Generator
 {
     public class Armor : Equipment
-    // Weapons, equipped by GameObjects
+        // Weapons, equipped by GameObjects
     {
-
         // Constructor
         public Armor(
-
             // Sprite
             string spriteFile = "Sprites/black_dot",
 
@@ -32,7 +25,7 @@ namespace Generator
             int strength = 0,
             int speed = 0,
             int perception = 0
-            )
+        )
         {
             // Sprite
             Sprite = Globals.Content.Load<Texture2D>(spriteFile);

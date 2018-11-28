@@ -1,49 +1,47 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
 
 namespace Generator
 {
-
     /// <summary>
-    /// This is the main type for your game.
+    ///     This is the main type for your game.
     /// </summary>
     public class GameControl : Game
     {
         // Generics
         public static GraphicsDeviceManager graphics;
-        public SpriteBatch spriteBatch;
-
-        // Player
-        private GameObject player;
-        private GameObject terrain1;
-        private GameObject terrain2;
 
         // For drawing... stuff
         public static Camera camera;
 
+        // Player
+        private GameObject player;
+        public SpriteBatch spriteBatch;
+        private GameObject terrain1;
+        private GameObject terrain2;
+
         public GameControl()
         {
-
             // Populate global variables
             Globals.Populate();
 
             // Setup stuff
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferHeight = (int)Globals.Resolution.Y,
-                PreferredBackBufferWidth = (int)Globals.Resolution.X,
+                PreferredBackBufferHeight = (int) Globals.Resolution.Y,
+                PreferredBackBufferWidth = (int) Globals.Resolution.X,
                 IsFullScreen = false
             };
             Content.RootDirectory = "Content";
         }
 
         /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
+        ///     Allows the game to perform any initialization it needs to before starting to run.
+        ///     This is where it can query for any required services and load any non-graphic
+        ///     related content.  Calling base.Initialize will enumerate through any components
+        ///     and initialize them as well.
         /// </summary>
         protected override void Initialize()
         {
@@ -54,8 +52,8 @@ namespace Generator
         }
 
         /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
+        ///     LoadContent will be called once per game and is the place to load
+        ///     all of your content.
         /// </summary>
         protected override void LoadContent()
         {
@@ -90,12 +88,12 @@ namespace Generator
 
             // Create terrain
             terrain1 = new GameObject(x: 5, y: 6, name: "angry terrain", width: 1, avatarFile: "Sprites/angry");
-            terrain1.Activate = delegate ()
+            terrain1.Activate = delegate
             {
                 terrain1.Say("Check it out I do something weird");
                 terrain1.Say("Did you see how weird that was?!");
-                GameObject terrain3 = new GameObject(x: 10, y: 10, name: "big terrain", width: 5, length: 5, height: 5);
-                terrain3.Activate = delegate ()
+                var terrain3 = new GameObject(x: 10, y: 10, name: "big terrain", width: 5, length: 5, height: 5);
+                terrain3.Activate = delegate
                 {
                     terrain3.Say("I don't do anything weird.");
                     terrain3.Say("...I'm just really fat.");
@@ -105,8 +103,8 @@ namespace Generator
         }
 
         /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
+        ///     UnloadContent will be called once per game and is the place to unload
+        ///     game-specific content.
         /// </summary>
         protected override void UnloadContent()
         {
@@ -115,14 +113,15 @@ namespace Generator
         }
 
         /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
+        ///     Allows the game to run logic such as updating the world,
+        ///     checking for collisions, gathering input, and playing audio.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
             // This should happen before anything else
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             Globals.Clock += 1;
 
@@ -131,30 +130,14 @@ namespace Generator
 
             // Update the GameObjects
             Globals.DeathList = new List<string>();
-            foreach (KeyValuePair<string, GameObject> Object in Globals.ObjectDict)
-            {
-                Object.Value.Update();
-            }
-            foreach (string Name in Globals.DeathList)
-            {
-                Globals.ObjectDict.Remove(Name);
-            }
-
-            // Log stuff
-            // TODO: Remove this once we have a better way to display it
-            if (Globals.Mod(Globals.Clock, 2 * Globals.RefreshRate) == 0)
-            {
-                Globals.Log(
-                    "\nHealth: " + player.Health.Current
-                    + "\nStamina: " + player.Stamina.Current
-                    + "\nElectricity: " + player.Electricity.Current);
-            }
+            foreach (var Object in Globals.ObjectDict) Object.Value.Update();
+            foreach (var Name in Globals.DeathList) Globals.ObjectDict.Remove(Name);
 
             base.Update(gameTime);
         }
 
         /// <summary>
-        /// This is called when the game should draw itself.
+        ///     This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
@@ -163,15 +146,12 @@ namespace Generator
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
             spriteBatch.Begin(
-                SpriteSortMode.BackToFront, 
-                null, 
-                samplerState: SamplerState.LinearWrap);
+                SpriteSortMode.BackToFront,
+                null,
+                SamplerState.LinearWrap);
 
             // Draw text box
-            if (Globals.DisplayTextQueue.Count != 0)
-            {
-                Drawing.DrawTextBox(spriteBatch);
-            }
+            if (Globals.DisplayTextQueue.Count != 0) Drawing.DrawTextBox(spriteBatch);
 
             // Draw the grid
             Drawing.DrawTile(
@@ -181,7 +161,7 @@ namespace Generator
                 Globals.Grid.GetLength(0));
 
             // Draw the GameObjects
-            foreach (KeyValuePair<string, GameObject> Object in Globals.ObjectDict)
+            foreach (var Object in Globals.ObjectDict)
             {
                 Drawing.DrawSprite(
                     Object.Value.Sprite,
@@ -193,13 +173,9 @@ namespace Generator
                 {
                     Drawing.DrawResource(spriteBatch, Object.Value.Health, Object.Value.PartyNumber);
                     if (Object.Value.Stamina.Max > 0)
-                    {
                         Drawing.DrawResource(spriteBatch, Object.Value.Stamina, Object.Value.PartyNumber);
-                    }
                     if (Object.Value.Electricity.Max > 0)
-                    {
                         Drawing.DrawResource(spriteBatch, Object.Value.Electricity, Object.Value.PartyNumber);
-                    }
                 }
             }
 
