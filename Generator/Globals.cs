@@ -134,7 +134,7 @@ namespace Generator
         public static void Populate()
         {
             // Regular old variables
-            Resolution = new Vector2(1500, 900);
+            Resolution = new Vector2(900, 600);
             Logging = true;
             Clock = 0;
             GridAlpha = 50;

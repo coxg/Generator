@@ -70,36 +70,27 @@ namespace Generator
             Globals.Content = Content;
 
             // Create player
-            player = new GameObject(
-                partyNumber: 0, // TODO: This shouldn't be hard coded
-                x: 1,
-                y: 3,
-                name: "Niels",
-                strength: 10,
-                perception: 10,
-                speed: 10,
-                stamina: 100,
-                spriteFile: "Sprites/face",
-                weapon: new Weapon(
+            player = new GameObject(// TODO: This shouldn't be hard coded
+                x: 1, y: 3, stamina: 100, strength: 10, speed: 10, perception: 10, name: "Niels", partyNumber: 0, weapon: new Weapon(
                     name: "Sword",
                     type: "Cut",
                     damage: 10,
                     spriteFile: "Sprites/sword"));
 
             // Create terrain
-            terrain1 = new GameObject(x: 5, y: 6, name: "angry terrain", width: 1, avatarFile: "Sprites/angry");
+            terrain1 = new GameObject(avatarFile: "Sprites/angry", width: 1, x: 5, y: 6, name: "angry terrain");
             terrain1.Activate = delegate
             {
                 terrain1.Say("Check it out I do something weird");
                 terrain1.Say("Did you see how weird that was?!");
-                var terrain3 = new GameObject(x: 10, y: 10, name: "big terrain", width: 5, length: 5, height: 5);
+                var terrain3 = new GameObject(width: 5, length: 5, height: 5, x: 10, y: 10, name: "big terrain");
                 terrain3.Activate = delegate
                 {
                     terrain3.Say("I don't do anything weird.");
                     terrain3.Say("...I'm just really fat.");
                 };
             };
-            terrain2 = new GameObject(x: 5, y: 9, name: "medium terrain", width: 2, length: 2, height: 2);
+            terrain2 = new GameObject(width: 2, length: 2, height: 2, x: 5, y: 9, name: "medium terrain");
         }
 
         /// <summary>

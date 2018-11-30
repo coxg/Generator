@@ -29,7 +29,8 @@ namespace Generator
         // Constructor
         public GameObject(
             // Sprites
-            string spriteFile = "Sprites/face",
+            string spriteFile = "2dgameartbundle/4DirectionalNinja/PNG/PNGSequences/128x128/",
+            int spriteFrames = 1,
             string avatarFile = null,
 
             // Grid logic
@@ -47,7 +48,6 @@ namespace Generator
 
             // Primary Attributes
             int strength = 0,
-            int intellect = 0,
             int speed = 0,
             int perception = 0,
             int weight = 150, // Roughly in pounds
@@ -73,7 +73,30 @@ namespace Generator
         )
         {
             // Sprites
-            Sprite = Globals.Content.Load<Texture2D>(spriteFile);
+            SpriteFrames = spriteFrames;
+            CurrentFrame = 0;
+            SpriteDictionary = new Dictionary<string, Dictionary<string, List<Texture2D>>>();
+            foreach (var directionString in new List<string> {"Back", "Front", "Left", "Right"})
+            {
+                SpriteDictionary.Add(directionString, new Dictionary<string, List<Texture2D>>());
+                foreach (var actionString in new List<string> {"Hurt", "Idle", "Slashing", "Walking"})
+                {
+                    SpriteDictionary[directionString].Add(actionString, new List<Texture2D>());
+                    for (int spriteFrame = 0; spriteFrame < SpriteFrames; spriteFrame++)
+                    {
+                        Globals.Log(
+                                spriteFile + directionString + "-" + actionString
+                                + "/" + directionString + "-" + actionString + "_"
+                            + new String('0', 3 - spriteFrame.ToString().Length) + spriteFrame);
+                        SpriteDictionary[directionString][actionString].Add(
+                            Globals.Content.Load<Texture2D>(
+                                spriteFile + directionString + "-" + actionString 
+                                + "/" + directionString + "-" + actionString + "_"
+                                + new String('0', 3 - spriteFrame.ToString().Length) + spriteFrame));
+                    }
+                }
+            }
+            Sprite = SpriteDictionary["Front"]["Idle"][0];
             if (avatarFile != null)
                 Avatar = Globals.Content.Load<Texture2D>(avatarFile);
             else
@@ -201,6 +224,9 @@ namespace Generator
         // Sprites
         // TODO: Make sure this can be an AnimatedSprite
         public Texture2D Sprite { get; set; }
+        public Dictionary<string, Dictionary<string, List<Texture2D>>> SpriteDictionary { get; set; }
+        public int SpriteFrames { get; set; }
+        public int CurrentFrame { get; set; }
         public Texture2D Avatar { get; set; }
 
         // Location
@@ -351,6 +377,11 @@ namespace Generator
             Health.Update();
             Stamina.Update();
             Electricity.Update();
+            
+            // Update frame of animation
+            CurrentFrame++;
+            if (CurrentFrame >= SpriteFrames)
+                CurrentFrame = 0;
 
             // Use abilities
             foreach (var ability in Abilities) ability.Update();
