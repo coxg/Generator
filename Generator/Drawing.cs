@@ -148,7 +148,7 @@ namespace Generator
                 View = GameControl.camera.View,
                 Projection = GameControl.camera.Projection,
                 TextureEnabled = true,
-                Texture = sprite
+                Texture = sprite,
             };
             foreach (var pass in effect.CurrentTechnique.Passes)
             {

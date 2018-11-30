@@ -140,16 +140,6 @@ namespace Generator
                 Globals.ObjectDict.Remove(Name);
             }
 
-            // Log stuff
-            // TODO: Remove this once we have a better way to display it
-            if (Globals.Mod(Globals.Clock, 2 * Globals.RefreshRate) == 0)
-            {
-                Globals.Log(
-                    "\nHealth: " + player.Health.Current
-                    + "\nStamina: " + player.Stamina.Current
-                    + "\nElectricity: " + player.Electricity.Current);
-            }
-
             base.Update(gameTime);
         }
 

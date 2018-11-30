@@ -283,22 +283,13 @@ namespace Generator
                 {
                     // TODO: We should create a dictionary for these in Globals
                     new Ability(
-                        name: "Sprint",
-                        staminaCost: 1,
-                        isChanneled: true,
+                        name: "Jump",
+                        staminaCost: 15,
                         animation: new Animation(
-                            updateFrames: new Frames(
+                            startFrames: new Frames(
                                 offsets: new List<Vector3> {
-                                    new Vector3(0, 0, .2f) },
-                                duration: .5f)),
-                        start: delegate ()
-                        {
-                            Speed.CurrentValue *= 4;
-                        },
-                        stop: delegate ()
-                        {
-                            Speed.CurrentValue /= 4;
-                        }),
+                                    new Vector3(0, 0, 1f) },
+                                duration: .75f))),
                     new Ability(
                         name: "Attack",
                         staminaCost: EquippedWeapon.Weight + 10,
@@ -321,7 +312,7 @@ namespace Generator
                         }
                     ),
                     new Ability(
-                        name: "Always Sprint",
+                        name: "Toggle Sprint",
                         staminaCost: 1,
                         isToggleable: true,
                         start: delegate ()
@@ -347,8 +338,18 @@ namespace Generator
                                 offsets: new List<Vector3> {
                                     new Vector3(0, 0, 1) },
                                 duration: 1.0f))),
+                    new Ability(
+                        name: "Dash",
+                        staminaCost: 30,
+                        animation: new Animation(
+                            endAtStartLocation: false,
+                            startFrames: new Frames(
+                                endAtStartLocation: false,
+                                offsets: new List<Vector3> {
+                                    new Vector3(0, 5f, 0) },
+                                duration: .25f))),
                 };
-                foreach(Ability ability in abilities)
+                foreach (Ability ability in abilities)
                 {
                     ability.SourceObject = this;
                 }

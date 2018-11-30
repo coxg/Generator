@@ -14,25 +14,27 @@ namespace Generator
         public Frames(
             List<Vector3> offsets,
             float duration,
-            Animation sourceAnimation = null)
+            Animation sourceAnimation = null,
+            bool endAtStartLocation = true)
         // Constructor
         {
             SourceAnimation = sourceAnimation;
             Duration = (int)(duration * Globals.RefreshRate);
             CurrentFrame = 0;
-            Offsets = SmoothFrames(offsets, Duration);
+            Offsets = SmoothFrames(offsets, Duration, endAtStartLocation);
         }
 
         public void Play()
         // Plays a frame of the animation
         {
+
             // Rotate the difference between the last frame and this one
-            Vector3 PositionDifference = Offsets[CurrentFrame]
-                - Offsets[(int)Globals.Mod(CurrentFrame - 1, Offsets.Count)];
+            Vector3 PositionDifference = Offsets[(int)Globals.Mod(CurrentFrame + 1, Offsets.Count)] 
+                - Offsets[CurrentFrame];
             PositionDifference = Globals.PointRotatedAroundPoint(
                 RotatedPoint: PositionDifference,
                 AroundPoint: new Vector3(0, 0, 0),
-                Radians: SourceAnimation.SourceObject.Direction);
+                Radians: -SourceAnimation.SourceObject.Direction);
 
             // Move the object in that direction
             Vector3 NewPosition = SourceAnimation.SourceObject.Position + PositionDifference;
@@ -46,12 +48,18 @@ namespace Generator
             CurrentFrame = (int)Globals.Mod(CurrentFrame + 1, Offsets.Count);
         }
 
-        public static List<Vector3> SmoothFrames(List<Vector3> Frames, int Duration)
+        public static List<Vector3> SmoothFrames(List<Vector3> Frames, int Duration, 
+            bool EndAtStartLocation = true)
         // Lengthen the frames to the specified duration, smoothing along the way.
         {
-            // Always start and end with (0, 0, 0)
+            // Always start with (0, 0, 0)
             Frames.Insert(0, new Vector3(0, 0, 0));
-            Frames.Add(new Vector3(0, 0, 0));
+
+            // If we want to end at the start location, end with (0, 0, 0)
+            if (EndAtStartLocation)
+            {
+                Frames.Add(new Vector3(0, 0, 0));
+            }
 
             // Create lists of values for each dimension
             List<float> XValues = new List<float>();
@@ -164,6 +172,7 @@ namespace Generator
         public bool IsStarting { get; set; }
         public bool IsUpdating { get; set; }
         public bool IsStopping { get; set; }
+        public bool EndAtStartLocation { get; set; }
 
         // Constructor
         public Animation(
@@ -177,7 +186,10 @@ namespace Generator
             // What it does
             Frames startFrames = null,
             Frames updateFrames = null,
-            Frames stopFrames = null)
+            Frames stopFrames = null,
+            
+            // How it does it
+            bool endAtStartLocation = true)
         {
             // Animation name
             Name = name;
@@ -190,6 +202,7 @@ namespace Generator
             IsStarting = false;
             IsUpdating = false;
             IsStopping = false;
+            EndAtStartLocation = endAtStartLocation;
 
             // What it does
             StartFrames = startFrames;
@@ -213,7 +226,10 @@ namespace Generator
         // When the ability is started
         {
             // Make it only starting
-            Reset();
+            if (EndAtStartLocation)
+            {
+                Reset();
+            }
             IsStarting = true;
         }
 
@@ -237,6 +253,8 @@ namespace Generator
         // Kills the animation wherever it is, resetting frames and positions.
         // Outside the animation class, one should use Stop().
         {
+            Globals.Log("Resetting position");
+
             // Reset position
             SourceObject.Position -= TotalOffset;
             TotalOffset = new Vector3(0, 0, 0);
@@ -274,8 +292,9 @@ namespace Generator
                 }
 
                 // If it was the last frame of the animation
-                if (StartFrames == null || StartFrames.CurrentFrame == 0)
+                if (StartFrames == null || StartFrames.CurrentFrame == StartFrames.Offsets.Count - 1)
                 {
+                    StartFrames.CurrentFrame = 0;
                     IsStarting = false;
                 }
             }
@@ -294,8 +313,10 @@ namespace Generator
             if (IsStopping)
             {
                 // Let the updating animation finish playing
-                if (IsUpdating && (UpdateFrames == null || UpdateFrames.CurrentFrame == 0))
+                if (IsUpdating && (UpdateFrames == null || UpdateFrames.CurrentFrame 
+                    == UpdateFrames.Offsets.Count - 1))
                 {
+                    UpdateFrames.CurrentFrame = 0;
                     IsUpdating = false;
                     if (StopFrames == null)
                     {
@@ -310,10 +331,15 @@ namespace Generator
                     if (StopFrames != null)
                     {
                         StopFrames.Play();
-                        if (StopFrames.CurrentFrame == 0)
+                        if (StopFrames.CurrentFrame == StopFrames.Offsets.Count - 1)
                         {
+                            StopFrames.CurrentFrame = 0;
                             IsStopping = false;
                         }
+                    }
+                    else
+                    {
+                        IsStopping = false;
                     }
                 }
             }
