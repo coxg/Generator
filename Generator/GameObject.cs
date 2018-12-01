@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -11,20 +12,12 @@ namespace Generator
         Used as a basis for terrain, playable characters, and enemies.
         */
     {
-        // Accessory
-        private Accessory equippedAccessory;
-
-        // Armor
-        private Armor equippedArmor;
-
-        // Generation
-        private Generation equippedGenerator;
-
-        // OffHand
-        private OffHand equippedOffHand;
-
-        // Weapon
-        private Weapon equippedWeapon;
+        // Equipment
+        private Accessory _equippedAccessory;
+        private Armor _equippedArmor;
+        private Generation _equippedGenerator;
+        private OffHand _equippedOffHand;
+        private Weapon _equippedWeapon;
 
         // Constructor
         public GameObject(
@@ -32,6 +25,11 @@ namespace Generator
             // Sprite attributes
             string spriteFile = "Sprites/2dgameartbundle/4DirectionalNinja/PNG/PNGSequences/128x128/",
             string avatarFile = null,
+            
+            // Actions
+            bool isWalking = false,
+            bool isSwinging = false,
+            bool isShooting = false,
 
             // Grid logic
             float width = 1,
@@ -50,7 +48,7 @@ namespace Generator
             int strength = 0,
             int speed = 0,
             int perception = 0,
-            int weight = 150, // Roughly in pounds
+            int weight = 150,
 
             // ...Other Attributes
             string name = null,
@@ -85,7 +83,7 @@ namespace Generator
                     var numberOfFrames =  System.IO.Directory.GetFiles(
                         Globals.Directory + "Content/" + directory, 
                         "*.png", System.IO.SearchOption.TopDirectoryOnly).Length;
-                    for (int spriteFrame = 0; spriteFrame < numberOfFrames; spriteFrame++)
+                    for (var spriteFrame = 0; spriteFrame < numberOfFrames; spriteFrame++)
                     {
                         SpriteDictionary[directionString][actionString].Add(
                             Globals.Content.Load<Texture2D>(
@@ -95,10 +93,12 @@ namespace Generator
                 }
             }
             Sprite = SpriteDictionary["Front"]["Idle"][0];
-            if (avatarFile != null)
-                Avatar = Globals.Content.Load<Texture2D>(avatarFile);
-            else
-                Avatar = null;
+            Avatar = avatarFile == null ? null : Globals.Content.Load<Texture2D>(avatarFile);
+            
+            // Actions
+            IsWalking = isWalking;
+            IsSwinging = isSwinging;
+            IsShooting = isShooting;
 
             // Grid logic
             Dimensions = new Vector3(width, length, height);
@@ -123,16 +123,16 @@ namespace Generator
             Direction = direction;
 
             // Equipment
-            equippedWeapon = weapon ?? new Weapon();
-            equippedOffHand = offHand ?? new OffHand();
-            equippedArmor = armor ?? new Armor();
-            equippedGenerator = generator ?? new Generation();
-            equippedAccessory = accessory ?? new Accessory();
-            EquippedWeapon = equippedWeapon;
-            EquippedOffHand = equippedOffHand;
-            EquippedArmor = equippedArmor;
-            EquippedGenerator = equippedGenerator;
-            EquippedAccessory = equippedAccessory;
+            _equippedWeapon = weapon ?? new Weapon();
+            _equippedOffHand = offHand ?? new OffHand();
+            _equippedArmor = armor ?? new Armor();
+            _equippedGenerator = generator ?? new Generation();
+            _equippedAccessory = accessory ?? new Accessory();
+            EquippedWeapon = _equippedWeapon;
+            EquippedOffHand = _equippedOffHand;
+            EquippedArmor = _equippedArmor;
+            EquippedGenerator = _equippedGenerator;
+            EquippedAccessory = _equippedAccessory;
 
             // Abilities
             if (abilities == null)
@@ -151,13 +151,23 @@ namespace Generator
                                     new Vector3(0, 0, .2f)
                                 },
                                 .5f)),
-                        start: delegate { Speed.CurrentValue *= 4; },
-                        stop: delegate { Speed.CurrentValue /= 4; }),
+                        start: delegate { 
+                            Speed.CurrentValue *= 4;
+                            IsWalking = true; 
+                        },
+                        stop: delegate
+                        {
+                            Speed.CurrentValue /= 4;
+                            IsWalking = false; 
+                        }),
                     new Ability(
                         "Attack",
                         staminaCost: EquippedWeapon.Weight + 10,
                         start: delegate
                         {
+                            CurrentFrame = 0;
+                            IsSwinging = true;
+                            
                             // Figure out which one you hit
                             var target = GetTarget(EquippedWeapon.Range);
 
@@ -177,8 +187,15 @@ namespace Generator
                         "Always Sprint",
                         staminaCost: 1,
                         isToggleable: true,
-                        start: delegate { Speed.CurrentValue *= 4; },
-                        stop: delegate { Speed.CurrentValue /= 4; },
+                        start: delegate { 
+                            Speed.CurrentValue *= 4;
+                            IsWalking = true; 
+                        },
+                        stop: delegate
+                        {
+                            Speed.CurrentValue /= 4;
+                            IsWalking = false; 
+                        },
                         animation: new Animation(
                             startFrames: new Frames(
                                 new List<Vector3>
@@ -225,6 +242,11 @@ namespace Generator
         public Dictionary<string, Dictionary<string, List<Texture2D>>> SpriteDictionary { get; set; }
         public int CurrentFrame { get; set; }
         public Texture2D Avatar { get; set; }
+        
+        // Actions
+        public bool IsWalking { get; set; }
+        public bool IsSwinging { get; set; }
+        public bool IsShooting { get; set; }
 
         // Location
         public Vector3 Dimensions { get; set; }
@@ -279,91 +301,91 @@ namespace Generator
 
         public Weapon EquippedWeapon
         {
-            get => equippedWeapon;
+            get => _equippedWeapon;
             set
             {
                 // Resources
-                Health.Max += value.Health - equippedWeapon.Health;
-                Stamina.Max += value.Stamina - equippedWeapon.Stamina;
-                Electricity.Max += value.Capacity - equippedWeapon.Capacity;
+                Health.Max += value.Health - _equippedWeapon.Health;
+                Stamina.Max += value.Stamina - _equippedWeapon.Stamina;
+                Electricity.Max += value.Capacity - _equippedWeapon.Capacity;
 
                 // Attributes
-                Strength.CurrentValue += value.Strength - equippedWeapon.Strength;
-                Perception.CurrentValue += value.Perception - equippedWeapon.Perception;
-                Speed.CurrentValue += value.Speed - equippedWeapon.Speed;
-                equippedWeapon = value;
+                Strength.CurrentValue += value.Strength - _equippedWeapon.Strength;
+                Perception.CurrentValue += value.Perception - _equippedWeapon.Perception;
+                Speed.CurrentValue += value.Speed - _equippedWeapon.Speed;
+                _equippedWeapon = value;
             }
         }
 
         public OffHand EquippedOffHand
         {
-            get => equippedOffHand;
+            get => _equippedOffHand;
             set
             {
                 // Resources
-                Health.Max += value.Health - equippedOffHand.Health;
-                Stamina.Max += value.Stamina - equippedOffHand.Stamina;
-                Electricity.Max += value.Capacity - equippedOffHand.Capacity;
+                Health.Max += value.Health - _equippedOffHand.Health;
+                Stamina.Max += value.Stamina - _equippedOffHand.Stamina;
+                Electricity.Max += value.Capacity - _equippedOffHand.Capacity;
 
                 // Attributes
-                Strength.CurrentValue += value.Strength - equippedOffHand.Strength;
-                Speed.CurrentValue += value.Speed - equippedOffHand.Speed;
-                Perception.CurrentValue += value.Perception - equippedOffHand.Perception;
-                equippedOffHand = value;
+                Strength.CurrentValue += value.Strength - _equippedOffHand.Strength;
+                Speed.CurrentValue += value.Speed - _equippedOffHand.Speed;
+                Perception.CurrentValue += value.Perception - _equippedOffHand.Perception;
+                _equippedOffHand = value;
             }
         }
 
         public Armor EquippedArmor
         {
-            get => equippedArmor;
+            get => _equippedArmor;
             set
             {
                 // Resources
-                Health.Max += value.Health - equippedArmor.Health;
-                Stamina.Max += value.Stamina - equippedArmor.Stamina;
-                Electricity.Max += value.Capacity - equippedArmor.Capacity;
+                Health.Max += value.Health - _equippedArmor.Health;
+                Stamina.Max += value.Stamina - _equippedArmor.Stamina;
+                Electricity.Max += value.Capacity - _equippedArmor.Capacity;
 
                 // Attributes
-                Strength.CurrentValue += value.Strength - equippedArmor.Strength;
-                Speed.CurrentValue += value.Speed - equippedArmor.Speed;
-                Perception.CurrentValue += value.Perception - equippedArmor.Perception;
-                equippedArmor = value;
+                Strength.CurrentValue += value.Strength - _equippedArmor.Strength;
+                Speed.CurrentValue += value.Speed - _equippedArmor.Speed;
+                Perception.CurrentValue += value.Perception - _equippedArmor.Perception;
+                _equippedArmor = value;
             }
         }
 
         public Generation EquippedGenerator
         {
-            get => equippedGenerator;
+            get => _equippedGenerator;
             set
             {
                 // Resources
-                Health.Max += value.Health - equippedGenerator.Health;
-                Stamina.Max += value.Stamina - equippedGenerator.Stamina;
-                Electricity.Max += value.Capacity - equippedGenerator.Capacity;
+                Health.Max += value.Health - _equippedGenerator.Health;
+                Stamina.Max += value.Stamina - _equippedGenerator.Stamina;
+                Electricity.Max += value.Capacity - _equippedGenerator.Capacity;
 
                 // Attributes
-                Strength.CurrentValue += value.Strength - equippedGenerator.Strength;
-                Speed.CurrentValue += value.Speed - equippedGenerator.Speed;
-                Perception.CurrentValue += value.Perception - equippedGenerator.Perception;
-                equippedGenerator = value;
+                Strength.CurrentValue += value.Strength - _equippedGenerator.Strength;
+                Speed.CurrentValue += value.Speed - _equippedGenerator.Speed;
+                Perception.CurrentValue += value.Perception - _equippedGenerator.Perception;
+                _equippedGenerator = value;
             }
         }
 
         public Accessory EquippedAccessory
         {
-            get => equippedAccessory;
+            get => _equippedAccessory;
             set
             {
                 // Resources
-                Health.Max += value.Health - equippedAccessory.Health;
-                Stamina.Max += value.Stamina - equippedAccessory.Stamina;
-                Electricity.Max += value.Capacity - equippedAccessory.Capacity;
+                Health.Max += value.Health - _equippedAccessory.Health;
+                Stamina.Max += value.Stamina - _equippedAccessory.Stamina;
+                Electricity.Max += value.Capacity - _equippedAccessory.Capacity;
 
                 // Attributes
-                Strength.CurrentValue += value.Strength - equippedAccessory.Strength;
-                Speed.CurrentValue += value.Speed - equippedAccessory.Speed;
-                Perception.CurrentValue += value.Perception - equippedAccessory.Perception;
-                equippedAccessory = value;
+                Strength.CurrentValue += value.Strength - _equippedAccessory.Strength;
+                Speed.CurrentValue += value.Speed - _equippedAccessory.Speed;
+                Perception.CurrentValue += value.Perception - _equippedAccessory.Perception;
+                _equippedAccessory = value;
             }
         }
 
@@ -376,8 +398,22 @@ namespace Generator
             Electricity.Update();
             
             // Update animation
-            var spriteFrames = SpriteDictionary[Globals.StringFromRadians(Direction)]["Walking"];
+            var action = 
+                IsSwinging ? "Slashing" : 
+                IsShooting ? "IdleBlinking" : 
+                Health.Current < Health.Max / 2.0 ? "Hurt" : 
+                IsWalking ? "Walking" : "Idle";
+            var spriteFrames = SpriteDictionary[Globals.StringFromRadians(Direction)][action];
             CurrentFrame = (int)Globals.Mod(CurrentFrame + 1, spriteFrames.Count);
+            if (IsSwinging & CurrentFrame == 0) // TODO: Clean this up, I'm sure there's a better way
+            {
+                IsSwinging = false;
+                action =
+                    IsShooting ? "IdleBlinking" : 
+                    Health.Current < Health.Max / 2.0 ? "Hurt" : 
+                    IsWalking ? "Walking" : "Idle";
+                spriteFrames = SpriteDictionary[Globals.StringFromRadians(Direction)][action];
+            }
             Sprite = spriteFrames[CurrentFrame];
 
             // Use abilities
