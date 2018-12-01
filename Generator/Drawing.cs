@@ -211,46 +211,5 @@ namespace Generator
 
             effect.Dispose();
         }
-
-        public class AnimatedSprite
-        {
-            private readonly int totalFrames;
-            private int currentFrame;
-
-            public AnimatedSprite(Texture2D texture, int rows, int columns)
-            {
-                Texture = texture;
-                Rows = rows;
-                Columns = columns;
-                currentFrame = 0;
-                totalFrames = Rows * Columns;
-            }
-
-            public Texture2D Texture { get; set; }
-            public int Rows { get; set; }
-            public int Columns { get; set; }
-
-            public void Update()
-            {
-                currentFrame++;
-                if (currentFrame == totalFrames)
-                    currentFrame = 0;
-            }
-
-            public void Draw(SpriteBatch spriteBatch, Vector2 location)
-            {
-                var width = Texture.Width / Columns;
-                var height = Texture.Height / Rows;
-                var row = (int) (currentFrame / (float) Columns);
-                var column = currentFrame % Columns;
-
-                var sourceRectangle = new Rectangle(width * column, height * row, width, height);
-                var destinationRectangle = new Rectangle((int) location.X, (int) location.Y, width, height);
-
-                spriteBatch.Begin();
-                spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White);
-                spriteBatch.End();
-            }
-        }
     }
 }

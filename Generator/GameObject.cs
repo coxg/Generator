@@ -30,6 +30,7 @@ namespace Generator
             bool isWalking = false,
             bool isSwinging = false,
             bool isShooting = false,
+            bool isHurting = false,
 
             // Grid logic
             float width = 1,
@@ -99,6 +100,7 @@ namespace Generator
             IsWalking = isWalking;
             IsSwinging = isSwinging;
             IsShooting = isShooting;
+            IsHurting = isHurting;
 
             // Grid logic
             Dimensions = new Vector3(width, length, height);
@@ -169,7 +171,7 @@ namespace Generator
                             IsSwinging = true;
                             
                             // Figure out which one you hit
-                            var target = GetTarget(EquippedWeapon.Range);
+                            var target = GetTargetInRange(EquippedWeapon.Range);
 
                             // Deal damage
                             if (target != null)
@@ -180,6 +182,29 @@ namespace Generator
                             else
                             {
                                 Globals.Log(this + " attacks and misses.");
+                            }
+                        }
+                    ),
+                    new Ability(
+                        "Shoot",
+                        staminaCost: EquippedWeapon.Weight + 10,
+                        start: delegate
+                        {
+                            CurrentFrame = 0;
+                            IsShooting = true;
+                            
+                            // Figure out which one you hit
+                            var target = GetTargetInRange(EquippedWeapon.Range + 20);
+
+                            // Deal damage
+                            if (target != null)
+                            {
+                                Globals.Log(this + " shoots, hitting " + target + ".");
+                                DealDamage(target, EquippedWeapon.Damage + Strength.CurrentValue);
+                            }
+                            else
+                            {
+                                Globals.Log(this + " shoots and misses.");
                             }
                         }
                     ),
@@ -247,6 +272,7 @@ namespace Generator
         public bool IsWalking { get; set; }
         public bool IsSwinging { get; set; }
         public bool IsShooting { get; set; }
+        public bool IsHurting { get; set; }
 
         // Location
         public Vector3 Dimensions { get; set; }
@@ -400,8 +426,8 @@ namespace Generator
             // Update animation
             var action = 
                 IsSwinging ? "Slashing" : 
-                IsShooting ? "IdleBlinking" : 
-                Health.Current < Health.Max / 2.0 ? "Hurt" : 
+                IsShooting ? "Hurt" : // TODO: Replace with "Shooting"
+                IsHurting ? "Hurt" : 
                 IsWalking ? "Walking" : "Idle";
             var spriteFrames = SpriteDictionary[Globals.StringFromRadians(Direction)][action];
             CurrentFrame = (int)Globals.Mod(CurrentFrame + 1, spriteFrames.Count);
@@ -409,12 +435,27 @@ namespace Generator
             {
                 IsSwinging = false;
                 action =
-                    IsShooting ? "IdleBlinking" : 
-                    Health.Current < Health.Max / 2.0 ? "Hurt" : 
+                    IsShooting ? "Hurt" : // TODO: Replace with "Shooting"
+                    IsHurting ? "Hurt" : 
                     IsWalking ? "Walking" : "Idle";
                 spriteFrames = SpriteDictionary[Globals.StringFromRadians(Direction)][action];
             }
+            if (IsShooting & CurrentFrame == 0) // TODO: Clean this up, I'm sure there's a better way
+            {
+                IsShooting = false;
+                action =
+                    IsHurting ? "Hurt" : 
+                    IsWalking ? "Walking" : "Idle";
+                spriteFrames = SpriteDictionary[Globals.StringFromRadians(Direction)][action];
+            }
+            if (IsHurting & CurrentFrame == 0 & Health.Current > Health.Max / 2.0) // TODO: Clean this up, I'm sure there's a better way
+            {
+                IsHurting = false;
+                action = IsWalking ? "Walking" : "Idle";
+                spriteFrames = SpriteDictionary[Globals.StringFromRadians(Direction)][action];
+            }
             Sprite = spriteFrames[CurrentFrame];
+            IsWalking = false;
 
             // Use abilities
             foreach (var ability in Abilities) ability.Update();
@@ -480,6 +521,8 @@ namespace Generator
             // Live
             if (Health.Current > damage)
             {
+                CurrentFrame = 0;
+                IsHurting = true;
                 Health.Current -= damage;
             }
 
@@ -494,50 +537,51 @@ namespace Generator
         public GameObject GetTarget(float range = 1)
             // Gets whichever object is [distance] away in the current direction
         {
-            var Offsets = Globals.OffsetFromRadians(Direction);
-            var TargettedObject = Globals.Grid.GetObject(
-                (int) Math.Round(Position.X + (range + Dimensions.X / 2) * Offsets.X),
-                (int) Math.Round(Position.Y + (range + Dimensions.Y / 2) * Offsets.Y));
-            return TargettedObject;
+            var offsets = Globals.OffsetFromRadians(Direction);
+            var targettedObject = Globals.Grid.GetObject(
+                (int) Math.Round(Position.X + (range + Dimensions.X / 2) * offsets.X),
+                (int) Math.Round(Position.Y + (range + Dimensions.Y / 2) * offsets.Y));
+            return targettedObject;
         }
 
         public GameObject GetTargetInRange(int range = 1)
             // Gets whichever object is [distance] away or closer in the current direction
-            // TODO: Fix this. I'm pretty sure it crashes the game.
         {
-            GameObject ReturnObject = null;
-            var TargetRange = 1;
+            GameObject returnObject = null;
+            var targetRange = 1;
 
             // Loop from 1 to [range], seeing if anything is in the way
-            while (ReturnObject == null && TargetRange <= range)
+            while (returnObject == null && targetRange <= range)
             {
-                ReturnObject = GetTarget(TargetRange);
-                range++;
+                returnObject = GetTarget(targetRange);
+                targetRange++;
             }
 
-            return ReturnObject;
+            return returnObject;
         }
 
         public bool CanMoveTo(Vector3 position)
             // Sees if the GameObject can move to the specified location unimpeded.
         {
             // Loop through each x coordinate you're trying to move to
-            for (var MoveToX = (int) Math.Floor(position.X);
-                    MoveToX < (int) Math.Ceiling(position.X + Dimensions.X);
-                    MoveToX++)
+            for (
+                    var moveToX = (int) Math.Floor(position.X);
+                    moveToX < (int) Math.Ceiling(position.X + Dimensions.X);
+                    moveToX++)
                 
                 // Loop through each y coordinate you're trying to move to
-                for (var MoveToY = (int) Math.Floor(position.Y);
-                        MoveToY < (int) Math.Ceiling(position.Y + Dimensions.Y);
-                        MoveToY++)
+                for (
+                        var moveToY = (int) Math.Floor(position.Y);
+                        moveToY < (int) Math.Ceiling(position.Y + Dimensions.Y);
+                        moveToY++)
                     
                     // If location is not empty or self
-                    if (Globals.Grid.GetObject(MoveToX, MoveToY) != null
-                        && Globals.Grid.GetObject(MoveToX, MoveToY) != this)
+                    if (Globals.Grid.GetObject(moveToX, moveToY) != null
+                        && Globals.Grid.GetObject(moveToX, moveToY) != this)
                     {
                         Globals.Log(
-                            "[" + MoveToX + ", " + MoveToY + "]" +
-                            " is not empty or self: " + Globals.Grid.GetObject(MoveToX, MoveToY));
+                            "[" + moveToX + ", " + moveToY + "]" +
+                            " is not empty or self: " + Globals.Grid.GetObject(moveToX, moveToY));
                         return false;
                     }
 
@@ -551,7 +595,9 @@ namespace Generator
             )
             // Attempts to move the object in a direction (radians).
         {
-            // Update sprite to match direction
+            // Update sprite visuals
+            CurrentFrame = 0;
+            IsWalking = true;
             Direction = radians;
 
             // Get distance
@@ -559,20 +605,20 @@ namespace Generator
             var distance = (float) speed / Globals.RefreshRate;
 
             // Convert from radian direction to X/Y offsets
-            var Offsets = Globals.OffsetFromRadians(radians);
-            var NewPosition = new Vector3(
-                Position.X + distance * Offsets.X,
-                Position.Y + distance * Offsets.Y,
+            var offsets = Globals.OffsetFromRadians(radians);
+            var newPosition = new Vector3(
+                Position.X + distance * offsets.X,
+                Position.Y + distance * offsets.Y,
                 Position.Z);
 
             // See if you can move to the location
-            if (CanMoveTo(NewPosition)) Position = NewPosition;
+            if (CanMoveTo(newPosition)) Position = newPosition;
         }
 
-        public void Say(string Message)
+        public void Say(string message)
             // Submit message to the screen with icon
         {
-            Globals.DisplayTextQueue.Enqueue(Message);
+            Globals.DisplayTextQueue.Enqueue(message);
             Globals.TalkingObjectQueue.Enqueue(this);
         }
     }
