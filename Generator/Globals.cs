@@ -24,6 +24,7 @@ namespace Generator
         public static int Clock { get; set; }
         public static int GridAlpha { get; set; }
         public static int RefreshRate { get; set; }
+        public static string Directory { get; set; }
 
         // For better controls
         public static bool ActivateButtonWasDown { get; set; }
@@ -160,6 +161,7 @@ namespace Generator
             GridAlpha = 50;
             _grid = new GameObject[100, 100];
             RefreshRate = 30;
+            Directory = "/Users/gavencox/Generator/Generator/"; // TODO: Stop hard-coding this
 
             // For better control
             ActivateButtonWasDown = false;

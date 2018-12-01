@@ -28,9 +28,9 @@ namespace Generator
 
         // Constructor
         public GameObject(
-            // Sprites
+            
+            // Sprite attributes
             string spriteFile = "Sprites/2dgameartbundle/4DirectionalNinja/PNG/PNGSequences/128x128/",
-            int spriteFrames = 11,
             string avatarFile = null,
 
             // Grid logic
@@ -56,7 +56,7 @@ namespace Generator
             string name = null,
             int level = 1,
             int experience = 0,
-            float direction = 0f,
+            float direction = (float)Math.PI,
 
             // Abilities
             List<Ability> abilities = null,
@@ -73,7 +73,6 @@ namespace Generator
         )
         {
             // Sprites
-            SpriteFrames = spriteFrames;
             CurrentFrame = 0;
             SpriteDictionary = new Dictionary<string, Dictionary<string, List<Texture2D>>>();
             foreach (var directionString in new List<string> {"Back", "Front", "Left", "Right"})
@@ -82,12 +81,15 @@ namespace Generator
                 foreach (var actionString in new List<string> {"Hurt", "Idle", "Slashing", "Walking"})
                 {
                     SpriteDictionary[directionString].Add(actionString, new List<Texture2D>());
-                    for (int spriteFrame = 0; spriteFrame < SpriteFrames; spriteFrame++)
+                    var directory = spriteFile + directionString + "-" + actionString + "/";
+                    var numberOfFrames =  System.IO.Directory.GetFiles(
+                        Globals.Directory + "Content/" + directory, 
+                        "*.png", System.IO.SearchOption.TopDirectoryOnly).Length;
+                    for (int spriteFrame = 0; spriteFrame < numberOfFrames; spriteFrame++)
                     {
                         SpriteDictionary[directionString][actionString].Add(
                             Globals.Content.Load<Texture2D>(
-                                spriteFile + directionString + "-" + actionString 
-                                + "/" + directionString + "-" + actionString + "_"
+                                directory + directionString + "-" + actionString + "_"
                                 + new String('0', 3 - spriteFrame.ToString().Length) + spriteFrame));
                     }
                 }
@@ -221,7 +223,6 @@ namespace Generator
         // TODO: Make sure this can be an AnimatedSprite
         public Texture2D Sprite { get; set; }
         public Dictionary<string, Dictionary<string, List<Texture2D>>> SpriteDictionary { get; set; }
-        public int SpriteFrames { get; set; }
         public int CurrentFrame { get; set; }
         public Texture2D Avatar { get; set; }
 
@@ -375,8 +376,9 @@ namespace Generator
             Electricity.Update();
             
             // Update animation
-            CurrentFrame = (int)Globals.Mod(CurrentFrame + 1, SpriteFrames);
-            Sprite = SpriteDictionary[Globals.StringFromRadians(Direction)]["Walking"][CurrentFrame];
+            var spriteFrames = SpriteDictionary[Globals.StringFromRadians(Direction)]["Walking"];
+            CurrentFrame = (int)Globals.Mod(CurrentFrame + 1, spriteFrames.Count);
+            Sprite = spriteFrames[CurrentFrame];
 
             // Use abilities
             foreach (var ability in Abilities) ability.Update();

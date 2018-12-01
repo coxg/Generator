@@ -27,29 +27,29 @@ namespace Generator
             // Plays a frame of the animation
         {
             // Rotate the difference between the last frame and this one
-            var PositionDifference = Offsets[CurrentFrame]
+            var positionDifference = Offsets[CurrentFrame]
                                      - Offsets[(int) Globals.Mod(CurrentFrame - 1, Offsets.Count)];
-            PositionDifference = Globals.PointRotatedAroundPoint(
-                PositionDifference,
+            positionDifference = Globals.PointRotatedAroundPoint(
+                positionDifference,
                 new Vector3(0, 0, 0),
                 SourceAnimation.SourceObject.Direction);
 
             // Move the object in that direction
-            var newPosition = SourceAnimation.SourceObject.Position + PositionDifference;
+            var newPosition = SourceAnimation.SourceObject.Position + positionDifference;
             if (SourceAnimation.SourceObject.CanMoveTo(newPosition))
                 SourceAnimation.SourceObject.Position = newPosition;
 
             // Update animation logic
-            SourceAnimation.TotalOffset += PositionDifference;
+            SourceAnimation.TotalOffset += positionDifference;
             CurrentFrame = (int) Globals.Mod(CurrentFrame + 1, Offsets.Count);
         }
 
-        public static List<Vector3> SmoothFrames(List<Vector3> Frames, int Duration)
+        public static List<Vector3> SmoothFrames(List<Vector3> frames, int duration)
             // Lengthen the frames to the specified duration, smoothing along the way.
         {
             // Always start and end with (0, 0, 0)
-            Frames.Insert(0, new Vector3(0, 0, 0));
-            Frames.Add(new Vector3(0, 0, 0));
+            frames.Insert(0, new Vector3(0, 0, 0));
+            frames.Add(new Vector3(0, 0, 0));
 
             // Create lists of values for each dimension
             var xValues = new List<float>();
@@ -57,13 +57,13 @@ namespace Generator
             var zValues = new List<float>();
 
             // But wait - time is also a dimension! We're in 4D, people!
-            var timeInputs = Globals.FloatRange(Frames.Count);
-            for (var frameIndex = 0; frameIndex < Frames.Count; frameIndex++)
-                timeInputs[frameIndex] *= (float) Duration / (Frames.Count - 1);
-            var timeOutputs = Globals.FloatRange(Duration);
+            var timeInputs = Globals.FloatRange(frames.Count);
+            for (var frameIndex = 0; frameIndex < frames.Count; frameIndex++)
+                timeInputs[frameIndex] *= (float) duration / (frames.Count - 1);
+            var timeOutputs = Globals.FloatRange(duration);
 
             // Append X, Y, and Z values from the FrameType to their lists
-            foreach (var frame in Frames)
+            foreach (var frame in frames)
             {
                 xValues.Add(frame.X);
                 yValues.Add(frame.Y);
@@ -85,13 +85,13 @@ namespace Generator
                 timeOutputs);
 
             // Combine dimension lists into a list of Vector3s
-            Frames = new List<Vector3>();
-            for (var FrameIndex = 0; FrameIndex < Duration; FrameIndex++)
-                Frames.Add(new Vector3(
-                    xSpline[FrameIndex],
-                    ySpline[FrameIndex],
-                    zSpline[FrameIndex]));
-            return Frames;
+            frames = new List<Vector3>();
+            for (var frameIndex = 0; frameIndex < duration; frameIndex++)
+                frames.Add(new Vector3(
+                    xSpline[frameIndex],
+                    ySpline[frameIndex],
+                    zSpline[frameIndex]));
+            return frames;
         }
     }
 
