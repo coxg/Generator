@@ -9,26 +9,26 @@ namespace Generator
         public static void GetInput(GameObject player)
         {
             // Convert from actual movement input to direction offsets
-            var MoveVerticalOffset = 0;
-            var MoveHorizontalOffset = 0;
-            if (Keyboard.GetState().IsKeyDown(Keys.Up)) MoveVerticalOffset += 1;
-            if (Keyboard.GetState().IsKeyDown(Keys.Down)) MoveVerticalOffset -= 1;
-            if (Keyboard.GetState().IsKeyDown(Keys.Left)) MoveHorizontalOffset -= 1;
-            if (Keyboard.GetState().IsKeyDown(Keys.Right)) MoveHorizontalOffset += 1;
+            var moveVerticalOffset = 0;
+            var moveHorizontalOffset = 0;
+            if (Keyboard.GetState().IsKeyDown(Keys.Up)) moveVerticalOffset += 1;
+            if (Keyboard.GetState().IsKeyDown(Keys.Down)) moveVerticalOffset -= 1;
+            if (Keyboard.GetState().IsKeyDown(Keys.Left)) moveHorizontalOffset -= 1;
+            if (Keyboard.GetState().IsKeyDown(Keys.Right)) moveHorizontalOffset += 1;
 
             // Convert from direction offsets to radian direction
-            if (MoveHorizontalOffset != 0 || MoveVerticalOffset != 0)
+            if (moveHorizontalOffset != 0 || moveVerticalOffset != 0)
             {
                 // Convert from offsets to radians
-                var RadianDirection = (float) Math.Atan2(MoveHorizontalOffset, MoveVerticalOffset);
+                var radianDirection = (float) Math.Atan2(moveHorizontalOffset, moveVerticalOffset);
 
                 // Apply offset from map rotation
-                RadianDirection -= GameControl.camera.Rotation;
-                RadianDirection = Globals.Mod(RadianDirection, 2f * (float) Math.PI);
+                radianDirection -= GameControl.camera.Rotation;
+                radianDirection = Globals.Mod(radianDirection, 2f * (float) Math.PI);
 
                 // Convert from radian direction to cardinal direction
                 var speed = (float) Math.Sqrt(player.Speed.CurrentValue);
-                player.MoveInDirection(RadianDirection, speed);
+                player.MoveInDirection(radianDirection, speed);
             }
 
             // Abilities

@@ -35,9 +35,9 @@ namespace Generator
                 SourceAnimation.SourceObject.Direction);
 
             // Move the object in that direction
-            var NewPosition = SourceAnimation.SourceObject.Position + PositionDifference;
-            if (SourceAnimation.SourceObject.CanMoveTo(NewPosition))
-                SourceAnimation.SourceObject.Position = NewPosition;
+            var newPosition = SourceAnimation.SourceObject.Position + PositionDifference;
+            if (SourceAnimation.SourceObject.CanMoveTo(newPosition))
+                SourceAnimation.SourceObject.Position = newPosition;
 
             // Update animation logic
             SourceAnimation.TotalOffset += PositionDifference;
@@ -52,45 +52,45 @@ namespace Generator
             Frames.Add(new Vector3(0, 0, 0));
 
             // Create lists of values for each dimension
-            var XValues = new List<float>();
-            var YValues = new List<float>();
-            var ZValues = new List<float>();
+            var xValues = new List<float>();
+            var yValues = new List<float>();
+            var zValues = new List<float>();
 
             // But wait - time is also a dimension! We're in 4D, people!
-            var TimeInputs = Globals.FloatRange(Frames.Count);
-            for (var FrameIndex = 0; FrameIndex < Frames.Count; FrameIndex++)
-                TimeInputs[FrameIndex] *= (float) Duration / (Frames.Count - 1);
-            var TimeOutputs = Globals.FloatRange(Duration);
+            var timeInputs = Globals.FloatRange(Frames.Count);
+            for (var frameIndex = 0; frameIndex < Frames.Count; frameIndex++)
+                timeInputs[frameIndex] *= (float) Duration / (Frames.Count - 1);
+            var timeOutputs = Globals.FloatRange(Duration);
 
             // Append X, Y, and Z values from the FrameType to their lists
-            foreach (var Frame in Frames)
+            foreach (var frame in Frames)
             {
-                XValues.Add(Frame.X);
-                YValues.Add(Frame.Y);
-                ZValues.Add(Frame.Z);
+                xValues.Add(frame.X);
+                yValues.Add(frame.Y);
+                zValues.Add(frame.Z);
             }
 
             // Create splines from the dimension lists
-            var XSpline = Spline.Compute(
-                TimeInputs,
-                XValues.ToArray(),
-                TimeOutputs);
-            var YSpline = Spline.Compute(
-                TimeInputs,
-                YValues.ToArray(),
-                TimeOutputs);
-            var ZSpline = Spline.Compute(
-                TimeInputs,
-                ZValues.ToArray(),
-                TimeOutputs);
+            var xSpline = Spline.Compute(
+                timeInputs,
+                xValues.ToArray(),
+                timeOutputs);
+            var ySpline = Spline.Compute(
+                timeInputs,
+                yValues.ToArray(),
+                timeOutputs);
+            var zSpline = Spline.Compute(
+                timeInputs,
+                zValues.ToArray(),
+                timeOutputs);
 
             // Combine dimension lists into a list of Vector3s
             Frames = new List<Vector3>();
             for (var FrameIndex = 0; FrameIndex < Duration; FrameIndex++)
                 Frames.Add(new Vector3(
-                    XSpline[FrameIndex],
-                    YSpline[FrameIndex],
-                    ZSpline[FrameIndex]));
+                    xSpline[FrameIndex],
+                    ySpline[FrameIndex],
+                    zSpline[FrameIndex]));
             return Frames;
         }
     }
@@ -139,7 +139,6 @@ namespace Generator
 
         // What it does
         private Frames _startFrames { get; set; }
-
         public Frames StartFrames
         {
             get => _startFrames;
@@ -151,7 +150,6 @@ namespace Generator
         }
 
         private Frames _updateFrames { get; set; }
-
         public Frames UpdateFrames
         {
             get => _updateFrames;
@@ -163,7 +161,6 @@ namespace Generator
         }
 
         private Frames _stopFrames { get; set; }
-
         public Frames StopFrames
         {
             get => _stopFrames;

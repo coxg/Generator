@@ -374,10 +374,9 @@ namespace Generator
             Stamina.Update();
             Electricity.Update();
             
-            // Update frame of animation
-            CurrentFrame++;
-            if (CurrentFrame >= SpriteFrames)
-                CurrentFrame = 0;
+            // Update animation
+            CurrentFrame = (int)Globals.Mod(CurrentFrame + 1, SpriteFrames);
+            Sprite = SpriteDictionary[Globals.StringFromRadians(Direction)]["Walking"][CurrentFrame];
 
             // Use abilities
             foreach (var ability in Abilities) ability.Update();
@@ -386,9 +385,7 @@ namespace Generator
         public override string ToString()
             // Return name, useful for debugging.
         {
-            if (Name == null)
-                return "Unnamed GameObject";
-            return Name;
+            return Name ?? "Unnamed GameObject";
         }
 
         public void Spawn()
@@ -490,19 +487,21 @@ namespace Generator
             for (var MoveToX = (int) Math.Floor(position.X);
                     MoveToX < (int) Math.Ceiling(position.X + Dimensions.X);
                     MoveToX++)
+                
                 // Loop through each y coordinate you're trying to move to
-            for (var MoveToY = (int) Math.Floor(position.Y);
-                    MoveToY < (int) Math.Ceiling(position.Y + Dimensions.Y);
-                    MoveToY++)
-                // If location is not empty or self
-                if (Globals.Grid.GetObject(MoveToX, MoveToY) != null
-                    && Globals.Grid.GetObject(MoveToX, MoveToY) != this)
-                {
-                    Globals.Log(
-                        "[" + MoveToX + ", " + MoveToY + "]" +
-                        " is not empty or self: " + Globals.Grid.GetObject(MoveToX, MoveToY));
-                    return false;
-                }
+                for (var MoveToY = (int) Math.Floor(position.Y);
+                        MoveToY < (int) Math.Ceiling(position.Y + Dimensions.Y);
+                        MoveToY++)
+                    
+                    // If location is not empty or self
+                    if (Globals.Grid.GetObject(MoveToX, MoveToY) != null
+                        && Globals.Grid.GetObject(MoveToX, MoveToY) != this)
+                    {
+                        Globals.Log(
+                            "[" + MoveToX + ", " + MoveToY + "]" +
+                            " is not empty or self: " + Globals.Grid.GetObject(MoveToX, MoveToY));
+                        return false;
+                    }
 
             // If none of the above return false then it's passable
             return true;
@@ -515,21 +514,7 @@ namespace Generator
             // Attempts to move the object in a direction (radians).
         {
             // Update sprite to match direction
-            Globals.Log(radians);
-            var cardinalDirection = "Back";
-            if (radians >= .25 * Math.PI & radians < .75 * Math.PI)
-            {
-                cardinalDirection = "Left";
-            }
-            else if (radians >= .75 * Math.PI & radians < 1.25 * Math.PI)
-            {
-                cardinalDirection = "Front";
-            }
-            else if (radians >= 1.25 * Math.PI & radians < 1.75 * Math.PI)
-            {
-                cardinalDirection = "Right";
-            }
-            Sprite = SpriteDictionary[cardinalDirection]["Walking"][0];
+            Direction = radians;
 
             // Get distance
             if (speed == null) speed = (float) Math.Sqrt(Speed.CurrentValue);
@@ -541,9 +526,6 @@ namespace Generator
                 Position.X + distance * Offsets.X,
                 Position.Y + distance * Offsets.Y,
                 Position.Z);
-
-            // Set direction to the square you're aiming at
-            Direction = (float) Math.Atan2(NewPosition.X - Position.X, NewPosition.Y - Position.Y);
 
             // See if you can move to the location
             if (CanMoveTo(NewPosition)) Position = NewPosition;

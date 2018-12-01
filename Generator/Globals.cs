@@ -92,6 +92,26 @@ namespace Generator
             return new Vector2((float) Math.Sin(radians), (float) Math.Cos(radians));
         }
 
+        public static string StringFromRadians(float radians)
+        // Converts from radians to a string representing the direction
+        {
+            var cardinalDirection = "Back";
+            if (radians >= .25 * Math.PI & radians < .75 * Math.PI)
+            {
+                cardinalDirection = "Left";
+            }
+            else if (radians >= .75 * Math.PI & radians < 1.25 * Math.PI)
+            {
+                cardinalDirection = "Front";
+            }
+            else if (radians >= 1.25 * Math.PI & radians < 1.75 * Math.PI)
+            {
+                cardinalDirection = "Right";
+            }
+
+            return cardinalDirection;
+        }
+
         public static Vector3 PointRotatedAroundPoint(
                 Vector3 RotatedPoint, Vector3 AroundPoint, float Radians)
             // Rotates a point around another point
