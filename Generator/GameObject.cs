@@ -29,8 +29,8 @@ namespace Generator
         // Constructor
         public GameObject(
             // Sprites
-            string spriteFile = "2dgameartbundle/4DirectionalNinja/PNG/PNGSequences/128x128/",
-            int spriteFrames = 1,
+            string spriteFile = "Sprites/2dgameartbundle/4DirectionalNinja/PNG/PNGSequences/128x128/",
+            int spriteFrames = 11,
             string avatarFile = null,
 
             // Grid logic
@@ -84,10 +84,6 @@ namespace Generator
                     SpriteDictionary[directionString].Add(actionString, new List<Texture2D>());
                     for (int spriteFrame = 0; spriteFrame < SpriteFrames; spriteFrame++)
                     {
-                        Globals.Log(
-                                spriteFile + directionString + "-" + actionString
-                                + "/" + directionString + "-" + actionString + "_"
-                            + new String('0', 3 - spriteFrame.ToString().Length) + spriteFrame);
                         SpriteDictionary[directionString][actionString].Add(
                             Globals.Content.Load<Texture2D>(
                                 spriteFile + directionString + "-" + actionString 
@@ -518,6 +514,23 @@ namespace Generator
             )
             // Attempts to move the object in a direction (radians).
         {
+            // Update sprite to match direction
+            Globals.Log(radians);
+            var cardinalDirection = "Back";
+            if (radians >= .25 * Math.PI & radians < .75 * Math.PI)
+            {
+                cardinalDirection = "Left";
+            }
+            else if (radians >= .75 * Math.PI & radians < 1.25 * Math.PI)
+            {
+                cardinalDirection = "Front";
+            }
+            else if (radians >= 1.25 * Math.PI & radians < 1.75 * Math.PI)
+            {
+                cardinalDirection = "Right";
+            }
+            Sprite = SpriteDictionary[cardinalDirection]["Walking"][0];
+
             // Get distance
             if (speed == null) speed = (float) Math.Sqrt(Speed.CurrentValue);
             var distance = (float) speed / Globals.RefreshRate;
