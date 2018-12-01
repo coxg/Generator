@@ -123,6 +123,10 @@ namespace Generator
             Globals.DeathList = new List<string>();
             foreach (var Object in Globals.ObjectDict) Object.Value.Update();
             foreach (var Name in Globals.DeathList) Globals.ObjectDict.Remove(Name);
+            
+            // Keep the camera focused on the player
+            camera.Position = new Vector3(player.Position.X, player.Position.Y - 10, player.Position.Z + 5);
+            camera.Target = player.Position;
 
             base.Update(gameTime);
         }

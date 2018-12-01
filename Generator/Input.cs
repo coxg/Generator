@@ -37,55 +37,6 @@ namespace Generator
             if (player.Ability3 != null) player.Ability3.IsPressed = Keyboard.GetState().IsKeyDown(Keys.D3);
             if (player.Ability4 != null) player.Ability4.IsPressed = Keyboard.GetState().IsKeyDown(Keys.D4);
 
-            // Pan the camera
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
-            {
-                GameControl.camera.Position = new Vector3(
-                    GameControl.camera.Position.X,
-                    GameControl.camera.Position.Y + 1,
-                    GameControl.camera.Position.Z);
-                GameControl.camera.Target = new Vector3(
-                    GameControl.camera.Target.X,
-                    GameControl.camera.Target.Y + 1,
-                    GameControl.camera.Target.Z);
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
-            {
-                GameControl.camera.Position = new Vector3(
-                    GameControl.camera.Position.X,
-                    GameControl.camera.Position.Y - 1,
-                    GameControl.camera.Position.Z);
-                GameControl.camera.Target = new Vector3(
-                    GameControl.camera.Target.X,
-                    GameControl.camera.Target.Y - 1,
-                    GameControl.camera.Target.Z);
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
-            {
-                GameControl.camera.Position = new Vector3(
-                    GameControl.camera.Position.X - 1,
-                    GameControl.camera.Position.Y,
-                    GameControl.camera.Position.Z);
-                GameControl.camera.Target = new Vector3(
-                    GameControl.camera.Target.X - 1,
-                    GameControl.camera.Target.Y,
-                    GameControl.camera.Target.Z);
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-                GameControl.camera.Position = new Vector3(
-                    GameControl.camera.Position.X + 1,
-                    GameControl.camera.Position.Y,
-                    GameControl.camera.Position.Z);
-                GameControl.camera.Target = new Vector3(
-                    GameControl.camera.Target.X + 1,
-                    GameControl.camera.Target.Y,
-                    GameControl.camera.Target.Z);
-            }
-
             // Map rotation
             if (Keyboard.GetState().IsKeyDown(Keys.Q)) GameControl.camera.Rotation = .1f;
             if (Keyboard.GetState().IsKeyDown(Keys.E)) GameControl.camera.Rotation = -.1f;
