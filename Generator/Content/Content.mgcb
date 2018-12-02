@@ -3368,7 +3368,7 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Ninja/Attribute.png
 
-#begin Sprites/Ninja/Body - Back.png
+#begin Sprites/Ninja/Body-Back.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3378,9 +3378,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Body - Back.png
+/build:Sprites/Ninja/Body-Back.png
 
-#begin Sprites/Ninja/Body - Front.png
+#begin Sprites/Ninja/Body-Front.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3390,9 +3390,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Body - Front.png
+/build:Sprites/Ninja/Body-Front.png
 
-#begin Sprites/Ninja/Body - L View.png
+#begin Sprites/Ninja/Body-LView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3402,9 +3402,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Body - L View.png
+/build:Sprites/Ninja/Body-LView.png
 
-#begin Sprites/Ninja/Body - R View.png
+#begin Sprites/Ninja/Body-RView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3414,9 +3414,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Body - R View.png
+/build:Sprites/Ninja/Body-RView.png
 
-#begin Sprites/Ninja/Face 01 - L View.png
+#begin Sprites/Ninja/Face01-LView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3426,9 +3426,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Face 01 - L View.png
+/build:Sprites/Ninja/Face01-LView.png
 
-#begin Sprites/Ninja/Face 01 - R View.png
+#begin Sprites/Ninja/Face01-RView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3438,9 +3438,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Face 01 - R View.png
+/build:Sprites/Ninja/Face01-RView.png
 
-#begin Sprites/Ninja/Face 02 - L View.png
+#begin Sprites/Ninja/Face02-LView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3450,9 +3450,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Face 02 - L View.png
+/build:Sprites/Ninja/Face02-LView.png
 
-#begin Sprites/Ninja/Face 02 - R View.png
+#begin Sprites/Ninja/Face02-RView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3462,9 +3462,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Face 02 - R View.png
+/build:Sprites/Ninja/Face02-RView.png
 
-#begin Sprites/Ninja/Face 03 - L View.png
+#begin Sprites/Ninja/Face03-LView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3474,9 +3474,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Face 03 - L View.png
+/build:Sprites/Ninja/Face03-LView.png
 
-#begin Sprites/Ninja/Face 03 - R View.png
+#begin Sprites/Ninja/Face03-RView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3486,9 +3486,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Face 03 - R View.png
+/build:Sprites/Ninja/Face03-RView.png
 
-#begin Sprites/Ninja/Face 04 - L View.png
+#begin Sprites/Ninja/Face04-LView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3498,9 +3498,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Face 04 - L View.png
+/build:Sprites/Ninja/Face04-LView.png
 
-#begin Sprites/Ninja/Face 04 - R View.png
+#begin Sprites/Ninja/Face04-RView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3510,7 +3510,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Face 04 - R View.png
+/build:Sprites/Ninja/Face04-RView.png
 
 #begin Sprites/Ninja/Hand.png
 /importer:TextureImporter
@@ -3524,7 +3524,7 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Ninja/Hand.png
 
-#begin Sprites/Ninja/Head - Back.png
+#begin Sprites/Ninja/Head-Back.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3534,9 +3534,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Head - Back.png
+/build:Sprites/Ninja/Head-Back.png
 
-#begin Sprites/Ninja/Head - Front.png
+#begin Sprites/Ninja/Head-Front.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3546,9 +3546,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Head - Front.png
+/build:Sprites/Ninja/Head-Front.png
 
-#begin Sprites/Ninja/Head - L View.png
+#begin Sprites/Ninja/Head-LView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3558,9 +3558,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Head - L View.png
+/build:Sprites/Ninja/Head-LView.png
 
-#begin Sprites/Ninja/Head - R View.png
+#begin Sprites/Ninja/Head-RView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3570,9 +3570,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Head - R View.png
+/build:Sprites/Ninja/Head-RView.png
 
-#begin Sprites/Ninja/Left Arm - Back.png
+#begin Sprites/Ninja/LeftArm-Back.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3582,9 +3582,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Left Arm - Back.png
+/build:Sprites/Ninja/LeftArm-Back.png
 
-#begin Sprites/Ninja/Left Arm - Front.png
+#begin Sprites/Ninja/LeftArm-Front.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3594,9 +3594,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Left Arm - Front.png
+/build:Sprites/Ninja/LeftArm-Front.png
 
-#begin Sprites/Ninja/Left Arm - L View.png
+#begin Sprites/Ninja/LeftArm-LView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3606,9 +3606,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Left Arm - L View.png
+/build:Sprites/Ninja/LeftArm-LView.png
 
-#begin Sprites/Ninja/Left Arm - R View.png
+#begin Sprites/Ninja/LeftArm-RView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3618,9 +3618,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Left Arm - R View.png
+/build:Sprites/Ninja/LeftArm-RView.png
 
-#begin Sprites/Ninja/Left Leg - Back.png
+#begin Sprites/Ninja/LeftLeg-Back.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3630,9 +3630,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Left Leg - Back.png
+/build:Sprites/Ninja/LeftLeg-Back.png
 
-#begin Sprites/Ninja/Left Leg - Front.png
+#begin Sprites/Ninja/LeftLeg-Front.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3642,9 +3642,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Left Leg - Front.png
+/build:Sprites/Ninja/LeftLeg-Front.png
 
-#begin Sprites/Ninja/Left Leg - L View.png
+#begin Sprites/Ninja/LeftLeg-LView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3654,9 +3654,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Left Leg - L View.png
+/build:Sprites/Ninja/LeftLeg-LView.png
 
-#begin Sprites/Ninja/Left Leg - R View.png
+#begin Sprites/Ninja/LeftLeg-RView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3666,9 +3666,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Left Leg - R View.png
+/build:Sprites/Ninja/LeftLeg-RView.png
 
-#begin Sprites/Ninja/Melee Weapon - L View.png
+#begin Sprites/Ninja/MeleeWeapon-LView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3678,9 +3678,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Melee Weapon - L View.png
+/build:Sprites/Ninja/MeleeWeapon-LView.png
 
-#begin Sprites/Ninja/Melee Weapon.png
+#begin Sprites/Ninja/MeleeWeapon.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3690,9 +3690,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Melee Weapon.png
+/build:Sprites/Ninja/MeleeWeapon.png
 
-#begin Sprites/Ninja/Right Arm - Back.png
+#begin Sprites/Ninja/RightArm-Back.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3702,9 +3702,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Right Arm - Back.png
+/build:Sprites/Ninja/RightArm-Back.png
 
-#begin Sprites/Ninja/Right Arm - Front.png
+#begin Sprites/Ninja/RightArm-Front.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3714,9 +3714,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Right Arm - Front.png
+/build:Sprites/Ninja/RightArm-Front.png
 
-#begin Sprites/Ninja/Right Arm - L View.png
+#begin Sprites/Ninja/RightArm-LView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3726,9 +3726,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Right Arm - L View.png
+/build:Sprites/Ninja/RightArm-LView.png
 
-#begin Sprites/Ninja/Right Arm - R View.png
+#begin Sprites/Ninja/RightArm-RView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3738,9 +3738,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Right Arm - R View.png
+/build:Sprites/Ninja/RightArm-RView.png
 
-#begin Sprites/Ninja/Right Leg - Back.png
+#begin Sprites/Ninja/RightLeg-Back.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3750,9 +3750,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Right Leg - Back.png
+/build:Sprites/Ninja/RightLeg-Back.png
 
-#begin Sprites/Ninja/Right Leg - Front.png
+#begin Sprites/Ninja/RightLeg-Front.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3762,9 +3762,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Right Leg - Front.png
+/build:Sprites/Ninja/RightLeg-Front.png
 
-#begin Sprites/Ninja/Right Leg - L View.png
+#begin Sprites/Ninja/RightLeg-LView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3774,9 +3774,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Right Leg - L View.png
+/build:Sprites/Ninja/RightLeg-LView.png
 
-#begin Sprites/Ninja/Right Leg - R View.png
+#begin Sprites/Ninja/RightLeg-RView.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3786,9 +3786,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Right Leg - R View.png
+/build:Sprites/Ninja/RightLeg-RView.png
 
-#begin Sprites/Ninja/Slash FX 00.png
+#begin Sprites/Ninja/SlashFX00.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3798,9 +3798,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Slash FX 00.png
+/build:Sprites/Ninja/SlashFX00.png
 
-#begin Sprites/Ninja/Slash FX 01.png
+#begin Sprites/Ninja/SlashFX01.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3810,9 +3810,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Slash FX 01.png
+/build:Sprites/Ninja/SlashFX01.png
 
-#begin Sprites/Ninja/Slash FX 02.png
+#begin Sprites/Ninja/SlashFX02.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3822,5 +3822,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Ninja/Slash FX 02.png
+/build:Sprites/Ninja/SlashFX02.png
 
