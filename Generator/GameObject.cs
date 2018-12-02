@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -277,7 +276,6 @@ namespace Generator
         // Location
         public Vector3 Dimensions { get; set; }
         private Vector3 _position { get; set; }
-
         public Vector3 Position
         {
             get => _position;
@@ -470,25 +468,25 @@ namespace Generator
         public void Spawn()
             // Populates grid with self. This DOES NOT add sprite.
         {
-            for (var EachX = (int) Math.Floor(Position.X);
-                EachX <= Math.Ceiling(Position.X + Dimensions.X - 1);
-                EachX++)
-            for (var EachY = (int) Math.Floor(Position.Y);
-                EachY <= Math.Ceiling(Position.Y + Dimensions.Y - 1);
-                EachY++)
-                Globals.Grid.SetObject(EachX, EachY, this);
+            for (var eachX = (int) Math.Floor(Position.X);
+                eachX <= Math.Ceiling(Position.X + Dimensions.X - 1);
+                eachX++)
+            for (var eachY = (int) Math.Floor(Position.Y);
+                eachY <= Math.Ceiling(Position.Y + Dimensions.Y - 1);
+                eachY++)
+                Globals.Grid.SetObject(eachX, eachY, this);
         }
 
         public void Despawn()
             // Removes self from grid. This DOES NOT remove sprite.
         {
-            for (var EachX = (int) Math.Floor(Position.X);
-                EachX <= Math.Ceiling(Position.X + Dimensions.X - 1);
-                EachX++)
-            for (var EachY = (int) Math.Floor(Position.Y);
-                EachY <= Math.Ceiling(Position.Y + Dimensions.Y - 1);
-                EachY++)
-                Globals.Grid.SetObject(EachX, EachY, null);
+            for (var eachX = (int) Math.Floor(Position.X);
+                eachX <= Math.Ceiling(Position.X + Dimensions.X - 1);
+                eachX++)
+            for (var eachY = (int) Math.Floor(Position.Y);
+                eachY <= Math.Ceiling(Position.Y + Dimensions.Y - 1);
+                eachY++)
+                Globals.Grid.SetObject(eachX, eachY, null);
         }
 
         public void Die()

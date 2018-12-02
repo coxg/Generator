@@ -121,7 +121,7 @@ namespace Generator
                 bottomLeft.Y + (float) Math.Sqrt(2) * size.Y / 2,
                 bottomLeft.Z + (float) Math.Sqrt(2) * size.Z / 2);
 
-            // Bottom Right
+            // Bottom right
             vertices[2].Position = new Vector3(
                 bottomLeft.X + size.X,
                 bottomLeft.Y,

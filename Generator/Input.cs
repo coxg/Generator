@@ -9,12 +9,34 @@ namespace Generator
         public static void GetInput(GameObject player)
         {
             // Convert from actual movement input to direction offsets
-            var moveVerticalOffset = 0;
-            var moveHorizontalOffset = 0;
+            var moveVerticalOffset = 0.0;
+            var moveHorizontalOffset = 0.0;
             if (Keyboard.GetState().IsKeyDown(Keys.Up)) moveVerticalOffset += 1;
             if (Keyboard.GetState().IsKeyDown(Keys.Down)) moveVerticalOffset -= 1;
             if (Keyboard.GetState().IsKeyDown(Keys.Left)) moveHorizontalOffset -= 1;
             if (Keyboard.GetState().IsKeyDown(Keys.Right)) moveHorizontalOffset += 1;
+            
+            // Check the device for Player One
+            var capabilities = GamePad.GetCapabilities(PlayerIndex.One);
+            
+            // If there a controller attached, handle it
+            Globals.Log(PlayerIndex.One);
+            Globals.Log(capabilities);
+            Globals.Log(capabilities.IsConnected);
+            if (capabilities.IsConnected)
+            {
+                // Get the current state of Controller1
+                GamePadState state = GamePad.GetState(PlayerIndex.One);
+                Globals.Log(state);
+                Globals.Log(capabilities.HasLeftXThumbStick);
+
+                // You can check explicitly if a gamepad has support for a certain feature
+                if (capabilities.HasLeftXThumbStick)
+                {
+                    moveHorizontalOffset = state.ThumbSticks.Left.X;
+                    moveVerticalOffset = state.ThumbSticks.Left.Y;
+                }
+            }
 
             // Convert from direction offsets to radian direction
             if (moveHorizontalOffset != 0 || moveVerticalOffset != 0)
