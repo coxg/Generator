@@ -161,7 +161,7 @@ namespace Generator
             GridAlpha = 50;
             _grid = new GameObject[100, 100];
             RefreshRate = 30;
-            Directory = "/Users/gavencox/Generator/Generator/"; // TODO: Stop hard-coding this
+            Directory = "/Generator/Generator/"; // TODO: Stop hard-coding this
 
             // For better control
             ActivateButtonWasDown = false;
