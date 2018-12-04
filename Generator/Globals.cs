@@ -99,7 +99,7 @@ namespace Generator
             var cardinalDirection = "Back";
             if (radians >= .25 * Math.PI & radians < .75 * Math.PI)
             {
-                cardinalDirection = "Left";
+                cardinalDirection = "LView";
             }
             else if (radians >= .75 * Math.PI & radians < 1.25 * Math.PI)
             {
@@ -107,7 +107,7 @@ namespace Generator
             }
             else if (radians >= 1.25 * Math.PI & radians < 1.75 * Math.PI)
             {
-                cardinalDirection = "Right";
+                cardinalDirection = "RView";
             }
 
             return cardinalDirection;
@@ -155,7 +155,7 @@ namespace Generator
         public static void Populate()
         {
             // Regular old variables
-            Resolution = new Vector2(900, 600);
+            Resolution = new Vector2(1500, 900);
             Logging = true;
             Clock = 0;
             GridAlpha = 50;

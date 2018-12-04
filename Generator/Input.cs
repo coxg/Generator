@@ -18,11 +18,20 @@ namespace Generator
             GamePadState state = GamePad.GetState(PlayerIndex.One);
             bool ButtonOrKeyDown(Buttons button, Keys key)
             {
-                return capabilities.IsConnected ? state.IsButtonDown(button) : Keyboard.GetState().IsKeyDown(key);
+                return capabilities.IsConnected & state.IsButtonDown(button) | Keyboard.GetState().IsKeyDown(key);
+            }
+            bool ButtonStateOrKeyDown(ButtonState buttonState, Keys key)
+            {
+                return capabilities.IsConnected & buttonState == ButtonState.Pressed | Keyboard.GetState().IsKeyDown(key);
             }
 
+            float directionHorizontalOffset = 0;
+            float directionVerticalOffset = 0;
+            moveVerticalOffset = state.ThumbSticks.Left.Y;
             if (capabilities.IsConnected)
             {
+                directionHorizontalOffset = state.ThumbSticks.Right.X;
+                directionVerticalOffset = state.ThumbSticks.Right.Y;
                 moveHorizontalOffset = state.ThumbSticks.Left.X;
                 moveVerticalOffset = state.ThumbSticks.Left.Y;
                 speed = Math.Sqrt(
@@ -41,7 +50,7 @@ namespace Generator
                 speed = (float)Math.Sqrt(player.Speed.CurrentValue);
             }
 
-            // Convert from direction offsets to radian direction
+            // Move in the direction specified
             if (moveHorizontalOffset != 0 || moveVerticalOffset != 0)
             {
                 // Convert from offsets to radians
@@ -51,8 +60,22 @@ namespace Generator
                 radianDirection -= GameControl.camera.Rotation;
                 radianDirection = Globals.Mod(radianDirection, 2f * (float) Math.PI);
 
-                // Convert from radian direction to cardinal direction
+                // Move in that direction
                 player.MoveInDirection(radianDirection, (float)speed);
+            }
+
+            // Convert from direction offsets to radian direction
+            if (directionHorizontalOffset != 0 || directionVerticalOffset != 0)
+            {
+                // Convert from offsets to radians
+                var radianDirection = (float)Math.Atan2(directionHorizontalOffset, directionVerticalOffset);
+
+                // Apply offset from map rotation
+                radianDirection -= GameControl.camera.Rotation;
+                radianDirection = Globals.Mod(radianDirection, 2f * (float)Math.PI);
+
+                // Look in that direction
+                player.Direction = radianDirection;
             }
 
             // Abilities
@@ -62,11 +85,11 @@ namespace Generator
             if (player.Ability4 != null) player.Ability4.IsPressed = ButtonOrKeyDown(Buttons.RightShoulder, Keys.D4);
 
             // Map rotation
-            if (Keyboard.GetState().IsKeyDown(Keys.Q)) GameControl.camera.Rotation = .1f;
-            if (Keyboard.GetState().IsKeyDown(Keys.E)) GameControl.camera.Rotation = -.1f;
+            if (ButtonStateOrKeyDown(state.DPad.Left, Keys.Q)) GameControl.camera.Rotation = .1f;
+            if (ButtonStateOrKeyDown(state.DPad.Right, Keys.E)) GameControl.camera.Rotation = -.1f;
 
             // Zoom in/out
-            if (ButtonOrKeyDown(Buttons.DPadUp, Keys.OemPlus))
+            if (ButtonStateOrKeyDown(state.DPad.Up, Keys.OemPlus))
             {
                 GameControl.camera.Position = new Vector3(
                     GameControl.camera.Position.X,
@@ -78,7 +101,7 @@ namespace Generator
                     GameControl.camera.Target.Z - 1);
             }
 
-            if (ButtonOrKeyDown(Buttons.DPadDown, Keys.OemMinus))
+            if (ButtonStateOrKeyDown(state.DPad.Right, Keys.OemMinus))
             {
                 GameControl.camera.Position = new Vector3(
                     GameControl.camera.Position.X,

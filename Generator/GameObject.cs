@@ -22,7 +22,7 @@ namespace Generator
         public GameObject(
             
             // Sprite attributes
-            string spriteFile = "Sprites/2dgameartbundle/4DirectionalNinja/PNG/PNGSequences/128x128/",
+            string spriteFile = "Ninja",
             string avatarFile = null,
             
             // Actions
@@ -71,28 +71,75 @@ namespace Generator
         )
         {
             // Sprites
-            CurrentFrame = 0;
-            SpriteDictionary = new Dictionary<string, Dictionary<string, List<Texture2D>>>();
-            foreach (var directionString in new List<string> {"Back", "Front", "Left", "Right"})
+            ComponentDictionary = new Dictionary<string, Component>()
             {
-                SpriteDictionary.Add(directionString, new Dictionary<string, List<Texture2D>>());
-                foreach (var actionString in new List<string> {"Hurt", "Idle", "Slashing", "Walking"})
-                {
-                    SpriteDictionary[directionString].Add(actionString, new List<Texture2D>());
-                    var directory = spriteFile + directionString + "-" + actionString + "/";
-                    var numberOfFrames =  System.IO.Directory.GetFiles(
-                        Globals.Directory + "Content/" + directory, 
-                        "*.png", System.IO.SearchOption.TopDirectoryOnly).Length;
-                    for (var spriteFrame = 0; spriteFrame < numberOfFrames; spriteFrame++)
-                    {
-                        SpriteDictionary[directionString][actionString].Add(
-                            Globals.Content.Load<Texture2D>(
-                                directory + directionString + "-" + actionString + "_"
-                                + new String('0', 3 - spriteFrame.ToString().Length) + spriteFrame));
-                    }
+                {"Head", new Component(
+                    spriteFile: spriteFile + "/Head",
+                    directional: true,
+                    relativePosition: new Vector3(.5f, .506f, .65f),
+                    relativeSize: .96f,
+                    sourceObject: this)
+                },
+                {"Left Eye", new Component(
+                    spriteFile: spriteFile + "/Face01-RView",
+                    relativePosition: new Vector3(.3f, .517f, .55f),
+                    relativeSize: .384f,
+                    sourceObject: this)
+                },
+                {"Right Eye", new Component(
+                    spriteFile: spriteFile + "/Face01-LView",
+                    relativePosition: new Vector3(.7f, .517f, .55f),
+                    relativeSize: .384f,
+                    sourceObject: this)
+                },
+                {"Body", new Component(
+                    spriteFile: spriteFile + "/Body",
+                    directional: true,
+                    relativePosition: new Vector3(.5f, .505f, .23f),
+                    relativeSize: .48f,
+                    sourceObject: this)
+                },
+                {"Left Arm", new Component(
+                    spriteFile: spriteFile + "/RightArm",
+                    directional: true,
+                    relativePosition: new Vector3(-.1f, .504f, .27f),
+                    relativeSize: .24f,
+                    sourceObject: this)
+                },
+                {"Right Arm", new Component(
+                    spriteFile: spriteFile + "/LeftArm",
+                    directional: true,
+                    relativePosition: new Vector3(1.1f, .504f, .27f),
+                    relativeSize: .24f,
+                    sourceObject: this)
+                },
+                {"Left Hand", new Component(
+                    spriteFile: spriteFile + "/Hand",
+                    relativePosition: new Vector3(-.2f, .5045f, .18f),
+                    relativeSize: .24f,
+                    sourceObject: this)
+                },
+                {"Right Hand", new Component(
+                    spriteFile: spriteFile + "/Hand",
+                    relativePosition: new Vector3(1.2f, .5045f, .18f),
+                    relativeSize: .24f,
+                    sourceObject: this)
+                },
+                {"Left Leg", new Component(
+                    spriteFile: spriteFile + "/RightLeg",
+                    directional: true,
+                    relativePosition: new Vector3(.23f, .504f, .07f),
+                    relativeSize: .24f,
+                    sourceObject: this)
+                },
+                {"Right Leg", new Component(
+                    spriteFile: spriteFile + "/LeftLeg",
+                    directional: true,
+                    relativePosition: new Vector3(.77f, .504f, .07f),
+                    relativeSize: .24f,
+                    sourceObject: this)
                 }
-            }
-            Sprite = SpriteDictionary["Front"]["Idle"][0];
+            };
             Avatar = avatarFile == null ? null : Globals.Content.Load<Texture2D>(avatarFile);
             
             // Actions
@@ -102,7 +149,7 @@ namespace Generator
             IsHurting = isHurting;
 
             // Grid logic
-            Dimensions = new Vector3(width, length, height);
+            Size = new Vector3(width, length, height);
             Position = new Vector3(x, y, z);
             Spawn();
 
@@ -166,7 +213,6 @@ namespace Generator
                         staminaCost: EquippedWeapon.Weight + 10,
                         start: delegate
                         {
-                            CurrentFrame = 0;
                             IsSwinging = true;
                             
                             // Figure out which one you hit
@@ -189,7 +235,6 @@ namespace Generator
                         staminaCost: EquippedWeapon.Weight + 10,
                         start: delegate
                         {
-                            CurrentFrame = 0;
                             IsShooting = true;
                             
                             // Figure out which one you hit
@@ -261,10 +306,7 @@ namespace Generator
         }
 
         // Sprites
-        // TODO: Make sure this can be an AnimatedSprite
-        public Texture2D Sprite { get; set; }
-        public Dictionary<string, Dictionary<string, List<Texture2D>>> SpriteDictionary { get; set; }
-        public int CurrentFrame { get; set; }
+        public Dictionary<string, Component> ComponentDictionary { get; set; }
         public Texture2D Avatar { get; set; }
         
         // Actions
@@ -274,7 +316,7 @@ namespace Generator
         public bool IsHurting { get; set; }
 
         // Location
-        public Vector3 Dimensions { get; set; }
+        public Vector3 Size { get; set; }
         private Vector3 _position { get; set; }
         public Vector3 Position
         {
@@ -420,39 +462,9 @@ namespace Generator
             Health.Update();
             Stamina.Update();
             Electricity.Update();
-            
+
             // Update animation
-            var action = 
-                IsSwinging ? "Slashing" : 
-                IsShooting ? "Hurt" : // TODO: Replace with "Shooting"
-                IsHurting ? "Hurt" : 
-                IsWalking ? "Walking" : "Idle";
-            var spriteFrames = SpriteDictionary[Globals.StringFromRadians(Direction)][action];
-            CurrentFrame = (int)Globals.Mod(CurrentFrame + 1, spriteFrames.Count);
-            if (IsSwinging & CurrentFrame == 0) // TODO: Clean this up, I'm sure there's a better way
-            {
-                IsSwinging = false;
-                action =
-                    IsShooting ? "Hurt" : // TODO: Replace with "Shooting"
-                    IsHurting ? "Hurt" : 
-                    IsWalking ? "Walking" : "Idle";
-                spriteFrames = SpriteDictionary[Globals.StringFromRadians(Direction)][action];
-            }
-            if (IsShooting & CurrentFrame == 0) // TODO: Clean this up, I'm sure there's a better way
-            {
-                IsShooting = false;
-                action =
-                    IsHurting ? "Hurt" : 
-                    IsWalking ? "Walking" : "Idle";
-                spriteFrames = SpriteDictionary[Globals.StringFromRadians(Direction)][action];
-            }
-            if (IsHurting & CurrentFrame == 0 & Health.Current > Health.Max / 2.0) // TODO: Clean this up, I'm sure there's a better way
-            {
-                IsHurting = false;
-                action = IsWalking ? "Walking" : "Idle";
-                spriteFrames = SpriteDictionary[Globals.StringFromRadians(Direction)][action];
-            }
-            Sprite = spriteFrames[CurrentFrame];
+            foreach (var component in ComponentDictionary) component.Value.Update();
             IsWalking = false;
 
             // Use abilities
@@ -469,10 +481,10 @@ namespace Generator
             // Populates grid with self. This DOES NOT add sprite.
         {
             for (var eachX = (int) Math.Floor(Position.X);
-                eachX <= Math.Ceiling(Position.X + Dimensions.X - 1);
+                eachX <= Math.Ceiling(Position.X + Size.X - 1);
                 eachX++)
             for (var eachY = (int) Math.Floor(Position.Y);
-                eachY <= Math.Ceiling(Position.Y + Dimensions.Y - 1);
+                eachY <= Math.Ceiling(Position.Y + Size.Y - 1);
                 eachY++)
                 Globals.Grid.SetObject(eachX, eachY, this);
         }
@@ -481,10 +493,10 @@ namespace Generator
             // Removes self from grid. This DOES NOT remove sprite.
         {
             for (var eachX = (int) Math.Floor(Position.X);
-                eachX <= Math.Ceiling(Position.X + Dimensions.X - 1);
+                eachX <= Math.Ceiling(Position.X + Size.X - 1);
                 eachX++)
             for (var eachY = (int) Math.Floor(Position.Y);
-                eachY <= Math.Ceiling(Position.Y + Dimensions.Y - 1);
+                eachY <= Math.Ceiling(Position.Y + Size.Y - 1);
                 eachY++)
                 Globals.Grid.SetObject(eachX, eachY, null);
         }
@@ -519,7 +531,6 @@ namespace Generator
             // Live
             if (Health.Current > damage)
             {
-                CurrentFrame = 0;
                 IsHurting = true;
                 Health.Current -= damage;
             }
@@ -537,8 +548,8 @@ namespace Generator
         {
             var offsets = Globals.OffsetFromRadians(Direction);
             var targettedObject = Globals.Grid.GetObject(
-                (int) Math.Round(Position.X + (range + Dimensions.X / 2) * offsets.X),
-                (int) Math.Round(Position.Y + (range + Dimensions.Y / 2) * offsets.Y));
+                (int) Math.Round(Position.X + (range + Size.X / 2) * offsets.X),
+                (int) Math.Round(Position.Y + (range + Size.Y / 2) * offsets.Y));
             return targettedObject;
         }
 
@@ -564,13 +575,13 @@ namespace Generator
             // Loop through each x coordinate you're trying to move to
             for (
                     var moveToX = (int) Math.Floor(position.X);
-                    moveToX < (int) Math.Ceiling(position.X + Dimensions.X);
+                    moveToX < (int) Math.Ceiling(position.X + Size.X);
                     moveToX++)
                 
                 // Loop through each y coordinate you're trying to move to
                 for (
                         var moveToY = (int) Math.Floor(position.Y);
-                        moveToY < (int) Math.Ceiling(position.Y + Dimensions.Y);
+                        moveToY < (int) Math.Ceiling(position.Y + Size.Y);
                         moveToY++)
                     
                     // If location is not empty or self
@@ -594,7 +605,6 @@ namespace Generator
             // Attempts to move the object in a direction (radians).
         {
             // Update sprite visuals
-            CurrentFrame = 0;
             IsWalking = true;
             Direction = radians;
 

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Linq;
 
 namespace Generator
 {
@@ -70,15 +71,15 @@ namespace Generator
             Globals.Content = Content;
 
             // Create player
-            player = new GameObject(// TODO: This shouldn't be hard coded
-                x: 1, y: 3, stamina: 100, strength: 10, speed: 10, perception: 10, name: "Niels", partyNumber: 0, weapon: new Weapon(
+            player = new GameObject( // TODO: This shouldn't be hard coded
+                x: 0, y: 0, stamina: 100, strength: 10, speed: 10, perception: 10, name: "Niels", partyNumber: 0, weapon: new Weapon(
                     name: "Sword",
                     type: "Cut",
                     damage: 10,
                     spriteFile: "Sprites/sword"));
 
             // Create terrain
-            terrain1 = new GameObject(avatarFile: "Sprites/angry", width: 1, x: 5, y: 6, name: "angry terrain");
+            terrain1 = new GameObject(avatarFile: "Sprites/angry", x: 5, y: 6, name: "angry terrain");
             terrain1.Activate = delegate
             {
                 terrain1.Say("Check it out I do something weird");
@@ -155,15 +156,26 @@ namespace Generator
                 new Vector2(Globals.Grid.GetLength(0), Globals.Grid.GetLength(1)),
                 Globals.Grid.GetLength(0));
 
+            spriteBatch.End();
+
             // Draw the GameObjects
-            foreach (var Object in Globals.ObjectDict)
+            foreach (var Object in Globals.ObjectDict.OrderBy(i => -i.Value.Position.Y))
             {
-                Drawing.DrawSprite(
-                    Object.Value.Sprite,
-                    new Vector3(Object.Value.Position.X, Object.Value.Position.Y, Object.Value.Position.Z),
-                    new Vector3(Object.Value.Dimensions.X, Object.Value.Dimensions.Y, Object.Value.Dimensions.Z));
+                foreach (var Component in Object.Value.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
+                {
+                    spriteBatch.Begin();
+                    Drawing.DrawSprite(
+                        Component.Value.Sprite,
+                        Component.Value.Position,
+                        Object.Value.Size * Component.Value.RelativeSize);
+                    spriteBatch.End();
+                }
 
                 // Draw resource bars if they're in the party
+                spriteBatch.Begin(
+                    SpriteSortMode.BackToFront,
+                    null,
+                    SamplerState.LinearWrap);
                 if (Object.Value.PartyNumber >= 0)
                 {
                     Drawing.DrawResource(spriteBatch, Object.Value.Health, Object.Value.PartyNumber);
@@ -172,9 +184,8 @@ namespace Generator
                     if (Object.Value.Electricity.Max > 0)
                         Drawing.DrawResource(spriteBatch, Object.Value.Electricity, Object.Value.PartyNumber);
                 }
+                spriteBatch.End();
             }
-
-            spriteBatch.End();
 
             base.Draw(gameTime);
         }
