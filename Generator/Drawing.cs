@@ -118,8 +118,8 @@ namespace Generator
             // Top left
             vertices[1].Position = new Vector3(
                 bottomLeft.X,
-                bottomLeft.Y + (float) Math.Sqrt(2) * size.Y / 2,
-                bottomLeft.Z + (float) Math.Sqrt(2) * size.Z / 2);
+                bottomLeft.Y,
+                bottomLeft.Z + size.Z);
 
             // Bottom right
             vertices[2].Position = new Vector3(
@@ -131,8 +131,8 @@ namespace Generator
             // Top right
             vertices[4].Position = new Vector3(
                 bottomLeft.X + size.X,
-                bottomLeft.Y + (float) Math.Sqrt(2) * size.Y / 2,
-                bottomLeft.Z + (float) Math.Sqrt(2) * size.Z / 2);
+                bottomLeft.Y,
+                bottomLeft.Z + size.Z);
             vertices[5].Position = vertices[2].Position;
 
             // Generate the texture coordinates

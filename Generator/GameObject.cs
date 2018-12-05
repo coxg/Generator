@@ -80,15 +80,10 @@ namespace Generator
                     relativeSize: .96f,
                     sourceObject: this)
                 },
-                {"Left Eye", new Component(
-                    spriteFile: spriteFile + "/Face01-RView",
-                    relativePosition: new Vector3(.3f, .517f, .55f),
-                    relativeSize: .384f,
-                    sourceObject: this)
-                },
-                {"Right Eye", new Component(
-                    spriteFile: spriteFile + "/Face01-LView",
-                    relativePosition: new Vector3(.7f, .517f, .55f),
+                {"Face", new Component(
+                    spriteFile: spriteFile + "/Face01",
+                    directional: true,
+                    relativePosition: new Vector3(.5f, .515f, .525f),
                     relativeSize: .384f,
                     sourceObject: this)
                 },
@@ -126,17 +121,17 @@ namespace Generator
                     sourceObject: this)
                 },
                 {"Left Leg", new Component(
-                    spriteFile: spriteFile + "/RightLeg",
-                    directional: true,
+                    spriteFile: spriteFile + "/Leg",
                     relativePosition: new Vector3(.23f, .504f, .07f),
                     relativeSize: .24f,
+                    yOffset: .1f,
                     sourceObject: this)
                 },
                 {"Right Leg", new Component(
-                    spriteFile: spriteFile + "/LeftLeg",
-                    directional: true,
+                    spriteFile: spriteFile + "/Leg",
                     relativePosition: new Vector3(.77f, .504f, .07f),
                     relativeSize: .24f,
+                    yOffset: .1f,
                     sourceObject: this)
                 }
             };

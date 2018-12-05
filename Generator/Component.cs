@@ -12,7 +12,8 @@ namespace Generator
             Vector3 relativePosition,
             float relativeSize,
             bool directional = false,
-            GameObject sourceObject = null
+            GameObject sourceObject = null,
+            float yOffset = 0
         )
         {
             CurrentFrame = 0;
@@ -21,6 +22,7 @@ namespace Generator
             RelativePosition = relativePosition;
             RelativeSize = relativeSize;
             SourceObject = sourceObject;
+            YOffset = yOffset;
         }
 
         public int CurrentFrame { get; set; }
@@ -31,6 +33,7 @@ namespace Generator
         public float RelativeSize { get; set; }
         public Vector3 RelativeRotationPoint { get; set; }
         public GameObject SourceObject { get; set; }
+        public float YOffset { get; set; }
 
         public Vector3 Position
         {
@@ -72,8 +75,8 @@ namespace Generator
                 // Finally, move the component to its position relative to the object itself
                 OffsetCorrectedPosition += new Vector3(
                     SourceObject.Size.X / 2 + (RelativePosition.X - .5f) * SourceObject.Size.X * RelativeSize - .5f * SourceObject.Size.X * RelativeSize,
-                    0,
-                    SourceObject.Size.X * (RelativePosition.Z - RelativeSize / 2));
+                    YOffset,
+                    SourceObject.Size.Z * (RelativePosition.Z - RelativeSize / 2));
 
                 if (SourceObject.Name == "Niels")
                 {
