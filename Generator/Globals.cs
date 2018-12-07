@@ -114,19 +114,38 @@ namespace Generator
         }
 
         public static Vector3 PointRotatedAroundPoint(
-                Vector3 RotatedPoint, Vector3 AroundPoint, float Radians)
+                Vector3 RotatedPoint, Vector3 AroundPoint, float Radians, string axis = "XY") // TODO: Is there a cleaner way to do this?
             // Rotates a point around another point
         {
             // Translate point
             RotatedPoint -= AroundPoint;
 
-            // Rotate point
+            // Precompute sin/cos
             var sin = (float) Math.Sin(Radians);
             var cos = (float) Math.Cos(Radians);
-            RotatedPoint = new Vector3(
-                RotatedPoint.X * cos - RotatedPoint.Y * sin,
-                RotatedPoint.X * sin + RotatedPoint.Y * cos,
-                RotatedPoint.Z);
+
+            // Rotate point
+            switch (axis)
+            {
+                case "XY":
+                    RotatedPoint = new Vector3(
+                        RotatedPoint.X * cos - RotatedPoint.Y * sin,
+                        RotatedPoint.X * sin + RotatedPoint.Y * cos,
+                        RotatedPoint.Z);
+                    break;
+                case "XZ":
+                    RotatedPoint = new Vector3(
+                        RotatedPoint.X * sin + RotatedPoint.Z * cos,
+                        RotatedPoint.Y,
+                        RotatedPoint.X * cos - RotatedPoint.Z * sin);
+                    break;
+                case "YZ":
+                    RotatedPoint = new Vector3(
+                        RotatedPoint.X,
+                        RotatedPoint.Y * cos - RotatedPoint.Z * sin,
+                        RotatedPoint.Y * sin + RotatedPoint.Z * cos);
+                    break;
+            }
 
             // Translate point back
             RotatedPoint += AroundPoint;
