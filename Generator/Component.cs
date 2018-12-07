@@ -60,29 +60,12 @@ namespace Generator
                 // Subtract the offsets we used before - we draw from the bottom left corner, not the center
                 var OffsetCorrectedPosition = RotatedPosition - ComponentOffsets;
 
-                if (SourceObject.Name == "Niels")
-                {
-                    Globals.Log(SpriteFile);
-                    Globals.Log(SourceObject.Position);
-                    Globals.Log(ObjectOffsets);
-                    Globals.Log(ComponentOffsets);
-                    Globals.Log(RotatedPosition);
-                    Globals.Log(SourceObject.Position + ComponentOffsets);
-                    Globals.Log(SourceObject.Position + ObjectOffsets);
-                    Globals.Log(OffsetCorrectedPosition);
-                }
-
                 // Finally, move the component to its position relative to the object itself
                 OffsetCorrectedPosition += new Vector3(
                     SourceObject.Size.X / 2 + (RelativePosition.X - .5f) * SourceObject.Size.X * RelativeSize - .5f * SourceObject.Size.X * RelativeSize,
                     YOffset,
                     SourceObject.Size.Z * (RelativePosition.Z - RelativeSize / 2));
 
-                if (SourceObject.Name == "Niels")
-                {
-                    Globals.Log(OffsetCorrectedPosition);
-                    Globals.Log();
-                }
                 return OffsetCorrectedPosition;
             }
         }

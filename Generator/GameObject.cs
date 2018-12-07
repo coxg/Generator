@@ -83,7 +83,7 @@ namespace Generator
                 {"Face", new Component(
                     spriteFile: spriteFile + "/Face01",
                     directional: true,
-                    relativePosition: new Vector3(.5f, .515f, .525f),
+                    relativePosition: new Vector3(.5f, .57f, .525f),
                     relativeSize: .384f,
                     sourceObject: this)
                 },
