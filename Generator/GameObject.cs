@@ -76,47 +76,49 @@ namespace Generator
                 {"Head", new Component(
                     spriteFile: spriteFile + "/Head",
                     directional: true,
-                    relativePosition: new Vector3(.5f, .506f, .65f),
+                    relativePosition: new Vector3(.5f, .506f, .68f),
                     relativeSize: .96f,
+                    yOffset: -.05f,
                     sourceObject: this)
                 },
                 {"Face", new Component(
                     spriteFile: spriteFile + "/Face01",
                     directional: true,
-                    relativePosition: new Vector3(.5f, .57f, .525f),
+                    relativePosition: new Vector3(.5f, .57f, .555f),
                     relativeSize: .384f,
+                    yOffset: -.05f,
                     sourceObject: this)
                 },
                 {"Body", new Component(
                     spriteFile: spriteFile + "/Body",
                     directional: true,
-                    relativePosition: new Vector3(.5f, .505f, .23f),
+                    relativePosition: new Vector3(.5f, .505f, .26f),
                     relativeSize: .48f,
                     sourceObject: this)
                 },
                 {"Left Arm", new Component(
                     spriteFile: spriteFile + "/RightArm",
                     directional: true,
-                    relativePosition: new Vector3(-.1f, .504f, .27f),
+                    relativePosition: new Vector3(-.1f, .504f, .30f),
                     relativeSize: .24f,
                     sourceObject: this)
                 },
                 {"Right Arm", new Component(
                     spriteFile: spriteFile + "/LeftArm",
                     directional: true,
-                    relativePosition: new Vector3(1.1f, .504f, .27f),
+                    relativePosition: new Vector3(1.1f, .504f, .30f),
                     relativeSize: .24f,
                     sourceObject: this)
                 },
                 {"Left Hand", new Component(
                     spriteFile: spriteFile + "/Hand",
-                    relativePosition: new Vector3(-.2f, .5045f, .18f),
+                    relativePosition: new Vector3(-.2f, .5045f, .21f),
                     relativeSize: .24f,
                     sourceObject: this)
                 },
                 {"Right Hand", new Component(
                     spriteFile: spriteFile + "/Hand",
-                    relativePosition: new Vector3(1.2f, .5045f, .18f),
+                    relativePosition: new Vector3(1.2f, .5045f, .21f),
                     relativeSize: .24f,
                     sourceObject: this)
                 },

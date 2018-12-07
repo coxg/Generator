@@ -13,14 +13,15 @@ namespace Generator
             float relativeSize,
             bool directional = false,
             GameObject sourceObject = null,
-            float yOffset = 0
+            float yOffset = 0,
+            float sizeMultiplier = 2
         )
         {
             CurrentFrame = 0;
             Directional = directional;
             SpriteFile = spriteFile; // Fix - System.IO.Directory.GetFiles
-            RelativePosition = relativePosition;
-            RelativeSize = relativeSize;
+            RelativePosition = new Vector3(relativePosition.X, relativePosition.Y, relativePosition.Z * sizeMultiplier);
+            RelativeSize = relativeSize * sizeMultiplier;
             SourceObject = sourceObject;
             YOffset = yOffset;
         }
@@ -63,7 +64,7 @@ namespace Generator
                 // Finally, move the component to its position relative to the object itself
                 OffsetCorrectedPosition += new Vector3(
                     SourceObject.Size.X / 2 + (RelativePosition.X - .5f) * SourceObject.Size.X * RelativeSize - .5f * SourceObject.Size.X * RelativeSize,
-                    YOffset,
+                    SourceObject.Size.Y / 2 + YOffset,
                     SourceObject.Size.Z * (RelativePosition.Z - RelativeSize / 2));
 
                 return OffsetCorrectedPosition;
