@@ -45,6 +45,7 @@ namespace Generator
         public static Dictionary<string, GameObject> ObjectDict { get; set; }
         public static Dictionary<string, Weapon> WeaponsDict { get; set; }
         public static Dictionary<string, OffHand> OffHandDict { get; set; }
+        public static Dictionary<string, Helmet> HelmetDict { get; set; }
         public static Dictionary<string, Armor> ArmorDict { get; set; }
         public static Dictionary<string, Generation> GeneratorDict { get; set; }
         public static Dictionary<string, Accessory> AccessoryDict { get; set; }
@@ -193,6 +194,7 @@ namespace Generator
             ObjectDict = new Dictionary<string, GameObject>();
             WeaponsDict = new Dictionary<string, Weapon>();
             OffHandDict = new Dictionary<string, OffHand>();
+            HelmetDict = new Dictionary<string, Helmet>();
             ArmorDict = new Dictionary<string, Armor>();
             GeneratorDict = new Dictionary<string, Generation>();
             AccessoryDict = new Dictionary<string, Accessory>();

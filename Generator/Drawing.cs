@@ -32,10 +32,10 @@ namespace Generator
             var spriteWidthAndExtraMargin = 0;
             if (Globals.DisplayTextQueue.Count != 0
                 && Globals.TalkingObjectQueue.Count != 0
-                && Globals.TalkingObjectQueue.Peek().Avatar != null)
+                && Globals.TalkingObjectQueue.Peek().Sprite != null)
             {
                 spriteBatch.Draw(
-                    Globals.TalkingObjectQueue.Peek().Avatar,
+                    Globals.TalkingObjectQueue.Peek().Sprite,
                     new Rectangle(
                         Margin,
                         (int) Globals.Resolution.Y - TextBoxHeight + Margin,

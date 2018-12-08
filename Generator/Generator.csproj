@@ -62,6 +62,8 @@
     <Compile Include="Ability.cs" />
     <Compile Include="Accessory.cs" />
     <Compile Include="Animation.cs" />
+    <Compile Include="GameElement.cs" />
+    <Compile Include="Helmet.cs" />
     <Compile Include="Armor.cs" />
     <Compile Include="ArrayUtil.cs" />
     <Compile Include="Attribute.cs" />

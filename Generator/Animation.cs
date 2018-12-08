@@ -32,12 +32,12 @@ namespace Generator
             positionDifference = Globals.PointRotatedAroundPoint(
                 positionDifference,
                 new Vector3(0, 0, 0),
-                SourceAnimation.SourceObject.Direction);
+                SourceAnimation.SourceElement.Direction);
 
             // Move the object in that direction
-            var newPosition = SourceAnimation.SourceObject.Position + positionDifference;
-            if (SourceAnimation.SourceObject.CanMoveTo(newPosition))
-                SourceAnimation.SourceObject.Position = newPosition;
+            var newPosition = SourceAnimation.SourceElement.Position + positionDifference;
+            if (SourceAnimation.SourceElement.CanMoveTo(newPosition))
+                SourceAnimation.SourceElement.Position = newPosition;
 
             // Update animation logic
             SourceAnimation.TotalOffset += positionDifference;
@@ -103,7 +103,7 @@ namespace Generator
             string name = null,
 
             // What's being animated
-            GameObject sourceObject = null,
+            GameElement sourceElement = null,
 
             // What it does
             Frames startFrames = null,
@@ -114,7 +114,7 @@ namespace Generator
             Name = name;
 
             // What's being animated
-            SourceObject = sourceObject;
+            SourceElement = sourceElement;
 
             // How it does it
             TotalOffset = new Vector3(0, 0, 0);
@@ -135,7 +135,7 @@ namespace Generator
         public string Name { get; set; }
 
         // What's being animated
-        public GameObject SourceObject { get; set; }
+        public GameElement SourceElement { get; set; }
 
         // What it does
         private Frames _startFrames { get; set; }
@@ -203,7 +203,7 @@ namespace Generator
             // Outside the animation class, one should use Stop().
         {
             // Reset position
-            SourceObject.Position -= TotalOffset;
+            SourceElement.Position -= TotalOffset;
             TotalOffset = new Vector3(0, 0, 0);
 
             // Stop all animations

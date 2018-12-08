@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Generator
 {
-    public class GameObject
+    public class GameObject : GameElement
         /*
         Represents every object you will see in the game.
         Used as a basis for terrain, playable characters, and enemies.
@@ -22,8 +22,8 @@ namespace Generator
         public GameObject(
             
             // Sprite attributes
-            string spriteFile = "Ninja",
-            string avatarFile = null,
+            string componentSpriteFile = "Ninja",
+            string spriteFile = null,
             
             // Actions
             bool isWalking = false,
@@ -74,7 +74,7 @@ namespace Generator
             ComponentDictionary = new Dictionary<string, Component>()
             {
                 {"Head", new Component(
-                    spriteFile: spriteFile + "/Head",
+                    spriteFile: componentSpriteFile + "/Head",
                     directional: true,
                     relativePosition: new Vector3(.5f, .506f, .68f),
                     relativeSize: .96f,
@@ -82,7 +82,7 @@ namespace Generator
                     sourceObject: this)
                 },
                 {"Face", new Component(
-                    spriteFile: spriteFile + "/Face01",
+                    spriteFile: componentSpriteFile + "/Face01",
                     directional: true,
                     relativePosition: new Vector3(.5f, .57f, .555f),
                     relativeSize: .384f,
@@ -90,54 +90,54 @@ namespace Generator
                     sourceObject: this)
                 },
                 {"Body", new Component(
-                    spriteFile: spriteFile + "/Body",
+                    spriteFile: componentSpriteFile + "/Body",
                     directional: true,
                     relativePosition: new Vector3(.5f, .505f, .26f),
                     relativeSize: .48f,
                     sourceObject: this)
                 },
                 {"Left Arm", new Component(
-                    spriteFile: spriteFile + "/RightArm",
+                    spriteFile: componentSpriteFile + "/RightArm",
                     directional: true,
                     relativePosition: new Vector3(-.1f, .504f, .30f),
                     relativeSize: .24f,
                     sourceObject: this)
                 },
                 {"Right Arm", new Component(
-                    spriteFile: spriteFile + "/LeftArm",
+                    spriteFile: componentSpriteFile + "/LeftArm",
                     directional: true,
                     relativePosition: new Vector3(1.1f, .504f, .30f),
                     relativeSize: .24f,
                     sourceObject: this)
                 },
                 {"Left Hand", new Component(
-                    spriteFile: spriteFile + "/Hand",
+                    spriteFile: componentSpriteFile + "/Hand",
                     relativePosition: new Vector3(-.2f, .5045f, .21f),
                     relativeSize: .24f,
                     sourceObject: this)
                 },
                 {"Right Hand", new Component(
-                    spriteFile: spriteFile + "/Hand",
+                    spriteFile: componentSpriteFile + "/Hand",
                     relativePosition: new Vector3(1.2f, .5045f, .21f),
                     relativeSize: .24f,
                     sourceObject: this)
                 },
                 {"Left Leg", new Component(
-                    spriteFile: spriteFile + "/Leg",
+                    spriteFile: componentSpriteFile + "/Leg",
                     relativePosition: new Vector3(.23f, .504f, .07f),
                     relativeSize: .24f,
                     yOffset: .1f,
                     sourceObject: this)
                 },
                 {"Right Leg", new Component(
-                    spriteFile: spriteFile + "/Leg",
+                    spriteFile: componentSpriteFile + "/Leg",
                     relativePosition: new Vector3(.77f, .504f, .07f),
                     relativeSize: .24f,
                     yOffset: .1f,
                     sourceObject: this)
                 }
             };
-            Avatar = avatarFile == null ? null : Globals.Content.Load<Texture2D>(avatarFile);
+            Sprite = spriteFile == null ? null : Globals.Content.Load<Texture2D>(spriteFile);
             
             // Actions
             IsWalking = isWalking;
@@ -304,7 +304,6 @@ namespace Generator
 
         // Sprites
         public Dictionary<string, Component> ComponentDictionary { get; set; }
-        public Texture2D Avatar { get; set; }
         
         // Actions
         public bool IsWalking { get; set; }
@@ -313,9 +312,8 @@ namespace Generator
         public bool IsHurting { get; set; }
 
         // Location
-        public Vector3 Size { get; set; }
         private Vector3 _position { get; set; }
-        public Vector3 Position
+        new public Vector3 Position
         {
             get => _position;
             set
@@ -349,10 +347,8 @@ namespace Generator
         public string Name { get; set; }
         public int Level { get; set; }
         public int Experience { get; set; }
-        public float Direction { get; set; }
 
         // Abilities
-        public List<Ability> Abilities { get; set; }
         public Ability Ability1 { get; set; }
         public Ability Ability2 { get; set; }
         public Ability Ability3 { get; set; }
@@ -564,35 +560,6 @@ namespace Generator
             }
 
             return returnObject;
-        }
-
-        public bool CanMoveTo(Vector3 position)
-            // Sees if the GameObject can move to the specified location unimpeded.
-        {
-            // Loop through each x coordinate you're trying to move to
-            for (
-                    var moveToX = (int) Math.Floor(position.X);
-                    moveToX < (int) Math.Ceiling(position.X + Size.X);
-                    moveToX++)
-                
-                // Loop through each y coordinate you're trying to move to
-                for (
-                        var moveToY = (int) Math.Floor(position.Y);
-                        moveToY < (int) Math.Ceiling(position.Y + Size.Y);
-                        moveToY++)
-                    
-                    // If location is not empty or self
-                    if (Globals.Grid.GetObject(moveToX, moveToY) != null
-                        && Globals.Grid.GetObject(moveToX, moveToY) != this)
-                    {
-                        Globals.Log(
-                            "[" + moveToX + ", " + moveToY + "]" +
-                            " is not empty or self: " + Globals.Grid.GetObject(moveToX, moveToY));
-                        return false;
-                    }
-
-            // If none of the above return false then it's passable
-            return true;
         }
 
         public void MoveInDirection(

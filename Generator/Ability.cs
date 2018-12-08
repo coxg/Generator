@@ -70,7 +70,7 @@ namespace Generator
             set
             {
                 _sourceObject = value;
-                if (Animation != null) Animation.SourceObject = SourceObject;
+                if (Animation != null) Animation.SourceElement = SourceObject;
             }
         }
 
@@ -108,7 +108,7 @@ namespace Generator
                 _animation = value;
                 if (_animation != null)
                 {
-                    _animation.SourceObject = SourceObject;
+                    _animation.SourceElement = SourceObject;
                     if (_animation.Name == "") _animation.Name = Name;
                 }
             }

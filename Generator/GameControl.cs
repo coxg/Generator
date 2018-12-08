@@ -72,14 +72,14 @@ namespace Generator
 
             // Create player
             player = new GameObject( // TODO: This shouldn't be hard coded
-                x: 0, y: 0, stamina: 100, strength: 10, speed: 10, perception: 10, name: "Niels", partyNumber: 0, weapon: new Weapon(
+                x: 2.5f, y: 2.5f, stamina: 100, strength: 10, speed: 10, perception: 10, name: "Niels", partyNumber: 0, weapon: new Weapon(
                     name: "Sword",
                     type: "Cut",
                     damage: 10,
                     spriteFile: "Sprites/sword"));
 
             // Create terrain
-            terrain1 = new GameObject(avatarFile: "Sprites/angry", x: 5, y: 6, name: "angry terrain");
+            terrain1 = new GameObject(spriteFile: "Sprites/angry", x: 5, y: 6, name: "angry terrain");
             terrain1.Activate = delegate
             {
                 terrain1.Say("Check it out I do something weird");
@@ -167,7 +167,7 @@ namespace Generator
                     Drawing.DrawSprite(
                         Component.Value.Sprite,
                         Component.Value.Position,
-                        Object.Value.Size * Component.Value.RelativeSize);
+                        Object.Value.Size * Component.Value.Size);
                     spriteBatch.End();
                 }
 
