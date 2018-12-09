@@ -5,14 +5,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Generator
 {
-    public class GameElement
+    public abstract class GameElement
         // GameObjects and their components
     {
         public string Name { get; set; }
         public Vector3 AnimationOffset { get; set; }
         public Vector3 Size { get; set; }
         public Texture2D Sprite { get; set; }
-        public float Direction { get; set; }
+        public abstract float Direction { get; set; }
 
         public bool CanMoveTo(Vector3 position)
         // Sees if the GameElement can move to the specified location unimpeded.

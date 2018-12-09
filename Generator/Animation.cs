@@ -32,7 +32,7 @@ namespace Generator
             positionDifference = Globals.PointRotatedAroundPoint(
                 positionDifference,
                 new Vector3(0, 0, 0),
-                SourceAnimation.SourceElement.Direction);
+                -SourceAnimation.SourceElement.Direction);
 
             // Move the object in that direction
             SourceAnimation.SourceElement.AnimationOffset = SourceAnimation.SourceElement.AnimationOffset + positionDifference;

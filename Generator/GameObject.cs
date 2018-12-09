@@ -428,6 +428,7 @@ namespace Generator
         public bool IsHurting { get; set; }
 
         // Location
+        override public float Direction { get; set; }
         public Vector3 _Position { get; set; }
         public Vector3 Position
         {

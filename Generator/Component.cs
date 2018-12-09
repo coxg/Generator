@@ -39,6 +39,12 @@ namespace Generator
         public GameObject SourceObject { get; set; }
         public float YOffset { get; set; }
         public Dictionary<String, Animation> Animations { get; set; }
+
+        private float _Direction { get; set; }
+        override public float Direction {
+            set { _Direction = value; }
+            get { return SourceObject.Direction; }
+        }
         
         private Vector3 PositionOffset { get; set; }
         public Vector3 Position
@@ -82,6 +88,7 @@ namespace Generator
         {
             foreach (var animation in Animations) animation.Value.Update();
 
+            // TODO: Only do this when we need to - maybe that's default behavior?
             Sprite = Globals.Content.Load<Texture2D>(
                 "Sprites/" + SpriteFile + (
                 Directional ? "-" + Globals.StringFromRadians(SourceObject.Direction) : ""));
