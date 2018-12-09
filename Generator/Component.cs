@@ -11,6 +11,7 @@ namespace Generator
             string spriteFile,
             Vector3 relativePosition,
             float relativeSize,
+            string name = null,
             bool directional = false,
             GameObject sourceObject = null,
             float yOffset = 0,
@@ -18,6 +19,7 @@ namespace Generator
             Dictionary<String, Animation> animations = null
         )
         {
+            Name = name;
             CurrentFrame = 0;
             Directional = directional;
             SpriteFile = spriteFile; // Fix - System.IO.Directory.GetFiles
@@ -38,10 +40,9 @@ namespace Generator
         public float YOffset { get; set; }
         public Dictionary<String, Animation> Animations { get; set; }
         
-        private Vector3 positionOffset { get; set; }
-        new public Vector3 Position
+        private Vector3 PositionOffset { get; set; }
+        public Vector3 Position
         {
-            set { positionOffset = value - Position; }
             get
             {
                 // Get the center point of the object itself - this is what we're rotating around
@@ -71,7 +72,7 @@ namespace Generator
                     SourceObject.Size.X / 2 + (RelativePosition.X - 1) * ComponentSize.X,
                     SourceObject.Size.Y / 2 + YOffset,
                     SourceObject.Size.Z * (RelativePosition.Z - Size / 2));
-                OffsetCorrectedPosition += positionOffset;
+                OffsetCorrectedPosition += AnimationOffset;
 
                 return OffsetCorrectedPosition;
             }

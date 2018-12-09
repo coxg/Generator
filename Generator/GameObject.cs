@@ -85,20 +85,7 @@ namespace Generator
                     directional: true,
                     relativePosition: new Vector3(.5f, .57f, .555f),
                     relativeSize: .384f,
-                    yOffset: -.05f,
-                    animations: new Dictionary<string, Animation>()
-                    {
-                        {"Walk", new Animation(
-                            updateFrames: new Frames(
-                                new List<Vector3>
-                                {
-                                    new Vector3(0, 0, .1f)
-                                },
-                                .5f
-                                )
-                            )
-                        }
-                    })
+                    yOffset: -.05f)
                 },
                 {"Body", new Component(
                     spriteFile: componentSpriteFile + "/Body",
@@ -110,44 +97,133 @@ namespace Generator
                     spriteFile: componentSpriteFile + "/RightArm",
                     directional: true,
                     relativePosition: new Vector3(-.1f, .504f, .30f),
-                    relativeSize: .24f)
+                    relativeSize: .24f,
+                    yOffset: .001f,
+                    animations: new Dictionary<string, Animation>()
+                    {
+                        {"Walk", new Animation(
+                            updateFrames: new Frames(
+                                new List<Vector3>
+                                {
+                                    new Vector3(0, .1f, 0),
+                                    new Vector3(0, -.1f, 0)
+                                },
+                                1
+                                )
+                            )
+                        }
+                    })
                 },
                 {"Right Arm", new Component(
                     spriteFile: componentSpriteFile + "/LeftArm",
                     directional: true,
                     relativePosition: new Vector3(1.1f, .504f, .30f),
-                    relativeSize: .24f)
+                    relativeSize: .24f,
+                    yOffset: .001f,
+                    animations: new Dictionary<string, Animation>()
+                    {
+                        {"Walk", new Animation(
+                            updateFrames: new Frames(
+                                new List<Vector3>
+                                {
+                                    new Vector3(0, -.1f, 0),
+                                    new Vector3(0, .1f, 0)
+                                },
+                                1
+                                )
+                            )
+                        }
+                    })
                 },
                 {"Left Hand", new Component(
                     spriteFile: componentSpriteFile + "/Hand",
                     relativePosition: new Vector3(-.2f, .5045f, .21f),
-                    relativeSize: .24f)
+                    relativeSize: .24f,
+                    yOffset: .001f,
+                    animations: new Dictionary<string, Animation>()
+                    {
+                        {"Walk", new Animation(
+                            updateFrames: new Frames(
+                                new List<Vector3>
+                                {
+                                    new Vector3(0, .1f, 0),
+                                    new Vector3(0, -.1f, 0)
+                                },
+                                1
+                                )
+                            )
+                        }
+                    })
                 },
                 {"Right Hand", new Component(
                     spriteFile: componentSpriteFile + "/Hand",
                     relativePosition: new Vector3(1.2f, .5045f, .21f),
-                    relativeSize: .24f)
+                    relativeSize: .24f,
+                    yOffset: .001f,
+                    animations: new Dictionary<string, Animation>()
+                    {
+                        {"Walk", new Animation(
+                            updateFrames: new Frames(
+                                new List<Vector3>
+                                {
+                                    new Vector3(0, -.1f, 0),
+                                    new Vector3(0, .1f, 0)
+                                },
+                                1
+                                )
+                            )
+                        }
+                    })
                 },
                 {"Left Leg", new Component(
                     spriteFile: componentSpriteFile + "/Leg",
                     relativePosition: new Vector3(.23f, .504f, .07f),
                     relativeSize: .24f,
-                    yOffset: .1f)
+                    yOffset: .1f,
+                    animations: new Dictionary<string, Animation>()
+                    {
+                        {"Walk", new Animation(
+                            updateFrames: new Frames(
+                                new List<Vector3>
+                                {
+                                    new Vector3(0, -.1f, 0),
+                                    new Vector3(0, .1f, 0)
+                                },
+                                1
+                                )
+                            )
+                        }
+                    })
                 },
                 {"Right Leg", new Component(
                     spriteFile: componentSpriteFile + "/Leg",
                     relativePosition: new Vector3(.77f, .504f, .07f),
                     relativeSize: .24f,
-                    yOffset: .1f)
+                    yOffset: .1f,
+                    animations: new Dictionary<string, Animation>()
+                    {
+                        {"Walk", new Animation(
+                            updateFrames: new Frames(
+                                new List<Vector3>
+                                {
+                                    new Vector3(0, .1f, 0),
+                                    new Vector3(0, -.1f, 0)
+                                },
+                                1
+                                )
+                            )
+                        }
+                    })
                 }
             };
             foreach (var component in ComponentDictionary)
             {
+                component.Value.Name = component.Key;
                 component.Value.SourceObject = this;
                 foreach (var animation in component.Value.Animations)
                 {
                     animation.Value.Name = animation.Key;
-                    animation.Value.SourceElement = this;
+                    animation.Value.SourceElement = component.Value;
                 }
             }
             Sprite = spriteFile == null ? null : Globals.Content.Load<Texture2D>(spriteFile);
@@ -160,7 +236,7 @@ namespace Generator
 
             // Grid logic
             Size = new Vector3(width, length, height);
-            Position = new Vector3(x, y, z);
+            _Position = new Vector3(x, y, z);
             Spawn();
 
             // Resources
@@ -319,29 +395,59 @@ namespace Generator
         public Dictionary<string, Component> ComponentDictionary { get; set; }
         
         // Actions
-        public bool IsWalking { get; set; }
+        private bool _IsWalking { get; set; }
+        public bool IsWalking {
+            get => _IsWalking;
+            set
+            {
+                if (value & !IsWalking)
+                {
+                    foreach (var component in ComponentDictionary)
+                    {
+                        if (component.Value.Animations.ContainsKey("Walk"))
+                        {
+                            component.Value.Animations["Walk"].Start();
+                        }
+                    }
+                }
+                else if (!value & IsWalking)
+                {
+                    foreach (var component in ComponentDictionary)
+                    {
+                        if (component.Value.Animations.ContainsKey("Walk"))
+                        {
+                            component.Value.Animations["Walk"].Stop();
+                        }
+                    }
+                }
+                _IsWalking = value;
+            }
+        }
         public bool IsSwinging { get; set; }
         public bool IsShooting { get; set; }
         public bool IsHurting { get; set; }
 
         // Location
-        private Vector3 _position { get; set; }
-        new public Vector3 Position
+        public Vector3 _Position { get; set; }
+        public Vector3 Position
         {
-            get => _position;
+            get => _Position + AnimationOffset;
             set
             {
-                // Null out all previous locations
-                Despawn();
+                if (CanMoveTo(value))
+                {
+                    // Null out all previous locations
+                    Despawn();
 
-                // Assing new attributes for object
-                _position = new Vector3(
-                    Globals.Mod(value.X, Globals.Grid.GetLength(0)),
-                    Globals.Mod(value.Y, Globals.Grid.GetLength(1)),
-                    value.Z);
+                    // Assing new attributes for object
+                    _Position = new Vector3(
+                        Globals.Mod(value.X, Globals.Grid.GetLength(0)),
+                        Globals.Mod(value.Y, Globals.Grid.GetLength(1)),
+                        value.Z);
 
-                // Assign all new locations
-                Spawn();
+                    // Assign all new locations
+                    Spawn();
+                }
             }
         }
 
@@ -357,7 +463,6 @@ namespace Generator
         public Attribute Weight { get; set; } // Roughly in pounds
 
         // ...Other Attributes
-        public string Name { get; set; }
         public int Level { get; set; }
         public int Experience { get; set; }
 
@@ -471,15 +576,6 @@ namespace Generator
             Electricity.Update();
 
             // Update animation
-            if (IsWalking)
-            {
-                ComponentDictionary["Face"].Animations["Walk"].Start();
-            }
-            else
-            {
-                ComponentDictionary["Face"].Animations["Walk"].Stop();
-            }
-            IsWalking = false;
             foreach (var component in ComponentDictionary) component.Value.Update();
 
             // Use abilities
@@ -495,11 +591,11 @@ namespace Generator
         public void Spawn()
             // Populates grid with self. This DOES NOT add sprite.
         {
-            for (var eachX = (int) Math.Floor(Position.X);
-                eachX <= Math.Ceiling(Position.X + Size.X - 1);
+            for (var eachX = (int) Math.Floor(_Position.X);
+                eachX <= Math.Ceiling(_Position.X + Size.X - 1);
                 eachX++)
-            for (var eachY = (int) Math.Floor(Position.Y);
-                eachY <= Math.Ceiling(Position.Y + Size.Y - 1);
+            for (var eachY = (int) Math.Floor(_Position.Y);
+                eachY <= Math.Ceiling(_Position.Y + Size.Y - 1);
                 eachY++)
                 Globals.Grid.SetObject(eachX, eachY, this);
         }
@@ -507,11 +603,11 @@ namespace Generator
         public void Despawn()
             // Removes self from grid. This DOES NOT remove sprite.
         {
-            for (var eachX = (int) Math.Floor(Position.X);
-                eachX <= Math.Ceiling(Position.X + Size.X - 1);
+            for (var eachX = (int) Math.Floor(_Position.X);
+                eachX <= Math.Ceiling(_Position.X + Size.X - 1);
                 eachX++)
-            for (var eachY = (int) Math.Floor(Position.Y);
-                eachY <= Math.Ceiling(Position.Y + Size.Y - 1);
+            for (var eachY = (int) Math.Floor(_Position.Y);
+                eachY <= Math.Ceiling(_Position.Y + Size.Y - 1);
                 eachY++)
                 Globals.Grid.SetObject(eachX, eachY, null);
         }
@@ -563,8 +659,8 @@ namespace Generator
         {
             var offsets = Globals.OffsetFromRadians(Direction);
             var targettedObject = Globals.Grid.GetObject(
-                (int) Math.Round(Position.X + (range + Size.X / 2) * offsets.X),
-                (int) Math.Round(Position.Y + (range + Size.Y / 2) * offsets.Y));
+                (int) Math.Round(_Position.X + (range + Size.X / 2) * offsets.X),
+                (int) Math.Round(_Position.Y + (range + Size.Y / 2) * offsets.Y));
             return targettedObject;
         }
 
@@ -601,12 +697,12 @@ namespace Generator
             // Convert from radian direction to X/Y offsets
             var offsets = Globals.OffsetFromRadians(radians);
             var newPosition = new Vector3(
-                Position.X + distance * offsets.X,
-                Position.Y + distance * offsets.Y,
-                Position.Z);
+                _Position.X + distance * offsets.X,
+                _Position.Y + distance * offsets.Y,
+                _Position.Z);
 
             // See if you can move to the location
-            if (CanMoveTo(newPosition)) Position = newPosition;
+            Position = newPosition;
         }
 
         public void Say(string message)

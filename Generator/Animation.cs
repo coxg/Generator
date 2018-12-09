@@ -35,9 +35,7 @@ namespace Generator
                 SourceAnimation.SourceElement.Direction);
 
             // Move the object in that direction
-            var newPosition = SourceAnimation.SourceElement.Position + positionDifference;
-            if (SourceAnimation.SourceElement.CanMoveTo(newPosition))
-                SourceAnimation.SourceElement.Position = newPosition;
+            SourceAnimation.SourceElement.AnimationOffset = SourceAnimation.SourceElement.AnimationOffset + positionDifference;
 
             // Update animation logic
             SourceAnimation.TotalOffset += positionDifference;
@@ -203,7 +201,7 @@ namespace Generator
             // Outside the animation class, one should use Stop().
         {
             // Reset position
-            SourceElement.Position -= TotalOffset;
+            SourceElement.AnimationOffset -= TotalOffset;
             TotalOffset = new Vector3(0, 0, 0);
 
             // Stop all animations
@@ -227,7 +225,11 @@ namespace Generator
                 if (StartFrames != null) StartFrames.Play();
 
                 // If it was the last frame of the animation
-                if (StartFrames == null || StartFrames.CurrentFrame == 0) IsStarting = false;
+                if (StartFrames == null || StartFrames.CurrentFrame == 0)
+                {
+                    IsStarting = false;
+                    IsUpdating = true;
+                }
             }
 
             // Updating
@@ -240,11 +242,15 @@ namespace Generator
             // Stopping
             if (IsStopping)
             {
-                // Let the updating animation finish playing
-                if (IsUpdating && (UpdateFrames == null || UpdateFrames.CurrentFrame == 0))
+                // If we're ending the stopping animation
+                if (IsUpdating && (
+                        UpdateFrames == null 
+                        || UpdateFrames.CurrentFrame == 0 
+                        || UpdateFrames.Offsets[UpdateFrames.CurrentFrame] == new Vector3(0, 0, 0)))
                 {
                     IsUpdating = false;
                     if (StopFrames == null) IsStopping = false;
+                    Reset();
                 }
 
                 // If we're playing the stopping animation

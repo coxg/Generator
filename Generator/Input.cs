@@ -63,6 +63,10 @@ namespace Generator
                 // Move in that direction
                 player.MoveInDirection(radianDirection, (float)speed);
             }
+            else
+            {
+                player.IsWalking = false;
+            }
 
             // Convert from direction offsets to radian direction
             if (directionHorizontalOffset != 0 || directionVerticalOffset != 0)

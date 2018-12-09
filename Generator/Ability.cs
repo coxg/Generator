@@ -228,7 +228,6 @@ namespace Generator
             else if (WasActive && IsNowActive)
             {
                 OnUpdate();
-                if (Animation != null) Animation.OnUpdate();
             }
 
             // Update variable
