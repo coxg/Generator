@@ -12,7 +12,6 @@ namespace Generator
         public Vector3 Size { get; set; }
         public Texture2D Sprite { get; set; }
         public float Direction { get; set; }
-        public List<Ability> Abilities { get; set; }
 
         public bool CanMoveTo(Vector3 position)
         // Sees if the GameObject can move to the specified location unimpeded.

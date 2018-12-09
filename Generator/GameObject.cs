@@ -78,8 +78,7 @@ namespace Generator
                     directional: true,
                     relativePosition: new Vector3(.5f, .506f, .68f),
                     relativeSize: .96f,
-                    yOffset: -.05f,
-                    sourceObject: this)
+                    yOffset: -.05f)
                 },
                 {"Face", new Component(
                     spriteFile: componentSpriteFile + "/Face01",
@@ -87,56 +86,70 @@ namespace Generator
                     relativePosition: new Vector3(.5f, .57f, .555f),
                     relativeSize: .384f,
                     yOffset: -.05f,
-                    sourceObject: this)
+                    animations: new Dictionary<string, Animation>()
+                    {
+                        {"Walk", new Animation(
+                            updateFrames: new Frames(
+                                new List<Vector3>
+                                {
+                                    new Vector3(0, 0, .1f)
+                                },
+                                .5f
+                                )
+                            )
+                        }
+                    })
                 },
                 {"Body", new Component(
                     spriteFile: componentSpriteFile + "/Body",
                     directional: true,
                     relativePosition: new Vector3(.5f, .505f, .26f),
-                    relativeSize: .48f,
-                    sourceObject: this)
+                    relativeSize: .48f)
                 },
                 {"Left Arm", new Component(
                     spriteFile: componentSpriteFile + "/RightArm",
                     directional: true,
                     relativePosition: new Vector3(-.1f, .504f, .30f),
-                    relativeSize: .24f,
-                    sourceObject: this)
+                    relativeSize: .24f)
                 },
                 {"Right Arm", new Component(
                     spriteFile: componentSpriteFile + "/LeftArm",
                     directional: true,
                     relativePosition: new Vector3(1.1f, .504f, .30f),
-                    relativeSize: .24f,
-                    sourceObject: this)
+                    relativeSize: .24f)
                 },
                 {"Left Hand", new Component(
                     spriteFile: componentSpriteFile + "/Hand",
                     relativePosition: new Vector3(-.2f, .5045f, .21f),
-                    relativeSize: .24f,
-                    sourceObject: this)
+                    relativeSize: .24f)
                 },
                 {"Right Hand", new Component(
                     spriteFile: componentSpriteFile + "/Hand",
                     relativePosition: new Vector3(1.2f, .5045f, .21f),
-                    relativeSize: .24f,
-                    sourceObject: this)
+                    relativeSize: .24f)
                 },
                 {"Left Leg", new Component(
                     spriteFile: componentSpriteFile + "/Leg",
                     relativePosition: new Vector3(.23f, .504f, .07f),
                     relativeSize: .24f,
-                    yOffset: .1f,
-                    sourceObject: this)
+                    yOffset: .1f)
                 },
                 {"Right Leg", new Component(
                     spriteFile: componentSpriteFile + "/Leg",
                     relativePosition: new Vector3(.77f, .504f, .07f),
                     relativeSize: .24f,
-                    yOffset: .1f,
-                    sourceObject: this)
+                    yOffset: .1f)
                 }
             };
+            foreach (var component in ComponentDictionary)
+            {
+                component.Value.SourceObject = this;
+                foreach (var animation in component.Value.Animations)
+                {
+                    animation.Value.Name = animation.Key;
+                    animation.Value.SourceElement = this;
+                }
+            }
             Sprite = spriteFile == null ? null : Globals.Content.Load<Texture2D>(spriteFile);
             
             // Actions
@@ -349,6 +362,7 @@ namespace Generator
         public int Experience { get; set; }
 
         // Abilities
+        public List<Ability> Abilities { get; set; }
         public Ability Ability1 { get; set; }
         public Ability Ability2 { get; set; }
         public Ability Ability3 { get; set; }
@@ -457,8 +471,16 @@ namespace Generator
             Electricity.Update();
 
             // Update animation
-            foreach (var component in ComponentDictionary) component.Value.Update();
+            if (IsWalking)
+            {
+                ComponentDictionary["Face"].Animations["Walk"].Start();
+            }
+            else
+            {
+                ComponentDictionary["Face"].Animations["Walk"].Stop();
+            }
             IsWalking = false;
+            foreach (var component in ComponentDictionary) component.Value.Update();
 
             // Use abilities
             foreach (var ability in Abilities) ability.Update();

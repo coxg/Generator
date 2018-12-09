@@ -14,7 +14,8 @@ namespace Generator
             bool directional = false,
             GameObject sourceObject = null,
             float yOffset = 0,
-            float sizeMultiplier = 2
+            float sizeMultiplier = 2,
+            Dictionary<String, Animation> animations = null
         )
         {
             CurrentFrame = 0;
@@ -24,6 +25,7 @@ namespace Generator
             Size = relativeSize * sizeMultiplier;
             SourceObject = sourceObject;
             YOffset = yOffset;
+            Animations = animations ?? new Dictionary<String, Animation>();
         }
 
         public int CurrentFrame { get; set; }
@@ -34,9 +36,12 @@ namespace Generator
         public Vector3 RelativeRotationPoint { get; set; }
         public GameObject SourceObject { get; set; }
         public float YOffset { get; set; }
-
+        public Dictionary<String, Animation> Animations { get; set; }
+        
+        private Vector3 positionOffset { get; set; }
         new public Vector3 Position
         {
+            set { positionOffset = value - Position; }
             get
             {
                 // Get the center point of the object itself - this is what we're rotating around
@@ -66,6 +71,7 @@ namespace Generator
                     SourceObject.Size.X / 2 + (RelativePosition.X - 1) * ComponentSize.X,
                     SourceObject.Size.Y / 2 + YOffset,
                     SourceObject.Size.Z * (RelativePosition.Z - Size / 2));
+                OffsetCorrectedPosition += positionOffset;
 
                 return OffsetCorrectedPosition;
             }
@@ -73,7 +79,7 @@ namespace Generator
 
         public void Update()
         {
-            foreach (var ability in Abilities) ability.Update();
+            foreach (var animation in Animations) animation.Value.Update();
 
             Sprite = Globals.Content.Load<Texture2D>(
                 "Sprites/" + SpriteFile + (
