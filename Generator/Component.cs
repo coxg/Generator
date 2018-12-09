@@ -15,7 +15,6 @@ namespace Generator
             bool directional = false,
             GameObject sourceObject = null,
             float yOffset = 0,
-            float sizeMultiplier = 2,
             Dictionary<String, Animation> animations = null
         )
         {
@@ -23,8 +22,8 @@ namespace Generator
             CurrentFrame = 0;
             Directional = directional;
             SpriteFile = spriteFile; // Fix - System.IO.Directory.GetFiles
-            RelativePosition = new Vector3(relativePosition.X, relativePosition.Y, relativePosition.Z * sizeMultiplier);
-            Size = relativeSize * sizeMultiplier;
+            RelativePosition = relativePosition;
+            Size = relativeSize * 6;
             SourceObject = sourceObject;
             YOffset = yOffset;
             Animations = animations ?? new Dictionary<String, Animation>();

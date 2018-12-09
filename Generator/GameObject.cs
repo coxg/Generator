@@ -76,28 +76,28 @@ namespace Generator
                 {"Head", new Component(
                     spriteFile: componentSpriteFile + "/Head",
                     directional: true,
-                    relativePosition: new Vector3(.5f, .506f, .68f),
-                    relativeSize: .96f,
+                    relativePosition: new Vector3(.5f, .506f, 1.36f),
+                    relativeSize: .32f,
                     yOffset: -.05f)
                 },
                 {"Face", new Component(
                     spriteFile: componentSpriteFile + "/Face01",
                     directional: true,
-                    relativePosition: new Vector3(.5f, .57f, .555f),
-                    relativeSize: .384f,
+                    relativePosition: new Vector3(.5f, .57f, 1.11f),
+                    relativeSize: .128f,
                     yOffset: -.05f)
                 },
                 {"Body", new Component(
                     spriteFile: componentSpriteFile + "/Body",
                     directional: true,
-                    relativePosition: new Vector3(.5f, .505f, .26f),
-                    relativeSize: .48f)
+                    relativePosition: new Vector3(.5f, .505f, .52f),
+                    relativeSize: .16f)
                 },
                 {"Left Arm", new Component(
                     spriteFile: componentSpriteFile + "/RightArm",
                     directional: true,
-                    relativePosition: new Vector3(-.1f, .504f, .30f),
-                    relativeSize: .24f,
+                    relativePosition: new Vector3(-.1f, .504f, .6f),
+                    relativeSize: .08f,
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -117,8 +117,8 @@ namespace Generator
                 {"Right Arm", new Component(
                     spriteFile: componentSpriteFile + "/LeftArm",
                     directional: true,
-                    relativePosition: new Vector3(1.1f, .504f, .30f),
-                    relativeSize: .24f,
+                    relativePosition: new Vector3(1.1f, .504f, .6f),
+                    relativeSize: .08f,
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -137,8 +137,8 @@ namespace Generator
                 },
                 {"Left Hand", new Component(
                     spriteFile: componentSpriteFile + "/Hand",
-                    relativePosition: new Vector3(-.2f, .5045f, .21f),
-                    relativeSize: .24f,
+                    relativePosition: new Vector3(-.2f, .5045f, .42f),
+                    relativeSize: .08f,
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -157,8 +157,8 @@ namespace Generator
                 },
                 {"Right Hand", new Component(
                     spriteFile: componentSpriteFile + "/Hand",
-                    relativePosition: new Vector3(1.2f, .5045f, .21f),
-                    relativeSize: .24f,
+                    relativePosition: new Vector3(1.2f, .5045f, .42f),
+                    relativeSize: .08f,
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -177,8 +177,8 @@ namespace Generator
                 },
                 {"Left Leg", new Component(
                     spriteFile: componentSpriteFile + "/Leg",
-                    relativePosition: new Vector3(.23f, .504f, .07f),
-                    relativeSize: .24f,
+                    relativePosition: new Vector3(.23f, .504f, .14f),
+                    relativeSize: .08f,
                     yOffset: .1f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -197,8 +197,8 @@ namespace Generator
                 },
                 {"Right Leg", new Component(
                     spriteFile: componentSpriteFile + "/Leg",
-                    relativePosition: new Vector3(.77f, .504f, .07f),
-                    relativeSize: .24f,
+                    relativePosition: new Vector3(.77f, .504f, .14f),
+                    relativeSize: .08f,
                     yOffset: .1f,
                     animations: new Dictionary<string, Animation>()
                     {
