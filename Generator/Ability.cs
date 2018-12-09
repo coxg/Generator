@@ -20,6 +20,7 @@ namespace Generator
             // How it works
             bool isChanneled = false,
             bool isToggleable = false,
+            bool requiresWalking = false,
 
             // What it looks like
             Animation animation = null,
@@ -41,6 +42,8 @@ namespace Generator
             IsChanneled = isChanneled;
             IsToggleable = isToggleable;
             IsActive = false;
+            RequiresWalking = requiresWalking;
+          
 
             // What's using the ability
             SourceObject = sourceObject;
@@ -85,6 +88,7 @@ namespace Generator
         private bool IsActive { get; set; }
         private bool WasPressed { get; set; }
         private bool _isPressed { get; set; }
+        private bool RequiresWalking { get; set; }
 
         public bool IsPressed
         {
@@ -130,7 +134,8 @@ namespace Generator
         {
             return SourceObject.Health.Current >= HealthCost
                    && SourceObject.Stamina.Current >= StaminaCost
-                   && SourceObject.Electricity.Current >= ElectricityCost;
+                   && SourceObject.Electricity.Current >= ElectricityCost
+                   && (SourceObject.IsWalking || !RequiresWalking);
         }
 
         public void Use()

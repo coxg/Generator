@@ -278,6 +278,7 @@ namespace Generator
                         "Sprint",
                         staminaCost: 1,
                         isChanneled: true,
+                        requiresWalking: true,
                         animation: new Animation(
                             updateFrames: new Frames(
                                 new List<Vector3>
@@ -342,6 +343,7 @@ namespace Generator
                         "Always Sprint",
                         staminaCost: 1,
                         isToggleable: true,
+                        requiresWalking: true,
                         start: delegate { 
                             Speed.CurrentValue *= 4;
                             IsWalking = true; 
