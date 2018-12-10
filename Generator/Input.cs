@@ -128,8 +128,17 @@ namespace Generator
                     // If you're trying to progress a message
                     if (Globals.DisplayTextQueue.Count != 0)
                     {
-                        Globals.DisplayTextQueue.Dequeue();
-                        Globals.TalkingObjectQueue.Dequeue();
+                        // Removes text box if player looks away from active object
+                        if (player.GetTarget() != Globals.TalkingObjectQueue.Peek())
+                        {
+                            Globals.DisplayTextQueue.Clear();
+                            Globals.TalkingObjectQueue.Clear();
+                        }
+                        else
+                        {
+                            Globals.DisplayTextQueue.Dequeue();
+                            Globals.TalkingObjectQueue.Dequeue();
+                        }
                     }
 
                     // If you're trying to activate the object in front of you
