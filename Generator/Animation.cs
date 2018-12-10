@@ -7,18 +7,21 @@ namespace Generator
         // The frames of the animation
     {
         public Frames(
-                List<Vector3> offsets,
                 float duration,
+                List<Vector3> offsets = null,
+                List<Vector3> rotations = null,
                 Animation sourceAnimation = null)
             // Constructor
         {
             SourceAnimation = sourceAnimation;
             Duration = (int) (duration * Globals.RefreshRate);
             CurrentFrame = 0;
-            Offsets = SmoothFrames(offsets, Duration);
+            Offsets = SmoothFrames(offsets ?? new List<Vector3>(), Duration);
+            Rotations = SmoothFrames(rotations ?? new List<Vector3>(), Duration);
         }
 
         public List<Vector3> Offsets { get; set; }
+        public List<Vector3> Rotations { get; set; }
         public Animation SourceAnimation { get; set; }
         public int Duration { get; set; }
         public int CurrentFrame { get; set; }
@@ -27,18 +30,18 @@ namespace Generator
             // Plays a frame of the animation
         {
             // Rotate the difference between the last frame and this one
-            var positionDifference = Offsets[CurrentFrame]
-                                     - Offsets[(int) Globals.Mod(CurrentFrame - 1, Offsets.Count)];
-            positionDifference = Globals.PointRotatedAroundPoint(
-                positionDifference,
+            var positionDifference = Globals.PointRotatedAroundPoint(
+                Offsets[CurrentFrame],
                 new Vector3(0, 0, 0),
                 -SourceAnimation.SourceElement.Direction);
 
             // Move the object in that direction
-            SourceAnimation.SourceElement.AnimationOffset = SourceAnimation.SourceElement.AnimationOffset + positionDifference;
+            SourceAnimation.SourceElement.AnimationOffset = positionDifference;
 
             // Update animation logic
-            SourceAnimation.TotalOffset += positionDifference;
+            SourceAnimation.TotalOffset = positionDifference;
+
+            // Update the current frame
             CurrentFrame = (int) Globals.Mod(CurrentFrame + 1, Offsets.Count);
         }
 
@@ -116,6 +119,7 @@ namespace Generator
 
             // How it does it
             TotalOffset = new Vector3(0, 0, 0);
+            TotalRotation = new Vector3(0, 0, 0);
             IsStarting = false;
             IsUpdating = false;
             IsStopping = false;
@@ -171,6 +175,7 @@ namespace Generator
 
         // How it does it
         public Vector3 TotalOffset { get; set; }
+        public Vector3 TotalRotation { get; set; }
         public bool IsStarting { get; set; }
         public bool IsUpdating { get; set; }
         public bool IsStopping { get; set; }
@@ -250,7 +255,6 @@ namespace Generator
                 {
                     IsUpdating = false;
                     if (StopFrames == null) IsStopping = false;
-                    Reset();
                 }
 
                 // If we're playing the stopping animation

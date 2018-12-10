@@ -78,6 +78,7 @@ namespace Generator
                     directional: true,
                     relativePosition: new Vector3(.5f, .506f, 1.36f),
                     relativeSize: .32f,
+                    rotationPoint: new Vector3(.16f, 0, .256f),
                     yOffset: -.05f)
                 },
                 {"Face", new Component(
@@ -85,30 +86,33 @@ namespace Generator
                     directional: true,
                     relativePosition: new Vector3(.5f, .57f, 1.11f),
                     relativeSize: .128f,
+                    rotationPoint: new Vector3(.08f, 0, .066f),
                     yOffset: -.05f)
                 },
                 {"Body", new Component(
                     spriteFile: componentSpriteFile + "/Body",
                     directional: true,
                     relativePosition: new Vector3(.5f, .505f, .52f),
-                    relativeSize: .16f)
+                    relativeSize: .16f,
+                    rotationPoint: new Vector3(.08f, 0, .08f))
                 },
                 {"Left Arm", new Component(
                     spriteFile: componentSpriteFile + "/RightArm",
                     directional: true,
                     relativePosition: new Vector3(-.1f, .504f, .6f),
                     relativeSize: .08f,
+                    rotationPoint: new Vector3(.04f, 0, .023f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                new List<Vector3>
+                                offsets: new List<Vector3>
                                 {
                                     new Vector3(0, .1f, 0),
                                     new Vector3(0, -.1f, 0)
                                 },
-                                1
+                                duration: 1
                                 )
                             )
                         }
@@ -119,17 +123,18 @@ namespace Generator
                     directional: true,
                     relativePosition: new Vector3(1.1f, .504f, .6f),
                     relativeSize: .08f,
+                    rotationPoint: new Vector3(.04f, 0, .023f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                new List<Vector3>
+                                offsets: new List<Vector3>
                                 {
                                     new Vector3(0, -.1f, 0),
                                     new Vector3(0, .1f, 0)
                                 },
-                                1
+                                duration: 1
                                 )
                             )
                         }
@@ -139,17 +144,18 @@ namespace Generator
                     spriteFile: componentSpriteFile + "/Hand",
                     relativePosition: new Vector3(-.2f, .5045f, .42f),
                     relativeSize: .08f,
+                    rotationPoint: new Vector3(.04f, 0, .027f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                new List<Vector3>
+                                offsets: new List<Vector3>
                                 {
                                     new Vector3(0, .1f, 0),
                                     new Vector3(0, -.1f, 0)
                                 },
-                                1
+                                duration: 1
                                 )
                             )
                         }
@@ -159,17 +165,18 @@ namespace Generator
                     spriteFile: componentSpriteFile + "/Hand",
                     relativePosition: new Vector3(1.2f, .5045f, .42f),
                     relativeSize: .08f,
+                    rotationPoint: new Vector3(.04f, 0, .027f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                new List<Vector3>
+                                offsets: new List<Vector3>
                                 {
                                     new Vector3(0, -.1f, 0),
                                     new Vector3(0, .1f, 0)
                                 },
-                                1
+                                duration: 1
                                 )
                             )
                         }
@@ -179,17 +186,18 @@ namespace Generator
                     spriteFile: componentSpriteFile + "/Leg",
                     relativePosition: new Vector3(.23f, .504f, .14f),
                     relativeSize: .08f,
+                    rotationPoint: new Vector3(.04f, 0, .018f),
                     yOffset: .1f,
                     animations: new Dictionary<string, Animation>()
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                new List<Vector3>
+                                offsets: new List<Vector3>
                                 {
                                     new Vector3(0, -.1f, 0),
                                     new Vector3(0, .1f, 0)
                                 },
-                                1
+                                duration: 1
                                 )
                             )
                         }
@@ -199,17 +207,18 @@ namespace Generator
                     spriteFile: componentSpriteFile + "/Leg",
                     relativePosition: new Vector3(.77f, .504f, .14f),
                     relativeSize: .08f,
+                    rotationPoint: new Vector3(.04f, 0, .018f),
                     yOffset: .1f,
                     animations: new Dictionary<string, Animation>()
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                new List<Vector3>
+                                offsets: new List<Vector3>
                                 {
                                     new Vector3(0, .1f, 0),
                                     new Vector3(0, -.1f, 0)
                                 },
-                                1
+                                duration: 1
                                 )
                             )
                         }
@@ -248,7 +257,7 @@ namespace Generator
             Strength = new Attribute(strength);
             Speed = new Attribute(speed);
             Perception = new Attribute(perception);
-            Weight = new Attribute(weight); // Roughly in pounds
+            Weight = new Attribute(weight); // TODO: Use this in knockback calculation
 
             // ...Other Attributes
             Name = name;
@@ -281,11 +290,11 @@ namespace Generator
                         requiresWalking: true,
                         animation: new Animation(
                             updateFrames: new Frames(
-                                new List<Vector3>
+                                offsets: new List<Vector3>
                                 {
                                     new Vector3(0, 0, .2f)
                                 },
-                                .5f)),
+                                duration: .5f)),
                         start: delegate { 
                             Speed.CurrentValue *= 4;
                             IsWalking = true; 
@@ -355,24 +364,24 @@ namespace Generator
                         },
                         animation: new Animation(
                             startFrames: new Frames(
-                                new List<Vector3>
+                                offsets: new List<Vector3>
                                 {
                                     new Vector3(0, 0, 1)
                                 },
-                                1),
+                                duration: 1),
                             updateFrames: new Frames(
-                                new List<Vector3>
+                                offsets: new List<Vector3>
                                 {
                                     new Vector3(-.2f, 0, 0),
                                     new Vector3(.2f, 0, 0)
                                 },
-                                .5f),
+                                duration: .5f),
                             stopFrames: new Frames(
-                                new List<Vector3>
+                                offsets: new List<Vector3>
                                 {
                                     new Vector3(0, 0, 1)
                                 },
-                                1.0f)))
+                                duration: 1)))
                 };
                 foreach (var ability in abilities) ability.SourceObject = this;
                 Abilities = abilities;
@@ -432,7 +441,7 @@ namespace Generator
         // Location
         override public float Direction { get; set; }
         public Vector3 _Position { get; set; }
-        public Vector3 Position
+        override public Vector3 Position
         {
             get => _Position + AnimationOffset;
             set
@@ -662,9 +671,9 @@ namespace Generator
         {
             var offsets = Globals.OffsetFromRadians(Direction);
             var targettedObject = Globals.Grid.GetObject(
-                (int) Math.Round(_Position.X + (range + Size.X / 2) * offsets.X),
-                (int) Math.Round(_Position.Y + (range + Size.Y / 2) * offsets.Y));
-            return targettedObject;
+                (int) Math.Round(Center.X + range * offsets.X),
+                (int) Math.Round(Center.Y + range * offsets.Y));
+            return targettedObject != this ? targettedObject : null;
         }
 
         public GameObject GetTargetInRange(int range = 1)

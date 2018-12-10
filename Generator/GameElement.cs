@@ -10,9 +10,14 @@ namespace Generator
     {
         public string Name { get; set; }
         public Vector3 AnimationOffset { get; set; }
+        public Vector3 RotationOffset { get; set; }
+        public Vector3 RotationPoint { get; set; }
         public Vector3 Size { get; set; }
         public Texture2D Sprite { get; set; }
+        public abstract Vector3 Position { get; set; }
         public abstract float Direction { get; set; }
+
+        public Vector3 Center { get { return Position + Size / 2; } }
 
         public bool CanMoveTo(Vector3 position)
         // Sees if the GameElement can move to the specified location unimpeded.

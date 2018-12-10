@@ -6,6 +6,7 @@ namespace Generator
     {
         // Constructor
         public Ability(
+
             // Ability name
             string name,
 
@@ -44,7 +45,6 @@ namespace Generator
             IsActive = false;
             RequiresWalking = requiresWalking;
           
-
             // What's using the ability
             SourceObject = sourceObject;
 
@@ -65,7 +65,6 @@ namespace Generator
 
         // What's using the ability
         private GameObject _sourceObject { get; set; }
-
         public GameObject SourceObject
         {
             get => _sourceObject;
@@ -102,7 +101,6 @@ namespace Generator
 
         // What it looks like
         private Animation _animation { get; set; }
-
         public Animation Animation
         {
             get => _animation;

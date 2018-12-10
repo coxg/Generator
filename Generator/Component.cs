@@ -11,6 +11,7 @@ namespace Generator
             string spriteFile,
             Vector3 relativePosition,
             float relativeSize,
+            Vector3 rotationPoint,
             string name = null,
             bool directional = false,
             GameObject sourceObject = null,
@@ -18,12 +19,13 @@ namespace Generator
             Dictionary<String, Animation> animations = null
         )
         {
+            RotationPoint = rotationPoint;
             Name = name;
             CurrentFrame = 0;
             Directional = directional;
-            SpriteFile = spriteFile; // Fix - System.IO.Directory.GetFiles
+            SpriteFile = spriteFile;
             RelativePosition = relativePosition;
-            Size = relativeSize * 6;
+            Size = relativeSize * 6; // TODO: Why is this necessary? Why is it 6?
             SourceObject = sourceObject;
             YOffset = yOffset;
             Animations = animations ?? new Dictionary<String, Animation>();
@@ -34,7 +36,6 @@ namespace Generator
         public string SpriteFile { get; set; }
         public Vector3 RelativePosition { get; set; }
         new public float Size { get; set; }
-        public Vector3 RelativeRotationPoint { get; set; }
         public GameObject SourceObject { get; set; }
         public float YOffset { get; set; }
         public Dictionary<String, Animation> Animations { get; set; }
@@ -46,8 +47,10 @@ namespace Generator
         }
         
         private Vector3 PositionOffset { get; set; }
-        public Vector3 Position
+        override public Vector3 Position
         {
+            set { throw new NotImplementedException("Cannot set Component position directly; use an animation instead."); }
+
             get
             {
                 // Get the center point of the object itself - this is what we're rotating around
