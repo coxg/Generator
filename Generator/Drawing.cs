@@ -99,9 +99,8 @@ namespace Generator
                 .05f);
         }
 
-        public static void DrawSprite(
-                Texture2D sprite,
-                Vector3 bottomLeft,
+        public static void DrawElement(
+                GameElement gameElement,
                 Vector3 size)
             // This should be used to draw characters.
             // These should be able to move, rotate, etc.
@@ -110,6 +109,7 @@ namespace Generator
             var vertices = new VertexPositionTexture[6];
 
             // Bottom left
+            var bottomLeft = gameElement.Position;
             vertices[0].Position = new Vector3(
                 bottomLeft.X,
                 bottomLeft.Y,
@@ -149,7 +149,7 @@ namespace Generator
                 View = GameControl.camera.View,
                 Projection = GameControl.camera.Projection,
                 TextureEnabled = true,
-                Texture = sprite
+                Texture = gameElement.Sprite
             };
             foreach (var pass in effect.CurrentTechnique.Passes)
             {

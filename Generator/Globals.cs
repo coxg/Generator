@@ -115,38 +115,35 @@ namespace Generator
         }
 
         public static Vector3 PointRotatedAroundPoint(
-                Vector3 RotatedPoint, Vector3 AroundPoint, float Radians, string axis = "XY") // TODO: Is there a cleaner way to do this?
-            // Rotates a point around another point
+                        Vector3 RotatedPoint, Vector3 AroundPoint, Vector3 RotationAxis)
+        // Rotates a point around another point
         {
             // Translate point
             RotatedPoint -= AroundPoint;
 
             // Precompute sin/cos
-            var sin = (float) Math.Sin(Radians);
-            var cos = (float) Math.Cos(Radians);
+            var sin = new Vector3(
+                (float)Math.Sin(RotationAxis.X),
+                (float)Math.Sin(RotationAxis.Y),
+                (float)Math.Sin(RotationAxis.Z));
+            var cos = new Vector3(
+                (float)Math.Cos(RotationAxis.X),
+                (float)Math.Cos(RotationAxis.Y),
+                (float)Math.Cos(RotationAxis.Z));
 
-            // Rotate point
-            switch (axis)
-            {
-                case "XY":
-                    RotatedPoint = new Vector3(
-                        RotatedPoint.X * cos - RotatedPoint.Y * sin,
-                        RotatedPoint.X * sin + RotatedPoint.Y * cos,
-                        RotatedPoint.Z);
-                    break;
-                case "XZ":
-                    RotatedPoint = new Vector3(
-                        RotatedPoint.X * sin + RotatedPoint.Z * cos,
-                        RotatedPoint.Y,
-                        RotatedPoint.X * cos - RotatedPoint.Z * sin);
-                    break;
-                case "YZ":
-                    RotatedPoint = new Vector3(
-                        RotatedPoint.X,
-                        RotatedPoint.Y * cos - RotatedPoint.Z * sin,
-                        RotatedPoint.Y * sin + RotatedPoint.Z * cos);
-                    break;
-            }
+            // Rotate point around each axis
+            RotatedPoint = new Vector3(
+                RotatedPoint.X,
+                RotatedPoint.Y * cos.X - RotatedPoint.Z * sin.X,
+                RotatedPoint.Y * sin.X + RotatedPoint.Z * cos.X);
+            RotatedPoint = new Vector3(
+                RotatedPoint.X * cos.Y + RotatedPoint.Z * sin.Y,
+                RotatedPoint.Y,
+                -RotatedPoint.X * sin.Y + RotatedPoint.Z * cos.Y);
+            RotatedPoint = new Vector3(
+                RotatedPoint.X * cos.Z - RotatedPoint.Y * sin.Z,
+                RotatedPoint.X * sin.Z + RotatedPoint.Y * cos.Z,
+                RotatedPoint.Z);
 
             // Translate point back
             RotatedPoint += AroundPoint;
@@ -163,11 +160,9 @@ namespace Generator
                 var CallingFrame = new StackTrace(1, true).GetFrame(0);
                 Console.WriteLine(
                     CallingFrame.GetFileName().Split('\\').Last() + " line "
-                                                                  + CallingFrame.GetFileLineNumber() + ", in "
-                                                                  + CallingFrame.GetMethod().ToString()
-                                                                      .Split(" ".ToCharArray())
-                                                                      [1].Split("(".ToCharArray()).First() + ": "
-                                                                  + text);
+                    + CallingFrame.GetFileLineNumber() + ", in " 
+                    + CallingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First() 
+                    + ": " + text);
             }
         }
 

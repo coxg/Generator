@@ -164,9 +164,8 @@ namespace Generator
                 foreach (var Component in Object.Value.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
                 {
                     spriteBatch.Begin();
-                    Drawing.DrawSprite(
-                        Component.Value.Sprite,
-                        Component.Value.Position,
+                    Drawing.DrawElement(
+                        Component.Value,
                         Object.Value.Size * Component.Value.Size);
                     spriteBatch.End();
                 }

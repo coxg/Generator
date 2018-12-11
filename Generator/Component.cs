@@ -70,7 +70,7 @@ namespace Generator
                 var RotatedPosition = Globals.PointRotatedAroundPoint(
                     SourceObject.Position + ComponentOffsets, // Center of component
                     SourceObject.Position + ObjectOffsets, // Center of object
-                    -SourceObject.Direction);
+                    new Vector3(0, 0, -SourceObject.Direction));
 
                 // Subtract the offsets we used before - we draw from the bottom left corner, not the center
                 var OffsetCorrectedPosition = RotatedPosition - ComponentOffsets;

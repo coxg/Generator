@@ -671,9 +671,9 @@ namespace Generator
         {
             var offsets = Globals.OffsetFromRadians(Direction);
             var targettedObject = Globals.Grid.GetObject(
-                (int) Math.Round(Center.X + range * offsets.X),
-                (int) Math.Round(Center.Y + range * offsets.Y));
-            return targettedObject != this ? targettedObject : null;
+                (int)Math.Round(_Position.X + (range + Size.X / 2) * offsets.X),
+                (int)Math.Round(_Position.Y + (range + Size.Y / 2) * offsets.Y));
+            return targettedObject;
         }
 
         public GameObject GetTargetInRange(int range = 1)

@@ -33,13 +33,14 @@ namespace Generator
             var positionDifference = Globals.PointRotatedAroundPoint(
                 Offsets[CurrentFrame],
                 new Vector3(0, 0, 0),
-                -SourceAnimation.SourceElement.Direction);
+                new Vector3(0, 0, -SourceAnimation.SourceElement.Direction));
 
             // Move the object in that direction
             SourceAnimation.SourceElement.AnimationOffset = positionDifference;
 
             // Update animation logic
             SourceAnimation.TotalOffset = positionDifference;
+            SourceAnimation.TotalRotation = Rotations[CurrentFrame];
 
             // Update the current frame
             CurrentFrame = (int) Globals.Mod(CurrentFrame + 1, Offsets.Count);
