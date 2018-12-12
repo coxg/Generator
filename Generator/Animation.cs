@@ -37,6 +37,7 @@ namespace Generator
 
             // Move the object in that direction
             SourceAnimation.SourceElement.AnimationOffset = positionDifference;
+            SourceAnimation.SourceElement.RotationOffset = Rotations[CurrentFrame];
 
             // Update animation logic
             SourceAnimation.TotalOffset = positionDifference;
@@ -209,6 +210,7 @@ namespace Generator
             // Reset position
             SourceElement.AnimationOffset -= TotalOffset;
             TotalOffset = new Vector3(0, 0, 0);
+            SourceElement.RotationOffset = new Vector3(0, 0, 0);
 
             // Stop all animations
             IsStarting = false;
@@ -252,7 +254,8 @@ namespace Generator
                 if (IsUpdating && (
                         UpdateFrames == null 
                         || UpdateFrames.CurrentFrame == 0 
-                        || UpdateFrames.Offsets[UpdateFrames.CurrentFrame] == new Vector3(0, 0, 0)))
+                        || (UpdateFrames.Offsets[UpdateFrames.CurrentFrame] == new Vector3(0, 0, 0) 
+                            & UpdateFrames.Rotations[UpdateFrames.CurrentFrame] == new Vector3(0, 0, 0))))
                 {
                     IsUpdating = false;
                     if (StopFrames == null) IsStopping = false;

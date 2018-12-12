@@ -110,29 +110,43 @@ namespace Generator
 
             // Bottom left
             var bottomLeft = gameElement.Position;
-            vertices[0].Position = new Vector3(
-                bottomLeft.X,
-                bottomLeft.Y,
-                bottomLeft.Z);
+            var rotationPoint = bottomLeft + gameElement.RotationPoint;
+            var rotationDirection = Globals.PointRotatedAroundPoint(
+                gameElement.RotationOffset,
+                new Vector3(0, 0, 0),
+                new Vector3(0, 0, gameElement.Direction));
+            vertices[0].Position = Globals.PointRotatedAroundPoint(
+                bottomLeft,
+                rotationPoint,
+                rotationDirection);
 
             // Top left
-            vertices[1].Position = new Vector3(
-                bottomLeft.X,
-                bottomLeft.Y,
-                bottomLeft.Z + size.Z);
+            vertices[1].Position = Globals.PointRotatedAroundPoint(
+                new Vector3(
+                    bottomLeft.X,
+                    bottomLeft.Y,
+                    bottomLeft.Z + size.Z),
+                rotationPoint,
+                rotationDirection);
 
             // Bottom right
-            vertices[2].Position = new Vector3(
-                bottomLeft.X + size.X,
-                bottomLeft.Y,
-                bottomLeft.Z);
+            vertices[2].Position = Globals.PointRotatedAroundPoint(
+                new Vector3(
+                    bottomLeft.X + size.X,
+                    bottomLeft.Y,
+                    bottomLeft.Z),
+                rotationPoint,
+                rotationDirection);
             vertices[3].Position = vertices[1].Position;
 
             // Top right
-            vertices[4].Position = new Vector3(
-                bottomLeft.X + size.X,
-                bottomLeft.Y,
-                bottomLeft.Z + size.Z);
+            vertices[4].Position = Globals.PointRotatedAroundPoint(
+                new Vector3(
+                    bottomLeft.X + size.X,
+                    bottomLeft.Y,
+                    bottomLeft.Z + size.Z),
+                rotationPoint,
+                rotationDirection);
             vertices[5].Position = vertices[2].Position;
 
             // Generate the texture coordinates

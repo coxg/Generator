@@ -107,10 +107,10 @@ namespace Generator
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                offsets: new List<Vector3>
+                                rotations: new List<Vector3>
                                 {
-                                    new Vector3(0, .1f, 0),
-                                    new Vector3(0, -.1f, 0)
+                                    new Vector3(.7f, 0, 0),
+                                    new Vector3(-.7f, 0, 0)
                                 },
                                 duration: 1
                                 )
@@ -129,10 +129,10 @@ namespace Generator
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                offsets: new List<Vector3>
+                                rotations: new List<Vector3>
                                 {
-                                    new Vector3(0, -.1f, 0),
-                                    new Vector3(0, .1f, 0)
+                                    new Vector3(-.7f, 0, 0),
+                                    new Vector3(.7f, 0, 0)
                                 },
                                 duration: 1
                                 )
@@ -144,16 +144,16 @@ namespace Generator
                     spriteFile: componentSpriteFile + "/Hand",
                     relativePosition: new Vector3(-.2f, .5045f, .42f),
                     relativeSize: .08f,
-                    rotationPoint: new Vector3(.04f, 0, .027f),
+                    rotationPoint: new Vector3(.04f, 0, .032f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                offsets: new List<Vector3>
+                                rotations: new List<Vector3>
                                 {
-                                    new Vector3(0, .1f, 0),
-                                    new Vector3(0, -.1f, 0)
+                                    new Vector3(.7f, 0, 0),
+                                    new Vector3(-.7f, 0, 0)
                                 },
                                 duration: 1
                                 )
@@ -165,16 +165,16 @@ namespace Generator
                     spriteFile: componentSpriteFile + "/Hand",
                     relativePosition: new Vector3(1.2f, .5045f, .42f),
                     relativeSize: .08f,
-                    rotationPoint: new Vector3(.04f, 0, .027f),
+                    rotationPoint: new Vector3(.04f, 0, .032f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                offsets: new List<Vector3>
+                                rotations: new List<Vector3>
                                 {
-                                    new Vector3(0, -.1f, 0),
-                                    new Vector3(0, .1f, 0)
+                                    new Vector3(-.7f, 0, 0),
+                                    new Vector3(.7f, 0, 0)
                                 },
                                 duration: 1
                                 )
@@ -192,10 +192,10 @@ namespace Generator
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                offsets: new List<Vector3>
+                                rotations: new List<Vector3>
                                 {
-                                    new Vector3(0, -.1f, 0),
-                                    new Vector3(0, .1f, 0)
+                                    new Vector3(-.7f, 0, 0),
+                                    new Vector3(.7f, 0, 0)
                                 },
                                 duration: 1
                                 )
@@ -213,10 +213,10 @@ namespace Generator
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                offsets: new List<Vector3>
+                                rotations: new List<Vector3>
                                 {
-                                    new Vector3(0, .1f, 0),
-                                    new Vector3(0, -.1f, 0)
+                                    new Vector3(.7f, 0, 0),
+                                    new Vector3(-.7f, 0, 0)
                                 },
                                 duration: 1
                                 )
