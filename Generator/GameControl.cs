@@ -46,7 +46,7 @@ namespace Generator
         /// </summary>
         protected override void Initialize()
         {
-            camera = new Camera(new Vector3(20, -40, 20));
+            camera = new Camera();
 
             // We’ll be assigning texture values later
             base.Initialize();
@@ -127,7 +127,7 @@ namespace Generator
             
             // Keep the camera focused on the player
             camera.Position = new Vector3(player.Position.X, player.Position.Y - 10, player.Position.Z + 5);
-            camera.Target = player.Position;
+            camera.Target = new Vector3(player.Position.X, player.Position.Y - 1, player.Position.Z);
 
             base.Update(gameTime);
         }

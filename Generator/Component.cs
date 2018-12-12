@@ -19,11 +19,10 @@ namespace Generator
             Dictionary<String, Animation> animations = null
         )
         {
-            RotationPoint = rotationPoint * 6;
             RotationPoint = new Vector3(
                 rotationPoint.X * 6,
                 rotationPoint.Y * 6,
-                rotationPoint.Z * 18);
+                rotationPoint.Z * 18); // TODO: What's going on here?
             Name = name;
             CurrentFrame = 0;
             Directional = directional;

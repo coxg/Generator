@@ -7,11 +7,9 @@ namespace Generator
         // Rotation stuff
         private float rotation;
 
-        public Camera(Vector3 position)
+        public Camera()
             // Constructor
         {
-            Position = position;
-            Target = new Vector3(position.X, 0, 0);
             Up = Vector3.UnitZ;
             Rotation = 0f;
         }

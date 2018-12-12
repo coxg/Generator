@@ -184,7 +184,7 @@ namespace Generator
                 },
                 {"Left Leg", new Component(
                     spriteFile: componentSpriteFile + "/Leg",
-                    relativePosition: new Vector3(.23f, .504f, .14f),
+                    relativePosition: new Vector3(.23f, .504f, .17f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .018f),
                     yOffset: .1f,
@@ -205,7 +205,7 @@ namespace Generator
                 },
                 {"Right Leg", new Component(
                     spriteFile: componentSpriteFile + "/Leg",
-                    relativePosition: new Vector3(.77f, .504f, .14f),
+                    relativePosition: new Vector3(.77f, .504f, .17f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .018f),
                     yOffset: .1f,
