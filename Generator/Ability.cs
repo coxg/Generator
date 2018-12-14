@@ -239,7 +239,7 @@ namespace Generator
             // Use resources
             if (IsActive)
             {
-                SourceObject.Health.Current -= HealthCost;
+                SourceObject.TakeDamage(HealthCost);
                 SourceObject.Stamina.Current -= StaminaCost;
                 SourceObject.Electricity.Current -= ElectricityCost;
             }
