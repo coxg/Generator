@@ -112,11 +112,10 @@ namespace Generator
                 x: 50f, y: 50f, stamina: 100, strength: 10, speed: 10, perception: 10, name: "Niels", partyNumber: 0, weapon: new Weapon(
                     name: "Sword",
                     type: "Cut",
-                    damage: 10,
-                    spriteFile: "Sprites/sword"));
+                    damage: 10));
 
             // Create terrain
-            terrain1 = new GameObject(spriteFile: "Sprites/angry", x: 55, y: 56, name: "angry terrain");
+            terrain1 = new GameObject(spriteFile: "Sprites/angry_boy", x: 55, y: 56, name: "angry terrain");
             terrain1.Activate = delegate
             {
                 terrain1.Say("Check it out I do something weird");
