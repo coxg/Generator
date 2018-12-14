@@ -63,7 +63,9 @@ namespace Generator
             spriteBatch = new SpriteBatch(GraphicsDevice);
             effect = new BasicEffect(GraphicsDevice)
             {
-                TextureEnabled = true
+                TextureEnabled = true,
+                AmbientLightColor = new Vector3(0.8f, 0.8f, 0.8f),
+                LightingEnabled = true
             };
 
             // Load in the sprites

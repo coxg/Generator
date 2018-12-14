@@ -158,21 +158,13 @@ namespace Generator
             vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
 
             // Draw it
-            var effect = new BasicEffect(GameControl.graphics.GraphicsDevice)
-            {
-                View = GameControl.camera.View,
-                Projection = GameControl.camera.Projection,
-                TextureEnabled = true,
-                Texture = gameElement.Sprite
-            };
-            foreach (var pass in effect.CurrentTechnique.Passes)
+            GameControl.effect.Texture = gameElement.Sprite;
+            foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
                     PrimitiveType.TriangleList, vertices, 0, 2);
             }
-
-            effect.Dispose();
         }
 
         public static void DrawTile(
