@@ -12,6 +12,9 @@ namespace Generator
     // C# doesn't have globals. I do!
     public static class Globals
     {
+        // The player
+        public static GameObject Player { get; set; }
+
         // For making characters despawm
         public static List<string> DeathList = new List<string>();
 
@@ -36,7 +39,7 @@ namespace Generator
         // Loading assets
         public static Texture2D WhiteDot { get; set; }
         public static SpriteFont Font { get; set; }
-        public static Texture2D Checker { get; set; }
+        public static Dictionary<string, Texture2D> TileDict { get; set; }
 
         // Grid logic
         private static GameObject[,] _grid { get; set; }

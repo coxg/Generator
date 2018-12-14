@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Generator
 {
@@ -18,7 +19,6 @@ namespace Generator
         public static Camera camera;
 
         // Player
-        private GameObject player;
         public SpriteBatch spriteBatch;
         private GameObject terrain1;
         private GameObject terrain2;
@@ -63,15 +63,23 @@ namespace Generator
 
             // Load in the sprites
             Globals.WhiteDot = Content.Load<Texture2D>("Sprites/white_dot");
-            Globals.Checker = Content.Load<Texture2D>("Sprites/checkerboard");
 
             // Load in the fonts
             Globals.Font = Content.Load<SpriteFont>("Fonts/Score");
 
+            // Load in the tiles
+            Globals.TileDict = new Dictionary<string, Texture2D>();
+            foreach (var tileFile in System.IO.Directory.GetFiles(
+                Globals.Directory + "/Content/Tiles", "*.png", System.IO.SearchOption.TopDirectoryOnly
+                ).Select(System.IO.Path.GetFileName).Select(System.IO.Path.GetFileNameWithoutExtension))
+            {
+                Globals.TileDict.Add(tileFile, Content.Load<Texture2D>("Tiles/" + tileFile));
+            }
+
             Globals.Content = Content;
 
             // Create player
-            player = new GameObject( // TODO: This shouldn't be hard coded
+            Globals.Player = new GameObject( // TODO: This shouldn't be hard coded
                 x: 2.5f, y: 2.5f, stamina: 100, strength: 10, speed: 10, perception: 10, name: "Niels", partyNumber: 0, weapon: new Weapon(
                     name: "Sword",
                     type: "Cut",
@@ -118,7 +126,7 @@ namespace Generator
             Globals.Clock += 1;
 
             // Get input for character
-            Input.GetInput(player);
+            Input.GetInput(Globals.Player);
 
             // Update the GameObjects
             Globals.DeathList = new List<string>();
@@ -126,8 +134,14 @@ namespace Generator
             foreach (var Name in Globals.DeathList) Globals.ObjectDict.Remove(Name);
             
             // Keep the camera focused on the player
-            camera.Position = new Vector3(player.Position.X, player.Position.Y - 10, player.Position.Z + 5);
-            camera.Target = new Vector3(player.Position.X, player.Position.Y - 1, player.Position.Z);
+            camera.Position = new Vector3(
+                Globals.Player.Position.X, 
+                Globals.Player.Position.Y - 10, 
+                Globals.Player.Position.Z + 5);
+            camera.Target = new Vector3(
+                Globals.Player.Position.X, 
+                Globals.Player.Position.Y - 1, 
+                Globals.Player.Position.Z);
 
             base.Update(gameTime);
         }
@@ -142,7 +156,7 @@ namespace Generator
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
             spriteBatch.Begin(
-                SpriteSortMode.BackToFront,
+                SpriteSortMode.Texture,
                 null,
                 SamplerState.LinearWrap);
 
@@ -150,11 +164,16 @@ namespace Generator
             if (Globals.DisplayTextQueue.Count != 0) Drawing.DrawTextBox(spriteBatch);
 
             // Draw the grid
-            Drawing.DrawTile(
-                Globals.Checker,
-                new Vector2(0, 0),
-                new Vector2(Globals.Grid.GetLength(0), Globals.Grid.GetLength(1)),
-                Globals.Grid.GetLength(0));
+            for (int x = (int) Globals.Player.Position.X - 15; x < (int)Globals.Player.Position.X + 16; x++)
+            {
+                for (int y = (int)Globals.Player.Position.Y - 6; y < (int)Globals.Player.Position.Y + 20; y++)
+                {
+                    Drawing.DrawTile(
+                        Globals.TileDict["grass_01_tile_256_08"],
+                        new Vector2(x, y),
+                        new Vector2(1, 1));
+                }
+            }
 
             spriteBatch.End();
 
