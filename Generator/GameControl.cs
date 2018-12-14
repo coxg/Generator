@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace Generator
 {
@@ -18,6 +18,7 @@ namespace Generator
         // For drawing... stuff
         public static Camera camera;
         public static BasicEffect effect;
+        public static int[,] tileMap;
 
         // Player
         public SpriteBatch spriteBatch;
@@ -59,6 +60,10 @@ namespace Generator
         /// </summary>
         protected override void LoadContent()
         {
+
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             effect = new BasicEffect(GraphicsDevice)
@@ -75,38 +80,55 @@ namespace Generator
             Globals.Font = Content.Load<SpriteFont>("Fonts/Score");
 
             // Load in the tiles
-            Globals.TileDict = new Dictionary<string, Texture2D>();
-            foreach (var tileFile in System.IO.Directory.GetFiles(
-                Globals.Directory + "/Content/Tiles", "*.png", System.IO.SearchOption.TopDirectoryOnly
-                ).Select(System.IO.Path.GetFileName).Select(System.IO.Path.GetFileNameWithoutExtension))
+            Globals.TileNameToTexture = new Dictionary<string, Texture2D>();
+            Globals.TileIndexToTexture = new Dictionary<int, string>();
+            var tileIndex = 0;
+            foreach (var tileFile in Directory.GetFiles(
+                Globals.Directory + "/Content/Tiles", "*.png", SearchOption.TopDirectoryOnly
+                ).Select(Path.GetFileName).Select(Path.GetFileNameWithoutExtension))
             {
-                Globals.TileDict.Add(tileFile, Content.Load<Texture2D>("Tiles/" + tileFile));
+                Globals.TileNameToTexture.Add(tileFile, Content.Load<Texture2D>("Tiles/" + tileFile));
+                Globals.TileIndexToTexture.Add(tileIndex, tileFile);
+                tileIndex += 1;
+            }
+
+            // Load in the map
+            tileMap = new int[100, 100];
+            using (var sr = new StreamReader(Globals.Directory + "/Maps/Tiles/map_1_1.csv"))
+            {
+                var rows = sr.ReadToEnd().Split('\n');
+                for (int rowNumber = 0; rowNumber < rows.Length; rowNumber++)
+                {
+                    var row = rows[rowNumber].Split(',');
+                    for (int columnNumber = 0; columnNumber < row.Length; columnNumber++)
+                        tileMap[columnNumber, 99 - rowNumber] = int.Parse(row[columnNumber]);
+                }
             }
 
             Globals.Content = Content;
 
             // Create player
             Globals.Player = new GameObject( // TODO: This shouldn't be hard coded
-                x: 2.5f, y: 2.5f, stamina: 100, strength: 10, speed: 10, perception: 10, name: "Niels", partyNumber: 0, weapon: new Weapon(
+                x: 50f, y: 50f, stamina: 100, strength: 10, speed: 10, perception: 10, name: "Niels", partyNumber: 0, weapon: new Weapon(
                     name: "Sword",
                     type: "Cut",
                     damage: 10,
                     spriteFile: "Sprites/sword"));
 
             // Create terrain
-            terrain1 = new GameObject(spriteFile: "Sprites/angry", x: 5, y: 6, name: "angry terrain");
+            terrain1 = new GameObject(spriteFile: "Sprites/angry", x: 55, y: 56, name: "angry terrain");
             terrain1.Activate = delegate
             {
                 terrain1.Say("Check it out I do something weird");
                 terrain1.Say("Did you see how weird that was?!");
-                var terrain3 = new GameObject(width: 5, length: 5, height: 5, x: 10, y: 10, name: "big terrain");
+                var terrain3 = new GameObject(width: 5, length: 5, height: 5, x: 60, y: 60, name: "big terrain");
                 terrain3.Activate = delegate
                 {
                     terrain3.Say("I don't do anything weird.");
                     terrain3.Say("...I'm just really fat.");
                 };
             };
-            terrain2 = new GameObject(width: 2, length: 2, height: 2, x: 5, y: 9, name: "medium terrain");
+            terrain2 = new GameObject(width: 2, length: 2, height: 2, x: 55, y: 59, name: "medium terrain");
         }
 
         /// <summary>
@@ -159,11 +181,6 @@ namespace Generator
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-
-            // Draw text box
-            if (Globals.DisplayTextQueue.Count != 0) Drawing.DrawTextBox(spriteBatch);
 
             // Draw the grid
             effect.View = camera.View;
@@ -173,7 +190,7 @@ namespace Generator
                 for (int y = (int)Globals.Player.Position.Y - 6; y < (int)Globals.Player.Position.Y + 40; y++)
                 {
                     Drawing.DrawTile(
-                        Globals.TileDict["grass_01_tile_256_08"],
+                        Globals.TileNameToTexture[Globals.TileIndexToTexture[tileMap[x, y]]],
                         new Vector2(x, y));
                 }
             }
@@ -191,20 +208,23 @@ namespace Generator
                 }
 
                 // Draw resource bars if they're in the party
-                spriteBatch.Begin(
-                    SpriteSortMode.BackToFront,
-                    null,
-                    SamplerState.LinearWrap);
                 if (Object.Value.PartyNumber >= 0)
                 {
+                    spriteBatch.Begin(
+                        SpriteSortMode.Texture,
+                        null,
+                        SamplerState.LinearWrap);
                     Drawing.DrawResource(spriteBatch, Object.Value.Health, Object.Value.PartyNumber);
                     if (Object.Value.Stamina.Max > 0)
                         Drawing.DrawResource(spriteBatch, Object.Value.Stamina, Object.Value.PartyNumber);
                     if (Object.Value.Electricity.Max > 0)
                         Drawing.DrawResource(spriteBatch, Object.Value.Electricity, Object.Value.PartyNumber);
+                    spriteBatch.End();
                 }
-                spriteBatch.End();
             }
+
+            // Draw text box
+            if (Globals.DisplayTextQueue.Count != 0) Drawing.DrawTextBox(spriteBatch);
 
             base.Draw(gameTime);
         }

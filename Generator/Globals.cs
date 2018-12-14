@@ -39,7 +39,8 @@ namespace Generator
         // Loading assets
         public static Texture2D WhiteDot { get; set; }
         public static SpriteFont Font { get; set; }
-        public static Dictionary<string, Texture2D> TileDict { get; set; }
+        public static Dictionary<string, Texture2D> TileNameToTexture { get; set; }
+        public static Dictionary<int, string> TileIndexToTexture { get; set; }
 
         // Grid logic
         private static GameObject[,] _grid { get; set; }
