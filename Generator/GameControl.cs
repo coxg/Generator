@@ -17,6 +17,7 @@ namespace Generator
 
         // For drawing... stuff
         public static Camera camera;
+        public static BasicEffect effect;
 
         // Player
         public SpriteBatch spriteBatch;
@@ -60,6 +61,10 @@ namespace Generator
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            effect = new BasicEffect(GraphicsDevice)
+            {
+                TextureEnabled = true
+            };
 
             // Load in the sprites
             Globals.WhiteDot = Content.Load<Texture2D>("Sprites/white_dot");
@@ -155,27 +160,21 @@ namespace Generator
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-            spriteBatch.Begin(
-                SpriteSortMode.Texture,
-                null,
-                SamplerState.LinearWrap);
-
             // Draw text box
             if (Globals.DisplayTextQueue.Count != 0) Drawing.DrawTextBox(spriteBatch);
 
             // Draw the grid
-            for (int x = (int) Globals.Player.Position.X - 15; x < (int)Globals.Player.Position.X + 16; x++)
+            effect.View = camera.View;
+            effect.Projection = camera.Projection;
+            for (int x = (int) Globals.Player.Position.X - 30; x < (int)Globals.Player.Position.X + 31; x++)
             {
-                for (int y = (int)Globals.Player.Position.Y - 6; y < (int)Globals.Player.Position.Y + 20; y++)
+                for (int y = (int)Globals.Player.Position.Y - 6; y < (int)Globals.Player.Position.Y + 40; y++)
                 {
                     Drawing.DrawTile(
                         Globals.TileDict["grass_01_tile_256_08"],
-                        new Vector2(x, y),
-                        new Vector2(1, 1));
+                        new Vector2(x, y));
                 }
             }
-
-            spriteBatch.End();
 
             // Draw the GameObjects
             foreach (var Object in Globals.ObjectDict.OrderBy(i => -i.Value.Position.Y))

@@ -178,7 +178,6 @@ namespace Generator
         public static void DrawTile(
                 Texture2D sprite,
                 Vector2 bottomLeft,
-                Vector2 size,
                 int repetitions = 1)
             // This should be used to draw all tiles. 
             // These should pretty much remain stationary on the floor.
@@ -190,14 +189,14 @@ namespace Generator
             vertices[0].Position = new Vector3(bottomLeft.X, bottomLeft.Y, 0);
 
             // Top left
-            vertices[1].Position = new Vector3(bottomLeft.X, bottomLeft.Y + size.Y, 0);
+            vertices[1].Position = new Vector3(bottomLeft.X, bottomLeft.Y + 1, 0);
 
             // Bottom right
-            vertices[2].Position = new Vector3(bottomLeft.X + size.X, bottomLeft.Y, 0);
+            vertices[2].Position = new Vector3(bottomLeft.X + 1, bottomLeft.Y, 0);
             vertices[3].Position = vertices[1].Position;
 
             // Top right
-            vertices[4].Position = new Vector3(bottomLeft.X + size.X, bottomLeft.Y + size.Y, 0);
+            vertices[4].Position = new Vector3(bottomLeft.X + 1, bottomLeft.Y + 1, 0);
             vertices[5].Position = vertices[2].Position;
 
             // Generate the texture coordinates
@@ -209,21 +208,13 @@ namespace Generator
             vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
 
             // Draw it
-            var effect = new BasicEffect(GameControl.graphics.GraphicsDevice)
-            {
-                View = GameControl.camera.View,
-                Projection = GameControl.camera.Projection,
-                TextureEnabled = true,
-                Texture = sprite
-            };
-            foreach (var pass in effect.CurrentTechnique.Passes)
+            GameControl.effect.Texture = sprite;
+            foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
                     PrimitiveType.TriangleList, vertices, 0, 2);
             }
-
-            effect.Dispose();
         }
     }
 }
