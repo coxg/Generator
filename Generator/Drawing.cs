@@ -11,11 +11,6 @@ namespace Generator
             var TextBoxHeight = 256;
             var Margin = 16;
 
-            spriteBatch.Begin(
-                SpriteSortMode.Texture,
-                null,
-                SamplerState.LinearWrap);
-
             // Draw the background
             spriteBatch.Draw(
                 Globals.WhiteDot,
@@ -61,8 +56,6 @@ namespace Generator
                     Margin + spriteWidthAndExtraMargin,
                     Globals.Resolution.Y - (TextBoxHeight - Margin)),
                 Color.White);
-
-            spriteBatch.End();
         }
 
         public static void DrawResource(SpriteBatch spriteBatch, Resource resource, int partyNumber)

@@ -213,8 +213,12 @@ namespace Generator
             }
 
             // Draw text box
+            spriteBatch.Begin(
+                SpriteSortMode.BackToFront,
+                null,
+                SamplerState.LinearWrap);
             if (Globals.DisplayTextQueue.Count != 0) Drawing.DrawTextBox(spriteBatch);
-
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
