@@ -627,11 +627,10 @@ namespace Generator
         public void Die()
             // Plays death animation and despawns
         {
-            // TODO: Play death animation
-            Globals.DeathList.Add(Name);
 
             // Remove self from grid
             Despawn();
+            Globals.ObjectDict.Remove(Name);
 
             // TODO: Drop equipment + inventory
 

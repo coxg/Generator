@@ -27,8 +27,6 @@ namespace Generator
 
         public GameControl()
         {
-            // Populate global variables
-            Globals.PopulateGlobals();
 
             // Setup stuff
             graphics = new GraphicsDeviceManager(this)
@@ -48,19 +46,6 @@ namespace Generator
         /// </summary>
         protected override void Initialize()
         {
-            camera = new Camera();
-
-            // We’ll be assigning texture values later
-            base.Initialize();
-        }
-
-        /// <summary>
-        ///     LoadContent will be called once per game and is the place to load
-        ///     all of your content.
-        /// </summary>
-        protected override void LoadContent()
-        {
-
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
@@ -74,24 +59,7 @@ namespace Generator
                 // LightingEnabled = true
             };
 
-            // Load in the sprites
-            Globals.WhiteDot = Content.Load<Texture2D>("Sprites/white_dot");
-
-            // Load in the fonts
-            Globals.Font = Content.Load<SpriteFont>("Fonts/Score");
-
-            // Load in the tiles
-            GridLogic.TileNameToTexture = new Dictionary<string, Texture2D>();
-            GridLogic.TileIndexToTexture = new Dictionary<int, string>();
-            var tileIndex = 0;
-            foreach (var tileFile in Directory.GetFiles(
-                Globals.Directory + "/Content/Tiles", "*.png", SearchOption.TopDirectoryOnly
-                ).Select(Path.GetFileName).Select(Path.GetFileNameWithoutExtension))
-            {
-                GridLogic.TileNameToTexture.Add(tileFile, Content.Load<Texture2D>("Tiles/" + tileFile));
-                GridLogic.TileIndexToTexture.Add(tileIndex, tileFile);
-                tileIndex += 1;
-            }
+            camera = new Camera();
 
             // Load in the map
             tileMap = new int[100, 100];
@@ -129,6 +97,35 @@ namespace Generator
                 };
             };
             terrain2 = new GameObject(width: 2, length: 2, height: 2, x: 55, y: 59, name: "medium terrain");
+
+            base.Initialize();
+        }
+
+        /// <summary>
+        ///     LoadContent will be called once per game and is the place to load
+        ///     all of your content.
+        /// </summary>
+        protected override void LoadContent()
+        {
+
+            // Load in the sprites
+            Globals.WhiteDot = Content.Load<Texture2D>("Sprites/white_dot");
+
+            // Load in the fonts
+            Globals.Font = Content.Load<SpriteFont>("Fonts/Score");
+
+            // Load in the tiles
+            GridLogic.TileNameToTexture = new Dictionary<string, Texture2D>();
+            GridLogic.TileIndexToTexture = new Dictionary<int, string>();
+            var tileIndex = 0;
+            foreach (var tileFile in Directory.GetFiles(
+                Globals.Directory + "/Content/Tiles", "*.png", SearchOption.TopDirectoryOnly
+                ).Select(Path.GetFileName).Select(Path.GetFileNameWithoutExtension))
+            {
+                GridLogic.TileNameToTexture.Add(tileFile, Content.Load<Texture2D>("Tiles/" + tileFile));
+                GridLogic.TileIndexToTexture.Add(tileIndex, tileFile);
+                tileIndex += 1;
+            }
         }
 
         /// <summary>
@@ -158,19 +155,11 @@ namespace Generator
             Input.GetInput(Globals.Player);
 
             // Update the GameObjects
-            Globals.DeathList = new List<string>();
-            foreach (var Object in Globals.ObjectDict) Object.Value.Update();
-            foreach (var name in Globals.DeathList) Globals.ObjectDict.Remove(name);
-            
+            foreach (var Object in new Dictionary<string, GameObject>(Globals.ObjectDict))
+                Object.Value.Update();
+
             // Keep the camera focused on the player
-            camera.Position = new Vector3(
-                Globals.Player.Center.X, 
-                Globals.Player.Center.Y - 10, 
-                Globals.Player.Center.Z + 10);
-            camera.Target = new Vector3(
-                Globals.Player.Center.X,
-                Globals.Player.Center.Y - 1,
-                Globals.Player.Center.Z);
+            camera.Update();
 
             base.Update(gameTime);
         }

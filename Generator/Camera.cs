@@ -52,5 +52,17 @@ namespace Generator
                     fieldOfView, aspectRatio, nearClipPlane, farClipPlane);
             }
         }
+
+        public void Update()
+        {
+            Position = new Vector3(
+                Globals.Player.Center.X,
+                Globals.Player.Center.Y - 10,
+                Globals.Player.Center.Z + 10);
+            Target = new Vector3(
+                Globals.Player.Center.X,
+                Globals.Player.Center.Y - 1,
+                Globals.Player.Center.Z);
+        }
     }
 }
