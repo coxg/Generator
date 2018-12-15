@@ -62,6 +62,7 @@
     <Compile Include="Ability.cs" />
     <Compile Include="Accessory.cs" />
     <Compile Include="Animation.cs" />
+    <Compile Include="Defaults.cs" />
     <Compile Include="GameElement.cs" />
     <Compile Include="MathTools.cs" />
     <Compile Include="GridLogic.cs" />

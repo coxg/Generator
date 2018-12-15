@@ -5,24 +5,218 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Generator
 {
+    /*
+     * Represents every object you will see in the game.
+     * Used as a basis for terrain, playable characters, and enemies.
+     */
     public class GameObject : GameElement
-        /*
-        Represents every object you will see in the game.
-        Used as a basis for terrain, playable characters, and enemies.
-        */
     {
+        // name of component sprite file for this game object
+        private string componentSpriteFileName;
+
+        // Sprites
+        public Dictionary<string, Component> ComponentDictionary { get; set; }
+
+        // Toggleables
+        private bool _isWalking;
+        public bool IsWalking
+        {
+            get => _isWalking;
+            set
+            {
+                if (value & !IsWalking)
+                {
+                    foreach (var component in ComponentDictionary)
+                    {
+                        if (component.Value.Animations.ContainsKey("Walk"))
+                        {
+                            component.Value.Animations["Walk"].Start();
+                        }
+                    }
+                }
+                else if (!value & IsWalking)
+                {
+                    foreach (var component in ComponentDictionary)
+                    {
+                        if (component.Value.Animations.ContainsKey("Walk"))
+                        {
+                            component.Value.Animations["Walk"].Stop();
+                        }
+                    }
+                }
+                _isWalking = value;
+            }
+        }
+        public bool IsSwinging { get; set; }
+        public bool IsShooting { get; set; }
+        public bool IsHurting { get; set; }
+
+        // Location
+        override public float Direction { get; set; }
+        private Vector3 _Position;
+        override public Vector3 Position
+        {
+            get => _Position + AnimationOffset;
+            set
+            {
+                if (CanMoveTo(value))
+                {
+                    // Null out all previous locations
+                    Despawn();
+
+                    // Assing new attributes for object
+                    _Position = new Vector3(
+                        MathTools.Mod(value.X, GridLogic.Grid.GetLength(0)),
+                        MathTools.Mod(value.Y, GridLogic.Grid.GetLength(1)),
+                        value.Z);
+
+                    // Assign all new locations
+                    Spawn();
+                }
+            }
+        }
+
+        // Resources
+        public Resource Health { get; set; }
+        public Resource Stamina { get; set; }
+        public Resource Electricity { get; set; }
+
+        // Primary Attributes
+        public Attribute Strength { get; set; }
+        public Attribute Perception { get; set; }
+        public Attribute Speed { get; set; }
+        public Attribute Weight { get; set; } // Roughly in pounds
+
+        // ...Other Attributes
+        public int Level { get; set; }
+        public int Experience { get; set; }
+
+        // Abilities
+        private List<Ability> _abilities;
+        public List<Ability> Abilities
+        {
+            get => _abilities;
+            set 
+            {
+                this._abilities = value;
+                foreach (var ability in this._abilities) ability.SourceObject = this;
+
+                if (Abilities.Count >= 1) Ability1 = Abilities[0];
+                if (Abilities.Count >= 2) Ability2 = Abilities[1];
+                if (Abilities.Count >= 3) Ability3 = Abilities[2];
+                if (Abilities.Count >= 4) Ability4 = Abilities[3];
+            }
+        }
+        public Ability Ability1 { get; set; }
+        public Ability Ability2 { get; set; }
+        public Ability Ability3 { get; set; }
+        public Ability Ability4 { get; set; }
+
+        // Interaction
+        public int PartyNumber { get; set; }
+        public Action Activate { get; set; }
+
         // Equipment
-        private Accessory _equippedAccessory;
-        private Armor _equippedArmor;
-        private Generation _equippedGenerator;
-        private OffHand _equippedOffHand;
-        private Weapon _equippedWeapon;
+        private Weapon _equippedWeapon =  new Weapon();
+        public Weapon EquippedWeapon
+        {
+            get => _equippedWeapon;
+            set
+            {
+                // Resources
+                Health.Max += value.Health - _equippedWeapon.Health;
+                Stamina.Max += value.Stamina - _equippedWeapon.Stamina;
+                Electricity.Max += value.Capacity - _equippedWeapon.Capacity;
+
+                // Attributes
+                Strength.CurrentValue += value.Strength - _equippedWeapon.Strength;
+                Perception.CurrentValue += value.Perception - _equippedWeapon.Perception;
+                Speed.CurrentValue += value.Speed - _equippedWeapon.Speed;
+                _equippedWeapon = value;
+            }
+        }
+
+        private OffHand _equippedOffHand = new OffHand();
+        public OffHand EquippedOffHand
+        {
+            get => _equippedOffHand;
+            set
+            {
+                // Resources
+                Health.Max += value.Health - _equippedOffHand.Health;
+                Stamina.Max += value.Stamina - _equippedOffHand.Stamina;
+                Electricity.Max += value.Capacity - _equippedOffHand.Capacity;
+
+                // Attributes
+                Strength.CurrentValue += value.Strength - _equippedOffHand.Strength;
+                Speed.CurrentValue += value.Speed - _equippedOffHand.Speed;
+                Perception.CurrentValue += value.Perception - _equippedOffHand.Perception;
+                _equippedOffHand = value;
+            }
+        }
+
+        private Armor _equippedArmor = new Armor();
+        public Armor EquippedArmor
+        {
+            get => _equippedArmor;
+            set
+            {
+                // Resources
+                Health.Max += value.Health - _equippedArmor.Health;
+                Stamina.Max += value.Stamina - _equippedArmor.Stamina;
+                Electricity.Max += value.Capacity - _equippedArmor.Capacity;
+
+                // Attributes
+                Strength.CurrentValue += value.Strength - _equippedArmor.Strength;
+                Speed.CurrentValue += value.Speed - _equippedArmor.Speed;
+                Perception.CurrentValue += value.Perception - _equippedArmor.Perception;
+                _equippedArmor = value;
+            }
+        }
+
+        private Generation _equippedGenerator = new Generation();
+        public Generation EquippedGenerator
+        {
+            get => _equippedGenerator;
+            set
+            {
+                // Resources
+                Health.Max += value.Health - _equippedGenerator.Health;
+                Stamina.Max += value.Stamina - _equippedGenerator.Stamina;
+                Electricity.Max += value.Capacity - _equippedGenerator.Capacity;
+
+                // Attributes
+                Strength.CurrentValue += value.Strength - _equippedGenerator.Strength;
+                Speed.CurrentValue += value.Speed - _equippedGenerator.Speed;
+                Perception.CurrentValue += value.Perception - _equippedGenerator.Perception;
+                _equippedGenerator = value;
+            }
+        }
+
+        private Accessory _equippedAccessory = new Accessory();
+        public Accessory EquippedAccessory
+        {
+            get => _equippedAccessory;
+            set
+            {
+                // Resources
+                Health.Max += value.Health - _equippedAccessory.Health;
+                Stamina.Max += value.Stamina - _equippedAccessory.Stamina;
+                Electricity.Max += value.Capacity - _equippedAccessory.Capacity;
+
+                // Attributes
+                Strength.CurrentValue += value.Strength - _equippedAccessory.Strength;
+                Speed.CurrentValue += value.Speed - _equippedAccessory.Speed;
+                Perception.CurrentValue += value.Perception - _equippedAccessory.Perception;
+                _equippedAccessory = value;
+            }
+        }
 
         // Constructor
         public GameObject(
             
             // Sprite attributes
-            string componentSpriteFile = "Ninja",
+            string componentSpriteFileName = "Ninja",
             string spriteFile = null,
             
             // Actions
@@ -70,11 +264,84 @@ namespace Generator
             Accessory accessory = null
         )
         {
+
             // Sprites
-            ComponentDictionary = new Dictionary<string, Component>()
+            this.componentSpriteFileName = componentSpriteFileName;
+            this.ComponentDictionary = generateDefaultComponentDict();
+            linkComponents();
+            this.Sprite = spriteFile == null ? null : Globals.Content.Load<Texture2D>(spriteFile);
+
+            // Actions
+            this.IsWalking = isWalking;
+            this.IsSwinging = isSwinging;
+            this.IsShooting = isShooting;
+            this.IsHurting = isHurting;
+
+            // Grid logic
+            this.Size = new Vector3(width, length, height);
+            this.Position = new Vector3(x, y, z);
+            Spawn();
+
+            // Resources
+            this.Health = new Resource("Health", health);
+            this.Stamina = new Resource("Stamina", stamina, 10);
+            this.Electricity = new Resource("Electricity", electricity);
+
+            // Primary Attributes
+            this.Strength = new Attribute(strength);
+            this.Speed = new Attribute(speed);
+            this.Perception = new Attribute(perception);
+            this.Weight = new Attribute(weight); // TODO: Use this in knockback calculation
+
+            // ...Other Attributes
+            this.Name = name;
+            this.Level = level;
+            this.Experience = experience;
+            this.Direction = direction;
+
+            // Equipment
+            this.EquippedWeapon = weapon ?? new Weapon();
+            this.EquippedOffHand = offHand ?? new OffHand();
+            this.EquippedArmor = armor ?? new Armor();
+            this.EquippedGenerator = generator ?? new Generation();
+            this.EquippedAccessory = accessory ?? new Accessory();
+
+            // Abilities
+            this.Abilities = abilities != null ? abilities : Defaults.generateDefaultAbilities(this);
+
+            // Interaction
+            this.PartyNumber = partyNumber;
+            this.Activate = delegate // What happens when you try to talk to it
+            {
+                if (this.Name != null) Say("This is just a " + this.Name + ".");
+            };
+
+            // Make yourself accessible
+            Globals.ObjectDict[this.Name] = this;
+        }
+
+        // Establish a two-way link between the components and this GameObject
+        private void linkComponents()
+        {
+            foreach (var component in this.ComponentDictionary)
+            {
+                component.Value.Name = component.Key;
+                component.Value.SourceObject = this;
+                foreach (var animation in component.Value.Animations)
+                {
+                    animation.Value.Name = animation.Key;
+                    animation.Value.SourceElement = component.Value;
+                }
+            }
+        }
+
+        // Create the default ComponentDictionary
+        private Dictionary<string, Component> generateDefaultComponentDict()
+        {
+            Dictionary<string, Component> result = new Dictionary<string, Component>()
             {
                 {"Head", new Component(
-                    spriteFile: componentSpriteFile + "/Head",
+                    spriteFile: this.componentSpriteFileName + "/Head",
                     directional: true,
                     relativePosition: new Vector3(.5f, .506f, 1.36f),
                     relativeSize: .32f,
@@ -82,7 +349,7 @@ namespace Generator
                     yOffset: -.05f)
                 },
                 {"Face", new Component(
-                    spriteFile: componentSpriteFile + "/Face01",
+                    spriteFile: this.componentSpriteFileName + "/Face01",
                     directional: true,
                     relativePosition: new Vector3(.5f, .57f, 1.11f),
                     relativeSize: .128f,
@@ -90,14 +357,14 @@ namespace Generator
                     yOffset: -.05f)
                 },
                 {"Body", new Component(
-                    spriteFile: componentSpriteFile + "/Body",
+                    spriteFile: this.componentSpriteFileName + "/Body",
                     directional: true,
                     relativePosition: new Vector3(.5f, .505f, .52f),
                     relativeSize: .16f,
                     rotationPoint: new Vector3(.08f, 0, .08f))
                 },
                 {"Left Arm", new Component(
-                    spriteFile: componentSpriteFile + "/RightArm",
+                    spriteFile: this.componentSpriteFileName + "/RightArm",
                     directional: true,
                     relativePosition: new Vector3(-.1f, .504f, .6f),
                     relativeSize: .08f,
@@ -119,7 +386,7 @@ namespace Generator
                     })
                 },
                 {"Right Arm", new Component(
-                    spriteFile: componentSpriteFile + "/LeftArm",
+                    spriteFile: this.componentSpriteFileName + "/LeftArm",
                     directional: true,
                     relativePosition: new Vector3(1.1f, .504f, .6f),
                     relativeSize: .08f,
@@ -141,7 +408,7 @@ namespace Generator
                     })
                 },
                 {"Left Hand", new Component(
-                    spriteFile: componentSpriteFile + "/Hand",
+                    spriteFile: this.componentSpriteFileName + "/Hand",
                     relativePosition: new Vector3(-.2f, .5045f, .42f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .032f),
@@ -162,7 +429,7 @@ namespace Generator
                     })
                 },
                 {"Right Hand", new Component(
-                    spriteFile: componentSpriteFile + "/Hand",
+                    spriteFile: this.componentSpriteFileName + "/Hand",
                     relativePosition: new Vector3(1.2f, .5045f, .42f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .032f),
@@ -183,8 +450,8 @@ namespace Generator
                     })
                 },
                 {"Left Leg", new Component(
-                    spriteFile: componentSpriteFile + "/Leg",
-                    relativePosition: new Vector3(.23f, .504f, .17f),
+                    spriteFile: this.componentSpriteFileName + "/Leg",
+                    relativePosition: new Vector3(.23f, .504f, .14f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .018f),
                     yOffset: .1f,
@@ -204,8 +471,8 @@ namespace Generator
                     })
                 },
                 {"Right Leg", new Component(
-                    spriteFile: componentSpriteFile + "/Leg",
-                    relativePosition: new Vector3(.77f, .504f, .17f),
+                    spriteFile: this.componentSpriteFileName + "/Leg",
+                    relativePosition: new Vector3(.77f, .504f, .14f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .018f),
                     yOffset: .1f,
@@ -225,362 +492,12 @@ namespace Generator
                     })
                 }
             };
-            foreach (var component in ComponentDictionary)
-            {
-                component.Value.Name = component.Key;
-                component.Value.SourceObject = this;
-                foreach (var animation in component.Value.Animations)
-                {
-                    animation.Value.Name = animation.Key;
-                    animation.Value.SourceElement = component.Value;
-                }
-            }
-            Sprite = spriteFile == null ? null : Globals.Content.Load<Texture2D>(spriteFile);
-            
-            // Actions
-            IsWalking = isWalking;
-            IsSwinging = isSwinging;
-            IsShooting = isShooting;
-            IsHurting = isHurting;
 
-            // Grid logic
-            Size = new Vector3(width, length, height);
-            _Position = new Vector3(x, y, z);
-            Spawn();
-
-            // Resources
-            Health = new Resource("Health", health);
-            Stamina = new Resource("Stamina", stamina, 10);
-            Electricity = new Resource("Electricity", electricity);
-
-            // Primary Attributes
-            Strength = new Attribute(strength);
-            Speed = new Attribute(speed);
-            Perception = new Attribute(perception);
-            Weight = new Attribute(weight); // TODO: Use this in knockback calculation
-
-            // ...Other Attributes
-            Name = name;
-            Level = level;
-            Experience = experience;
-            Direction = direction;
-
-            // Equipment
-            _equippedWeapon = weapon ?? new Weapon();
-            _equippedOffHand = offHand ?? new OffHand();
-            _equippedArmor = armor ?? new Armor();
-            _equippedGenerator = generator ?? new Generation();
-            _equippedAccessory = accessory ?? new Accessory();
-            EquippedWeapon = _equippedWeapon;
-            EquippedOffHand = _equippedOffHand;
-            EquippedArmor = _equippedArmor;
-            EquippedGenerator = _equippedGenerator;
-            EquippedAccessory = _equippedAccessory;
-
-            // Abilities
-            if (abilities == null)
-            {
-                abilities = new List<Ability>
-                {
-                    // TODO: We should create a dictionary for these in Globals
-                    new Ability(
-                        "Sprint",
-                        staminaCost: 1,
-                        isChanneled: true,
-                        requiresWalking: true,
-                        animation: new Animation(
-                            updateFrames: new Frames(
-                                offsets: new List<Vector3>
-                                {
-                                    new Vector3(0, 0, .2f)
-                                },
-                                duration: .5f)),
-                        start: delegate { 
-                            Speed.CurrentValue *= 4;
-                            IsWalking = true; 
-                        },
-                        stop: delegate
-                        {
-                            Speed.CurrentValue /= 4;
-                            IsWalking = false; 
-                        }),
-                    new Ability(
-                        "Attack",
-                        staminaCost: EquippedWeapon.Weight + 10,
-                        start: delegate
-                        {
-                            IsSwinging = true;
-                            
-                            // Figure out which one you hit
-                            var target = GetTargetInRange(EquippedWeapon.Range);
-
-                            // Deal damage
-                            if (target != null)
-                            {
-                                Globals.Log(this + " attacks, hitting " + target + ".");
-                                DealDamage(target, EquippedWeapon.Damage + Strength.CurrentValue);
-                            }
-                            else
-                            {
-                                Globals.Log(this + " attacks and misses.");
-                            }
-                        }
-                    ),
-                    new Ability(
-                        "Shoot",
-                        staminaCost: EquippedWeapon.Weight + 10,
-                        start: delegate
-                        {
-                            IsShooting = true;
-                            
-                            // Figure out which one you hit
-                            var target = GetTargetInRange(EquippedWeapon.Range + 20);
-
-                            // Deal damage
-                            if (target != null)
-                            {
-                                Globals.Log(this + " shoots, hitting " + target + ".");
-                                DealDamage(target, EquippedWeapon.Damage + Strength.CurrentValue);
-                            }
-                            else
-                            {
-                                Globals.Log(this + " shoots and misses.");
-                            }
-                        }
-                    ),
-                    new Ability(
-                        "Always Sprint",
-                        staminaCost: 1,
-                        isToggleable: true,
-                        requiresWalking: true,
-                        start: delegate { 
-                            Speed.CurrentValue *= 4;
-                            IsWalking = true; 
-                        },
-                        stop: delegate
-                        {
-                            Speed.CurrentValue /= 4;
-                            IsWalking = false; 
-                        },
-                        animation: new Animation(
-                            startFrames: new Frames(
-                                offsets: new List<Vector3>
-                                {
-                                    new Vector3(0, 0, 1)
-                                },
-                                duration: 1),
-                            updateFrames: new Frames(
-                                offsets: new List<Vector3>
-                                {
-                                    new Vector3(-.2f, 0, 0),
-                                    new Vector3(.2f, 0, 0)
-                                },
-                                duration: .5f),
-                            stopFrames: new Frames(
-                                offsets: new List<Vector3>
-                                {
-                                    new Vector3(0, 0, 1)
-                                },
-                                duration: 1)))
-                };
-                foreach (var ability in abilities) ability.SourceObject = this;
-                Abilities = abilities;
-                if (Abilities.Count >= 1) Ability1 = Abilities[0];
-                if (Abilities.Count >= 2) Ability2 = Abilities[1];
-                if (Abilities.Count >= 3) Ability3 = Abilities[2];
-                if (Abilities.Count >= 4) Ability4 = Abilities[3];
-            }
-
-            // Interaction
-            PartyNumber = partyNumber;
-            Activate = delegate // What happens when you try to talk to it
-            {
-                if (Name != null) Say("This is just a " + Name + ".");
-            };
-
-            // Make yourself accessible
-            Globals.ObjectDict[Name] = this;
+            return result;
         }
 
-        // Sprites
-        public Dictionary<string, Component> ComponentDictionary { get; set; }
-        
-        // Actions
-        private bool _IsWalking { get; set; }
-        public bool IsWalking {
-            get => _IsWalking;
-            set
-            {
-                if (value & !IsWalking)
-                {
-                    foreach (var component in ComponentDictionary)
-                    {
-                        if (component.Value.Animations.ContainsKey("Walk"))
-                        {
-                            component.Value.Animations["Walk"].Start();
-                        }
-                    }
-                }
-                else if (!value & IsWalking)
-                {
-                    foreach (var component in ComponentDictionary)
-                    {
-                        if (component.Value.Animations.ContainsKey("Walk"))
-                        {
-                            component.Value.Animations["Walk"].Stop();
-                        }
-                    }
-                }
-                _IsWalking = value;
-            }
-        }
-        public bool IsSwinging { get; set; }
-        public bool IsShooting { get; set; }
-        public bool IsHurting { get; set; }
-
-        // Location
-        override public float Direction { get; set; }
-        public Vector3 _Position { get; set; }
-        override public Vector3 Position
-        {
-            get => _Position + AnimationOffset;
-            set
-            {
-                if (CanMoveTo(value))
-                {
-                    // Null out all previous locations
-                    Despawn();
-
-                    // Assing new attributes for object
-                    _Position = new Vector3(
-                        MathTools.Mod(value.X, GridLogic.Grid.GetLength(0)),
-                        MathTools.Mod(value.Y, GridLogic.Grid.GetLength(1)),
-                        value.Z);
-
-                    // Assign all new locations
-                    Spawn();
-                }
-            }
-        }
-
-        // Resources
-        public Resource Health { get; set; }
-        public Resource Stamina { get; set; }
-        public Resource Electricity { get; set; }
-
-        // Primary Attributes
-        public Attribute Strength { get; set; }
-        public Attribute Perception { get; set; }
-        public Attribute Speed { get; set; }
-        public Attribute Weight { get; set; } // Roughly in pounds
-
-        // ...Other Attributes
-        public int Level { get; set; }
-        public int Experience { get; set; }
-
-        // Abilities
-        public List<Ability> Abilities { get; set; }
-        public Ability Ability1 { get; set; }
-        public Ability Ability2 { get; set; }
-        public Ability Ability3 { get; set; }
-        public Ability Ability4 { get; set; }
-
-        // Interaction
-        public int PartyNumber { get; set; }
-        public Action Activate { get; set; }
-
-        public Weapon EquippedWeapon
-        {
-            get => _equippedWeapon;
-            set
-            {
-                // Resources
-                Health.Max += value.Health - _equippedWeapon.Health;
-                Stamina.Max += value.Stamina - _equippedWeapon.Stamina;
-                Electricity.Max += value.Capacity - _equippedWeapon.Capacity;
-
-                // Attributes
-                Strength.CurrentValue += value.Strength - _equippedWeapon.Strength;
-                Perception.CurrentValue += value.Perception - _equippedWeapon.Perception;
-                Speed.CurrentValue += value.Speed - _equippedWeapon.Speed;
-                _equippedWeapon = value;
-            }
-        }
-
-        public OffHand EquippedOffHand
-        {
-            get => _equippedOffHand;
-            set
-            {
-                // Resources
-                Health.Max += value.Health - _equippedOffHand.Health;
-                Stamina.Max += value.Stamina - _equippedOffHand.Stamina;
-                Electricity.Max += value.Capacity - _equippedOffHand.Capacity;
-
-                // Attributes
-                Strength.CurrentValue += value.Strength - _equippedOffHand.Strength;
-                Speed.CurrentValue += value.Speed - _equippedOffHand.Speed;
-                Perception.CurrentValue += value.Perception - _equippedOffHand.Perception;
-                _equippedOffHand = value;
-            }
-        }
-
-        public Armor EquippedArmor
-        {
-            get => _equippedArmor;
-            set
-            {
-                // Resources
-                Health.Max += value.Health - _equippedArmor.Health;
-                Stamina.Max += value.Stamina - _equippedArmor.Stamina;
-                Electricity.Max += value.Capacity - _equippedArmor.Capacity;
-
-                // Attributes
-                Strength.CurrentValue += value.Strength - _equippedArmor.Strength;
-                Speed.CurrentValue += value.Speed - _equippedArmor.Speed;
-                Perception.CurrentValue += value.Perception - _equippedArmor.Perception;
-                _equippedArmor = value;
-            }
-        }
-
-        public Generation EquippedGenerator
-        {
-            get => _equippedGenerator;
-            set
-            {
-                // Resources
-                Health.Max += value.Health - _equippedGenerator.Health;
-                Stamina.Max += value.Stamina - _equippedGenerator.Stamina;
-                Electricity.Max += value.Capacity - _equippedGenerator.Capacity;
-
-                // Attributes
-                Strength.CurrentValue += value.Strength - _equippedGenerator.Strength;
-                Speed.CurrentValue += value.Speed - _equippedGenerator.Speed;
-                Perception.CurrentValue += value.Perception - _equippedGenerator.Perception;
-                _equippedGenerator = value;
-            }
-        }
-
-        public Accessory EquippedAccessory
-        {
-            get => _equippedAccessory;
-            set
-            {
-                // Resources
-                Health.Max += value.Health - _equippedAccessory.Health;
-                Stamina.Max += value.Stamina - _equippedAccessory.Stamina;
-                Electricity.Max += value.Capacity - _equippedAccessory.Capacity;
-
-                // Attributes
-                Strength.CurrentValue += value.Strength - _equippedAccessory.Strength;
-                Speed.CurrentValue += value.Speed - _equippedAccessory.Speed;
-                Perception.CurrentValue += value.Perception - _equippedAccessory.Perception;
-                _equippedAccessory = value;
-            }
-        }
-
+        // What to do on each frame
         public void Update()
-            // What to do on each frame
         {
             // Update resources
             Health.Update();
@@ -594,14 +511,8 @@ namespace Generator
             foreach (var ability in Abilities) ability.Update();
         }
 
-        public override string ToString()
-            // Return name, useful for debugging.
-        {
-            return Name ?? "Unnamed GameObject";
-        }
-
+        // Populates grid with self. This DOES NOT add sprite.
         public void Spawn()
-            // Populates grid with self. This DOES NOT add sprite.
         {
             for (var eachX = (int) Math.Floor(_Position.X);
                 eachX <= Math.Ceiling(_Position.X + Size.X - 1);
@@ -612,8 +523,8 @@ namespace Generator
                 GridLogic.Grid.SetObject(eachX, eachY, this);
         }
 
+        // Removes self from grid. This DOES NOT remove sprite.
         public void Despawn()
-            // Removes self from grid. This DOES NOT remove sprite.
         {
             for (var eachX = (int) Math.Floor(_Position.X);
                 eachX <= Math.Ceiling(_Position.X + Size.X - 1);
@@ -624,8 +535,34 @@ namespace Generator
                 GridLogic.Grid.SetObject(eachX, eachY, null);
         }
 
+        // Deal damage to a target
+        public void DealDamage(GameObject target, int damage)
+        {
+            Globals.Log(this + " attacks for " + damage + " damage.");
+            target.TakeDamage(damage);
+        }
+
+        // Take damage
+        public void TakeDamage(int damage)
+        {
+            if (damage > 0)
+            {
+                Globals.Log(this + " takes " + damage + " damage. "
+                        + Health.Current + " -> " + (Health.Current - damage));
+
+                this.IsHurting = true;
+                this.ComponentDictionary["Face"].SpriteFile = this.componentSpriteFileName + "/Face04";
+                this.Health.Current -= damage;
+
+                if (this.Health.Current <= 0)
+                {
+                    Die();
+                }
+            }
+        }
+
+        // Plays death animation and despawns
         public void Die()
-            // Plays death animation and despawns
         {
             // TODO: Play death animation
             Globals.DeathList.Add(Name);
@@ -638,36 +575,8 @@ namespace Generator
             Globals.Log(this + " has passed away. RIP.");
         }
 
-        public void DealDamage(GameObject target, int damage)
-            // Deal damage to a target
-        {
-            Globals.Log(this + " attacks for " + damage + " damage.");
-            target.TakeDamage(damage);
-        }
-
-        public void TakeDamage(int damage)
-            // Take damage
-        {
-            Globals.Log(this + " takes " + damage + " damage. "
-                        + Health.Current + " -> " + (Health.Current - damage));
-
-            // Live
-            if (Health.Current > damage)
-            {
-                IsHurting = true;
-                Health.Current -= damage;
-            }
-
-            // Die
-            else
-            {
-                Health.Current = 0;
-                Die();
-            }
-        }
-
+        // Gets whichever object is [distance] away in the current direction
         public GameObject GetTarget(float range = 1)
-            // Gets whichever object is [distance] away in the current direction
         {
             var offsets = MathTools.OffsetFromRadians(Direction);
             var targettedObject = GridLogic.Grid.GetObject(
@@ -676,8 +585,8 @@ namespace Generator
             return targettedObject;
         }
 
+        // Gets whichever object is [distance] away or closer in the current direction
         public GameObject GetTargetInRange(int range = 1)
-            // Gets whichever object is [distance] away or closer in the current direction
         {
             GameObject returnObject = null;
             var targetRange = 1;
@@ -692,11 +601,11 @@ namespace Generator
             return returnObject;
         }
 
+        // Attempts to move the object in a direction (radians).
         public void MoveInDirection(
                 float radians = 0,
                 float? speed = null
             )
-            // Attempts to move the object in a direction (radians).
         {
             // Update sprite visuals
             IsWalking = true;
@@ -717,11 +626,17 @@ namespace Generator
             Position = newPosition;
         }
 
+        // Submit message to the screen with icon
         public void Say(string message)
-            // Submit message to the screen with icon
         {
             Globals.DisplayTextQueue.Enqueue(message);
             Globals.TalkingObjectQueue.Enqueue(this);
+        }
+
+        // Return name, useful for debugging.
+        public override string ToString()
+        {
+            return Name ?? "Unnamed GameObject";
         }
     }
 }
