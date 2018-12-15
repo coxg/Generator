@@ -12,23 +12,15 @@ namespace Generator
             var moveVerticalOffset = 0.0;
             var moveHorizontalOffset = 0.0;
             var speed = 0.0;
-            
-            // Use controller if available
+
+            // Use controller to calculate movement/direction if available and being used
             var capabilities = GamePad.GetCapabilities(PlayerIndex.One);
             GamePadState state = GamePad.GetState(PlayerIndex.One);
-            bool ButtonOrKeyDown(Buttons button, Keys key)
-            {
-                return capabilities.IsConnected & state.IsButtonDown(button) | Keyboard.GetState().IsKeyDown(key);
-            }
-            bool ButtonStateOrKeyDown(ButtonState buttonState, Keys key)
-            {
-                return capabilities.IsConnected & buttonState == ButtonState.Pressed | Keyboard.GetState().IsKeyDown(key);
-            }
-
             float directionHorizontalOffset = 0;
             float directionVerticalOffset = 0;
-            moveVerticalOffset = state.ThumbSticks.Left.Y;
-            if (capabilities.IsConnected)
+            if (capabilities.IsConnected & !(
+                state.ThumbSticks.Right.X == 0 & state.ThumbSticks.Right.Y == 0 
+                & state.ThumbSticks.Left.X == 0 & state.ThumbSticks.Left.Y == 0))
             {
                 directionHorizontalOffset = state.ThumbSticks.Right.X;
                 directionVerticalOffset = state.ThumbSticks.Right.Y;
@@ -82,6 +74,11 @@ namespace Generator
                 player.Direction = radianDirection;
             }
 
+            bool ButtonOrKeyDown(Buttons button, Keys key)
+            {
+                return capabilities.IsConnected & state.IsButtonDown(button) | Keyboard.GetState().IsKeyDown(key);
+            }
+
             // Abilities
             if (player.Ability1 != null) player.Ability1.IsPressed = ButtonOrKeyDown(Buttons.LeftTrigger, Keys.D1);
             if (player.Ability2 != null) player.Ability2.IsPressed = ButtonOrKeyDown(Buttons.RightTrigger, Keys.D2);
@@ -89,11 +86,11 @@ namespace Generator
             if (player.Ability4 != null) player.Ability4.IsPressed = ButtonOrKeyDown(Buttons.RightShoulder, Keys.D4);
 
             // Map rotation
-            if (ButtonStateOrKeyDown(state.DPad.Left, Keys.Q)) GameControl.camera.Rotation = .1f;
-            if (ButtonStateOrKeyDown(state.DPad.Right, Keys.E)) GameControl.camera.Rotation = -.1f;
+            if (ButtonOrKeyDown(Buttons.DPadLeft, Keys.Q)) GameControl.camera.Rotation = .1f;
+            if (ButtonOrKeyDown(Buttons.DPadRight, Keys.E)) GameControl.camera.Rotation = -.1f;
 
             // Zoom in/out
-            if (ButtonStateOrKeyDown(state.DPad.Up, Keys.OemPlus))
+            if (ButtonOrKeyDown(Buttons.DPadUp, Keys.OemPlus))
             {
                 GameControl.camera.Position = new Vector3(
                     GameControl.camera.Position.X,
@@ -105,7 +102,7 @@ namespace Generator
                     GameControl.camera.Target.Z - 1);
             }
 
-            if (ButtonStateOrKeyDown(state.DPad.Right, Keys.OemMinus))
+            if (ButtonOrKeyDown(Buttons.DPadDown, Keys.OemMinus))
             {
                 GameControl.camera.Position = new Vector3(
                     GameControl.camera.Position.X,
