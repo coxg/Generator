@@ -163,13 +163,13 @@ namespace Generator
             
             // Keep the camera focused on the player
             camera.Position = new Vector3(
-                Globals.Player.Position.X, 
-                Globals.Player.Position.Y - 10, 
-                Globals.Player.Position.Z + 5);
+                Globals.Player.Center.X, 
+                Globals.Player.Center.Y - 10, 
+                Globals.Player.Center.Z + 5);
             camera.Target = new Vector3(
-                Globals.Player.Position.X, 
-                Globals.Player.Position.Y - 1, 
-                Globals.Player.Position.Z);
+                Globals.Player.Center.X, 
+                Globals.Player.Center.Y - 1, 
+                Globals.Player.Center.Z);
 
             base.Update(gameTime);
         }
