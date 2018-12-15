@@ -69,8 +69,9 @@ namespace Generator
             effect = new BasicEffect(GraphicsDevice)
             {
                 TextureEnabled = true,
-                AmbientLightColor = new Vector3(0.8f, 0.8f, 0.8f),
-                LightingEnabled = true
+                // TODO: Figure out why these don't work on Sasha's macbook
+                // AmbientLightColor = new Vector3(0.8f, 0.8f, 0.8f),
+                // LightingEnabled = true
             };
 
             // Load in the sprites
