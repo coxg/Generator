@@ -160,7 +160,7 @@ namespace Generator
             // Update the GameObjects
             Globals.DeathList = new List<string>();
             foreach (var Object in Globals.ObjectDict) Object.Value.Update();
-            foreach (var Name in Globals.DeathList) Globals.ObjectDict.Remove(Name);
+            foreach (var name in Globals.DeathList) Globals.ObjectDict.Remove(name);
             
             // Keep the camera focused on the player
             camera.Position = new Vector3(
@@ -182,12 +182,12 @@ namespace Generator
         protected override void Draw(GameTime gameTime)
         {
 
-            // Draw the grid
+            // Draw all tiles which the camera can see
             effect.View = camera.View;
             effect.Projection = camera.Projection;
-            for (int x = (int) Globals.Player.Position.X - 17; x < (int)Globals.Player.Position.X + 18; x++)
+            for (var x = (int) camera.Position.X - 17; x < (int)camera.Position.X + 17; x++)
             {
-                for (int y = (int)Globals.Player.Position.Y - 6; y < (int)Globals.Player.Position.Y + 2 * Globals.Player.Position.Z + 16; y++)
+                for (var y = (int)camera.Position.Y + 4; y < (int)camera.Position.Y + 2 * camera.Position.Z + 2; y++)
                 {
                     Drawing.DrawTile(
                         Globals.TileNameToTexture[Globals.TileIndexToTexture[tileMap[x, y]]],
@@ -198,12 +198,12 @@ namespace Generator
             // Draw the GameObjects
             foreach (var Object in Globals.ObjectDict.OrderBy(i => -i.Value.Position.Y))
             {
-                foreach (var Component in Object.Value.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
+                foreach (var component in Object.Value.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
                 {
                     spriteBatch.Begin();
                     Drawing.DrawComponent(
-                        Component.Value,
-                        Object.Value.Size * Component.Value.Size);
+                        component.Value,
+                        Object.Value.Size * component.Value.Size);
                     spriteBatch.End();
                 }
 

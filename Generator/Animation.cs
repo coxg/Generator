@@ -196,13 +196,6 @@ namespace Generator
             IsStopping = true;
         }
 
-        public void OnUpdate()
-            // When the ability is channeled/toggled on
-        {
-            // Just because the ability's updating doesn't mean we are
-            if (!IsStarting) IsUpdating = true;
-        }
-
         private void Reset()
             // Kills the animation wherever it is, resetting frames and positions.
             // Outside the animation class, one should use Stop().
