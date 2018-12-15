@@ -62,7 +62,7 @@ namespace Generator
                 if (CanMoveTo(value))
                 {
                     // Null out all previous locations
-                    Despawn();
+                    RemoveFromGrid();
 
                     // Assing new attributes for object
                     _Position = new Vector3(
@@ -71,7 +71,7 @@ namespace Generator
                         value.Z);
 
                     // Assign all new locations
-                    Spawn();
+                    AddToGrid();
                 }
             }
         }
@@ -277,11 +277,6 @@ namespace Generator
             this.IsShooting = isShooting;
             this.IsHurting = isHurting;
 
-            // Grid logic
-            this.Size = new Vector3(width, length, height);
-            this.Position = new Vector3(x, y, z);
-            Spawn();
-
             // Resources
             this.Health = new Resource("Health", health);
             this.Stamina = new Resource("Stamina", stamina, 10);
@@ -316,8 +311,12 @@ namespace Generator
                 if (this.Name != null) Say("This is just a " + this.Name + ".");
             };
 
-            // Make yourself accessible
+            // Grid logic
+            this.Size = new Vector3(width, length, height);
+            this.Position = new Vector3(x, y, z);
+            AddToGrid();
             Globals.ObjectDict[this.Name] = this;
+            Globals.Log(Name + " has spawned.");
         }
 
         // Establish a two-way link between the components and this GameObject
@@ -512,37 +511,36 @@ namespace Generator
         }
 
         // Populates grid with self. This DOES NOT add sprite.
-        public void Spawn()
+        public void AddToGrid()
         {
             for (var eachX = (int) Math.Floor(_Position.X);
-                eachX <= Math.Ceiling(_Position.X + Size.X - 1);
-                eachX++)
-            for (var eachY = (int) Math.Floor(_Position.Y);
-                eachY <= Math.Ceiling(_Position.Y + Size.Y - 1);
-                eachY++)
-                GridLogic.Grid.SetObject(eachX, eachY, this);
+                    eachX <= Math.Ceiling(_Position.X + Size.X - 1);
+                    eachX++)
+                for (var eachY = (int) Math.Floor(_Position.Y);
+                        eachY <= Math.Ceiling(_Position.Y + Size.Y - 1);
+                        eachY++)
+                    GridLogic.Grid.SetObject(eachX, eachY, this);
         }
 
         // Removes self from grid. This DOES NOT remove sprite.
-        public void Despawn()
+        public void RemoveFromGrid()
         {
             for (var eachX = (int) Math.Floor(_Position.X);
-                eachX <= Math.Ceiling(_Position.X + Size.X - 1);
-                eachX++)
-            for (var eachY = (int) Math.Floor(_Position.Y);
-                eachY <= Math.Ceiling(_Position.Y + Size.Y - 1);
-                eachY++)
-                GridLogic.Grid.SetObject(eachX, eachY, null);
+                    eachX <= Math.Ceiling(_Position.X + Size.X - 1);
+                    eachX++)
+                for (var eachY = (int) Math.Floor(_Position.Y);
+                        eachY <= Math.Ceiling(_Position.Y + Size.Y - 1);
+                        eachY++)
+                    GridLogic.Grid.SetObject(eachX, eachY, null);
         }
 
         // Plays death animation and despawns
         public void Die()
-            // Plays death animation and despawns
         {
 
             // Remove self from grid
-            Despawn();
             Globals.ObjectDict.Remove(Name);
+            RemoveFromGrid();
 
             // TODO: Drop equipment + inventory
 
