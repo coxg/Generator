@@ -166,10 +166,10 @@ namespace Generator
             camera.Position = new Vector3(
                 Globals.Player.Center.X, 
                 Globals.Player.Center.Y - 10, 
-                Globals.Player.Center.Z + 5);
+                Globals.Player.Center.Z + 10);
             camera.Target = new Vector3(
-                Globals.Player.Center.X, 
-                Globals.Player.Center.Y - 1, 
+                Globals.Player.Center.X,
+                Globals.Player.Center.Y - 1,
                 Globals.Player.Center.Z);
 
             base.Update(gameTime);
@@ -185,9 +185,9 @@ namespace Generator
             // Draw the grid
             effect.View = camera.View;
             effect.Projection = camera.Projection;
-            for (int x = (int) Globals.Player.Position.X - 30; x < (int)Globals.Player.Position.X + 31; x++)
+            for (int x = (int) Globals.Player.Position.X - 17; x < (int)Globals.Player.Position.X + 18; x++)
             {
-                for (int y = (int)Globals.Player.Position.Y - 6; y < (int)Globals.Player.Position.Y + 40; y++)
+                for (int y = (int)Globals.Player.Position.Y - 6; y < (int)Globals.Player.Position.Y + 2 * Globals.Player.Position.Z + 16; y++)
                 {
                     Drawing.DrawTile(
                         Globals.TileNameToTexture[Globals.TileIndexToTexture[tileMap[x, y]]],
@@ -201,7 +201,7 @@ namespace Generator
                 foreach (var Component in Object.Value.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
                 {
                     spriteBatch.Begin();
-                    Drawing.DrawElement(
+                    Drawing.DrawComponent(
                         Component.Value,
                         Object.Value.Size * Component.Value.Size);
                     spriteBatch.End();

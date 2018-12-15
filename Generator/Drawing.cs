@@ -104,26 +104,30 @@ namespace Generator
                 .05f);
         }
 
-        public static void DrawElement(
-                GameElement gameElement,
+        public static void DrawComponent(
+                Component component,
                 Vector3 size)
             // This should be used to draw characters.
             // These should be able to move, rotate, etc.
         {
-            // Generate the vertices
             var vertices = new VertexPositionTexture[6];
+            var bottomLeft = component.Position;
+            var rotationPoint = bottomLeft + component.RotationPoint;
+            var rotationDirection = Globals.PointRotatedAroundPoint(
+                component.RotationOffset,
+                new Vector3(0, 0, 0),
+                new Vector3(0, 0, component.Direction));
+            var normalizationDirection = new Vector3(-.5f, 0, 0);
 
             // Bottom left
-            var bottomLeft = gameElement.Position;
-            var rotationPoint = bottomLeft + gameElement.RotationPoint;
-            var rotationDirection = Globals.PointRotatedAroundPoint(
-                gameElement.RotationOffset,
-                new Vector3(0, 0, 0),
-                new Vector3(0, 0, gameElement.Direction));
             vertices[0].Position = Globals.PointRotatedAroundPoint(
                 bottomLeft,
                 rotationPoint,
                 rotationDirection);
+            vertices[0].Position = Globals.PointRotatedAroundPoint(
+                vertices[0].Position,
+                component.SourceObject.Center,
+                normalizationDirection);
 
             // Top left
             vertices[1].Position = Globals.PointRotatedAroundPoint(
@@ -133,6 +137,10 @@ namespace Generator
                     bottomLeft.Z + size.Z),
                 rotationPoint,
                 rotationDirection);
+            vertices[1].Position = Globals.PointRotatedAroundPoint(
+                vertices[1].Position,
+                component.SourceObject.Center,
+                normalizationDirection);
 
             // Bottom right
             vertices[2].Position = Globals.PointRotatedAroundPoint(
@@ -142,6 +150,10 @@ namespace Generator
                     bottomLeft.Z),
                 rotationPoint,
                 rotationDirection);
+            vertices[2].Position = Globals.PointRotatedAroundPoint(
+                vertices[2].Position,
+                component.SourceObject.Center,
+                normalizationDirection);
             vertices[3].Position = vertices[1].Position;
 
             // Top right
@@ -152,6 +164,10 @@ namespace Generator
                     bottomLeft.Z + size.Z),
                 rotationPoint,
                 rotationDirection);
+            vertices[4].Position = Globals.PointRotatedAroundPoint(
+                vertices[4].Position,
+                component.SourceObject.Center,
+                normalizationDirection);
             vertices[5].Position = vertices[2].Position;
 
             // Generate the texture coordinates
@@ -163,7 +179,7 @@ namespace Generator
             vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
 
             // Draw it
-            GameControl.effect.Texture = gameElement.Sprite;
+            GameControl.effect.Texture = component.Sprite;
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
