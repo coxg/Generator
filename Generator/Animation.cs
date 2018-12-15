@@ -30,7 +30,7 @@ namespace Generator
             // Plays a frame of the animation
         {
             // Rotate the difference between the last frame and this one
-            var positionDifference = Globals.PointRotatedAroundPoint(
+            var positionDifference = MathTools.PointRotatedAroundPoint(
                 Offsets[CurrentFrame],
                 new Vector3(0, 0, 0),
                 new Vector3(0, 0, -SourceAnimation.SourceElement.Direction));
@@ -44,7 +44,7 @@ namespace Generator
             SourceAnimation.TotalRotation = Rotations[CurrentFrame];
 
             // Update the current frame
-            CurrentFrame = (int) Globals.Mod(CurrentFrame + 1, Offsets.Count);
+            CurrentFrame = (int)MathTools.Mod(CurrentFrame + 1, Offsets.Count);
         }
 
         public static List<Vector3> SmoothFrames(List<Vector3> frames, int duration)
@@ -60,10 +60,10 @@ namespace Generator
             var zValues = new List<float>();
 
             // But wait - time is also a dimension! We're in 4D, people!
-            var timeInputs = Globals.FloatRange(frames.Count);
+            var timeInputs = MathTools.FloatRange(frames.Count);
             for (var frameIndex = 0; frameIndex < frames.Count; frameIndex++)
                 timeInputs[frameIndex] *= (float) duration / (frames.Count - 1);
-            var timeOutputs = Globals.FloatRange(duration);
+            var timeOutputs = MathTools.FloatRange(duration);
 
             // Append X, Y, and Z values from the FrameType to their lists
             foreach (var frame in frames)

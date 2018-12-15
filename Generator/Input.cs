@@ -6,6 +6,8 @@ namespace Generator
 {
     public static class Input
     {
+        public static bool ActivateButtonWasDown = false;
+
         public static void GetInput(GameObject player)
         {
             // Convert from actual movement input to direction offsets
@@ -50,7 +52,7 @@ namespace Generator
 
                 // Apply offset from map rotation
                 radianDirection -= GameControl.camera.Rotation;
-                radianDirection = Globals.Mod(radianDirection, 2f * (float) Math.PI);
+                radianDirection = MathTools.Mod(radianDirection, 2f * (float) Math.PI);
 
                 // Move in that direction
                 player.MoveInDirection(radianDirection, (float)speed);
@@ -68,7 +70,7 @@ namespace Generator
 
                 // Apply offset from map rotation
                 radianDirection -= GameControl.camera.Rotation;
-                radianDirection = Globals.Mod(radianDirection, 2f * (float)Math.PI);
+                radianDirection = MathTools.Mod(radianDirection, 2f * (float)Math.PI);
 
                 // Look in that direction
                 player.Direction = radianDirection;
@@ -118,9 +120,9 @@ namespace Generator
             if (ButtonOrKeyDown(Buttons.A, Keys.F))
             {
                 // To make sure you're not holding it down
-                if (!Globals.ActivateButtonWasDown)
+                if (!ActivateButtonWasDown)
                 {
-                    Globals.ActivateButtonWasDown = true;
+                    ActivateButtonWasDown = true;
 
                     // If you're trying to progress a message
                     if (Globals.DisplayTextQueue.Count != 0)
@@ -147,7 +149,7 @@ namespace Generator
             }
             else
             {
-                Globals.ActivateButtonWasDown = false;
+                ActivateButtonWasDown = false;
             }
         }
     }

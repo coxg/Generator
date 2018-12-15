@@ -113,58 +113,58 @@ namespace Generator
             var vertices = new VertexPositionTexture[6];
             var bottomLeft = component.Position;
             var rotationPoint = bottomLeft + component.RotationPoint;
-            var rotationDirection = Globals.PointRotatedAroundPoint(
+            var rotationDirection = MathTools.PointRotatedAroundPoint(
                 component.RotationOffset,
                 new Vector3(0, 0, 0),
                 new Vector3(0, 0, component.Direction));
             var normalizationDirection = new Vector3(-.5f, 0, 0);
 
             // Bottom left
-            vertices[0].Position = Globals.PointRotatedAroundPoint(
+            vertices[0].Position = MathTools.PointRotatedAroundPoint(
                 bottomLeft,
                 rotationPoint,
                 rotationDirection);
-            vertices[0].Position = Globals.PointRotatedAroundPoint(
+            vertices[0].Position = MathTools.PointRotatedAroundPoint(
                 vertices[0].Position,
                 component.SourceObject.Center,
                 normalizationDirection);
 
             // Top left
-            vertices[1].Position = Globals.PointRotatedAroundPoint(
+            vertices[1].Position = MathTools.PointRotatedAroundPoint(
                 new Vector3(
                     bottomLeft.X,
                     bottomLeft.Y,
                     bottomLeft.Z + size.Z),
                 rotationPoint,
                 rotationDirection);
-            vertices[1].Position = Globals.PointRotatedAroundPoint(
+            vertices[1].Position = MathTools.PointRotatedAroundPoint(
                 vertices[1].Position,
                 component.SourceObject.Center,
                 normalizationDirection);
 
             // Bottom right
-            vertices[2].Position = Globals.PointRotatedAroundPoint(
+            vertices[2].Position = MathTools.PointRotatedAroundPoint(
                 new Vector3(
                     bottomLeft.X + size.X,
                     bottomLeft.Y,
                     bottomLeft.Z),
                 rotationPoint,
                 rotationDirection);
-            vertices[2].Position = Globals.PointRotatedAroundPoint(
+            vertices[2].Position = MathTools.PointRotatedAroundPoint(
                 vertices[2].Position,
                 component.SourceObject.Center,
                 normalizationDirection);
             vertices[3].Position = vertices[1].Position;
 
             // Top right
-            vertices[4].Position = Globals.PointRotatedAroundPoint(
+            vertices[4].Position = MathTools.PointRotatedAroundPoint(
                 new Vector3(
                     bottomLeft.X + size.X,
                     bottomLeft.Y,
                     bottomLeft.Z + size.Z),
                 rotationPoint,
                 rotationDirection);
-            vertices[4].Position = Globals.PointRotatedAroundPoint(
+            vertices[4].Position = MathTools.PointRotatedAroundPoint(
                 vertices[4].Position,
                 component.SourceObject.Center,
                 normalizationDirection);

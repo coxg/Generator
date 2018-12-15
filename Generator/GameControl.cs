@@ -28,7 +28,7 @@ namespace Generator
         public GameControl()
         {
             // Populate global variables
-            Globals.Populate();
+            Globals.PopulateGlobals();
 
             // Setup stuff
             graphics = new GraphicsDeviceManager(this)
@@ -81,15 +81,15 @@ namespace Generator
             Globals.Font = Content.Load<SpriteFont>("Fonts/Score");
 
             // Load in the tiles
-            Globals.TileNameToTexture = new Dictionary<string, Texture2D>();
-            Globals.TileIndexToTexture = new Dictionary<int, string>();
+            GridLogic.TileNameToTexture = new Dictionary<string, Texture2D>();
+            GridLogic.TileIndexToTexture = new Dictionary<int, string>();
             var tileIndex = 0;
             foreach (var tileFile in Directory.GetFiles(
                 Globals.Directory + "/Content/Tiles", "*.png", SearchOption.TopDirectoryOnly
                 ).Select(Path.GetFileName).Select(Path.GetFileNameWithoutExtension))
             {
-                Globals.TileNameToTexture.Add(tileFile, Content.Load<Texture2D>("Tiles/" + tileFile));
-                Globals.TileIndexToTexture.Add(tileIndex, tileFile);
+                GridLogic.TileNameToTexture.Add(tileFile, Content.Load<Texture2D>("Tiles/" + tileFile));
+                GridLogic.TileIndexToTexture.Add(tileIndex, tileFile);
                 tileIndex += 1;
             }
 
@@ -190,7 +190,7 @@ namespace Generator
                 for (var y = (int)camera.Position.Y + 4; y < (int)camera.Position.Y + 2 * camera.Position.Z + 2; y++)
                 {
                     Drawing.DrawTile(
-                        Globals.TileNameToTexture[Globals.TileIndexToTexture[tileMap[x, y]]],
+                        GridLogic.TileNameToTexture[GridLogic.TileIndexToTexture[tileMap[x, y]]],
                         new Vector2(x, y));
                 }
             }

@@ -70,7 +70,7 @@ namespace Generator
                     0);
 
                 // Rotate the center of the component around the center of the object
-                var RotatedPosition = Globals.PointRotatedAroundPoint(
+                var RotatedPosition = MathTools.PointRotatedAroundPoint(
                     SourceObject.Position + ComponentOffsets, // Center of component
                     SourceObject.Position + ObjectOffsets, // Center of object
                     new Vector3(0, 0, -SourceObject.Direction));
@@ -96,7 +96,7 @@ namespace Generator
             // TODO: Only do this when we need to - maybe that's default behavior?
             Sprite = Globals.Content.Load<Texture2D>(
                 "Sprites/" + SpriteFile + (
-                Directional ? "-" + Globals.StringFromRadians(SourceObject.Direction) : ""));
+                Directional ? "-" + MathTools.StringFromRadians(SourceObject.Direction) : ""));
         }
     }
 }

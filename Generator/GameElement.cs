@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -35,12 +34,12 @@ namespace Generator
                         moveToY++)
 
                     // If location is not empty or self
-                    if (Globals.Grid.GetObject(moveToX, moveToY) != null
-                        && Globals.Grid.GetObject(moveToX, moveToY) != this)
+                    if (GridLogic.Grid.GetObject(moveToX, moveToY) != null
+                        && GridLogic.Grid.GetObject(moveToX, moveToY) != this)
                     {
                         Globals.Log(
                             "[" + moveToX + ", " + moveToY + "]" +
-                            " is not empty or self: " + Globals.Grid.GetObject(moveToX, moveToY));
+                            " is not empty or self: " + GridLogic.Grid.GetObject(moveToX, moveToY));
                         return false;
                     }
 

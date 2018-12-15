@@ -453,8 +453,8 @@ namespace Generator
 
                     // Assing new attributes for object
                     _Position = new Vector3(
-                        Globals.Mod(value.X, Globals.Grid.GetLength(0)),
-                        Globals.Mod(value.Y, Globals.Grid.GetLength(1)),
+                        MathTools.Mod(value.X, GridLogic.Grid.GetLength(0)),
+                        MathTools.Mod(value.Y, GridLogic.Grid.GetLength(1)),
                         value.Z);
 
                     // Assign all new locations
@@ -609,7 +609,7 @@ namespace Generator
             for (var eachY = (int) Math.Floor(_Position.Y);
                 eachY <= Math.Ceiling(_Position.Y + Size.Y - 1);
                 eachY++)
-                Globals.Grid.SetObject(eachX, eachY, this);
+                GridLogic.Grid.SetObject(eachX, eachY, this);
         }
 
         public void Despawn()
@@ -621,7 +621,7 @@ namespace Generator
             for (var eachY = (int) Math.Floor(_Position.Y);
                 eachY <= Math.Ceiling(_Position.Y + Size.Y - 1);
                 eachY++)
-                Globals.Grid.SetObject(eachX, eachY, null);
+                GridLogic.Grid.SetObject(eachX, eachY, null);
         }
 
         public void Die()
@@ -669,8 +669,8 @@ namespace Generator
         public GameObject GetTarget(float range = 1)
             // Gets whichever object is [distance] away in the current direction
         {
-            var offsets = Globals.OffsetFromRadians(Direction);
-            var targettedObject = Globals.Grid.GetObject(
+            var offsets = MathTools.OffsetFromRadians(Direction);
+            var targettedObject = GridLogic.Grid.GetObject(
                 (int)Math.Round(_Position.X + (range + Size.X / 2) * offsets.X),
                 (int)Math.Round(_Position.Y + (range + Size.Y / 2) * offsets.Y));
             return targettedObject;
@@ -707,7 +707,7 @@ namespace Generator
             var distance = (float) speed / Globals.RefreshRate;
 
             // Convert from radian direction to X/Y offsets
-            var offsets = Globals.OffsetFromRadians(radians);
+            var offsets = MathTools.OffsetFromRadians(radians);
             var newPosition = new Vector3(
                 _Position.X + distance * offsets.X,
                 _Position.Y + distance * offsets.Y,

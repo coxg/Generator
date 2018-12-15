@@ -63,6 +63,8 @@
     <Compile Include="Accessory.cs" />
     <Compile Include="Animation.cs" />
     <Compile Include="GameElement.cs" />
+    <Compile Include="MathTools.cs" />
+    <Compile Include="GridLogic.cs" />
     <Compile Include="Helmet.cs" />
     <Compile Include="Armor.cs" />
     <Compile Include="ArrayUtil.cs" />
