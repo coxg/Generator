@@ -1,7 +1,11 @@
-﻿namespace Generator
+﻿using System.Collections.Generic;
+
+namespace Generator
 {
     public class GameObjectManager : Manager<GameObject>
     {
+        public HashSet<string> ActiveGameObjects = new HashSet<string>();
+
         public GameObjectManager()
         {
             // Set the name
@@ -22,16 +26,11 @@
             var terrain1 = NameToObject["angry terrain"];
             terrain1.Activate = delegate
             {
-                if (!NameToObject.ContainsKey("big terrain"))
+                if (Get(60, 60) == null)
                 {
                     terrain1.Say("Check it out, I do something weird!");
                     terrain1.Say("Did you see how weird that was?!");
-                    var terrain3 = new GameObject(width: 5, length: 5, height: 5, x: 60, y: 60, name: "big terrain");
-                    terrain3.Activate = delegate
-                    {
-                        terrain3.Say("I don't do anything weird.");
-                        terrain3.Say("...I'm just really fat.");
-                    };
+                    NameToObject["big terrain"].AddToGrid();
                 }
                 else
                 {
@@ -41,6 +40,14 @@
 
             AddNewObject("medium terrain", new GameObject(
                 width: 2, length: 2, height: 2, x: 55, y: 59, name: "medium terrain"));
+
+            AddNewObject("big terrain", new GameObject(width: 5, length: 5, height: 5, x: 60, y: 60, name: "big terrain"));
+            var terrain3 = NameToObject["big terrain"];
+            terrain3.Activate = delegate
+            {
+                terrain3.Say("I don't do anything weird.");
+                terrain3.Say("...I'm just really fat.");
+            };
 
             // Populate the Acres
             PopulateAcres();

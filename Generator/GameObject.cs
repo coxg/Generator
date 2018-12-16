@@ -505,9 +505,13 @@ namespace Generator
             foreach (var ability in Abilities) ability.Update();
         }
 
-        // Populates grid with self. This DOES NOT add sprite.
+        // Populates grid with self.
         public void AddToGrid()
         {
+            // So we're drawn
+            Globals.GameObjects.ActiveGameObjects.Add(Name);
+
+            // So we have collision
             for (var eachX = (int) Math.Floor(_Position.X);
                     eachX <= Math.Ceiling(_Position.X + Size.X - 1);
                     eachX++)
@@ -517,9 +521,13 @@ namespace Generator
                     Globals.GameObjects.Set(eachX, eachY, Name);
         }
 
-        // Removes self from grid. This DOES NOT remove sprite.
+        // Removes self from grid.
         public void RemoveFromGrid()
         {
+            // So we're no longer drawn
+            Globals.GameObjects.ActiveGameObjects.Remove(Name);
+
+            // So we no longer have collision
             for (var eachX = (int) Math.Floor(_Position.X);
                     eachX <= Math.Ceiling(_Position.X + Size.X - 1);
                     eachX++)

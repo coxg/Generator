@@ -65,12 +65,13 @@ namespace Generator
 
             // Create player
             Globals.Player = Globals.GameObjects.NameToObject["Niels"];
-
-            Globals.GameObjects.Set((int)Globals.Player.Position.X, (int)Globals.Player.Position.Y, Globals.Player.Name);
+            Globals.Player.AddToGrid();
 
             // Create terrain
             terrain1 = Globals.GameObjects.NameToObject["angry terrain"];
             terrain2 = Globals.GameObjects.NameToObject["medium terrain"];
+            terrain1.AddToGrid();
+            terrain2.AddToGrid();
 
             base.Initialize();
         }
@@ -117,13 +118,8 @@ namespace Generator
             Input.GetInput(Globals.Player);
 
             // Update the GameObjects
-            foreach (var Object in new Dictionary<string, GameObject>(Globals.GameObjects.NameToObject))
-            {
-                if (Object.Value != null)
-                {
-                    Object.Value.Update();
-                }
-            }
+            foreach (var ObjectName in new HashSet<string>(Globals.GameObjects.ActiveGameObjects))
+                Globals.GameObjects.NameToObject[ObjectName].Update();
             Globals.GameObjects.Update();
 
             // Update the tiles
@@ -154,7 +150,8 @@ namespace Generator
             }
 
             // Draw the GameObjects
-            foreach (var Object in Globals.GameObjects.NameToObject.Values.OfType<GameObject>().OrderBy(i => -i.Position.Y))
+            foreach (var Object in Globals.GameObjects.ActiveGameObjects.Select(
+                i => Globals.GameObjects.NameToObject[i]).OrderBy(i => -i.Position.Y))
             {
                 foreach (var component in Object.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
                 {
