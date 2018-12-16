@@ -34,12 +34,12 @@ namespace Generator
                         moveToY++)
 
                     // If location is not empty or self
-                    if (GridLogic.Grid.GetObject(moveToX, moveToY) != null
-                        && GridLogic.Grid.GetObject(moveToX, moveToY) != this)
+                    if (Globals.GameObjects.Get(moveToX, moveToY) != null
+                        && Globals.GameObjects.Get(moveToX, moveToY) != this)
                     {
                         Globals.Log(
                             "[" + moveToX + ", " + moveToY + "]" +
-                            " is not empty or self: " + GridLogic.Grid.GetObject(moveToX, moveToY));
+                            " is not empty or self: " + Globals.GameObjects.Get(moveToX, moveToY));
                         return false;
                     }
 

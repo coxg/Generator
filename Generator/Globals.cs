@@ -31,8 +31,11 @@ namespace Generator
         public static Texture2D WhiteDot;
         public static SpriteFont Font;
 
+        // Create the maps
+        public static GameObjectManager GameObjects = null;
+        public static TileManager Tiles = null;
+
         // Data storage
-        public static Dictionary<string, GameObject> ObjectDict = new Dictionary<string, GameObject>();
         public static Dictionary<string, Weapon> WeaponsDict = new Dictionary<string, Weapon>();
         public static Dictionary<string, OffHand> OffHandDict = new Dictionary<string, OffHand>();
         public static Dictionary<string, Helmet> HelmetDict = new Dictionary<string, Helmet>();
@@ -54,6 +57,22 @@ namespace Generator
                     + CallingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First() 
                     + ": " + text);
             }
+        }
+
+        public static Vector2 LoadMinCoordinates()
+        {
+            var cameraMin = GameControl.camera.ViewMinCoordinates();
+            return new Vector2(
+                cameraMin.X - MathTools.Mod(cameraMin.X, Acre.AcreSize.X) - Acre.AcreSize.X,
+                cameraMin.Y - MathTools.Mod(cameraMin.Y, Acre.AcreSize.Y) - Acre.AcreSize.Y);
+        }
+
+        public static Vector2 LoadMaxCoordinates()
+        {
+            var cameraMax = GameControl.camera.ViewMaxCoordinates();
+            return new Vector2(
+                cameraMax.X - MathTools.Mod(cameraMax.X, Acre.AcreSize.X) + 2 * Acre.AcreSize.X - 1,
+                cameraMax.Y - MathTools.Mod(cameraMax.Y, Acre.AcreSize.Y) + 2 * Acre.AcreSize.Y - 1);
         }
     }
 }

@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Linq;
-using System.IO;
 
 namespace Generator
 {
@@ -18,7 +17,6 @@ namespace Generator
         // For drawing... stuff
         public static Camera camera;
         public static BasicEffect effect;
-        public static int[,] tileMap;
 
         // Player
         public SpriteBatch spriteBatch;
@@ -27,7 +25,6 @@ namespace Generator
 
         public GameControl()
         {
-
             // Setup stuff
             graphics = new GraphicsDeviceManager(this)
             {
@@ -61,49 +58,19 @@ namespace Generator
 
             camera = new Camera();
 
-            // Load in the map
-            tileMap = new int[100, 100];
-            using (var sr = new StreamReader(Globals.Directory + "/Maps/Tiles/map_1_1.csv"))
-            {
-                var rows = sr.ReadToEnd().Split('\n');
-                for (int rowNumber = 0; rowNumber < rows.Length; rowNumber++)
-                {
-                    var row = rows[rowNumber].Split(',');
-                    for (int columnNumber = 0; columnNumber < row.Length; columnNumber++)
-                        tileMap[columnNumber, 99 - rowNumber] = int.Parse(row[columnNumber]);
-                }
-            }
-
             Globals.Content = Content;
 
+            Globals.GameObjects = new GameObjectManager();
+            Globals.Tiles = new TileManager();
+
             // Create player
-            Globals.Player = new GameObject( // TODO: This shouldn't be hard coded
-                x: 50f, y: 50f, stamina: 100, strength: 10, speed: 10, perception: 10, name: "Niels", partyNumber: 0, weapon: new Weapon(
-                    name: "Sword",
-                    type: "Cut",
-                    damage: 10));
+            Globals.Player = Globals.GameObjects.NameToObject["Niels"];
+
+            Globals.GameObjects.Set((int)Globals.Player.Position.X, (int)Globals.Player.Position.Y, Globals.Player.Name);
 
             // Create terrain
-            terrain1 = new GameObject(spriteFile: "Sprites/angry_boy", x: 55, y: 56, name: "angry terrain");
-            terrain1.Activate = delegate
-            {
-                if (!Globals.ObjectDict.ContainsKey("big terrain"))
-                {
-                    terrain1.Say("Check it out, I do something weird!");
-                    terrain1.Say("Did you see how weird that was?!");
-                    var terrain3 = new GameObject(width: 5, length: 5, height: 5, x: 60, y: 60, name: "big terrain");
-                    terrain3.Activate = delegate
-                    {
-                        terrain3.Say("I don't do anything weird.");
-                        terrain3.Say("...I'm just really fat.");
-                    };
-                }
-                else
-                {
-                    terrain1.Say("There's already a boy!");
-                }
-            };
-            terrain2 = new GameObject(width: 2, length: 2, height: 2, x: 55, y: 59, name: "medium terrain");
+            terrain1 = Globals.GameObjects.NameToObject["angry terrain"];
+            terrain2 = Globals.GameObjects.NameToObject["medium terrain"];
 
             base.Initialize();
         }
@@ -121,18 +88,6 @@ namespace Generator
             // Load in the fonts
             Globals.Font = Content.Load<SpriteFont>("Fonts/Score");
 
-            // Load in the tiles
-            GridLogic.TileNameToTexture = new Dictionary<string, Texture2D>();
-            GridLogic.TileIndexToTexture = new Dictionary<int, string>();
-            var tileIndex = 0;
-            foreach (var tileFile in Directory.GetFiles(
-                Globals.Directory + "/Content/Tiles", "*.png", SearchOption.TopDirectoryOnly
-                ).Select(Path.GetFileName).Select(Path.GetFileNameWithoutExtension))
-            {
-                GridLogic.TileNameToTexture.Add(tileFile, Content.Load<Texture2D>("Tiles/" + tileFile));
-                GridLogic.TileIndexToTexture.Add(tileIndex, tileFile);
-                tileIndex += 1;
-            }
         }
 
         /// <summary>
@@ -162,8 +117,17 @@ namespace Generator
             Input.GetInput(Globals.Player);
 
             // Update the GameObjects
-            foreach (var Object in new Dictionary<string, GameObject>(Globals.ObjectDict))
-                Object.Value.Update();
+            foreach (var Object in new Dictionary<string, GameObject>(Globals.GameObjects.NameToObject))
+            {
+                if (Object.Value != null)
+                {
+                    Object.Value.Update();
+                }
+            }
+            Globals.GameObjects.Update();
+
+            // Update the tiles
+            Globals.Tiles.Update();
 
             // Keep the camera focused on the player
             camera.Update();
@@ -181,40 +145,38 @@ namespace Generator
             // Draw all tiles which the camera can see
             effect.View = camera.View;
             effect.Projection = camera.Projection;
-            for (var x = (int) camera.Position.X - 17; x < (int)camera.Position.X + 17; x++)
+            for (var x = (int) camera.ViewMinCoordinates().X; x < (int) camera.ViewMaxCoordinates().X; x++)
             {
-                for (var y = (int)camera.Position.Y + 4; y < (int)camera.Position.Y + 2 * camera.Position.Z + 2; y++)
+                for (var y = (int) camera.ViewMinCoordinates().Y; y < (int) camera.ViewMaxCoordinates().Y; y++)
                 {
-                    Drawing.DrawTile(
-                        GridLogic.TileNameToTexture[GridLogic.TileIndexToTexture[tileMap[x, y]]],
-                        new Vector2(x, y));
+                    Drawing.DrawTile(Globals.Tiles.Get(x, y), new Vector2(x, y));
                 }
             }
 
             // Draw the GameObjects
-            foreach (var Object in Globals.ObjectDict.OrderBy(i => -i.Value.Position.Y))
+            foreach (var Object in Globals.GameObjects.NameToObject.Values.OfType<GameObject>().OrderBy(i => -i.Position.Y))
             {
-                foreach (var component in Object.Value.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
+                foreach (var component in Object.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
                 {
                     spriteBatch.Begin();
                     Drawing.DrawComponent(
                         component.Value,
-                        Object.Value.Size * component.Value.Size);
+                        Object.Size * component.Value.Size);
                     spriteBatch.End();
                 }
 
                 // Draw resource bars if they're in the party
-                if (Object.Value.PartyNumber >= 0)
+                if (Object.PartyNumber >= 0)
                 {
                     spriteBatch.Begin(
                         SpriteSortMode.Texture,
                         null,
                         SamplerState.LinearWrap);
-                    Drawing.DrawResource(spriteBatch, Object.Value.Health, Object.Value.PartyNumber);
-                    if (Object.Value.Stamina.Max > 0)
-                        Drawing.DrawResource(spriteBatch, Object.Value.Stamina, Object.Value.PartyNumber);
-                    if (Object.Value.Electricity.Max > 0)
-                        Drawing.DrawResource(spriteBatch, Object.Value.Electricity, Object.Value.PartyNumber);
+                    Drawing.DrawResource(spriteBatch, Object.Health, Object.PartyNumber);
+                    if (Object.Stamina.Max > 0)
+                        Drawing.DrawResource(spriteBatch, Object.Stamina, Object.PartyNumber);
+                    if (Object.Electricity.Max > 0)
+                        Drawing.DrawResource(spriteBatch, Object.Electricity, Object.PartyNumber);
                     spriteBatch.End();
                 }
             }

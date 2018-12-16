@@ -15,7 +15,7 @@ namespace Generator
         private string componentSpriteFileName;
 
         // Sprites
-        public Dictionary<string, Component> ComponentDictionary { get; set; }
+        public Dictionary<string, Component> ComponentDictionary;
 
         // Toggleables
         private bool _isWalking;
@@ -47,9 +47,9 @@ namespace Generator
                 _isWalking = value;
             }
         }
-        public bool IsSwinging { get; set; }
-        public bool IsShooting { get; set; }
-        public bool IsHurting { get; set; }
+        public bool IsSwinging;
+        public bool IsShooting;
+        public bool IsHurting;
 
         // Location
         override public float Direction { get; set; }
@@ -65,10 +65,7 @@ namespace Generator
                     RemoveFromGrid();
 
                     // Assing new attributes for object
-                    _Position = new Vector3(
-                        MathTools.Mod(value.X, GridLogic.Grid.GetLength(0)),
-                        MathTools.Mod(value.Y, GridLogic.Grid.GetLength(1)),
-                        value.Z);
+                    _Position = value;
 
                     // Assign all new locations
                     AddToGrid();
@@ -77,19 +74,19 @@ namespace Generator
         }
 
         // Resources
-        public Resource Health { get; set; }
-        public Resource Stamina { get; set; }
-        public Resource Electricity { get; set; }
+        public Resource Health;
+        public Resource Stamina;
+        public Resource Electricity;
 
         // Primary Attributes
-        public Attribute Strength { get; set; }
-        public Attribute Perception { get; set; }
-        public Attribute Speed { get; set; }
-        public Attribute Weight { get; set; } // Roughly in pounds
+        public Attribute Strength;
+        public Attribute Perception;
+        public Attribute Speed;
+        public Attribute Weight; // Roughly in pounds
 
         // ...Other Attributes
-        public int Level { get; set; }
-        public int Experience { get; set; }
+        public int Level;
+        public int Experience;
 
         // Abilities
         private List<Ability> _abilities;
@@ -107,14 +104,14 @@ namespace Generator
                 if (Abilities.Count >= 4) Ability4 = Abilities[3];
             }
         }
-        public Ability Ability1 { get; set; }
-        public Ability Ability2 { get; set; }
-        public Ability Ability3 { get; set; }
-        public Ability Ability4 { get; set; }
+        public Ability Ability1;
+        public Ability Ability2;
+        public Ability Ability3;
+        public Ability Ability4;
 
         // Interaction
-        public int PartyNumber { get; set; }
-        public Action Activate { get; set; }
+        public int PartyNumber;
+        public Action Activate;
 
         // Equipment
         private Weapon _equippedWeapon =  new Weapon();
@@ -313,9 +310,7 @@ namespace Generator
 
             // Grid logic
             this.Size = new Vector3(width, length, height);
-            this.Position = new Vector3(x, y, z);
-            AddToGrid();
-            Globals.ObjectDict[this.Name] = this;
+            this._Position = new Vector3(x, y, z);
             Globals.Log(Name + " has spawned.");
         }
 
@@ -519,7 +514,7 @@ namespace Generator
                 for (var eachY = (int) Math.Floor(_Position.Y);
                         eachY <= Math.Ceiling(_Position.Y + Size.Y - 1);
                         eachY++)
-                    GridLogic.Grid.SetObject(eachX, eachY, this);
+                    Globals.GameObjects.Set(eachX, eachY, Name);
         }
 
         // Removes self from grid. This DOES NOT remove sprite.
@@ -531,7 +526,7 @@ namespace Generator
                 for (var eachY = (int) Math.Floor(_Position.Y);
                         eachY <= Math.Ceiling(_Position.Y + Size.Y - 1);
                         eachY++)
-                    GridLogic.Grid.SetObject(eachX, eachY, null);
+                    Globals.GameObjects.Set(eachX, eachY, "");
         }
 
         // Plays death animation and despawns
@@ -539,11 +534,9 @@ namespace Generator
         {
 
             // Remove self from grid
-            Globals.ObjectDict.Remove(Name);
             RemoveFromGrid();
 
             // TODO: Drop equipment + inventory
-
             Globals.Log(this + " has passed away. RIP.");
         }
 
@@ -577,7 +570,7 @@ namespace Generator
         public GameObject GetTarget(float range = 1)
         {
             var offsets = MathTools.OffsetFromRadians(Direction);
-            var targettedObject = GridLogic.Grid.GetObject(
+            var targettedObject = Globals.GameObjects.Get(
                 (int)Math.Round(_Position.X + (range + Size.X / 2) * offsets.X),
                 (int)Math.Round(_Position.Y + (range + Size.Y / 2) * offsets.Y));
             return targettedObject;

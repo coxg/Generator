@@ -16,8 +16,8 @@ namespace Generator
 
         // Fields 
         public Vector3 Position { get; set; }
-        public Vector3 Target { get; set; }
-        public Vector3 Up { get; set; }
+        private Vector3 Target { get; set; }
+        private Vector3 Up { get; set; }
 
         public float Rotation
         {
@@ -63,6 +63,16 @@ namespace Generator
                 Globals.Player.Center.X,
                 Globals.Player.Center.Y - 1,
                 Globals.Player.Center.Z);
+        }
+
+        public Vector2 ViewMinCoordinates()
+        {
+            return new Vector2(Position.X - 17, Position.Y + 2);
+        }
+
+        public Vector2 ViewMaxCoordinates()
+        {
+            return new Vector2(Position.X + 17, Position.Y + 2 * Position.Z + 2);
         }
     }
 }

@@ -91,31 +91,6 @@ namespace Generator
             if (ButtonOrKeyDown(Buttons.DPadLeft, Keys.Q)) GameControl.camera.Rotation = .1f;
             if (ButtonOrKeyDown(Buttons.DPadRight, Keys.E)) GameControl.camera.Rotation = -.1f;
 
-            // Zoom in/out
-            if (ButtonOrKeyDown(Buttons.DPadUp, Keys.OemPlus))
-            {
-                GameControl.camera.Position = new Vector3(
-                    GameControl.camera.Position.X,
-                    GameControl.camera.Position.Y,
-                    GameControl.camera.Position.Z - 1);
-                GameControl.camera.Target = new Vector3(
-                    GameControl.camera.Target.X,
-                    GameControl.camera.Target.Y,
-                    GameControl.camera.Target.Z - 1);
-            }
-
-            if (ButtonOrKeyDown(Buttons.DPadDown, Keys.OemMinus))
-            {
-                GameControl.camera.Position = new Vector3(
-                    GameControl.camera.Position.X,
-                    GameControl.camera.Position.Y,
-                    GameControl.camera.Position.Z + 1);
-                GameControl.camera.Target = new Vector3(
-                    GameControl.camera.Target.X,
-                    GameControl.camera.Target.Y,
-                    GameControl.camera.Target.Z + 1);
-            }
-
             // The "Activate" button
             if (ButtonOrKeyDown(Buttons.A, Keys.F))
             {
