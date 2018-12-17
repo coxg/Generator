@@ -111,6 +111,7 @@ namespace Generator
                 new Vector3(0, 0, 0),
                 new Vector3(0, 0, component.Direction));
             var normalizationDirection = new Vector3(-.5f, 0, 0);
+            var normalizationOffset = new Vector3(0, component.SourceObject.Size.Z / 4 - .25f, 0);
 
             // Bottom left
             vertices[0].Position = MathTools.PointRotatedAroundPoint(
@@ -121,6 +122,7 @@ namespace Generator
                 vertices[0].Position,
                 component.SourceObject.Center,
                 normalizationDirection);
+            vertices[0].Position += normalizationOffset;
 
             // Top left
             vertices[1].Position = MathTools.PointRotatedAroundPoint(
@@ -134,6 +136,7 @@ namespace Generator
                 vertices[1].Position,
                 component.SourceObject.Center,
                 normalizationDirection);
+            vertices[1].Position += normalizationOffset;
 
             // Bottom right
             vertices[2].Position = MathTools.PointRotatedAroundPoint(
@@ -147,6 +150,7 @@ namespace Generator
                 vertices[2].Position,
                 component.SourceObject.Center,
                 normalizationDirection);
+            vertices[2].Position += normalizationOffset;
             vertices[3].Position = vertices[1].Position;
 
             // Top right
@@ -161,6 +165,7 @@ namespace Generator
                 vertices[4].Position,
                 component.SourceObject.Center,
                 normalizationDirection);
+            vertices[4].Position += normalizationOffset;
             vertices[5].Position = vertices[2].Position;
 
             // Generate the texture coordinates

@@ -211,7 +211,15 @@ namespace Generator
 
         // Constructor
         public GameObject(
-            
+
+            // Grid logic
+            float x,
+            float y,
+            float z = 0,
+            float width = 1,
+            float length = 1,
+            float height = 1,
+
             // Sprite attributes
             string componentSpriteFileName = "Ninja",
             string spriteFile = null,
@@ -221,14 +229,6 @@ namespace Generator
             bool isSwinging = false,
             bool isShooting = false,
             bool isHurting = false,
-
-            // Grid logic
-            float width = 1,
-            float length = 1,
-            float height = 1,
-            float x = 0,
-            float y = 0,
-            float z = 0,
 
             // Resources
             int health = 100,

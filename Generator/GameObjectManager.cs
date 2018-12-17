@@ -39,9 +39,9 @@ namespace Generator
             };
 
             AddNewObject("medium terrain", new GameObject(
-                width: 2, length: 2, height: 2, x: 55, y: 59, name: "medium terrain"));
+                width: 2, height: 2, x: 55, y: 59, name: "medium terrain"));
 
-            AddNewObject("big terrain", new GameObject(width: 5, length: 5, height: 5, x: 60, y: 60, name: "big terrain"));
+            AddNewObject("big terrain", new GameObject(width: 5, length: 1, height: 5, x: 60, y: 60, name: "big terrain"));
             var terrain3 = NameToObject["big terrain"];
             terrain3.Activate = delegate
             {
