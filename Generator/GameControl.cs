@@ -178,11 +178,41 @@ namespace Generator
                 }
             }
 
-            // Draw text box
             spriteBatch.Begin(
                 SpriteSortMode.BackToFront,
                 null,
                 SamplerState.LinearWrap);
+
+            // Draw the selected objects in creative mode
+            if (Globals.CreativeMode)
+            {
+                // Draw the object on the left
+                Drawing.DrawSprite(
+                    spriteBatch,
+                    Globals.Tiles.NameToObject[
+                        Globals.Tiles.IndexToName[
+                            (int)MathTools.Mod(Globals.CreativeObjectIndex - 1, Globals.Tiles.Count)]],
+                    new Vector2(Globals.Resolution.X / 2 - 125, 10),
+                    new Vector2(Globals.Resolution.X / 2 - 75, 60));
+
+                // Draw the object in the middle
+                Drawing.DrawSprite(
+                    spriteBatch,
+                    Globals.Tiles.NameToObject[Globals.Tiles.IndexToName[Globals.CreativeObjectIndex]],
+                    new Vector2(Globals.Resolution.X / 2 - 50, 10),
+                    new Vector2(Globals.Resolution.X / 2 + 50, 100));
+
+                // Draw the object on the right
+                Drawing.DrawSprite(
+                    spriteBatch,
+                    Globals.Tiles.NameToObject[
+                        Globals.Tiles.IndexToName[
+                            (int)MathTools.Mod(Globals.CreativeObjectIndex + 1, Globals.Tiles.Count)]],
+                    new Vector2(Globals.Resolution.X / 2 + 75, 10),
+                    new Vector2(Globals.Resolution.X / 2 + 125, 60));
+            }
+
+            // Draw text box
             if (Globals.DisplayTextQueue.Count != 0) Drawing.DrawTextBox(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);

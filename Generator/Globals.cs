@@ -23,6 +23,10 @@ namespace Generator
         public static int RefreshRate = 30;
         public static string Directory = "/Generator/Generator/";
 
+        // Configure the world building mode
+        public static bool CreativeMode = true;
+        public static int CreativeObjectIndex = 0;
+
         // For displaying talking stuff
         public static Queue<string> DisplayTextQueue = new Queue<string>();
         public static Queue<GameObject> TalkingObjectQueue = new Queue<GameObject>();

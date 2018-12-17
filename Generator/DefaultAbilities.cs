@@ -14,7 +14,7 @@ namespace Generator
                 { CreateDefaultSprintAbility(gameObject),
                   CreateDefaultAttackAbility(gameObject),
                   CreateDefaultShootAbility(gameObject),
-                  CreatePlacementAbility(gameObject)
+                  Globals.CreativeMode ? CreatePlacementAbility(gameObject) : CreateDefaultAlwaysSprintAbility(gameObject)
                 };
 
             return result;
@@ -105,7 +105,8 @@ namespace Generator
                 start: delegate
                 {
                     var targetCoordinates = gameObject.GetTargetCoordinates(1);
-                    Globals.Tiles.Set((int)targetCoordinates.X, (int)targetCoordinates.Y, Globals.Tiles.IndexToName[600]);
+                    Globals.Tiles.Set((int)targetCoordinates.X, (int)targetCoordinates.Y, 
+                        Globals.Tiles.IndexToName[Globals.CreativeObjectIndex]);
                 },
                 animation: new Animation(
                     startFrames: new Frames(

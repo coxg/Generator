@@ -5,6 +5,24 @@ namespace Generator
 {
     public static class Drawing
     {
+        public static void DrawSprite(SpriteBatch spriteBatch, Texture2D texture, Vector2 bottomLeft, Vector2 topRight)
+        // Draw a single sprite
+        {
+            spriteBatch.Draw(
+                texture,
+                new Rectangle(
+                    (int)bottomLeft.X,
+                    (int)(Globals.Resolution.Y - topRight.Y - bottomLeft.Y),
+                    (int)(topRight.X - bottomLeft.X),
+                    (int)(topRight.Y - bottomLeft.Y)),
+                null,
+                Color.White,
+                0,
+                new Vector2(0, 0),
+                SpriteEffects.None,
+                .04f);
+        }
+
         public static void DrawTextBox(SpriteBatch spriteBatch)
             // Use this for text displayed at the bottom of the screen
         {
@@ -211,11 +229,11 @@ namespace Generator
             vertices[5].Position = vertices[2].Position;
 
             // Generate the texture coordinates
-            vertices[0].TextureCoordinate = new Vector2(repetitions, repetitions);
-            vertices[1].TextureCoordinate = new Vector2(repetitions, 0);
-            vertices[2].TextureCoordinate = new Vector2(0, repetitions);
+            vertices[0].TextureCoordinate = new Vector2(0, repetitions);
+            vertices[1].TextureCoordinate = new Vector2(0, 0);
+            vertices[2].TextureCoordinate = new Vector2(repetitions, repetitions);
             vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
-            vertices[4].TextureCoordinate = new Vector2(0, 0);
+            vertices[4].TextureCoordinate = new Vector2(repetitions, 0);
             vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
 
             // Draw it

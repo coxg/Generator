@@ -8,6 +8,8 @@ namespace Generator
     {
         public static bool ActivateButtonWasDown = false;
         public static bool SaveButtonWasDown = false;
+        public static bool CreativeScrollLeftButton = false;
+        public static bool CreativeScrollRightButton = false;
 
         public static void GetInput(GameObject player)
         {
@@ -88,10 +90,6 @@ namespace Generator
             if (player.Ability3 != null) player.Ability3.IsPressed = ButtonOrKeyDown(Buttons.LeftShoulder, Keys.D3);
             if (player.Ability4 != null) player.Ability4.IsPressed = ButtonOrKeyDown(Buttons.RightShoulder, Keys.D4);
 
-            // Map rotation
-            if (ButtonOrKeyDown(Buttons.DPadLeft, Keys.Q)) GameControl.camera.Rotation = .1f;
-            if (ButtonOrKeyDown(Buttons.DPadRight, Keys.E)) GameControl.camera.Rotation = -.1f;
-
             // The "Activate" button
             if (ButtonOrKeyDown(Buttons.A, Keys.F))
             {
@@ -144,6 +142,38 @@ namespace Generator
             else
             {
                 SaveButtonWasDown = false;
+            }
+
+            // Creative mode controls
+            if (Globals.CreativeMode)
+            {
+                // Scroll left
+                if (ButtonOrKeyDown(Buttons.DPadLeft, Keys.OemMinus))
+                {
+                    if (!CreativeScrollLeftButton)
+                    {
+                        CreativeScrollLeftButton = true;
+                        Globals.CreativeObjectIndex = (int)MathTools.Mod(Globals.CreativeObjectIndex - 1, Globals.Tiles.Count);
+                    }
+                }
+                else
+                {
+                    CreativeScrollLeftButton = false;
+                }
+
+                // Scroll right
+                if (ButtonOrKeyDown(Buttons.DPadRight, Keys.OemPlus))
+                {
+                    if (!CreativeScrollRightButton)
+                    {
+                        CreativeScrollRightButton = true;
+                        Globals.CreativeObjectIndex = (int)MathTools.Mod(Globals.CreativeObjectIndex + 1, Globals.Tiles.Count);
+                    }
+                }
+                else
+                {
+                    CreativeScrollRightButton = false;
+                }
             }
         }
     }
