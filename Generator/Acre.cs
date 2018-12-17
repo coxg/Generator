@@ -47,7 +47,7 @@ namespace Generator
                 {
                     var row = rows[rowNumber].Split(',');
                     for (int columnNumber = 0; columnNumber < (int)AcreSize.X; columnNumber++)
-                        Values[rowNumber, columnNumber] = int.Parse(row[columnNumber]);
+                        Values[rowNumber, Values.GetLength(1) - columnNumber - 1] = int.Parse(row[columnNumber]);
                 }
             }
         }

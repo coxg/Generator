@@ -7,6 +7,7 @@ namespace Generator
     public static class Input
     {
         public static bool ActivateButtonWasDown = false;
+        public static bool SaveButtonWasDown = false;
 
         public static void GetInput(GameObject player)
         {
@@ -125,6 +126,24 @@ namespace Generator
             else
             {
                 ActivateButtonWasDown = false;
+            }
+
+            // Save the game
+            if (ButtonOrKeyDown(Buttons.Start, Keys.F12))
+            {
+                // To make sure you're not holding it down
+                if (!SaveButtonWasDown)
+                {
+                    Globals.Log("Saving game");
+                    SaveButtonWasDown = true;
+
+                    // Write the grids to disk
+                    foreach (Acre acre in Globals.Tiles.Acres) acre.Write();
+                }
+            }
+            else
+            {
+                SaveButtonWasDown = false;
             }
         }
     }

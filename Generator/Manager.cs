@@ -16,7 +16,7 @@ namespace Generator
         public int CenterAcreX;
         public int CenterAcreY;
 
-        private Acre[,] Acres = new Acre[3, 3];
+        public Acre[,] Acres = new Acre[3, 3];
 
         public override string ToString()
         {
@@ -97,10 +97,11 @@ namespace Generator
 
             if (NewCenterAcreX != CenterAcreX | NewCenterAcreY != CenterAcreY)
             {
-                Globals.Log("Camera moved to acre " + NewCenterAcreX.ToString() + ", " + NewCenterAcreY.ToString());
+                if (Name == "GameObjects")
+                    Globals.Log("Camera moved to acre " + NewCenterAcreX.ToString() + ", " + NewCenterAcreY.ToString());
 
                 // If we're now further to the left then slide acres to the right
-                if (NewCenterAcreX < CenterAcreX)
+                if (NewCenterAcreX + 1 == CenterAcreX & NewCenterAcreY == CenterAcreY)
                 {
                     // Write the acres to unload to disk
                     Acres[2, 0].Write();
@@ -122,7 +123,7 @@ namespace Generator
                 }
 
                 // If we're now further to the right then slide acres to the left
-                else if (NewCenterAcreX > CenterAcreX)
+                else if (NewCenterAcreX - 1 == CenterAcreX & NewCenterAcreY == CenterAcreY)
                 {
                     // Write the acres to unload to disk
                     Acres[0, 0].Write();
@@ -144,7 +145,7 @@ namespace Generator
                 }
 
                 // If we're now further down then slide acres up
-                if (NewCenterAcreY < CenterAcreY)
+                else if (NewCenterAcreX == CenterAcreX & NewCenterAcreY + 1 == CenterAcreY)
                 {
                     // Write the acres to unload to disk
                     Acres[0, 2].Write();
@@ -166,7 +167,7 @@ namespace Generator
                 }
 
                 // If we're now further up then slide acres down
-                else if (NewCenterAcreY > CenterAcreY)
+                else if (NewCenterAcreX == CenterAcreX & NewCenterAcreY - 1 == CenterAcreY)
                 {
                     // Write the acres to unload to disk
                     Acres[0, 0].Write();
@@ -187,12 +188,22 @@ namespace Generator
                     Acres[2, 2] = new Acre(Name, NewCenterAcreX + 1, NewCenterAcreY + 1);
                 }
 
+                // If we're not in one of the above cases then we moved the camera somewhere completely new
+                else
+                {
+                    foreach (Acre acre in Globals.Tiles.Acres) acre.Write();
+                    PopulateAcres();
+                }
+
                 // Update the Center stats to reflect the current position
                 CenterAcreX = NewCenterAcreX;
                 CenterAcreY = NewCenterAcreY;
 
-                Globals.Log("Now loading in:");
-                Globals.Log(this);
+                if (Name == "GameObjects")
+                {
+                    Globals.Log("Loaded in:");
+                    Globals.Log(this);
+                }
             }
         }
     }

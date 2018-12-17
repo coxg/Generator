@@ -63,7 +63,7 @@
     <Compile Include="Accessory.cs" />
     <Compile Include="Acre.cs" />
     <Compile Include="Animation.cs" />
-    <Compile Include="Defaults.cs" />
+    <Compile Include="DefaultAbilities.cs" />
     <Compile Include="GameElement.cs" />
     <Compile Include="GameObjectManager.cs" />
     <Compile Include="Manager.cs" />

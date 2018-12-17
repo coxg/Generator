@@ -299,7 +299,7 @@ namespace Generator
             this.EquippedAccessory = accessory ?? new Accessory();
 
             // Abilities
-            this.Abilities = abilities ?? Defaults.generateDefaultAbilities(this);
+            this.Abilities = abilities ?? DefaultAbilities.GenerateDefaultAbilities(this);
 
             // Interaction
             this.PartyNumber = partyNumber;
@@ -574,13 +574,22 @@ namespace Generator
             }
         }
 
+        // Gets the coordinates at the range specified
+        public Vector2 GetTargetCoordinates(float range = 1)
+        {
+            var offsets = MathTools.OffsetFromRadians(Direction);
+            return new Vector2(
+                (int)Math.Round(_Position.X + (range + Size.X / 2) * offsets.X),
+                (int)Math.Round(_Position.Y + (range + Size.Y / 2) * offsets.Y));
+        }
+
         // Gets whichever object is [distance] away in the current direction
         public GameObject GetTarget(float range = 1)
         {
-            var offsets = MathTools.OffsetFromRadians(Direction);
+            var targetCoordinates = GetTargetCoordinates(range);
             var targettedObject = Globals.GameObjects.Get(
-                (int)Math.Round(_Position.X + (range + Size.X / 2) * offsets.X),
-                (int)Math.Round(_Position.Y + (range + Size.Y / 2) * offsets.Y));
+                (int)targetCoordinates.X,
+                (int)targetCoordinates.Y);
             return targettedObject;
         }
 
