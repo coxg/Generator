@@ -153,7 +153,8 @@ namespace Generator
                     if (!CreativeScrollLeftButton)
                     {
                         CreativeScrollLeftButton = true;
-                        Globals.CreativeObjectIndex = (int)MathTools.Mod(Globals.CreativeObjectIndex - 1, Globals.Tiles.Count);
+                        Globals.CreativeObjectIndex = (int)MathTools.Mod(
+                            Globals.CreativeObjectIndex - 1, Globals.Tiles.BaseObjectIndexes.Count);
                     }
                 }
                 else
@@ -167,7 +168,8 @@ namespace Generator
                     if (!CreativeScrollRightButton)
                     {
                         CreativeScrollRightButton = true;
-                        Globals.CreativeObjectIndex = (int)MathTools.Mod(Globals.CreativeObjectIndex + 1, Globals.Tiles.Count);
+                        Globals.CreativeObjectIndex = (int)MathTools.Mod(
+                            Globals.CreativeObjectIndex + 1, Globals.Tiles.BaseObjectIndexes.Count);
                     }
                 }
                 else

@@ -5,6 +5,7 @@ namespace Generator
 {
     public class Manager <T>
     {
+        public List<int> BaseObjectIndexes = new List<int>();
         public Dictionary<string, T> NameToObject = new Dictionary<string, T>();
         public Dictionary<int, string> IndexToName = new Dictionary<int, string>();
         public Dictionary<string, int> NameToIndex = new Dictionary<string, int>();

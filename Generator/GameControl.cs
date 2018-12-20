@@ -191,14 +191,18 @@ namespace Generator
                     spriteBatch,
                     Globals.Tiles.NameToObject[
                         Globals.Tiles.IndexToName[
-                            (int)MathTools.Mod(Globals.CreativeObjectIndex - 1, Globals.Tiles.Count)]],
+                            Globals.Tiles.BaseObjectIndexes[
+                                (int)MathTools.Mod(Globals.CreativeObjectIndex - 1, Globals.Tiles.BaseObjectIndexes.Count)]]],
                     new Vector2(Globals.Resolution.X / 2 - 125, 10),
                     new Vector2(Globals.Resolution.X / 2 - 75, 60));
 
                 // Draw the object in the middle
                 Drawing.DrawSprite(
                     spriteBatch,
-                    Globals.Tiles.NameToObject[Globals.Tiles.IndexToName[Globals.CreativeObjectIndex]],
+                    Globals.Tiles.NameToObject[
+                        Globals.Tiles.IndexToName[
+                             Globals.Tiles.BaseObjectIndexes[
+                                Globals.CreativeObjectIndex]]],
                     new Vector2(Globals.Resolution.X / 2 - 50, 10),
                     new Vector2(Globals.Resolution.X / 2 + 50, 100));
 
@@ -207,7 +211,8 @@ namespace Generator
                     spriteBatch,
                     Globals.Tiles.NameToObject[
                         Globals.Tiles.IndexToName[
-                            (int)MathTools.Mod(Globals.CreativeObjectIndex + 1, Globals.Tiles.Count)]],
+                             Globals.Tiles.BaseObjectIndexes[
+                                (int)MathTools.Mod(Globals.CreativeObjectIndex + 1, Globals.Tiles.BaseObjectIndexes.Count)]]],
                     new Vector2(Globals.Resolution.X / 2 + 75, 10),
                     new Vector2(Globals.Resolution.X / 2 + 125, 60));
             }
