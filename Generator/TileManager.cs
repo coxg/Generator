@@ -12,11 +12,17 @@ namespace Generator
             Name = "Tiles";
 
             // Load in the objects - default comes first
-            foreach (var fileName in Directory.GetFiles(
-                Globals.Directory + "/Content/Tiles", "*.png", SearchOption.TopDirectoryOnly
+            foreach (var tileName in Directory.GetDirectories(
+                Globals.Directory + "/Content/Tiles", "*", SearchOption.TopDirectoryOnly
                 ).Select(Path.GetFileName).Select(Path.GetFileNameWithoutExtension))
             {
-                AddNewObject(fileName, Globals.Content.Load<Texture2D>("Tiles/" + fileName));
+                foreach (var baseTile in Directory.GetFiles(
+                    Globals.Directory + "/Content/Tiles/" + tileName + "/Base", "*.png", SearchOption.TopDirectoryOnly
+                    ).Select(Path.GetFileName).Select(Path.GetFileNameWithoutExtension))
+                {
+
+                    AddNewObject(baseTile, Globals.Content.Load<Texture2D>("Tiles/" + tileName + "/Base/" + baseTile));
+                }
             }
 
             // Populate the Acres
