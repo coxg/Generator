@@ -150,172 +150,148 @@ namespace Generator
                     var bottomLeft = new Vector2(x, y);
                     Drawing.DrawTile(Globals.Tiles.NameFromIndex[tileIndex], bottomLeft);
 
-                    // Figure out if we need to lay other tiles over it
-                    var topTileIndex = Globals.Tiles.GetIndex(x, y + 1);
-                    var bottomTileIndex = Globals.Tiles.GetIndex(x, y - 1);
-                    var rightTileIndex = Globals.Tiles.GetIndex(x + 1, y);
-                    var leftTileIndex = Globals.Tiles.GetIndex(x - 1, y);
-                    var topLeftTileIndex = Globals.Tiles.GetIndex(x - 1, y + 1);
-                    var topRightTileIndex = Globals.Tiles.GetIndex(x + 1, y + 1);
-                    var bottomRightTileIndex = Globals.Tiles.GetIndex(x + 1, y - 1);
-                    var bottomLeftTileIndex = Globals.Tiles.GetIndex(x - 1, y - 1);
-
-                    // If we're surrounded by entirely similar tiles then we can avoid all layering logic
-                    if (tileIndex != topTileIndex || tileIndex != bottomTileIndex 
-                        || tileIndex != leftTileIndex || tileIndex != rightTileIndex
-                        || tileIndex != topLeftTileIndex || tileIndex != topRightTileIndex 
-                        || tileIndex != bottomRightTileIndex || tileIndex != bottomLeftTileIndex)
+                    // Figure which tiles surround the current tile
+                    var surroundingTileMap = new Dictionary<string, int>
                     {
-                        // TODO: I need to abstract this, since I'll need to go in order from smallest to largest in order to preserve layering
+                        { "Top", Globals.Tiles.GetIndex(x, y + 1) },
+                        { "Bottom", Globals.Tiles.GetIndex(x, y - 1) },
+                        { "Right", Globals.Tiles.GetIndex(x + 1, y) },
+                        { "Left", Globals.Tiles.GetIndex(x - 1, y) },
+                        { "Top Left", Globals.Tiles.GetIndex(x - 1, y + 1) },
+                        { "Top Right", Globals.Tiles.GetIndex(x + 1, y + 1) },
+                        { "Bottom Right", Globals.Tiles.GetIndex(x + 1, y - 1) },
+                        { "Bottom Left", Globals.Tiles.GetIndex(x - 1, y - 1) },
+                    };
+
+                    // Figure out which unique tiles surround the current tile
+                    var uniqueSurroundingTileMap = new Dictionary<int, HashSet<string>>();
+                    foreach (var surroundingTile in surroundingTileMap)
+                    {
+                        if (surroundingTile.Value > tileIndex)
+                        {
+                            if (!uniqueSurroundingTileMap.ContainsKey(surroundingTile.Value))
+                            {
+                                uniqueSurroundingTileMap.Add(surroundingTile.Value, new HashSet<string>());
+                            }
+                            uniqueSurroundingTileMap[surroundingTile.Value].Add(surroundingTile.Key);
+                        }
+                    }
+
+                    // Loop through each unique tile from smallest to largest index, applying all layers for each
+                    foreach (var uniqueSurroundingTile in uniqueSurroundingTileMap.OrderBy(uniqueSurroundingTile => uniqueSurroundingTile.Key))
+                    {
+                        var tileName = Globals.Tiles.NameFromIndex[uniqueSurroundingTile.Key].Split(' ')[0];
 
                         // If we are being drawn over the tiles on all sides
-                        if (tileIndex < topTileIndex && tileIndex < bottomTileIndex && tileIndex < leftTileIndex && tileIndex < rightTileIndex)
-                        {
-                            var tileName = Globals.Tiles.NameFromIndex[rightTileIndex].Split(' ')[0];
-                            Drawing.DrawTile(tileName + " O", bottomLeft, "Right");
-                        }
+                        if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Bottom") 
+                            && uniqueSurroundingTile.Value.Contains("Left") && uniqueSurroundingTile.Value.Contains("Right"))
+                            Drawing.DrawTile(tileName + " O", bottomLeft);
 
                         else
                         {
                             // If we are being drawn over by the bottom three sides
-                            if (tileIndex < bottomTileIndex && tileIndex < leftTileIndex && tileIndex < rightTileIndex)
-                            {
-                                var tileName = Globals.Tiles.NameFromIndex[bottomTileIndex].Split(' ')[0];
+                            if (uniqueSurroundingTile.Value.Contains("Bottom") && uniqueSurroundingTile.Value.Contains("Left") 
+                                && uniqueSurroundingTile.Value.Contains("Right"))
                                 Drawing.DrawTile(tileName + " U", bottomLeft, "Bottom");
-                            }
 
                             // If we are being drawn over by the left three sides
-                            else if (tileIndex < topTileIndex && tileIndex < bottomTileIndex && tileIndex < leftTileIndex)
-                            {
-                                var tileName = Globals.Tiles.NameFromIndex[leftTileIndex].Split(' ')[0];
+                            else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Bottom") 
+                                && uniqueSurroundingTile.Value.Contains("Left"))
                                 Drawing.DrawTile(tileName + " U", bottomLeft, "Left");
-                            }
 
                             // If we are being drawn over by the top three sides
-                            else if (tileIndex < topTileIndex && tileIndex < leftTileIndex && tileIndex < rightTileIndex)
-                            {
-                                var tileName = Globals.Tiles.NameFromIndex[topTileIndex].Split(' ')[0];
+                            else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Left") 
+                                && uniqueSurroundingTile.Value.Contains("Right"))
                                 Drawing.DrawTile(tileName + " U", bottomLeft, "Top");
-                            }
 
                             // If we are being drawn over by the bottom right sides
-                            else if (tileIndex < topTileIndex && tileIndex < bottomTileIndex && tileIndex < rightTileIndex)
-                            {
-                                var tileName = Globals.Tiles.NameFromIndex[rightTileIndex].Split(' ')[0];
+                            else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Bottom") 
+                                && uniqueSurroundingTile.Value.Contains("Right"))
                                 Drawing.DrawTile(tileName + " U", bottomLeft, "Right");
-                            }
 
                             else
                             {
                                 // If we are being drawn over the bottom and the left
-                                if (tileIndex < bottomTileIndex && tileIndex < leftTileIndex)
+                                if (uniqueSurroundingTile.Value.Contains("Bottom") && uniqueSurroundingTile.Value.Contains("Left"))
                                 {
-                                    var tileName = Globals.Tiles.NameFromIndex[bottomTileIndex].Split(' ')[0];
                                     Drawing.DrawTile(tileName + " L", bottomLeft, "Bottom");
 
                                     // If we are being drawn over the tile on the top right
-                                    if (tileIndex < topRightTileIndex && tileIndex == topTileIndex && tileIndex == rightTileIndex)
-                                    {
+                                    if (uniqueSurroundingTile.Value.Contains("Top Right") && !uniqueSurroundingTile.Value.Contains("Top") 
+                                        && !uniqueSurroundingTile.Value.Contains("Right"))
                                         Drawing.DrawTile(tileName + " corner", bottomLeft, "Top");
-                                    }
                                 }
 
                                 // If we are being drawn over the top and the left
-                                else if (tileIndex < topTileIndex && tileIndex < leftTileIndex)
+                                else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Left"))
                                 {
-                                    var tileName = Globals.Tiles.NameFromIndex[leftTileIndex].Split(' ')[0];
                                     Drawing.DrawTile(tileName + " L", bottomLeft, "Left");
 
                                     // If we are being drawn over the tile on the bottom right
-                                    if (tileIndex < bottomRightTileIndex && tileIndex == bottomTileIndex && tileIndex == rightTileIndex)
-                                    {
+                                    if (uniqueSurroundingTile.Value.Contains("Bottom Right") && !uniqueSurroundingTile.Value.Contains("Bottom") 
+                                        && !uniqueSurroundingTile.Value.Contains("Right"))
                                         Drawing.DrawTile(tileName + " corner", bottomLeft, "Right");
-                                    }
                                 }
 
                                 // If we are being drawn over the top and the right
-                                else if (tileIndex < topTileIndex && tileIndex < rightTileIndex)
+                                else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Right"))
                                 {
-                                    var tileName = Globals.Tiles.NameFromIndex[topTileIndex].Split(' ')[0];
                                     Drawing.DrawTile(tileName + " L", bottomLeft, "Top");
 
                                     // If we are being drawn over the tile on the bottom left
-                                    if (tileIndex < bottomLeftTileIndex && tileIndex == bottomTileIndex && tileIndex == leftTileIndex)
-                                    {
+                                    if (uniqueSurroundingTile.Value.Contains("Bottom Left") && !uniqueSurroundingTile.Value.Contains("Bottom") 
+                                        && !uniqueSurroundingTile.Value.Contains("Left"))
                                         Drawing.DrawTile(tileName + " corner", bottomLeft, "Bottom");
-                                    }
                                 }
 
                                 // If we are being drawn over the bottom and the right
-                                else if (tileIndex < bottomTileIndex && tileIndex < rightTileIndex)
+                                else if (uniqueSurroundingTile.Value.Contains("Bottom") && uniqueSurroundingTile.Value.Contains("Right"))
                                 {
-                                    var tileName = Globals.Tiles.NameFromIndex[rightTileIndex].Split(' ')[0];
                                     Drawing.DrawTile(tileName + " L", bottomLeft, "Right");
 
                                     // If we are being drawn over the tile on the top left
-                                    if (tileIndex < topLeftTileIndex && tileIndex == topTileIndex && tileIndex == leftTileIndex)
-                                    {
+                                    if (uniqueSurroundingTile.Value.Contains("Top Left") && !uniqueSurroundingTile.Value.Contains("Top") 
+                                        && !uniqueSurroundingTile.Value.Contains("Left"))
                                         Drawing.DrawTile(tileName + " corner", bottomLeft, "Left");
-                                    }
                                 }
 
                                 else
                                 {
                                     // If we are being drawn over the tile on the right
-                                    if (tileIndex < rightTileIndex)
-                                    {
-                                        var tileName = Globals.Tiles.NameFromIndex[rightTileIndex].Split(' ')[0];
+                                    if (uniqueSurroundingTile.Value.Contains("Right"))
                                         Drawing.DrawTile(tileName + " side", bottomLeft, "Right");
-                                    }
 
                                     // If we are being drawn over the tile on the left
-                                    if (tileIndex < leftTileIndex)
-                                    {
-                                        var tileName = Globals.Tiles.NameFromIndex[leftTileIndex].Split(' ')[0];
+                                    if (uniqueSurroundingTile.Value.Contains("Left"))
                                         Drawing.DrawTile(tileName + " side", bottomLeft, "Left");
-                                    }
 
                                     // If we are being drawn over the tile on the bottom
-                                    if (tileIndex < bottomTileIndex)
-                                    {
-                                        var tileName = Globals.Tiles.NameFromIndex[bottomTileIndex].Split(' ')[0];
+                                    if (uniqueSurroundingTile.Value.Contains("Bottom"))
                                         Drawing.DrawTile(tileName + " side", bottomLeft, "Bottom");
-                                    }
 
                                     // If we are being drawn over the tile on the top
-                                    if (tileIndex < topTileIndex)
-                                    {
-                                        var tileName = Globals.Tiles.NameFromIndex[topTileIndex].Split(' ')[0];
+                                    if (uniqueSurroundingTile.Value.Contains("Top"))
                                         Drawing.DrawTile(tileName + " side", bottomLeft, "Top");
-                                    }
 
                                     // If we are being drawn over the tile on the top right
-                                    if (tileIndex < topRightTileIndex && tileIndex == topTileIndex && tileIndex == rightTileIndex)
-                                    {
-                                        var tileName = Globals.Tiles.NameFromIndex[topRightTileIndex].Split(' ')[0];
+                                    if (uniqueSurroundingTile.Value.Contains("Top Right") && !uniqueSurroundingTile.Value.Contains("Top") 
+                                        && !uniqueSurroundingTile.Value.Contains("Right"))
                                         Drawing.DrawTile(tileName + " corner", bottomLeft, "Top");
-                                    }
 
                                     // If we are being drawn over the tile on the top left
-                                    if (tileIndex < topLeftTileIndex && tileIndex == topTileIndex && tileIndex == leftTileIndex)
-                                    {
-                                        var tileName = Globals.Tiles.NameFromIndex[topLeftTileIndex].Split(' ')[0];
+                                    if (uniqueSurroundingTile.Value.Contains("Top Left") && !uniqueSurroundingTile.Value.Contains("Top") 
+                                        && !uniqueSurroundingTile.Value.Contains("Left"))
                                         Drawing.DrawTile(tileName + " corner", bottomLeft, "Left");
-                                    }
 
                                     // If we are being drawn over the tile on the bottom right
-                                    if (tileIndex < bottomRightTileIndex && tileIndex == bottomTileIndex && tileIndex == rightTileIndex)
-                                    {
-                                        var tileName = Globals.Tiles.NameFromIndex[bottomRightTileIndex].Split(' ')[0];
+                                    if (uniqueSurroundingTile.Value.Contains("Bottom Right") && !uniqueSurroundingTile.Value.Contains("Bottom") 
+                                        && !uniqueSurroundingTile.Value.Contains("Right"))
                                         Drawing.DrawTile(tileName + " corner", bottomLeft, "Right");
-                                    }
 
                                     // If we are being drawn over the tile on the bottom left
-                                    if (tileIndex < bottomLeftTileIndex && tileIndex == bottomTileIndex && tileIndex == leftTileIndex)
-                                    {
-                                        var tileName = Globals.Tiles.NameFromIndex[bottomLeftTileIndex].Split(' ')[0];
+                                    if (uniqueSurroundingTile.Value.Contains("Bottom Left") && !uniqueSurroundingTile.Value.Contains("Bottom") 
+                                        && !uniqueSurroundingTile.Value.Contains("Left"))
                                         Drawing.DrawTile(tileName + " corner", bottomLeft, "Bottom");
-                                    }
                                 }
                             }
                         }
