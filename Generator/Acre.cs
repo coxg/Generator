@@ -82,5 +82,23 @@ namespace Generator
         {
             Values[x - MinX, y - MinY] = value;
         }
+
+        public override string ToString()
+        {
+            var returnString = new StringBuilder();
+
+            for (var rowNumber = 0; rowNumber < Values.GetLength(0); rowNumber++)
+            {
+                var row = new StringBuilder();
+                for (var colNumber = 0; colNumber < Values.GetLength(1); colNumber++)
+                {
+                    row.Append(Values[rowNumber, Values.GetLength(1) - colNumber - 1]);
+                    row.Append('\t');
+                }
+                returnString.AppendLine(row.ToString());
+            }
+
+            return returnString.ToString();
+        }
     }
 }

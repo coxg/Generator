@@ -64,12 +64,12 @@ namespace Generator
             Globals.Tiles = new TileManager();
 
             // Create player
-            Globals.Player = Globals.GameObjects.NameToObject["Niels"];
+            Globals.Player = Globals.GameObjects.ObjectFromName["Niels"];
             Globals.Player.AddToGrid();
 
             // Create terrain
-            terrain1 = Globals.GameObjects.NameToObject["angry terrain"];
-            terrain2 = Globals.GameObjects.NameToObject["medium terrain"];
+            terrain1 = Globals.GameObjects.ObjectFromName["angry terrain"];
+            terrain2 = Globals.GameObjects.ObjectFromName["medium terrain"];
             terrain1.AddToGrid();
             terrain2.AddToGrid();
 
@@ -119,7 +119,7 @@ namespace Generator
 
             // Update the GameObjects
             foreach (var ObjectName in new HashSet<string>(Globals.GameObjects.ActiveGameObjects))
-                Globals.GameObjects.NameToObject[ObjectName].Update();
+                Globals.GameObjects.ObjectFromName[ObjectName].Update();
             Globals.GameObjects.Update();
 
             // Update the tiles
@@ -145,13 +145,92 @@ namespace Generator
             {
                 for (var y = (int) camera.ViewMinCoordinates().Y; y < (int) camera.ViewMaxCoordinates().Y; y++)
                 {
-                    Drawing.DrawTile(Globals.Tiles.Get(x, y), new Vector2(x, y));
+                    // Draw the base tile itself
+                    var tileIndex = Globals.Tiles.GetIndex(x, y);
+                    var bottomLeft = new Vector2(x, y);
+                    Drawing.DrawTile(Globals.Tiles.NameFromIndex[tileIndex], bottomLeft);
+
+                    // Figure out if we need to lay other tiles over it
+                    var topTileIndex = Globals.Tiles.GetIndex(x, y + 1);
+                    var bottomTileIndex = Globals.Tiles.GetIndex(x, y - 1);
+                    var rightTileIndex = Globals.Tiles.GetIndex(x + 1, y);
+                    var leftTileIndex = Globals.Tiles.GetIndex(x - 1, y);
+                    var topLeftTileIndex = Globals.Tiles.GetIndex(x - 1, y + 1);
+                    var topRightTileIndex = Globals.Tiles.GetIndex(x + 1, y + 1);
+                    var bottomRightTileIndex = Globals.Tiles.GetIndex(x + 1, y - 1);
+                    var bottomLeftTileIndex = Globals.Tiles.GetIndex(x - 1, y - 1);
+
+                    // If we're surrounded by entirely similar tiles then we can avoid all layering logic
+                    if (tileIndex != topTileIndex || tileIndex != bottomTileIndex 
+                        || tileIndex != leftTileIndex || tileIndex != rightTileIndex
+                        || tileIndex != topLeftTileIndex || tileIndex != topRightTileIndex 
+                        || tileIndex != bottomRightTileIndex || tileIndex != bottomLeftTileIndex)
+                    {
+                        // TODO: I need to abstract this, since I'll need to go in order from smallest to largest in order to preserve layering
+
+                        // If we are being drawn over the tile on the right
+                        if (tileIndex < rightTileIndex)
+                        {
+                            var tileName = Globals.Tiles.NameFromIndex[rightTileIndex].Split(' ')[0];
+                            Drawing.DrawTile(tileName + " side", bottomLeft, "Right");
+                        }
+
+                        // If we are being drawn over the tile on the left
+                        if (tileIndex < leftTileIndex)
+                        {
+                            var tileName = Globals.Tiles.NameFromIndex[leftTileIndex].Split(' ')[0];
+                            Drawing.DrawTile(tileName + " side", bottomLeft, "Left");
+                        }
+
+                        // If we are being drawn over the tile on the bottom
+                        if (tileIndex < bottomTileIndex)
+                        {
+                            var tileName = Globals.Tiles.NameFromIndex[bottomTileIndex].Split(' ')[0];
+                            Drawing.DrawTile(tileName + " side", bottomLeft, "Bottom");
+                        }
+
+                        // If we are being drawn over the tile on the top
+                        if (tileIndex < topTileIndex)
+                        {
+                            var tileName = Globals.Tiles.NameFromIndex[topTileIndex].Split(' ')[0];
+                            Drawing.DrawTile(tileName + " side", bottomLeft, "Top");
+                        }
+
+                        // If we are being drawn over the tile on the top right
+                        if (tileIndex < topRightTileIndex)
+                        {
+                            var tileName = Globals.Tiles.NameFromIndex[topRightTileIndex].Split(' ')[0];
+                            Drawing.DrawTile(tileName + " corner", bottomLeft, "Top");
+                        }
+
+                        // If we are being drawn over the tile on the top left
+                        if (tileIndex < topLeftTileIndex)
+                        {
+                            var tileName = Globals.Tiles.NameFromIndex[topLeftTileIndex].Split(' ')[0];
+                            Drawing.DrawTile(tileName + " corner", bottomLeft, "Left");
+                        }
+
+                        // If we are being drawn over the tile on the bottom right
+                        if (tileIndex < bottomRightTileIndex)
+                        {
+                            var tileName = Globals.Tiles.NameFromIndex[bottomRightTileIndex].Split(' ')[0];
+                            Drawing.DrawTile(tileName + " corner", bottomLeft, "Right");
+                        }
+
+                        // If we are being drawn over the tile on the bottom left
+                        if (tileIndex < bottomLeftTileIndex)
+                        {
+                            var tileName = Globals.Tiles.NameFromIndex[bottomLeftTileIndex].Split(' ')[0];
+                            Drawing.DrawTile(tileName + " corner", bottomLeft, "Bottom");
+                        }
+
+                    }
                 }
             }
 
             // Draw the GameObjects
             foreach (var Object in Globals.GameObjects.ActiveGameObjects.Select(
-                i => Globals.GameObjects.NameToObject[i]).OrderBy(i => -i.Position.Y))
+                i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
             {
                 foreach (var component in Object.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
                 {
@@ -189,8 +268,8 @@ namespace Generator
                 // Draw the object on the left
                 Drawing.DrawSprite(
                     spriteBatch,
-                    Globals.Tiles.NameToObject[
-                        Globals.Tiles.IndexToName[
+                    Globals.Tiles.ObjectFromName[
+                        Globals.Tiles.NameFromIndex[
                             Globals.Tiles.BaseObjectIndexes[
                                 (int)MathTools.Mod(Globals.CreativeObjectIndex - 1, Globals.Tiles.BaseObjectIndexes.Count)]]],
                     new Vector2(Globals.Resolution.X / 2 - 125, 10),
@@ -199,8 +278,8 @@ namespace Generator
                 // Draw the object in the middle
                 Drawing.DrawSprite(
                     spriteBatch,
-                    Globals.Tiles.NameToObject[
-                        Globals.Tiles.IndexToName[
+                    Globals.Tiles.ObjectFromName[
+                        Globals.Tiles.NameFromIndex[
                              Globals.Tiles.BaseObjectIndexes[
                                 Globals.CreativeObjectIndex]]],
                     new Vector2(Globals.Resolution.X / 2 - 50, 10),
@@ -209,8 +288,8 @@ namespace Generator
                 // Draw the object on the right
                 Drawing.DrawSprite(
                     spriteBatch,
-                    Globals.Tiles.NameToObject[
-                        Globals.Tiles.IndexToName[
+                    Globals.Tiles.ObjectFromName[
+                        Globals.Tiles.NameFromIndex[
                              Globals.Tiles.BaseObjectIndexes[
                                 (int)MathTools.Mod(Globals.CreativeObjectIndex + 1, Globals.Tiles.BaseObjectIndexes.Count)]]],
                     new Vector2(Globals.Resolution.X / 2 + 75, 10),

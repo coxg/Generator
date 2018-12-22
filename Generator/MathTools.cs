@@ -6,6 +6,12 @@ namespace Generator
 {
     public static class MathTools
     {
+        // Return a random number
+        private static Random random = new Random();
+        public static int RandInt(int value)
+        {
+            return random.Next(value);
+        }
 
         public static float Mod(float Number, float Modulo)
         // Because % is remainder, not mod

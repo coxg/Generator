@@ -106,7 +106,7 @@ namespace Generator
                 {
                     var targetCoordinates = gameObject.GetTargetCoordinates(1);
                     Globals.Tiles.Set((int)targetCoordinates.X, (int)targetCoordinates.Y, 
-                        Globals.Tiles.IndexToName[Globals.CreativeObjectIndex]);
+                        Globals.Tiles.NameFromIndex[Globals.Tiles.BaseObjectIndexes[Globals.CreativeObjectIndex]]);
                 },
                 animation: new Animation(
                     startFrames: new Frames(

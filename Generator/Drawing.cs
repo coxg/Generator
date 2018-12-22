@@ -205,9 +205,9 @@ namespace Generator
         }
 
         public static void DrawTile(
-                Texture2D sprite,
+                string tileName,
                 Vector2 bottomLeft,
-                int repetitions = 1)
+                string bottomSide = "Bottom")
             // This should be used to draw all tiles. 
             // These should pretty much remain stationary on the floor.
         {
@@ -229,15 +229,44 @@ namespace Generator
             vertices[5].Position = vertices[2].Position;
 
             // Generate the texture coordinates
-            vertices[0].TextureCoordinate = new Vector2(0, repetitions);
-            vertices[1].TextureCoordinate = new Vector2(0, 0);
-            vertices[2].TextureCoordinate = new Vector2(repetitions, repetitions);
-            vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
-            vertices[4].TextureCoordinate = new Vector2(repetitions, 0);
-            vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
+            switch (bottomSide)
+            {
+                case "Bottom":
+                    vertices[0].TextureCoordinate = new Vector2(0, 1); // Bottom left
+                    vertices[1].TextureCoordinate = new Vector2(0, 0); // Top left
+                    vertices[2].TextureCoordinate = new Vector2(1, 1); // Bottom right
+                    vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
+                    vertices[4].TextureCoordinate = new Vector2(1, 0); // Top right
+                    vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
+                    break;
+                case "Top":
+                    vertices[0].TextureCoordinate = new Vector2(1, 0); // Bottom left
+                    vertices[1].TextureCoordinate = new Vector2(1, 1); // Top left
+                    vertices[2].TextureCoordinate = new Vector2(0, 0); // Bottom right
+                    vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
+                    vertices[4].TextureCoordinate = new Vector2(0, 1); // Top right
+                    vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
+                    break;
+                case "Left":
+                    vertices[0].TextureCoordinate = new Vector2(1, 1); // Bottom left
+                    vertices[1].TextureCoordinate = new Vector2(0, 1); // Top left
+                    vertices[2].TextureCoordinate = new Vector2(1, 0); // Bottom right
+                    vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
+                    vertices[4].TextureCoordinate = new Vector2(0, 0); // Top right
+                    vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
+                    break;
+                case "Right":
+                    vertices[0].TextureCoordinate = new Vector2(0, 0); // Bottom left
+                    vertices[1].TextureCoordinate = new Vector2(1, 0); // Top left
+                    vertices[2].TextureCoordinate = new Vector2(0, 1); // Bottom right
+                    vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
+                    vertices[4].TextureCoordinate = new Vector2(1, 1); // Top right
+                    vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
+                    break;
+            }
 
             // Draw it
-            GameControl.effect.Texture = sprite;
+            GameControl.effect.Texture = Globals.Tiles.ObjectFromName[tileName];
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();

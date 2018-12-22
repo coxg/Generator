@@ -5,10 +5,11 @@ namespace Generator
 {
     public class Manager <T>
     {
+        public Dictionary<string, int> BaseObjectIndexFromName = new Dictionary<string, int>();
         public List<int> BaseObjectIndexes = new List<int>();
-        public Dictionary<string, T> NameToObject = new Dictionary<string, T>();
-        public Dictionary<int, string> IndexToName = new Dictionary<int, string>();
-        public Dictionary<string, int> NameToIndex = new Dictionary<string, int>();
+        public Dictionary<string, T> ObjectFromName = new Dictionary<string, T>();
+        public Dictionary<int, string> NameFromIndex = new Dictionary<int, string>();
+        public Dictionary<string, int> IndexFromName = new Dictionary<string, int>();
 
         public string Name;
 
@@ -39,13 +40,25 @@ namespace Generator
             return (int)Math.Floor(y / Acre.AcreSize.Y) - CenterAcreY + 1;
         }
 
-        // "Getter" - get the object value
-        // TODO: Replace this with a real getter
-        public T Get(int x, int y)
+        // Gets the index of the object at the location
+        public int GetIndex(int x, int y)
         {
             var acre = Acres[AcreX(x), AcreY(y)];
             var index = acre.Get(x, y);
-            return NameToObject[IndexToName[index]];
+            return index;
+        }
+
+        // Gets the name of the object at the location
+        public string GetName(int x, int y)
+        {
+            return NameFromIndex[GetIndex(x, y)];
+        }
+
+        // "Getter" - get the object at the location
+        // TODO: Replace this with a real getter
+        public T Get(int x, int y)
+        {
+            return ObjectFromName[GetName(x, y)];
         }
 
         // "Setter" - set the object by name
@@ -53,16 +66,16 @@ namespace Generator
         public void Set(int x, int y, string name)
         {
             var acre = Acres[AcreX(x), AcreY(y)];
-            var index = NameToIndex[name];
+            var index = IndexFromName[name];
             acre.Set(x, y, index);
         }
 
         // Adds a new object to the mappings
         public void AddNewObject(string Name, T Object)
         {
-            NameToObject.Add(Name, Object);
-            IndexToName.Add(Count, Name);
-            NameToIndex.Add(Name, Count);
+            ObjectFromName.Add(Name, Object);
+            NameFromIndex.Add(Count, Name);
+            IndexFromName.Add(Name, Count);
             Count += 1;
         }
 

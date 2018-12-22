@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -6,15 +7,32 @@ namespace Generator
 {
     public class TileManager: Manager<Texture2D>
     {
-        public void AddTileDirectory(string tileName, string directoryName)
+        // Maps each base tile to its other variants and sides, allowing better organization in creative mode
+        public Dictionary<int, Dictionary<string, List<int>>> TileInfo = new Dictionary<int, Dictionary<string, List<int>>>();
+
+        // Adds all tiles from a directory to all necessary manager attributes
+        public void AddAllTilesInDirectory(string tileName, string directoryName, int baseObjectIndex)
         {
-            foreach (var baseTile in Directory.GetFiles(
+            foreach (var individualTileFile in Directory.GetFiles(
                 Globals.Directory + "/Content/Tiles/" + tileName + "/" + directoryName, "*.png", 
                 SearchOption.TopDirectoryOnly
                 ).Select(Path.GetFileName).Select(Path.GetFileNameWithoutExtension))
             {
-                AddNewObject(baseTile, Globals.Content.Load<Texture2D>(
-                    "Tiles/" + tileName + "/" + directoryName + "/" + baseTile));
+                // Add it to the tile info dictionary, allowing us to access different sides
+                if (!TileInfo.ContainsKey(baseObjectIndex))
+                {
+                    TileInfo.Add(baseObjectIndex, new Dictionary<string, List<int>>());
+                }
+                if (!TileInfo[baseObjectIndex].ContainsKey(directoryName))
+                {
+                    TileInfo[baseObjectIndex].Add(directoryName, new List<int>());
+                }
+                TileInfo[baseObjectIndex][directoryName].Add(Count);
+
+                // Add it to the mapping dictionaries, allowing us to reference it by name/id
+                Globals.Log(tileName + " " + individualTileFile);
+                AddNewObject(tileName + " " + individualTileFile, Globals.Content.Load<Texture2D>(
+                    "Tiles/" + tileName + "/" + directoryName + "/" + individualTileFile));
             }
         }
 
@@ -24,20 +42,21 @@ namespace Generator
             Name = "Tiles";
 
             // Load in the tile sprites
-            foreach (var tileName in Directory.GetDirectories(
-                Globals.Directory + "/Content/Tiles", "*", SearchOption.TopDirectoryOnly
-                ).Select(Path.GetFileName).Select(Path.GetFileNameWithoutExtension))
+            // TODO: Is there a better way to do this?
+            foreach (var tileName in new List<string>{ "Grass", "Clay" })
             {
 
                 // Add the base tiles - these will be placed in creative mode and by certain abilities
-                BaseObjectIndexes.Add(Count);  // Note that the first tile is the default
-                AddTileDirectory(tileName, "Base");
+                var baseObjectIndex = Count;
+                BaseObjectIndexes.Add(baseObjectIndex);  // Note that the first tile is the default
+                BaseObjectIndexFromName.Add(tileName, baseObjectIndex);
+                AddAllTilesInDirectory(tileName, "Base", baseObjectIndex);
 
                 // Add the sides of the tiles - these will be drawn around the base tiles automatically
-                AddTileDirectory(tileName, "Sides");
+                AddAllTilesInDirectory(tileName, "Sides", baseObjectIndex);
 
                 // Add all other tiles as miscellaneous
-                AddTileDirectory(tileName, "Misc");
+                AddAllTilesInDirectory(tileName, "Misc", baseObjectIndex);
             }
 
             // Populate the Acres
