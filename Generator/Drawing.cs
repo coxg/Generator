@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Generator
 {
@@ -204,12 +206,167 @@ namespace Generator
             }
         }
 
-        public static void DrawTile(
+        // Draws all necessary layers for each tile
+        public static void DrawTile(int x, int y)
+        {
+            // Draw the base tile itself
+            var tileIndex = Globals.Tiles.GetIndex(x, y);
+            var bottomLeft = new Vector2(x, y);
+            Drawing.DrawTileLayer(Globals.Tiles.NameFromIndex[tileIndex], bottomLeft);
+
+            // Figure which tiles surround the current tile
+            var surroundingTileMap = new Dictionary<string, int>
+                    {
+                        { "Top", Globals.Tiles.GetIndex(x, y + 1) },
+                        { "Bottom", Globals.Tiles.GetIndex(x, y - 1) },
+                        { "Right", Globals.Tiles.GetIndex(x + 1, y) },
+                        { "Left", Globals.Tiles.GetIndex(x - 1, y) },
+                        { "Top Left", Globals.Tiles.GetIndex(x - 1, y + 1) },
+                        { "Top Right", Globals.Tiles.GetIndex(x + 1, y + 1) },
+                        { "Bottom Right", Globals.Tiles.GetIndex(x + 1, y - 1) },
+                        { "Bottom Left", Globals.Tiles.GetIndex(x - 1, y - 1) },
+                    };
+
+            // Figure out which unique tiles surround the current tile
+            var uniqueSurroundingTileMap = new Dictionary<int, HashSet<string>>();
+            foreach (var surroundingTile in surroundingTileMap)
+            {
+                if (surroundingTile.Value > tileIndex)
+                {
+                    if (!uniqueSurroundingTileMap.ContainsKey(surroundingTile.Value))
+                    {
+                        uniqueSurroundingTileMap.Add(surroundingTile.Value, new HashSet<string>());
+                    }
+                    uniqueSurroundingTileMap[surroundingTile.Value].Add(surroundingTile.Key);
+                }
+            }
+
+            // Loop through each unique tile from smallest to largest index, applying all layers for each
+            foreach (var uniqueSurroundingTile in uniqueSurroundingTileMap.OrderBy(uniqueSurroundingTile => uniqueSurroundingTile.Key))
+            {
+                var tileName = Globals.Tiles.NameFromIndex[uniqueSurroundingTile.Key].Split(' ')[0];
+
+                // If we are being drawn over the tiles on all sides
+                if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Bottom")
+                    && uniqueSurroundingTile.Value.Contains("Left") && uniqueSurroundingTile.Value.Contains("Right"))
+                    Drawing.DrawTileLayer(tileName + " O", bottomLeft);
+
+                else
+                {
+                    // If we are being drawn over by the bottom three sides
+                    if (uniqueSurroundingTile.Value.Contains("Bottom") && uniqueSurroundingTile.Value.Contains("Left")
+                        && uniqueSurroundingTile.Value.Contains("Right"))
+                        Drawing.DrawTileLayer(tileName + " U", bottomLeft, "Bottom");
+
+                    // If we are being drawn over by the left three sides
+                    else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Bottom")
+                        && uniqueSurroundingTile.Value.Contains("Left"))
+                        Drawing.DrawTileLayer(tileName + " U", bottomLeft, "Left");
+
+                    // If we are being drawn over by the top three sides
+                    else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Left")
+                        && uniqueSurroundingTile.Value.Contains("Right"))
+                        Drawing.DrawTileLayer(tileName + " U", bottomLeft, "Top");
+
+                    // If we are being drawn over by the bottom right sides
+                    else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Bottom")
+                        && uniqueSurroundingTile.Value.Contains("Right"))
+                        Drawing.DrawTileLayer(tileName + " U", bottomLeft, "Right");
+
+                    else
+                    {
+                        // If we are being drawn over the bottom and the left
+                        if (uniqueSurroundingTile.Value.Contains("Bottom") && uniqueSurroundingTile.Value.Contains("Left"))
+                        {
+                            Drawing.DrawTileLayer(tileName + " L", bottomLeft, "Bottom");
+
+                            // If we are being drawn over the tile on the top right
+                            if (uniqueSurroundingTile.Value.Contains("Top Right") && !uniqueSurroundingTile.Value.Contains("Top")
+                                && !uniqueSurroundingTile.Value.Contains("Right"))
+                                Drawing.DrawTileLayer(tileName + " corner", bottomLeft, "Top");
+                        }
+
+                        // If we are being drawn over the top and the left
+                        else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Left"))
+                        {
+                            Drawing.DrawTileLayer(tileName + " L", bottomLeft, "Left");
+
+                            // If we are being drawn over the tile on the bottom right
+                            if (uniqueSurroundingTile.Value.Contains("Bottom Right") && !uniqueSurroundingTile.Value.Contains("Bottom")
+                                && !uniqueSurroundingTile.Value.Contains("Right"))
+                                Drawing.DrawTileLayer(tileName + " corner", bottomLeft, "Right");
+                        }
+
+                        // If we are being drawn over the top and the right
+                        else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Right"))
+                        {
+                            Drawing.DrawTileLayer(tileName + " L", bottomLeft, "Top");
+
+                            // If we are being drawn over the tile on the bottom left
+                            if (uniqueSurroundingTile.Value.Contains("Bottom Left") && !uniqueSurroundingTile.Value.Contains("Bottom")
+                                && !uniqueSurroundingTile.Value.Contains("Left"))
+                                Drawing.DrawTileLayer(tileName + " corner", bottomLeft, "Bottom");
+                        }
+
+                        // If we are being drawn over the bottom and the right
+                        else if (uniqueSurroundingTile.Value.Contains("Bottom") && uniqueSurroundingTile.Value.Contains("Right"))
+                        {
+                            Drawing.DrawTileLayer(tileName + " L", bottomLeft, "Right");
+
+                            // If we are being drawn over the tile on the top left
+                            if (uniqueSurroundingTile.Value.Contains("Top Left") && !uniqueSurroundingTile.Value.Contains("Top")
+                                && !uniqueSurroundingTile.Value.Contains("Left"))
+                                Drawing.DrawTileLayer(tileName + " corner", bottomLeft, "Left");
+                        }
+
+                        else
+                        {
+                            // If we are being drawn over the tile on the right
+                            if (uniqueSurroundingTile.Value.Contains("Right"))
+                                Drawing.DrawTileLayer(tileName + " side", bottomLeft, "Right");
+
+                            // If we are being drawn over the tile on the left
+                            if (uniqueSurroundingTile.Value.Contains("Left"))
+                                Drawing.DrawTileLayer(tileName + " side", bottomLeft, "Left");
+
+                            // If we are being drawn over the tile on the bottom
+                            if (uniqueSurroundingTile.Value.Contains("Bottom"))
+                                Drawing.DrawTileLayer(tileName + " side", bottomLeft, "Bottom");
+
+                            // If we are being drawn over the tile on the top
+                            if (uniqueSurroundingTile.Value.Contains("Top"))
+                                Drawing.DrawTileLayer(tileName + " side", bottomLeft, "Top");
+
+                            // If we are being drawn over the tile on the top right
+                            if (uniqueSurroundingTile.Value.Contains("Top Right") && !uniqueSurroundingTile.Value.Contains("Top")
+                                && !uniqueSurroundingTile.Value.Contains("Right"))
+                                Drawing.DrawTileLayer(tileName + " corner", bottomLeft, "Top");
+
+                            // If we are being drawn over the tile on the top left
+                            if (uniqueSurroundingTile.Value.Contains("Top Left") && !uniqueSurroundingTile.Value.Contains("Top")
+                                && !uniqueSurroundingTile.Value.Contains("Left"))
+                                Drawing.DrawTileLayer(tileName + " corner", bottomLeft, "Left");
+
+                            // If we are being drawn over the tile on the bottom right
+                            if (uniqueSurroundingTile.Value.Contains("Bottom Right") && !uniqueSurroundingTile.Value.Contains("Bottom")
+                                && !uniqueSurroundingTile.Value.Contains("Right"))
+                                Drawing.DrawTileLayer(tileName + " corner", bottomLeft, "Right");
+
+                            // If we are being drawn over the tile on the bottom left
+                            if (uniqueSurroundingTile.Value.Contains("Bottom Left") && !uniqueSurroundingTile.Value.Contains("Bottom")
+                                && !uniqueSurroundingTile.Value.Contains("Left"))
+                                Drawing.DrawTileLayer(tileName + " corner", bottomLeft, "Bottom");
+                        }
+                    }
+                }
+            }
+        }
+
+        // Draws a single layer of a tile
+        public static void DrawTileLayer(
                 string tileName,
                 Vector2 bottomLeft,
                 string bottomSide = "Bottom")
-            // This should be used to draw all tiles. 
-            // These should pretty much remain stationary on the floor.
         {
             // Generate the vertices
             var vertices = new VertexPositionTexture[6];
@@ -273,6 +430,40 @@ namespace Generator
                 GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
                     PrimitiveType.TriangleList, vertices, 0, 2);
             }
+        }
+
+        // Draws the creative mode UI, including tile previews
+        public static void DrawCreativeUI(SpriteBatch spriteBatch)
+        {
+            // Draw the object on the left
+            Drawing.DrawSprite(
+                spriteBatch,
+                Globals.Tiles.ObjectFromName[
+                    Globals.Tiles.NameFromIndex[
+                        Globals.Tiles.BaseObjectIndexes[
+                            (int)MathTools.Mod(Globals.CreativeObjectIndex - 1, Globals.Tiles.BaseObjectIndexes.Count)]]],
+                new Vector2(Globals.Resolution.X / 2 - 125, 10),
+                new Vector2(Globals.Resolution.X / 2 - 75, 60));
+
+            // Draw the object in the middle
+            Drawing.DrawSprite(
+                spriteBatch,
+                Globals.Tiles.ObjectFromName[
+                    Globals.Tiles.NameFromIndex[
+                         Globals.Tiles.BaseObjectIndexes[
+                            Globals.CreativeObjectIndex]]],
+                new Vector2(Globals.Resolution.X / 2 - 50, 10),
+                new Vector2(Globals.Resolution.X / 2 + 50, 100));
+
+            // Draw the object on the right
+            Drawing.DrawSprite(
+                spriteBatch,
+                Globals.Tiles.ObjectFromName[
+                    Globals.Tiles.NameFromIndex[
+                         Globals.Tiles.BaseObjectIndexes[
+                            (int)MathTools.Mod(Globals.CreativeObjectIndex + 1, Globals.Tiles.BaseObjectIndexes.Count)]]],
+                new Vector2(Globals.Resolution.X / 2 + 75, 10),
+                new Vector2(Globals.Resolution.X / 2 + 125, 60));
         }
     }
 }
