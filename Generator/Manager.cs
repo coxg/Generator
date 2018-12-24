@@ -5,8 +5,6 @@ namespace Generator
 {
     public class Manager <T>
     {
-        public Dictionary<string, int> BaseObjectIndexFromName = new Dictionary<string, int>();
-        public List<int> BaseObjectIndexes = new List<int>();
         public Dictionary<string, T> ObjectFromName = new Dictionary<string, T>();
         public Dictionary<int, string> NameFromIndex = new Dictionary<int, string>();
         public Dictionary<string, int> IndexFromName = new Dictionary<string, int>();
@@ -205,7 +203,6 @@ namespace Generator
                 // If we're not in one of the above cases then we moved the camera somewhere completely new
                 else
                 {
-                    foreach (Acre acre in Globals.Tiles.Acres) acre.Write();
                     PopulateAcres();
                 }
 

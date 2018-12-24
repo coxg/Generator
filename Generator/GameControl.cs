@@ -60,8 +60,8 @@ namespace Generator
 
             Globals.Content = Content;
 
-            Globals.GameObjects = new GameObjectManager();
             Globals.Tiles = new TileManager();
+            Globals.GameObjects = new GameObjectManager();
 
             // Create player
             Globals.Player = Globals.GameObjects.ObjectFromName["Niels"];

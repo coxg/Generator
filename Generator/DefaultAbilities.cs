@@ -104,9 +104,10 @@ namespace Generator
                 "Place Object",
                 start: delegate
                 {
+                    var baseTileName = Globals.Tiles.NameFromIndex[Globals.Tiles.BaseTileIndexes[Globals.CreativeObjectIndex]];
+                    var randomBaseTile = Globals.Tiles.GetRandomBaseIndex(Globals.Tiles.ObjectFromName[baseTileName].BaseTileName);
                     var targetCoordinates = gameObject.GetTargetCoordinates(1);
-                    Globals.Tiles.Set((int)targetCoordinates.X, (int)targetCoordinates.Y, 
-                        Globals.Tiles.NameFromIndex[Globals.Tiles.BaseObjectIndexes[Globals.CreativeObjectIndex]]);
+                    Globals.Tiles.Set((int)targetCoordinates.X, (int)targetCoordinates.Y, Globals.Tiles.NameFromIndex[randomBaseTile]);
                 },
                 animation: new Animation(
                     startFrames: new Frames(

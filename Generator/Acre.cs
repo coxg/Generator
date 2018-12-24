@@ -26,13 +26,18 @@ namespace Generator
                 Read();
             }
 
-            // If the file doesn't exist then just populate with 0s
+            // If the file doesn't exist then populate with the default values
             else
             {
+                var defaultValue = 0;
                 for (int rowNumber = 0; rowNumber < (int)AcreSize.Y; rowNumber++)
                 {
+                    // Fill the values with the default value
                     for (int columnNumber = 0; columnNumber < (int)AcreSize.X; columnNumber++)
-                        Values[rowNumber, columnNumber] = 0;
+                    {
+                        if (level == "Tiles" && Globals.Tiles != null) defaultValue = Globals.Tiles.GetRandomBaseIndex("Grass");
+                        Values[rowNumber, columnNumber] = defaultValue;
+                    }
                 }
             }
         }
@@ -83,6 +88,7 @@ namespace Generator
             Values[x - MinX, y - MinY] = value;
         }
 
+        // For debugging
         public override string ToString()
         {
             var returnString = new StringBuilder();
@@ -97,7 +103,6 @@ namespace Generator
                 }
                 returnString.AppendLine(row.ToString());
             }
-
             return returnString.ToString();
         }
     }

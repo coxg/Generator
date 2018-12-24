@@ -5,13 +5,17 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Generator
 {
-    public class TileManager: Manager<Texture2D>
+    public class TileManager: Manager<Tile>
     {
+        // Mappings to help move between the base tile ("Grass") and the unique sprites for it
+        public Dictionary<string, int> BaseTileIndexFromName = new Dictionary<string, int>();
+        public List<int> BaseTileIndexes = new List<int>();
+
         // Maps each base tile to its other variants and sides, allowing better organization in creative mode
         public Dictionary<int, Dictionary<string, List<int>>> TileInfo = new Dictionary<int, Dictionary<string, List<int>>>();
 
         // Adds all tiles from a directory to all necessary manager attributes
-        public void AddAllTilesInDirectory(string tileName, string directoryName, int baseObjectIndex)
+        public void AddAllTilesInDirectory(string tileName, string directoryName, int baseTileIndex)
         {
             foreach (var individualTileFile in Directory.GetFiles(
                 Globals.Directory + "/Content/Tiles/" + tileName + "/" + directoryName, "*.png", 
@@ -19,21 +23,36 @@ namespace Generator
                 ).Select(Path.GetFileName).Select(Path.GetFileNameWithoutExtension))
             {
                 // Add it to the tile info dictionary, allowing us to access different sides
-                if (!TileInfo.ContainsKey(baseObjectIndex))
+                if (!TileInfo.ContainsKey(baseTileIndex))
                 {
-                    TileInfo.Add(baseObjectIndex, new Dictionary<string, List<int>>());
+                    TileInfo.Add(baseTileIndex, new Dictionary<string, List<int>>());
                 }
-                if (!TileInfo[baseObjectIndex].ContainsKey(directoryName))
+                if (!TileInfo[baseTileIndex].ContainsKey(directoryName))
                 {
-                    TileInfo[baseObjectIndex].Add(directoryName, new List<int>());
+                    TileInfo[baseTileIndex].Add(directoryName, new List<int>());
                 }
-                TileInfo[baseObjectIndex][directoryName].Add(Count);
+                TileInfo[baseTileIndex][directoryName].Add(Count);
 
                 // Add it to the mapping dictionaries, allowing us to reference it by name/id
                 Globals.Log(tileName + " " + individualTileFile);
-                AddNewObject(tileName + " " + individualTileFile, Globals.Content.Load<Texture2D>(
-                    "Tiles/" + tileName + "/" + directoryName + "/" + individualTileFile));
+                AddNewObject(
+                    tileName + " " + individualTileFile, 
+                    new Tile(
+                        tileName + " " + individualTileFile,
+                        Globals.Content.Load<Texture2D>(
+                            "Tiles/" + tileName + "/" + directoryName + "/" + individualTileFile),
+                        baseTileIndex,
+                        tileName
+                    )
+                );
             }
+        }
+
+        // Gets a random base tile for a particular tile type
+        public int GetRandomBaseIndex(string baseObject)
+        {
+            var baseObjects = TileInfo[BaseTileIndexFromName[baseObject]]["Base"];
+            return baseObjects[MathTools.RandInt(baseObjects.Count)];
         }
 
         public TileManager()
@@ -48,8 +67,8 @@ namespace Generator
 
                 // Add the base tiles - these will be placed in creative mode and by certain abilities
                 var baseObjectIndex = Count;
-                BaseObjectIndexes.Add(baseObjectIndex);  // Note that the first tile is the default
-                BaseObjectIndexFromName.Add(tileName, baseObjectIndex);
+                BaseTileIndexes.Add(baseObjectIndex);  // Note that the first tile is the default
+                BaseTileIndexFromName.Add(tileName, baseObjectIndex);
                 AddAllTilesInDirectory(tileName, "Base", baseObjectIndex);
 
                 // Add the sides of the tiles - these will be drawn around the base tiles automatically
