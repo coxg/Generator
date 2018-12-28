@@ -139,6 +139,7 @@ namespace Generator
         {
 
             // Draw all tiles which the camera can see
+            spriteBatch.Begin();
             effect.View = camera.View;
             effect.Projection = camera.Projection;
             for (var x = (int) camera.ViewMinCoordinates().X; x < (int) camera.ViewMaxCoordinates().X; x++)
@@ -155,33 +156,21 @@ namespace Generator
             {
                 foreach (var component in Object.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
                 {
-                    spriteBatch.Begin();
                     Drawing.DrawComponent(
                         component.Value,
                         Object.Size * component.Value.Size);
-                    spriteBatch.End();
                 }
 
                 // Draw resource bars if they're in the party
                 if (Object.PartyNumber >= 0)
                 {
-                    spriteBatch.Begin(
-                        SpriteSortMode.Texture,
-                        null,
-                        SamplerState.LinearWrap);
                     Drawing.DrawResource(spriteBatch, Object.Health, Object.PartyNumber);
                     if (Object.Stamina.Max > 0)
                         Drawing.DrawResource(spriteBatch, Object.Stamina, Object.PartyNumber);
                     if (Object.Electricity.Max > 0)
                         Drawing.DrawResource(spriteBatch, Object.Electricity, Object.PartyNumber);
-                    spriteBatch.End();
                 }
             }
-
-            spriteBatch.Begin(
-                SpriteSortMode.BackToFront,
-                null,
-                SamplerState.LinearWrap);
 
             // Draw the selected objects in creative mode
             if (Globals.CreativeMode)
