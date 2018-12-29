@@ -21,19 +21,19 @@ namespace Generator
                 var objectDistance = Math.Sqrt(
                     Math.Pow(gameObject.Center.X - x - .5, 2) + Math.Pow(gameObject.Center.Y - y - .5, 2));
 
-                if (objectDistance < gameObject.Brightness.Length() * 5 * MathHelper.Pi)
+                if (objectDistance < gameObject.Brightness.Length() * 2 * MathHelper.Pi)
                 {
                     brightness += gameObject.Brightness * (float)
-                        Math.Cos(.1 / gameObject.Brightness.Length() * objectDistance);
+                        Math.Pow(Math.Cos(.25 / gameObject.Brightness.Length() * objectDistance), 2);
                 }
             }
 
             // TODO: Figure out some better way to smooth this
             // We definitely don't want them to add together linearly, maybe diminishing returns?
             return new Vector3(
-                Math.Min(brightness.X, 1), 
-                Math.Min(brightness.Y, 1), 
-                Math.Min(brightness.Z, 1));
+                (float)Math.Sqrt(brightness.X),
+                (float)Math.Sqrt(brightness.Y),
+                (float)Math.Sqrt(brightness.Z));
         }
 
         public static void DrawSprite(SpriteBatch spriteBatch, Texture2D texture, Vector2 bottomLeft, Vector2 topRight)
