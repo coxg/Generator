@@ -214,12 +214,8 @@ namespace Generator
         public GameObject(
 
             // Grid logic
-            float x,
-            float y,
-            float z = 0,
-            float width = 1,
-            float length = 1,
-            float height = 1,
+            Vector3 position,
+            Vector3? size = null,
 
             // Sprite attributes
             string componentSpriteFileName = "Ninja",
@@ -312,8 +308,8 @@ namespace Generator
             };
 
             // Grid logic
-            this.Size = new Vector3(width, length, height);
-            this._Position = new Vector3(x, y, z);
+            this.Size = size ?? Vector3.One;
+            this._Position = position;
             Globals.Log(Name + " has spawned.");
         }
 

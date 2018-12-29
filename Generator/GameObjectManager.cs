@@ -16,7 +16,7 @@ namespace Generator
             AddNewObject("", null);
 
             AddNewObject("Niels", new GameObject(
-                x: 50f, y: 50f, stamina: 100, strength: 10, speed: 10, perception: 10, 
+                new Vector3(50, 50, 0), stamina: 100, strength: 10, speed: 10, perception: 10, 
                 name: "Niels", partyNumber: 0, 
                 brightness: new Vector3(.5f, .25f, .5f),
                 weapon: new Weapon(
@@ -25,7 +25,8 @@ namespace Generator
                     damage: 10)));
 
             AddNewObject("angry terrain", new GameObject(
-                spriteFile: "Sprites/angry_boy", x: 55, y: 56, name: "angry terrain", 
+                new Vector3(55, 56, 0),
+                spriteFile: "Sprites/angry_boy", name: "angry terrain", 
                 brightness: Vector3.One));
             var terrain1 = ObjectFromName["angry terrain"];
             terrain1.Activate = delegate
@@ -43,10 +44,10 @@ namespace Generator
             };
 
             AddNewObject("medium terrain", new GameObject(
-                width: 2, height: 2, x: 55, y: 59, name: "medium terrain"));
+                new Vector3(55, 59, 0), new Vector3(2, 1, 2), name: "medium terrain"));
 
             AddNewObject("big terrain", new GameObject(
-                width: 5, length: 1, height: 5, x: 60, y: 60, name: "big terrain"));
+                new Vector3(60, 60, 0), new Vector3(5, 1, 5), name: "big terrain"));
             var terrain3 = ObjectFromName["big terrain"];
             terrain3.Activate = delegate
             {
