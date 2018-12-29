@@ -23,13 +23,13 @@ namespace Generator
 
                 if (objectDistance < gameObject.Brightness.Length() * 2 * MathHelper.Pi)
                 {
-                    brightness += gameObject.Brightness * (float)
+                    var flutteryBrightness = .01f * (float)Math.Cos(Globals.Clock / 10) * gameObject.Brightness;
+                    brightness += flutteryBrightness + gameObject.Brightness * (float)
                         Math.Pow(Math.Cos(.25 / gameObject.Brightness.Length() * objectDistance), 2);
                 }
             }
 
-            // TODO: Figure out some better way to smooth this
-            // We definitely don't want them to add together linearly, maybe diminishing returns?
+            // Smooth lighting, multiple lighting effects can stack together
             return new Vector3(
                 (float)Math.Sqrt(brightness.X),
                 (float)Math.Sqrt(brightness.Y),
