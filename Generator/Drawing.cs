@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,6 +8,34 @@ namespace Generator
 {
     public static class Drawing
     {
+        public static Vector3 GetBrightness(float x, float y)
+        {
+            var brightness = Vector3.Zero;
+
+            // TODO: Rather than looping through all objects for each tile, 
+            // create a mapping layer for brightness which gets computed on each
+            // update.
+            foreach (var gameObjectName in Globals.GameObjects.ActiveGameObjects)
+            {
+                var gameObject = Globals.GameObjects.ObjectFromName[gameObjectName];
+                var objectDistance = Math.Sqrt(
+                    Math.Pow(gameObject.Center.X - x - .5, 2) + Math.Pow(gameObject.Center.Y - y - .5, 2));
+
+                if (objectDistance < gameObject.Brightness.Length() * 5 * MathHelper.Pi)
+                {
+                    brightness += gameObject.Brightness * (float)
+                        Math.Cos(.1 / gameObject.Brightness.Length() * objectDistance);
+                }
+            }
+
+            // TODO: Figure out some better way to smooth this
+            // We definitely don't want them to add together linearly, maybe diminishing returns?
+            return new Vector3(
+                Math.Min(brightness.X, 1), 
+                Math.Min(brightness.Y, 1), 
+                Math.Min(brightness.Z, 1));
+        }
+
         public static void DrawSprite(SpriteBatch spriteBatch, Texture2D texture, Vector2 bottomLeft, Vector2 topRight)
         // Draw a single sprite
         {
@@ -198,6 +227,7 @@ namespace Generator
 
             // Draw it
             GameControl.effect.Texture = component.Sprite;
+            GameControl.effect.DiffuseColor = GetBrightness(component.Center.X, component.Center.Y);
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -424,6 +454,7 @@ namespace Generator
 
             // Draw it
             GameControl.effect.Texture = Globals.Tiles.ObjectFromName[tileName].Sprite;
+            GameControl.effect.DiffuseColor = GetBrightness(bottomLeft.X, bottomLeft.Y);
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();

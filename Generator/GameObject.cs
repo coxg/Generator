@@ -87,6 +87,7 @@ namespace Generator
         // ...Other Attributes
         public int Level;
         public int Experience;
+        public Vector3 Brightness;
 
         // Abilities
         private List<Ability> _abilities;
@@ -246,6 +247,7 @@ namespace Generator
             int level = 1,
             int experience = 0,
             float direction = (float)Math.PI,
+            Vector3? brightness = null,
 
             // Abilities
             List<Ability> abilities = null,
@@ -290,6 +292,7 @@ namespace Generator
             this.Level = level;
             this.Experience = experience;
             this.Direction = direction;
+            this.Brightness = brightness ?? Vector3.Zero;
 
             // Equipment
             this.EquippedWeapon = weapon ?? new Weapon();
