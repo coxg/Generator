@@ -48,13 +48,7 @@ namespace Generator
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            effect = new BasicEffect(GraphicsDevice)
-            {
-                TextureEnabled = true,
-                // TODO: Figure out why these don't work on Sasha's macbook
-                // AmbientLightColor = new Vector3(0.8f, 0.8f, 0.8f),
-                // LightingEnabled = true
-            };
+            effect = new BasicEffect(GraphicsDevice) { TextureEnabled = true };
 
             camera = new Camera();
 
@@ -120,7 +114,9 @@ namespace Generator
             // Update the GameObjects
             foreach (var ObjectName in new HashSet<string>(Globals.GameObjects.ActiveGameObjects))
                 Globals.GameObjects.ObjectFromName[ObjectName].Update();
-            Globals.GameObjects.Update();
+
+            // TODO: Why is this broken?
+            // Globals.GameObjects.Update();
 
             // Update the tiles
             Globals.Tiles.Update();
