@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -18,36 +19,43 @@ namespace Generator
 
         public Vector3 Center { get { return Position + Size / 2; } }
 
-        // Checks if the game element has line of sight to the specified position
+        // Checks if it can see the specified position or if we're blocked by any gameObjects
         public bool CanSee(Vector3 position)
         {
-            // Create a beam from the object to the position
-            var m = (position.Y - Center.Y) / (position.X - Center.X);
-            var b = Center.Y - m * Center.X;
+            var viewAngle = MathTools.Angle(Center, position);
+            var viewDistance = MathTools.Distance(Center, position);
 
             // Check each active gameObject
             foreach (var gameObjectName in Globals.GameObjects.ActiveGameObjects)
             {
-
                 // Make sure it's not this object
                 if (gameObjectName != Name)
                 {
                     var gameObject = Globals.GameObjects.ObjectFromName[gameObjectName];
 
-                    // Make sure the x value is valid
-                    if ((position.X < gameObject.Center.X && gameObject.Center.X < Center.X) 
-                        || (Center.X < gameObject.Center.X && gameObject.Center.X < position.X))
+                    // Make sure the object is between the two points
+                    if (MathTools.Distance(Center, gameObject.Center) + gameObject.Size.Length() / 4 < viewDistance)
                     {
-                        // Make sure the y value is valid
-                        if ((position.Y < gameObject.Center.Y && gameObject.Center.Y < Center.Y)
-                            || (Center.Y < gameObject.Center.Y && gameObject.Center.Y < position.Y))
+                        // Get the angles for each corner of the gameObject
+                        var objectAngles = new double[4];
+                        objectAngles[0] = MathTools.Angle(Center, gameObject.Position);
+                        objectAngles[1] = MathTools.Angle(Center, new Vector3(
+                            gameObject.Position.X + gameObject.Size.X,
+                            gameObject.Position.Y,
+                            gameObject.Position.Z));
+                        objectAngles[2] = MathTools.Angle(Center, new Vector3(
+                            gameObject.Position.X,
+                            gameObject.Position.Y + gameObject.Size.Y,
+                            gameObject.Position.Z));
+                        objectAngles[3] = MathTools.Angle(Center, new Vector3(
+                            gameObject.Position.X + gameObject.Size.X,
+                            gameObject.Position.Y + gameObject.Size.Y,
+                            gameObject.Position.Z));
+
+                        // Compare the viewing angle with the upper and lower bounds of the object
+                        if (objectAngles.Min() < viewAngle && viewAngle < objectAngles.Max())
                         {
-                            // If any active gameObjects intercept the beam then return false
-                            var y = m * gameObject.Center.X + b;
-                            if (y > gameObject.Position.Y && y < gameObject.Position.Y + gameObject.Size.Y)
-                            {
-                                return false;
-                            }
+                            return false;
                         }
                     }
                 }

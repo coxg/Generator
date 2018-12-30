@@ -112,5 +112,22 @@ namespace Generator
             RotatedPoint += AroundPoint;
             return RotatedPoint;
         }
+
+        // Gets the angle in radians between two points
+        public static double Angle(Vector3 Point1, Vector3 Point2)
+        {
+            var deltaX = Point1.X - Point2.X;
+            var deltaY = Point1.Y - Point2.Y;
+            return Math.Atan2(deltaY, deltaX);
+        }
+
+        // Gets the distance between two points
+        public static double Distance(Vector3 Point1, Vector3 Point2)
+        {
+            return Math.Sqrt(
+                Math.Pow(Point2.X - Point1.X, 2)
+                + Math.Pow(Point2.Y - Point1.Y, 2)
+                + Math.Pow(Point2.Z - Point1.Z, 2));
+        }
     }
 }

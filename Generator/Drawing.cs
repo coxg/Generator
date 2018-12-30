@@ -150,7 +150,8 @@ namespace Generator
 
         public static void DrawComponent(
                 Component component,
-                Vector3 size)
+                Vector3 size,
+                Vector3 brightness)
             // This should be used to draw characters.
             // These should be able to move, rotate, etc.
         {
@@ -229,7 +230,7 @@ namespace Generator
 
             // Draw it
             GameControl.effect.Texture = component.Sprite;
-            GameControl.effect.DiffuseColor = GetBrightness(component.Center.X, component.Center.Y);
+            GameControl.effect.DiffuseColor = brightness;
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();

@@ -18,7 +18,7 @@ namespace Generator
             AddNewObject("Niels", new GameObject(
                 new Vector3(50, 50, 0), stamina: 100, strength: 10, speed: 10, perception: 10, 
                 name: "Niels", partyNumber: 0, 
-                brightness: new Vector3(.5f, .25f, .5f),
+                brightness: new Vector3(.75f, .25f, .75f),
                 weapon: new Weapon(
                     name: "Sword",
                     type: "Cut",
@@ -44,7 +44,7 @@ namespace Generator
             };
 
             AddNewObject("medium terrain", new GameObject(
-                new Vector3(55, 59, 0), new Vector3(2, 1, 2), name: "medium terrain"));
+                new Vector3(57, 59, 0), new Vector3(2, 1, 2), name: "medium terrain"));
 
             AddNewObject("big terrain", new GameObject(
                 new Vector3(60, 60, 0), new Vector3(5, 1, 5), name: "big terrain"));
