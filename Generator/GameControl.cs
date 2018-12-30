@@ -115,7 +115,8 @@ namespace Generator
             foreach (var ObjectName in new HashSet<string>(Globals.GameObjects.ActiveGameObjects))
                 Globals.GameObjects.ObjectFromName[ObjectName].Update();
 
-            // TODO: Why is this broken?
+            // TODO: Why is this broken? 
+            // Until fixed, I won't be able to move outside of the starting acres
             // Globals.GameObjects.Update();
 
             // Update the tiles

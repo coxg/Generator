@@ -21,8 +21,9 @@ namespace Generator
                 var objectDistance = Math.Sqrt(
                     Math.Pow(gameObject.Center.X - x - .5, 2) + Math.Pow(gameObject.Center.Y - y - .5, 2));
 
-                // TODO: Once collision is working again, add a check for CanMoveTo
-                if (objectDistance < gameObject.Brightness.Length() * 2 * MathHelper.Pi)
+                // Make sure we're not being blocked by a gameObject
+                if (objectDistance < gameObject.Brightness.Length() * 2 * MathHelper.Pi 
+                    && gameObject.CanSee(new Vector3(x + .5f, y + .5f, 0)))
                 {
                     var flutteryBrightness = .01f * (float)Math.Cos(Globals.Clock / 10) * gameObject.Brightness;
                     brightness += flutteryBrightness + gameObject.Brightness * (float)

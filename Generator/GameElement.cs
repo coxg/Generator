@@ -18,32 +18,42 @@ namespace Generator
 
         public Vector3 Center { get { return Position + Size / 2; } }
 
-        public bool CanMoveTo(Vector3 position)
-        // Sees if the GameElement can move to the specified location unimpeded.
+        // Checks if the game element has line of sight to the specified position
+        public bool CanSee(Vector3 position)
         {
-            // Loop through each x coordinate you're trying to move to
-            for (
-                    var moveToX = (int)Math.Floor(position.X);
-                    moveToX < (int)Math.Ceiling(position.X + Size.X);
-                    moveToX++)
+            // Create a beam from the object to the position
+            var m = (position.Y - Center.Y) / (position.X - Center.X);
+            var b = Center.Y - m * Center.X;
 
-                // Loop through each y coordinate you're trying to move to
-                for (
-                        var moveToY = (int)Math.Floor(position.Y);
-                        moveToY < (int)Math.Ceiling(position.Y + Size.Y);
-                        moveToY++)
+            // Check each active gameObject
+            foreach (var gameObjectName in Globals.GameObjects.ActiveGameObjects)
+            {
 
-                    // If location is not empty or self
-                    if (Globals.GameObjects.Get(moveToX, moveToY) != null
-                        && Globals.GameObjects.Get(moveToX, moveToY) != this)
+                // Make sure it's not this object
+                if (gameObjectName != Name)
+                {
+                    var gameObject = Globals.GameObjects.ObjectFromName[gameObjectName];
+
+                    // Make sure the x value is valid
+                    if ((position.X < gameObject.Center.X && gameObject.Center.X < Center.X) 
+                        || (Center.X < gameObject.Center.X && gameObject.Center.X < position.X))
                     {
-                        Globals.Log(
-                            "[" + moveToX + ", " + moveToY + "]" +
-                            " is not empty or self: " + Globals.GameObjects.Get(moveToX, moveToY));
-                        return false;
+                        // Make sure the y value is valid
+                        if ((position.Y < gameObject.Center.Y && gameObject.Center.Y < Center.Y)
+                            || (Center.Y < gameObject.Center.Y && gameObject.Center.Y < position.Y))
+                        {
+                            // If any active gameObjects intercept the beam then return false
+                            var y = m * gameObject.Center.X + b;
+                            if (y > gameObject.Position.Y && y < gameObject.Position.Y + gameObject.Size.Y)
+                            {
+                                return false;
+                            }
+                        }
                     }
+                }
+            }
 
-            // If none of the above return false then it's passable
+            // If we didn't collide with anything then we have line of sight
             return true;
         }
     }

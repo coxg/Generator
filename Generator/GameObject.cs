@@ -59,7 +59,7 @@ namespace Generator
             get => _Position + AnimationOffset;
             set
             {
-                if (CanMoveTo(value))
+                if (CanSee(value))
                 {
                     // Null out all previous locations
                     RemoveFromGrid();
