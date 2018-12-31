@@ -53,7 +53,16 @@ namespace Generator
                             gameObject.Position.Z));
 
                         // Compare the viewing angle with the upper and lower bounds of the object
-                        if (objectAngles.Min() < viewAngle && viewAngle < objectAngles.Max())
+                        var minObjectAngle = objectAngles.Min();
+                        var maxObjectAngle = objectAngles.Max();
+                        if (maxObjectAngle - minObjectAngle > MathHelper.Pi)
+                        {
+                            if (maxObjectAngle < viewAngle || viewAngle < minObjectAngle)
+                            {
+                                return false;
+                            }
+                        }
+                        else if (minObjectAngle < viewAngle && viewAngle < maxObjectAngle)
                         {
                             return false;
                         }
