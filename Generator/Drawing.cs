@@ -155,7 +155,7 @@ namespace Generator
             // This should be used to draw characters.
             // These should be able to move, rotate, etc.
         {
-            var vertices = new VertexPositionTexture[6];
+            var vertices = new VertexPositionColorTexture[6];
             var bottomLeft = component.Position;
             var rotationPoint = bottomLeft + component.RotationPoint;
             var rotationDirection = MathTools.PointRotatedAroundPoint(
@@ -228,9 +228,14 @@ namespace Generator
             vertices[4].TextureCoordinate = new Vector2(0, 0);
             vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
 
+            // Generate shadow gradients by calculating brightness at each vertex
+            for (var i = 0; i < 6; i++)
+            {
+                vertices[i].Color = new Color(brightness);
+            }
+
             // Draw it
             GameControl.effect.Texture = component.Sprite;
-            GameControl.effect.DiffuseColor = brightness;
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -402,7 +407,7 @@ namespace Generator
                 string bottomSide = "Bottom")
         {
             // Generate the vertices
-            var vertices = new VertexPositionTexture[6];
+            var vertices = new VertexPositionColorTexture[6];
 
             // Bottom left
             vertices[0].Position = new Vector3(bottomLeft.X, bottomLeft.Y, 0);
@@ -417,6 +422,13 @@ namespace Generator
             // Top right
             vertices[4].Position = new Vector3(bottomLeft.X + 1, bottomLeft.Y + 1, 0);
             vertices[5].Position = vertices[2].Position;
+
+            // Generate shadow gradients by calculating brightness at each vertex
+            // TODO: Cache these calculations
+            for (var i = 0; i < 6; i++)
+            {
+                vertices[i].Color = new Color(GetBrightness(vertices[i].Position.X, vertices[i].Position.Y));
+            }
 
             // Generate the texture coordinates
             switch (bottomSide)
@@ -457,7 +469,6 @@ namespace Generator
 
             // Draw it
             GameControl.effect.Texture = Globals.Tiles.ObjectFromName[tileName].Sprite;
-            GameControl.effect.DiffuseColor = GetBrightness(bottomLeft.X, bottomLeft.Y);
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();

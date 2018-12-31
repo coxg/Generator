@@ -48,7 +48,9 @@ namespace Generator
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            effect = new BasicEffect(GraphicsDevice) { TextureEnabled = true };
+            effect = new BasicEffect(GraphicsDevice) { 
+                TextureEnabled = true, 
+                VertexColorEnabled = true};
 
             camera = new Camera();
 
