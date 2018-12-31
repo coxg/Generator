@@ -156,7 +156,7 @@ namespace Generator
                     Drawing.DrawComponent(
                         component.Value,
                         Object.Size * component.Value.Size,
-                        Drawing.GetBrightness(Object.Center.X, Object.Center.Y));
+                        Drawing.GetBrightness(Object.Center.X - .5f, Object.Center.Y - 1));
                 }
 
                 // Draw resource bars if they're in the party
