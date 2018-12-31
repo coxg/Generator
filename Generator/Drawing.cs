@@ -8,34 +8,49 @@ namespace Generator
 {
     public static class Drawing
     {
+        public static Dictionary<float[], Vector3> BrightnessCache;
+
         public static Vector3 GetBrightness(float x, float y)
         {
-            var brightness = Vector3.Zero;
-
-            // TODO: Rather than looping through all objects for each tile, 
-            // create a mapping layer for brightness which gets computed on each
-            // update.
-            foreach (var gameObjectName in Globals.GameObjects.ActiveGameObjects)
+            // If we've already peformed the operation this update then just returned the value
+            var cacheKey = new float[] { x, y };
+            if (BrightnessCache.ContainsKey(cacheKey))
             {
-                var gameObject = Globals.GameObjects.ObjectFromName[gameObjectName];
-                var objectDistance = Math.Sqrt(
-                    Math.Pow(gameObject.Center.X - x - .5, 2) + Math.Pow(gameObject.Center.Y - y - .5, 2));
-
-                // Make sure we're not being blocked by a gameObject
-                if (objectDistance < gameObject.Brightness.Length() * 2 * MathHelper.Pi 
-                    && gameObject.CanSee(new Vector3(x + .5f, y + .5f, 0)))
-                {
-                    var flutteryBrightness = .01f * (float)Math.Cos(Globals.Clock / 10) * gameObject.Brightness;
-                    brightness += flutteryBrightness + gameObject.Brightness * (float)
-                        Math.Pow(Math.Cos(.25 / gameObject.Brightness.Length() * objectDistance), 2);
-                }
+                return BrightnessCache[cacheKey];
             }
 
-            // Smooth lighting, multiple lighting effects can stack together
-            return new Vector3(
-                (float)Math.Sqrt(brightness.X),
-                (float)Math.Sqrt(brightness.Y),
-                (float)Math.Sqrt(brightness.Z));
+            // If not, calculate if from scratch
+            else
+            {
+                var brightness = Vector3.Zero;
+
+                // TODO: Rather than looping through all objects for each tile, 
+                // create a mapping layer for brightness which gets computed on each
+                // update.
+                foreach (var gameObjectName in Globals.GameObjects.ActiveGameObjects)
+                {
+                    var gameObject = Globals.GameObjects.ObjectFromName[gameObjectName];
+                    var objectDistance = Math.Sqrt(
+                        Math.Pow(gameObject.Center.X - x - .5, 2) + Math.Pow(gameObject.Center.Y - y - .5, 2));
+
+                    // Make sure we're not being blocked by a gameObject
+                    if (objectDistance < gameObject.Brightness.Length() * 2 * MathHelper.Pi
+                        && gameObject.CanSee(new Vector3(x + .5f, y + .5f, 0)))
+                    {
+                        var flutteryBrightness = .01f * (float)Math.Cos(Globals.Clock / 10) * gameObject.Brightness;
+                        brightness += flutteryBrightness + gameObject.Brightness * (float)
+                            Math.Pow(Math.Cos(.25 / gameObject.Brightness.Length() * objectDistance), 2);
+                    }
+                }
+
+                // Smooth lighting, multiple lighting effects can stack together
+                brightness = new Vector3(
+                    (float)Math.Sqrt(brightness.X),
+                    (float)Math.Sqrt(brightness.Y),
+                    (float)Math.Sqrt(brightness.Z));
+                BrightnessCache[cacheKey] = brightness;
+                return brightness;
+            }
         }
 
         public static void DrawSprite(SpriteBatch spriteBatch, Texture2D texture, Vector2 bottomLeft, Vector2 topRight)
