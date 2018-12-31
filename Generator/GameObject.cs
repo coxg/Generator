@@ -59,7 +59,7 @@ namespace Generator
             get => _Position + AnimationOffset;
             set
             {
-                if (CanSee(value))
+                if (CanMoveTo(value))
                 {
                     // Null out all previous locations
                     RemoveFromGrid();
@@ -574,18 +574,18 @@ namespace Generator
         }
 
         // Gets the coordinates at the range specified
-        public Vector2 GetTargetCoordinates(float range = 1)
+        public Vector2 GetTargetCoordinates(float range = 1, float? direction = null)
         {
-            var offsets = MathTools.OffsetFromRadians(Direction);
+            var offsets = MathTools.OffsetFromRadians(direction ?? Direction);
             return new Vector2(
                 (int)Math.Round(_Position.X + (range + Size.X / 2) * offsets.X),
                 (int)Math.Round(_Position.Y + (range + Size.Y / 2) * offsets.Y));
         }
 
         // Gets whichever object is [distance] away in the current direction
-        public GameObject GetTarget(float range = 1)
+        public GameObject GetTarget(float range = 1, float? direction = null)
         {
-            var targetCoordinates = GetTargetCoordinates(range);
+            var targetCoordinates = GetTargetCoordinates(range, direction);
             var targettedObject = Globals.GameObjects.Get(
                 (int)targetCoordinates.X,
                 (int)targetCoordinates.Y);
@@ -644,6 +644,30 @@ namespace Generator
         public override string ToString()
         {
             return Name ?? "Unnamed GameObject";
+        }
+
+        // See if we can move to a location
+        public bool CanMoveTo(Vector3 position)
+        {
+            // See if any of the locations we'd occupy are already filled
+            for (var eachX = (int)Math.Floor(position.X);
+                    eachX <= Math.Ceiling(position.X + Size.X - 1);
+                    eachX++)
+            {
+                for (var eachY = (int)Math.Floor(position.Y);
+                        eachY <= Math.Ceiling(position.Y + Size.Y - 1);
+                        eachY++)
+                {
+                    var objectAtLocation = Globals.GameObjects.Get(eachX, eachY);
+                    if (objectAtLocation != null && objectAtLocation != this)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            // If none of them are filled then we're clear to move
+            return true;
         }
     }
 }
