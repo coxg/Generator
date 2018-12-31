@@ -137,7 +137,7 @@ namespace Generator
         protected override void Draw(GameTime gameTime)
         {
             // Clear the cache
-            Drawing.BrightnessCache = new Dictionary<float[], Vector3>();
+            Drawing.BrightnessCache = new Dictionary<string, Vector3>();
 
             // Draw all tiles which the camera can see
             spriteBatch.Begin();

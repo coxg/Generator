@@ -8,12 +8,12 @@ namespace Generator
 {
     public static class Drawing
     {
-        public static Dictionary<float[], Vector3> BrightnessCache;
+        public static Dictionary<string, Vector3> BrightnessCache;
 
         public static Vector3 GetBrightness(float x, float y)
         {
             // If we've already peformed the operation this update then just returned the value
-            var cacheKey = new float[] { x, y };
+            var cacheKey = x.ToString() + " " + y.ToString();
             if (BrightnessCache.ContainsKey(cacheKey))
             {
                 return BrightnessCache[cacheKey];
