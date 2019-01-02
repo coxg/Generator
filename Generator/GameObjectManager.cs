@@ -17,8 +17,7 @@ namespace Generator
 
             AddNewObject("Niels", new GameObject(
                 new Vector3(50, 50, 0), stamina: 100, strength: 10, speed: 10, perception: 10, 
-                name: "Niels", partyNumber: 0, 
-                brightness: new Vector3(.75f, .25f, .75f),
+                name: "Niels", partyNumber: 0,
                 weapon: new Weapon(
                     name: "Sword",
                     type: "Cut",

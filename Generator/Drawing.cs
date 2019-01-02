@@ -31,11 +31,11 @@ namespace Generator
                 {
                     var gameObject = Globals.GameObjects.ObjectFromName[gameObjectName];
                     var objectDistance = Math.Sqrt(
-                        Math.Pow(gameObject.Center.X - x - .5, 2) + Math.Pow(gameObject.Center.Y - y - .5, 2));
+                        Math.Pow(gameObject.Center.X - x, 2) + Math.Pow(gameObject.Center.Y - y, 2));
 
                     // Make sure we're not being blocked by a gameObject
                     if (objectDistance < gameObject.Brightness.Length() * 2 * MathHelper.Pi
-                        && gameObject.CanSee(new Vector3(x + .5f, y + .5f, 0)))
+                        && gameObject.CanSee(new Vector3(x, y, 0)))
                     {
                         var flutteryBrightness = .01f * (float)Math.Cos(Globals.Clock / 10) * gameObject.Brightness;
                         brightness += flutteryBrightness + gameObject.Brightness * (float)
@@ -244,10 +244,12 @@ namespace Generator
             vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
 
             // Generate shadow gradients by calculating brightness at each vertex
-            for (var i = 0; i < 6; i++)
-            {
-                vertices[i].Color = new Color(brightness);
-            }
+            vertices[0].Color = new Color(GetBrightness(component.SourceObject.Center.X - .5f, component.SourceObject.Position.Y - .5f));
+            vertices[1].Color = new Color(GetBrightness(component.SourceObject.Center.X - .5f, component.SourceObject.Position.Y - .5f));
+            vertices[2].Color = new Color(GetBrightness(component.SourceObject.Center.X + .5f, component.SourceObject.Position.Y - .5f));
+            vertices[3].Color = new Color(GetBrightness(component.SourceObject.Center.X - .5f, component.SourceObject.Position.Y - .5f));
+            vertices[4].Color = new Color(GetBrightness(component.SourceObject.Center.X + .5f, component.SourceObject.Position.Y - .5f));
+            vertices[5].Color = new Color(GetBrightness(component.SourceObject.Center.X + .5f, component.SourceObject.Position.Y - .5f));
 
             // Draw it
             GameControl.effect.Texture = component.Sprite;
