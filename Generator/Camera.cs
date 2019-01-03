@@ -16,8 +16,8 @@ namespace Generator
 
         // Fields 
         public Vector3 Position { get; set; }
-        private Vector3 Target { get; set; }
-        private Vector3 Up { get; set; }
+        public Vector3 Target { get; set; }
+        public Vector3 Up { get; set; }
 
         public float Rotation
         {

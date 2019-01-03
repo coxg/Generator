@@ -22,7 +22,7 @@ namespace Generator
             // If not, calculate if from scratch
             else
             {
-                var brightness = Vector3.Zero;
+                var brightness = new Vector3(.02f, .02f, .02f);
 
                 // TODO: Rather than looping through all objects for each tile, 
                 // create a mapping layer for brightness which gets computed on each
@@ -35,7 +35,7 @@ namespace Generator
 
                     // Make sure we're not being blocked by a gameObject
                     if (objectDistance < gameObject.Brightness.Length() * 2 * MathHelper.Pi
-                        && gameObject.CanSee(new Vector3(x, y, 0)))
+                        && (!Globals.ShadowsEnabled || gameObject.CanSee(new Vector3(x, y, 0))))
                     {
                         var flutteryBrightness = .01f * (float)Math.Cos(Globals.Clock / 10) * gameObject.Brightness;
                         brightness += flutteryBrightness + gameObject.Brightness * (float)
