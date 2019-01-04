@@ -151,10 +151,31 @@ namespace Generator
                 }
             }
 
+            // Draw the shadows
+            foreach (var Object in Globals.GameObjects.ActiveGameObjects.Select(
+                i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
+            {
+                foreach (var component in Object.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
+                {
+                    Drawing.DrawComponentShadow(
+                        component.Value,
+                        Object.Size * component.Value.Size,
+                        Drawing.GetBrightness(Object.Center.X - .5f, Object.Center.Y - 1));
+                }
+            }
+            for (var x = (int)camera.ViewMinCoordinates().X; x < (int)camera.ViewMaxCoordinates().X; x++)
+            {
+                for (var y = (int)camera.ViewMinCoordinates().Y; y < (int)camera.ViewMaxCoordinates().Y; y++)
+                {
+                    Drawing.DrawTile(x, y, .5f);
+                }
+            }
+
             // Draw the GameObjects
             foreach (var Object in Globals.GameObjects.ActiveGameObjects.Select(
                 i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
             {
+                // Draw components for the object
                 foreach (var component in Object.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
                 {
                     Drawing.DrawComponent(
