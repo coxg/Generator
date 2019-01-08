@@ -17,6 +17,7 @@ namespace Generator
         // For drawing... stuff
         public static Camera camera;
         public static BasicEffect effect;
+        public static RenderTarget2D renderTarget;
 
         // Player
         public SpriteBatch spriteBatch;
@@ -43,8 +44,16 @@ namespace Generator
         /// </summary>
         protected override void Initialize()
         {
+            // Set up the GraphicsDevice, which is used for all drawing
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            renderTarget = new RenderTarget2D(
+                GraphicsDevice,
+                GraphicsDevice.PresentationParameters.BackBufferWidth,
+                GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -136,22 +145,13 @@ namespace Generator
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            // Clear the cache
-            Drawing.BrightnessCache = new Dictionary<string, Vector3>();
-
-            // Draw all tiles which the camera can see
-            spriteBatch.Begin();
             effect.View = camera.View;
             effect.Projection = camera.Projection;
-            for (var x = (int) camera.ViewMinCoordinates().X; x < (int) camera.ViewMaxCoordinates().X; x++)
-            {
-                for (var y = (int) camera.ViewMinCoordinates().Y; y < (int) camera.ViewMaxCoordinates().Y; y++)
-                {
-                    Drawing.DrawTile(x, y);
-                }
-            }
 
-            // Draw the shadows
+            // Pre-compute the lighting layer
+            GraphicsDevice.Clear(new Color(new Vector4(0, 0, 0, .5f)));
+            GraphicsDevice.SetRenderTarget(renderTarget);
+            Drawing.DrawLight(new Vector2(55.5f, 56.5f), new Vector2(5, 5), Color.MonoGameOrange);
             foreach (var Object in Globals.GameObjects.ActiveGameObjects.Select(
                 i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
             {
@@ -159,19 +159,28 @@ namespace Generator
                 {
                     Drawing.DrawComponentShadow(
                         component.Value,
-                        Object.Size * component.Value.Size,
-                        Drawing.GetBrightness(Object.Center.X - .5f, Object.Center.Y - 1));
+                        Object.Size * component.Value.Size);
                 }
             }
+            GraphicsDevice.SetRenderTarget(null);
+            GraphicsDevice.Clear(Color.Transparent);
+
+            // Draw the tile layer
             for (var x = (int)camera.ViewMinCoordinates().X; x < (int)camera.ViewMaxCoordinates().X; x++)
             {
                 for (var y = (int)camera.ViewMinCoordinates().Y; y < (int)camera.ViewMaxCoordinates().Y; y++)
                 {
-                    Drawing.DrawTile(x, y, .5f);
+                    Drawing.DrawTile(x, y);
                 }
             }
 
+            // Draw the lighting layer
+            spriteBatch.Begin();
+            spriteBatch.Draw(renderTarget, new Rectangle(0, 0, (int)Globals.Resolution.X, (int)Globals.Resolution.Y), new Color(new Vector4(1, 1, 1, .5f)));
+            spriteBatch.End();
+
             // Draw the GameObjects
+            spriteBatch.Begin();
             foreach (var Object in Globals.GameObjects.ActiveGameObjects.Select(
                 i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
             {
@@ -180,8 +189,7 @@ namespace Generator
                 {
                     Drawing.DrawComponent(
                         component.Value,
-                        Object.Size * component.Value.Size,
-                        Drawing.GetBrightness(Object.Center.X - .5f, Object.Center.Y - 1));
+                        Object.Size * component.Value.Size);
                 }
 
                 // Draw resource bars if they're in the party
@@ -204,6 +212,7 @@ namespace Generator
             // Draw text box
             if (Globals.DisplayTextQueue.Count != 0) Drawing.DrawTextBox(spriteBatch);
             spriteBatch.End();
+
             base.Draw(gameTime);
         }
     }

@@ -22,7 +22,6 @@ namespace Generator
         public static int Clock = 0;
         public static int RefreshRate = 30;
         public static string Directory = "/Generator/Generator/";
-        public static bool ShadowsEnabled = false;
 
         // Configure the world building mode
         public static bool CreativeMode = true;

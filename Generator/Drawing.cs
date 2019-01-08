@@ -8,49 +8,37 @@ namespace Generator
 {
     public static class Drawing
     {
-        public static Dictionary<string, Vector3> BrightnessCache;
 
         public static Vector3 GetBrightness(float x, float y)
         {
-            // If we've already peformed the operation this update then just returned the value
-            var cacheKey = x.ToString() + " " + y.ToString();
-            if (BrightnessCache.ContainsKey(cacheKey))
-            {
-                return BrightnessCache[cacheKey];
-            }
 
-            // If not, calculate if from scratch
-            else
-            {
-                var brightness = new Vector3(.02f, .02f, .02f);
+            var brightness = new Vector3(.02f, .02f, .02f);
 
-                // TODO: Rather than looping through all objects for each tile, 
-                // create a mapping layer for brightness which gets computed on each
-                // update.
-                foreach (var gameObjectName in Globals.GameObjects.ActiveGameObjects)
+            // TODO: Rather than looping through all objects for each tile, 
+            // create a mapping layer for brightness which gets computed on each
+            // update.
+            foreach (var gameObjectName in Globals.GameObjects.ActiveGameObjects)
+            {
+                var gameObject = Globals.GameObjects.ObjectFromName[gameObjectName];
+                var objectDistance = Math.Sqrt(
+                    Math.Pow(gameObject.Center.X - x, 2) + Math.Pow(gameObject.Center.Y - y, 2));
+
+                // Make sure we're not being blocked by a gameObject
+                if (objectDistance < gameObject.Brightness.Length() * 2 * MathHelper.Pi
+                    && gameObject.CanSee(new Vector3(x, y, 0)))
                 {
-                    var gameObject = Globals.GameObjects.ObjectFromName[gameObjectName];
-                    var objectDistance = Math.Sqrt(
-                        Math.Pow(gameObject.Center.X - x, 2) + Math.Pow(gameObject.Center.Y - y, 2));
-
-                    // Make sure we're not being blocked by a gameObject
-                    if (objectDistance < gameObject.Brightness.Length() * 2 * MathHelper.Pi
-                        && (!Globals.ShadowsEnabled || gameObject.CanSee(new Vector3(x, y, 0))))
-                    {
-                        var flutteryBrightness = .01f * (float)Math.Cos(Globals.Clock / 10) * gameObject.Brightness;
-                        brightness += flutteryBrightness + gameObject.Brightness * (float)
-                            Math.Pow(Math.Cos(.25 / gameObject.Brightness.Length() * objectDistance), 2);
-                    }
+                    var flutteryBrightness = .01f * (float)Math.Cos(Globals.Clock / 10) * gameObject.Brightness;
+                    brightness += flutteryBrightness + gameObject.Brightness * (float)
+                        Math.Pow(Math.Cos(.25 / gameObject.Brightness.Length() * objectDistance), 2);
                 }
-
-                // Smooth lighting, multiple lighting effects can stack together
-                brightness = new Vector3(
-                    (float)Math.Sqrt(brightness.X),
-                    (float)Math.Sqrt(brightness.Y),
-                    (float)Math.Sqrt(brightness.Z));
-                BrightnessCache[cacheKey] = brightness;
-                return brightness;
             }
+
+            // Smooth lighting, multiple lighting effects can stack together
+            brightness = new Vector3(
+                (float)Math.Sqrt(brightness.X),
+                (float)Math.Sqrt(brightness.Y),
+                (float)Math.Sqrt(brightness.Z));
+            return brightness;
         }
 
         public static void DrawSprite(SpriteBatch spriteBatch, Texture2D texture, Vector2 bottomLeft, Vector2 topRight)
@@ -165,8 +153,7 @@ namespace Generator
 
         public static void DrawComponentShadow(
                 Component component,
-                Vector3 size,
-                Vector3 brightness)
+                Vector3 size)
         // This should be used to draw shadows for character components.
         {
             var vertices = new VertexPositionColorTexture[6];
@@ -246,7 +233,7 @@ namespace Generator
             // Generate shadow gradients by calculating brightness at each vertex
             for (var vertexIndex = 0; vertexIndex < 6; vertexIndex++)
             {
-                vertices[vertexIndex].Color = new Color(new Vector3(0, 0, 0));
+                vertices[vertexIndex].Color = Color.FromNonPremultiplied(new Vector4(0, 0, 0, 1));
             }
 
             // Draw it
@@ -261,8 +248,7 @@ namespace Generator
 
         public static void DrawComponent(
                 Component component,
-                Vector3 size,
-                Vector3 brightness)
+                Vector3 size)
             // This should be used to draw characters.
             // These should be able to move, rotate, etc.
         {
@@ -341,12 +327,16 @@ namespace Generator
             vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
 
             // Generate shadow gradients by calculating brightness at each vertex
-            vertices[0].Color = new Color(GetBrightness(component.SourceObject.Center.X - .5f, component.SourceObject.Position.Y - .5f));
-            vertices[1].Color = new Color(GetBrightness(component.SourceObject.Center.X - .5f, component.SourceObject.Position.Y - .5f));
-            vertices[2].Color = new Color(GetBrightness(component.SourceObject.Center.X + .5f, component.SourceObject.Position.Y - .5f));
-            vertices[3].Color = new Color(GetBrightness(component.SourceObject.Center.X - .5f, component.SourceObject.Position.Y - .5f));
-            vertices[4].Color = new Color(GetBrightness(component.SourceObject.Center.X + .5f, component.SourceObject.Position.Y - .5f));
-            vertices[5].Color = new Color(GetBrightness(component.SourceObject.Center.X + .5f, component.SourceObject.Position.Y - .5f));
+            var leftBrightness = new Color(GetBrightness(
+                component.SourceObject.Center.X - .5f, component.SourceObject.Position.Y - .5f));
+            var rightBrightness = new Color(GetBrightness(
+                component.SourceObject.Center.X + .5f, component.SourceObject.Position.Y - .5f));
+            vertices[0].Color = leftBrightness;
+            vertices[1].Color = leftBrightness;
+            vertices[2].Color = rightBrightness;
+            vertices[3].Color = leftBrightness;
+            vertices[4].Color = rightBrightness;
+            vertices[5].Color = rightBrightness;
 
             // Draw it
             GameControl.effect.Texture = component.Sprite;
@@ -514,6 +504,54 @@ namespace Generator
             }
         }
 
+        // Draws a light source
+        public static void DrawLight(
+                Vector2 position,
+                Vector2 size,
+                Color color)
+        {
+            // Generate the vertices
+            var vertices = new VertexPositionColorTexture[6];
+
+            // Bottom left
+            var bottomLeft = position - size / 2;
+            vertices[0].Position = new Vector3(bottomLeft.X, bottomLeft.Y, 0);
+
+            // Top left
+            vertices[1].Position = new Vector3(bottomLeft.X, bottomLeft.Y + size.Y, 0);
+
+            // Bottom right
+            vertices[2].Position = new Vector3(bottomLeft.X + size.X, bottomLeft.Y, 0);
+            vertices[3].Position = vertices[1].Position;
+
+            // Top right
+            vertices[4].Position = new Vector3(bottomLeft.X + size.X, bottomLeft.Y + size.Y, 0);
+            vertices[5].Position = vertices[2].Position;
+
+            // Get the texture coordinates
+            vertices[0].TextureCoordinate = new Vector2(0, 1); // Bottom left
+            vertices[1].TextureCoordinate = new Vector2(0, 0); // Top left
+            vertices[2].TextureCoordinate = new Vector2(1, 1); // Bottom right
+            vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
+            vertices[4].TextureCoordinate = new Vector2(1, 0); // Top right
+            vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
+
+            // Set the colors to white - the shadows will lay over this
+            for (var i = 0; i < 6; i++)
+            {
+                vertices[i].Color = color;
+            }
+
+            // Draw it
+            GameControl.effect.Texture = Globals.WhiteDot;
+            foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
+                    PrimitiveType.TriangleList, vertices, 0, 2);
+            }
+        }
+
         // Draws a single layer of a tile
         public static void DrawTileLayer(
                 string tileName,
@@ -537,15 +575,6 @@ namespace Generator
             // Top right
             vertices[4].Position = new Vector3(bottomLeft.X + 1, bottomLeft.Y + 1, 0);
             vertices[5].Position = vertices[2].Position;
-
-            // Generate shadow gradients by calculating brightness at each vertex
-            // TODO: Cache these calculations
-            for (var i = 0; i < 6; i++)
-            {
-                var brightness = GetBrightness(vertices[i].Position.X, vertices[i].Position.Y);
-                vertices[i].Color = new Color(new Vector4(
-                    brightness.X, brightness.Y, brightness.Z, opacity));
-            }
 
             // Generate the texture coordinates
             switch (bottomSide)
@@ -582,6 +611,12 @@ namespace Generator
                     vertices[4].TextureCoordinate = new Vector2(1, 1); // Top right
                     vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
                     break;
+            }
+
+            // Set the colors to white - the shadows will lay over this
+            for (var i = 0; i < 6; i++)
+            {
+                vertices[i].Color = Color.White;
             }
 
             // Draw it
