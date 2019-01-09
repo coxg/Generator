@@ -164,8 +164,8 @@ namespace Generator
                 new Vector3(0, 0, 0),
                 new Vector3(0, 0, component.Direction));
 
-            var normalizationDirection = new Vector3(-1 * MathHelper.PiOver2, 0, MathHelper.PiOver2);
-            var normalizationOffset = new Vector3(-component.SourceObject.Size.X / 2, component.SourceObject.Size.Z / 4 - .25f, -component.SourceObject.Size.Z / 2);
+            var normalizationDirection = new Vector3(-MathHelper.PiOver2, 0, -MathHelper.PiOver2);
+            var normalizationOffset = new Vector3(component.SourceObject.Size.X / 2, component.SourceObject.Size.Z / 4 - .25f, -component.SourceObject.Size.Z / 2);
 
             // Bottom left
             vertices[0].Position = MathTools.PointRotatedAroundPoint(
@@ -230,9 +230,10 @@ namespace Generator
             vertices[4].TextureCoordinate = new Vector2(0, 0);
             vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
 
-            // Generate shadow gradients by calculating brightness at each vertex
+            // Null out color and position
             for (var vertexIndex = 0; vertexIndex < 6; vertexIndex++)
             {
+                vertices[vertexIndex].Position.Z = 0;
                 vertices[vertexIndex].Color = Color.FromNonPremultiplied(new Vector4(0, 0, 0, 1));
             }
 

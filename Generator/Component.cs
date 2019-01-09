@@ -26,27 +26,51 @@ namespace Generator
             Name = name;
             CurrentFrame = 0;
             Directional = directional;
-            SpriteFile = spriteFile;
             RelativePosition = relativePosition;
             Size = relativeSize * 6; // TODO: Why is this necessary? Why is it 6?
             SourceObject = sourceObject;
             YOffset = yOffset;
             Animations = animations ?? new Dictionary<String, Animation>();
+            Sprites = new Dictionary<string, Texture2D>();
+            SpriteFile = spriteFile;
+
         }
 
         public int CurrentFrame { get; set; }
         public bool Directional { get; set; }
-        public string SpriteFile { get; set; }
         public Vector3 RelativePosition { get; set; }
         new public float Size { get; set; }
         public GameObject SourceObject { get; set; }
         public float YOffset { get; set; }
         public Dictionary<String, Animation> Animations { get; set; }
+        public Dictionary<String, Texture2D> Sprites { get; set; }
 
         private float _Direction { get; set; }
         override public float Direction {
             set { _Direction = value; }
             get { return SourceObject.Direction; }
+        }
+
+        private string _spriteFile { get; set; }
+        public string SpriteFile
+        {
+            get { return _spriteFile; }
+
+            set
+            {
+                Sprites["Front"] = Globals.Content.Load<Texture2D>("Sprites/" + value + (Directional ? "-Front" : ""));
+                Sprites["Back"] = Globals.Content.Load<Texture2D>("Sprites/" + value + (Directional ? "-Back" : ""));
+                Sprites["LView"] = Globals.Content.Load<Texture2D>("Sprites/" + value + (Directional ? "-LView" : ""));
+                Sprites["RView"] = Globals.Content.Load<Texture2D>("Sprites/" + value + (Directional ? "-RView" : ""));
+                _spriteFile = value;
+            }
+        }
+
+        override public Texture2D Sprite
+        {
+            get { return Sprites[MathTools.StringFromRadians(Direction)]; }
+
+            set { throw new NotImplementedException("Cannot set Component Sprite directly; use SpriteFile instead."); }
         }
         
         private Vector3 PositionOffset { get; set; }
@@ -92,11 +116,6 @@ namespace Generator
         public void Update()
         {
             foreach (var animation in Animations) animation.Value.Update();
-
-            // TODO: Only do this when we need to - maybe that's default behavior?
-            Sprite = Globals.Content.Load<Texture2D>(
-                "Sprites/" + SpriteFile + (
-                Directional ? "-" + MathTools.StringFromRadians(SourceObject.Direction) : ""));
         }
     }
 }

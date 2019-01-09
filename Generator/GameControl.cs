@@ -149,18 +149,20 @@ namespace Generator
             effect.Projection = camera.Projection;
 
             // Pre-compute the lighting layer
-            GraphicsDevice.Clear(new Color(new Vector4(0, 0, 0, .5f)));
             GraphicsDevice.SetRenderTarget(renderTarget);
+            GraphicsDevice.Clear(new Color(new Vector4(0, 0, 0, 1)));
             Drawing.DrawLight(new Vector2(55.5f, 56.5f), new Vector2(5, 5), Color.MonoGameOrange);
             foreach (var Object in Globals.GameObjects.ActiveGameObjects.Select(
                 i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
             {
+                Object.Direction = MathTools.Mod(-Object.Direction - MathHelper.PiOver2, MathHelper.TwoPi);
                 foreach (var component in Object.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
                 {
                     Drawing.DrawComponentShadow(
                         component.Value,
                         Object.Size * component.Value.Size);
                 }
+                Object.Direction = MathTools.Mod(-Object.Direction - MathHelper.PiOver2, MathHelper.TwoPi);
             }
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.Transparent);

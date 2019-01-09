@@ -88,6 +88,7 @@ namespace Generator
         public int Level;
         public int Experience;
         public Vector3 Brightness;
+        public override Texture2D Sprite { get; set; }
 
         // Abilities
         private List<Ability> _abilities;

@@ -13,7 +13,7 @@ namespace Generator
         public Vector3 RotationOffset { get; set; }
         public Vector3 RotationPoint { get; set; }
         public Vector3 Size { get; set; }
-        public Texture2D Sprite { get; set; }
+        public abstract Texture2D Sprite { get; set; }
         public abstract Vector3 Position { get; set; }
         public abstract float Direction { get; set; }
 
