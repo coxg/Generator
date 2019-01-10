@@ -90,6 +90,7 @@ namespace Generator
 
             // Load in the sprites
             Globals.WhiteDot = Content.Load<Texture2D>("Sprites/white_dot");
+            Globals.LightTexture = Content.Load<Texture2D>("Sprites/light");
 
             // Load in the fonts
             Globals.Font = Content.Load<SpriteFont>("Fonts/Score");
@@ -151,18 +152,30 @@ namespace Generator
             // Pre-compute the lighting layer
             GraphicsDevice.SetRenderTarget(renderTarget);
             GraphicsDevice.Clear(new Color(new Vector4(0, 0, 0, 1)));
-            Drawing.DrawLight(new Vector2(55.5f, 56.5f), new Vector2(5, 5), Color.MonoGameOrange);
-            foreach (var Object in Globals.GameObjects.ActiveGameObjects.Select(
-                i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
+            Drawing.DrawLight(new Vector2(55.5f, 56.5f), new Vector2(50, 50), Color.White);
+            foreach (var LightSource in Globals.GameObjects.ActiveGameObjects.Select(
+            i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
             {
-                Object.Direction = MathTools.Mod(-Object.Direction - MathHelper.PiOver2, MathHelper.TwoPi);
-                foreach (var component in Object.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
+                if (LightSource.Brightness.Length() != 0)
                 {
-                    Drawing.DrawComponentShadow(
-                        component.Value,
-                        Object.Size * component.Value.Size);
+                    foreach (var Object in Globals.GameObjects.ActiveGameObjects.Select(
+                    i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
+                    {
+                        if (Object != LightSource)
+                        {
+                            var lightAngle = (float)MathTools.Angle(LightSource.Center, Object.Center);
+                            Object.Direction = MathTools.Mod(-Object.Direction - lightAngle + MathHelper.PiOver2, MathHelper.TwoPi);
+                            foreach (var component in Object.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
+                            {
+                                Drawing.DrawComponentShadow(
+                                    component.Value,
+                                    Object.Size * component.Value.Size,
+                                    lightAngle);
+                            }
+                            Object.Direction = MathTools.Mod(-Object.Direction - lightAngle + MathHelper.PiOver2, MathHelper.TwoPi);
+                        }
+                    }
                 }
-                Object.Direction = MathTools.Mod(-Object.Direction - MathHelper.PiOver2, MathHelper.TwoPi);
             }
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.Transparent);

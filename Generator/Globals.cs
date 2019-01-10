@@ -34,6 +34,7 @@ namespace Generator
         // Loading assets
         public static Texture2D WhiteDot;
         public static SpriteFont Font;
+        public static Texture2D LightTexture;
 
         // Create the maps
         public static GameObjectManager GameObjects = null;

@@ -153,7 +153,8 @@ namespace Generator
 
         public static void DrawComponentShadow(
                 Component component,
-                Vector3 size)
+                Vector3 size,
+                float direction)
         // This should be used to draw shadows for character components.
         {
             var vertices = new VertexPositionColorTexture[6];
@@ -161,11 +162,18 @@ namespace Generator
             var rotationPoint = bottomLeft + component.RotationPoint;
             var rotationDirection = MathTools.PointRotatedAroundPoint(
                 component.RotationOffset,
-                new Vector3(0, 0, 0),
+                Vector3.Zero,
                 new Vector3(0, 0, component.Direction));
 
-            var normalizationDirection = new Vector3(-MathHelper.PiOver2, 0, -MathHelper.PiOver2);
-            var normalizationOffset = new Vector3(component.SourceObject.Size.X / 2, component.SourceObject.Size.Z / 4 - .25f, -component.SourceObject.Size.Z / 2);
+            var normalizationDirection = new Vector3(-MathHelper.PiOver2, 0, direction + MathHelper.PiOver2);
+            var normalizationOffset = MathTools.PointRotatedAroundPoint(
+                Vector3.Zero,
+                new Vector3(component.SourceObject.Size.X / 2, 0, -component.SourceObject.Size.Z / 2),
+                new Vector3(0, 0, direction));
+            normalizationOffset += new Vector3(
+                -component.SourceObject.Size.X / 2,
+                component.SourceObject.Size.Z / 4 - .25f,
+                0);
 
             // Bottom left
             vertices[0].Position = MathTools.PointRotatedAroundPoint(
@@ -234,7 +242,7 @@ namespace Generator
             for (var vertexIndex = 0; vertexIndex < 6; vertexIndex++)
             {
                 vertices[vertexIndex].Position.Z = 0;
-                vertices[vertexIndex].Color = Color.FromNonPremultiplied(new Vector4(0, 0, 0, 1));
+                vertices[vertexIndex].Color = Color.Black;
             }
 
             // Draw it
@@ -544,7 +552,7 @@ namespace Generator
             }
 
             // Draw it
-            GameControl.effect.Texture = Globals.WhiteDot;
+            GameControl.effect.Texture = Globals.LightTexture;
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
