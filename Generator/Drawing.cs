@@ -515,26 +515,26 @@ namespace Generator
 
         // Draws a light source
         public static void DrawLight(
-                Vector2 position,
-                Vector2 size,
+                Vector3 position,
+                float size,
                 Color color)
         {
             // Generate the vertices
             var vertices = new VertexPositionColorTexture[6];
 
             // Bottom left
-            var bottomLeft = position - size / 2;
+            var bottomLeft = position - Vector3.One * size / 2;
             vertices[0].Position = new Vector3(bottomLeft.X, bottomLeft.Y, 0);
 
             // Top left
-            vertices[1].Position = new Vector3(bottomLeft.X, bottomLeft.Y + size.Y, 0);
+            vertices[1].Position = new Vector3(bottomLeft.X, bottomLeft.Y + size, 0);
 
             // Bottom right
-            vertices[2].Position = new Vector3(bottomLeft.X + size.X, bottomLeft.Y, 0);
+            vertices[2].Position = new Vector3(bottomLeft.X + size, bottomLeft.Y, 0);
             vertices[3].Position = vertices[1].Position;
 
             // Top right
-            vertices[4].Position = new Vector3(bottomLeft.X + size.X, bottomLeft.Y + size.Y, 0);
+            vertices[4].Position = new Vector3(bottomLeft.X + size, bottomLeft.Y + size, 0);
             vertices[5].Position = vertices[2].Position;
 
             // Get the texture coordinates

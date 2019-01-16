@@ -17,7 +17,13 @@ namespace Generator
         // For drawing... stuff
         public static Camera camera;
         public static BasicEffect effect;
-        public static RenderTarget2D renderTarget;
+        public static RenderTarget2D tileRenderTarget;
+        public static RenderTarget2D shadowRenderTarget;
+        public static RenderTarget2D objectRenderTarget;
+        public static Dictionary<GameObject, RenderTarget2D> lightingRenderTargets = new Dictionary<GameObject, RenderTarget2D>();
+        public static BlendState lightingBlendState;
+        public static Rectangle screenSize = new Rectangle(0, 0, (int)Globals.Resolution.X, (int)Globals.Resolution.Y);
+        public static List<BlendState> lightingBlendStates = new List<BlendState>();
 
         // Player
         public SpriteBatch spriteBatch;
@@ -47,13 +53,137 @@ namespace Generator
             // Set up the GraphicsDevice, which is used for all drawing
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            renderTarget = new RenderTarget2D(
+            tileRenderTarget = new RenderTarget2D(
                 GraphicsDevice,
                 GraphicsDevice.PresentationParameters.BackBufferWidth,
                 GraphicsDevice.PresentationParameters.BackBufferHeight,
                 false,
                 GraphicsDevice.PresentationParameters.BackBufferFormat,
                 DepthFormat.Depth24);
+            shadowRenderTarget = new RenderTarget2D(
+                GraphicsDevice,
+                GraphicsDevice.PresentationParameters.BackBufferWidth,
+                GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+            objectRenderTarget = new RenderTarget2D(
+                GraphicsDevice,
+                GraphicsDevice.PresentationParameters.BackBufferWidth,
+                GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+            lightingBlendState = new BlendState
+            {
+                //ColorDestinationBlend = Blend.InverseSourceAlpha,
+                //ColorDestinationBlend = Blend.InverseSourceColor,
+                ColorDestinationBlend = Blend.InverseDestinationColor,
+                //ColorSourceBlend = Blend.BlendFactor,
+                //ColorBlendFunction = BlendFunction.ReverseSubtract
+                //ColorDestinationBlend = Blend.SourceAlphaSaturation
+            };
+            lightingBlendStates = new List<BlendState>();
+            var ColorBlendFunctions = new List<BlendFunction>
+            {
+                //BlendFunction.Subtract,
+                BlendFunction.Add,
+                //BlendFunction.ReverseSubtract
+            };
+            var ColorDestinationBlends = new List<Blend>
+            {
+                //Blend.DestinationAlpha, // Close
+                //Blend.DestinationColor,
+                //Blend.InverseBlendFactor,
+                Blend.InverseDestinationAlpha,
+                //Blend.InverseDestinationColor,
+                //Blend.InverseSourceAlpha,
+                //Blend.InverseSourceColor, // Spooky
+                //Blend.One, // Spooky
+                //Blend.SourceAlpha,
+                //Blend.SourceAlphaSaturation, // Spooky
+                //Blend.SourceColor,
+                //Blend.Zero
+            };
+            var AlphaSourceBlends = new List<Blend>
+            {
+                //Blend.BlendFactor,
+                Blend.DestinationAlpha,
+                Blend.DestinationColor,
+                Blend.InverseBlendFactor,
+                Blend.InverseDestinationAlpha,
+                Blend.InverseDestinationColor,
+                Blend.InverseSourceAlpha,
+                Blend.InverseSourceColor,
+                Blend.One,
+                Blend.SourceAlpha,
+                Blend.SourceAlphaSaturation,
+                Blend.SourceColor,
+                Blend.Zero
+            };
+            var AlphaDestinationBlends = new List<Blend>
+            {
+                Blend.BlendFactor,
+                Blend.DestinationAlpha,
+                Blend.DestinationColor,
+                Blend.InverseBlendFactor,
+                Blend.InverseDestinationAlpha,
+                Blend.InverseDestinationColor,
+                Blend.InverseSourceAlpha,
+                Blend.InverseSourceColor,
+                Blend.One,
+                Blend.SourceAlpha,
+                Blend.SourceAlphaSaturation,
+                Blend.SourceColor,
+                Blend.Zero
+            };
+            var AlphaBlendFunctions = new List<BlendFunction>
+            {
+                BlendFunction.Add,
+            };
+            var ColorSourceBlends = new List<Blend>
+            {
+                Blend.BlendFactor,
+                Blend.DestinationAlpha,
+                Blend.DestinationColor,
+                Blend.InverseBlendFactor,
+                Blend.InverseDestinationAlpha,
+                Blend.InverseDestinationColor,
+                Blend.InverseSourceAlpha,
+                Blend.InverseSourceColor,
+                Blend.One,
+                Blend.SourceAlpha,
+                Blend.SourceAlphaSaturation,
+                Blend.SourceColor,
+                Blend.Zero
+            };
+            foreach (var ColorBlendFunction in ColorBlendFunctions)
+            {
+                foreach (var ColorDestinationBlend in ColorDestinationBlends)
+                {
+                    foreach (var AlphaSourceBlend in AlphaSourceBlends)
+                    {
+                        foreach (var AlphaDestinationBlend in AlphaDestinationBlends)
+                        {
+                            foreach (var AlphaBlendFunction in AlphaBlendFunctions)
+                            {
+                                foreach (var ColorSourceBlend in ColorSourceBlends)
+                                {
+                                    lightingBlendStates.Add(new BlendState
+                                    {
+                                        ColorBlendFunction = ColorBlendFunction,
+                                        ColorDestinationBlend = ColorDestinationBlend,
+                                        AlphaSourceBlend = AlphaSourceBlend,
+                                        AlphaDestinationBlend = AlphaDestinationBlend,
+                                        AlphaBlendFunction = AlphaBlendFunction,
+                                        ColorSourceBlend = ColorSourceBlend
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -118,6 +248,7 @@ namespace Generator
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
             Globals.Clock += 1;
 
             // Get input for character
@@ -150,16 +281,36 @@ namespace Generator
             effect.Projection = camera.Projection;
 
             // Pre-compute the lighting layer
-            GraphicsDevice.SetRenderTarget(renderTarget);
-            GraphicsDevice.Clear(new Color(new Vector4(0, 0, 0, 1)));
-            Drawing.DrawLight(new Vector2(55.5f, 56.5f), new Vector2(50, 50), Color.White);
+            GraphicsDevice.SetRenderTarget(shadowRenderTarget);
+            GraphicsDevice.Clear(Color.Black);
+
+            // Draw the light effects from each object into their own renderTargets
             foreach (var LightSource in Globals.GameObjects.ActiveGameObjects.Select(
-            i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
+                i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
             {
-                if (LightSource.Brightness.Length() != 0)
+                var brightness = 25 * LightSource.Brightness.Length();
+                if (brightness != 0)
                 {
+                    // Give it a unique renderTarget
+                    if (!lightingRenderTargets.ContainsKey(LightSource))
+                    {
+                        lightingRenderTargets[LightSource] = new RenderTarget2D(
+                            GraphicsDevice,
+                            GraphicsDevice.PresentationParameters.BackBufferWidth,
+                            GraphicsDevice.PresentationParameters.BackBufferHeight,
+                            false,
+                            GraphicsDevice.PresentationParameters.BackBufferFormat,
+                            DepthFormat.Depth24);
+                    }
+                    GraphicsDevice.SetRenderTarget(lightingRenderTargets[LightSource]);
+                    GraphicsDevice.Clear(Color.Transparent);
+
+                    // Draw the light
+                    Drawing.DrawLight(LightSource.Center, brightness, Color.White);
+
+                    // Draw the shadows
                     foreach (var Object in Globals.GameObjects.ActiveGameObjects.Select(
-                    i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
+                        i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
                     {
                         if (Object != LightSource)
                         {
@@ -177,10 +328,10 @@ namespace Generator
                     }
                 }
             }
-            GraphicsDevice.SetRenderTarget(null);
-            GraphicsDevice.Clear(Color.Transparent);
 
             // Draw the tile layer
+            GraphicsDevice.SetRenderTarget(tileRenderTarget);
+            GraphicsDevice.Clear(Color.Transparent);
             for (var x = (int)camera.ViewMinCoordinates().X; x < (int)camera.ViewMaxCoordinates().X; x++)
             {
                 for (var y = (int)camera.ViewMinCoordinates().Y; y < (int)camera.ViewMaxCoordinates().Y; y++)
@@ -189,13 +340,10 @@ namespace Generator
                 }
             }
 
-            // Draw the lighting layer
-            spriteBatch.Begin();
-            spriteBatch.Draw(renderTarget, new Rectangle(0, 0, (int)Globals.Resolution.X, (int)Globals.Resolution.Y), new Color(new Vector4(1, 1, 1, .5f)));
-            spriteBatch.End();
-
             // Draw the GameObjects
-            spriteBatch.Begin();
+            GraphicsDevice.SetRenderTarget(objectRenderTarget);
+            GraphicsDevice.Clear(Color.Transparent);
+            spriteBatch.Begin(blendState: BlendState.AlphaBlend);
             foreach (var Object in Globals.GameObjects.ActiveGameObjects.Select(
                 i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
             {
@@ -217,6 +365,34 @@ namespace Generator
                         Drawing.DrawResource(spriteBatch, Object.Electricity, Object.PartyNumber);
                 }
             }
+            spriteBatch.End();
+
+            // Pre-compute the lighting layer
+            GraphicsDevice.SetRenderTarget(shadowRenderTarget);
+            spriteBatch.Begin(blendState: lightingBlendState);
+            GraphicsDevice.Clear(Color.Black);
+            foreach (var lightingRenderTarget in lightingRenderTargets)
+            {
+                spriteBatch.Draw(lightingRenderTarget.Value, screenSize, new Color(new Vector4(1, 1, 1, 1f)));
+            }
+            spriteBatch.End();
+
+            // Draw the tile layer
+            GraphicsDevice.SetRenderTarget(null);
+            GraphicsDevice.Clear(Color.AliceBlue);
+            spriteBatch.Begin();
+            spriteBatch.Draw(tileRenderTarget, screenSize, Color.White);
+            spriteBatch.End();
+
+            // Draw the lighting layer
+            Globals.Log(Globals.Clock / 30);
+            spriteBatch.Begin(blendState: lightingBlendStates[2]);
+            spriteBatch.Draw(shadowRenderTarget, screenSize, new Color(new Vector4(1, 1, 1, .5f)));
+            spriteBatch.End();
+
+            // Draw the object layer
+            spriteBatch.Begin();
+            spriteBatch.Draw(objectRenderTarget, screenSize, Color.White);
 
             // Draw the selected objects in creative mode
             if (Globals.CreativeMode)

@@ -21,7 +21,8 @@ namespace Generator
                 weapon: new Weapon(
                     name: "Sword",
                     type: "Cut",
-                    damage: 10)));
+                    damage: 10),
+                brightness: Vector3.One));
 
             AddNewObject("angry terrain", new GameObject(
                 new Vector3(55, 56, 0),
