@@ -266,7 +266,10 @@ namespace Generator
             GraphicsDevice.Clear(Color.Black);
             foreach (var lightingRenderTarget in lightingRenderTargets)
             {
-                spriteBatch.Draw(lightingRenderTarget.Value, screenSize, new Color(lightingRenderTarget.Key.Brightness));
+                if (Globals.GameObjects.ActiveGameObjects.Contains(lightingRenderTarget.Key.Name))
+                {
+                    spriteBatch.Draw(lightingRenderTarget.Value, screenSize, new Color(lightingRenderTarget.Key.Brightness));
+                }
             }
             spriteBatch.End();
 
