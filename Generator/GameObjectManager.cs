@@ -27,7 +27,7 @@ namespace Generator
             AddNewObject("angry terrain", new GameObject(
                 new Vector3(55, 56, 0),
                 spriteFile: "Sprites/angry_boy", name: "angry terrain", 
-                brightness: Vector3.One));
+                brightness: new Vector3(.5f, .1f, .5f)));
             var terrain1 = ObjectFromName["angry terrain"];
             terrain1.Activate = delegate
             {

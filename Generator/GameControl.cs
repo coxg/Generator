@@ -22,8 +22,8 @@ namespace Generator
         public static RenderTarget2D objectRenderTarget;
         public static Dictionary<GameObject, RenderTarget2D> lightingRenderTargets = new Dictionary<GameObject, RenderTarget2D>();
         public static BlendState lightingBlendState;
+        public static BlendState lightingLayerBlendState;
         public static Rectangle screenSize = new Rectangle(0, 0, (int)Globals.Resolution.X, (int)Globals.Resolution.Y);
-        public static List<BlendState> lightingBlendStates = new List<BlendState>();
 
         // Player
         public SpriteBatch spriteBatch;
@@ -74,116 +74,9 @@ namespace Generator
                 false,
                 GraphicsDevice.PresentationParameters.BackBufferFormat,
                 DepthFormat.Depth24);
-            lightingBlendState = new BlendState
-            {
-                //ColorDestinationBlend = Blend.InverseSourceAlpha,
-                //ColorDestinationBlend = Blend.InverseSourceColor,
-                ColorDestinationBlend = Blend.InverseDestinationColor,
-                //ColorSourceBlend = Blend.BlendFactor,
-                //ColorBlendFunction = BlendFunction.ReverseSubtract
-                //ColorDestinationBlend = Blend.SourceAlphaSaturation
-            };
-            lightingBlendStates = new List<BlendState>();
-            var ColorBlendFunctions = new List<BlendFunction>
-            {
-                //BlendFunction.Subtract,
-                BlendFunction.Add,
-                //BlendFunction.ReverseSubtract
-            };
-            var ColorDestinationBlends = new List<Blend>
-            {
-                //Blend.DestinationAlpha, // Close
-                //Blend.DestinationColor,
-                //Blend.InverseBlendFactor,
-                Blend.InverseDestinationAlpha,
-                //Blend.InverseDestinationColor,
-                //Blend.InverseSourceAlpha,
-                //Blend.InverseSourceColor, // Spooky
-                //Blend.One, // Spooky
-                //Blend.SourceAlpha,
-                //Blend.SourceAlphaSaturation, // Spooky
-                //Blend.SourceColor,
-                //Blend.Zero
-            };
-            var AlphaSourceBlends = new List<Blend>
-            {
-                //Blend.BlendFactor,
-                Blend.DestinationAlpha,
-                Blend.DestinationColor,
-                Blend.InverseBlendFactor,
-                Blend.InverseDestinationAlpha,
-                Blend.InverseDestinationColor,
-                Blend.InverseSourceAlpha,
-                Blend.InverseSourceColor,
-                Blend.One,
-                Blend.SourceAlpha,
-                Blend.SourceAlphaSaturation,
-                Blend.SourceColor,
-                Blend.Zero
-            };
-            var AlphaDestinationBlends = new List<Blend>
-            {
-                Blend.BlendFactor,
-                Blend.DestinationAlpha,
-                Blend.DestinationColor,
-                Blend.InverseBlendFactor,
-                Blend.InverseDestinationAlpha,
-                Blend.InverseDestinationColor,
-                Blend.InverseSourceAlpha,
-                Blend.InverseSourceColor,
-                Blend.One,
-                Blend.SourceAlpha,
-                Blend.SourceAlphaSaturation,
-                Blend.SourceColor,
-                Blend.Zero
-            };
-            var AlphaBlendFunctions = new List<BlendFunction>
-            {
-                BlendFunction.Add,
-            };
-            var ColorSourceBlends = new List<Blend>
-            {
-                Blend.BlendFactor,
-                Blend.DestinationAlpha,
-                Blend.DestinationColor,
-                Blend.InverseBlendFactor,
-                Blend.InverseDestinationAlpha,
-                Blend.InverseDestinationColor,
-                Blend.InverseSourceAlpha,
-                Blend.InverseSourceColor,
-                Blend.One,
-                Blend.SourceAlpha,
-                Blend.SourceAlphaSaturation,
-                Blend.SourceColor,
-                Blend.Zero
-            };
-            foreach (var ColorBlendFunction in ColorBlendFunctions)
-            {
-                foreach (var ColorDestinationBlend in ColorDestinationBlends)
-                {
-                    foreach (var AlphaSourceBlend in AlphaSourceBlends)
-                    {
-                        foreach (var AlphaDestinationBlend in AlphaDestinationBlends)
-                        {
-                            foreach (var AlphaBlendFunction in AlphaBlendFunctions)
-                            {
-                                foreach (var ColorSourceBlend in ColorSourceBlends)
-                                {
-                                    lightingBlendStates.Add(new BlendState
-                                    {
-                                        ColorBlendFunction = ColorBlendFunction,
-                                        ColorDestinationBlend = ColorDestinationBlend,
-                                        AlphaSourceBlend = AlphaSourceBlend,
-                                        AlphaDestinationBlend = AlphaDestinationBlend,
-                                        AlphaBlendFunction = AlphaBlendFunction,
-                                        ColorSourceBlend = ColorSourceBlend
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            lightingBlendState = new BlendState { ColorDestinationBlend = Blend.InverseDestinationColor };
+            lightingLayerBlendState = new BlendState { ColorSourceBlend = Blend.DestinationColor };
+
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -373,7 +266,7 @@ namespace Generator
             GraphicsDevice.Clear(Color.Black);
             foreach (var lightingRenderTarget in lightingRenderTargets)
             {
-                spriteBatch.Draw(lightingRenderTarget.Value, screenSize, new Color(new Vector4(1, 1, 1, 1f)));
+                spriteBatch.Draw(lightingRenderTarget.Value, screenSize, new Color(lightingRenderTarget.Key.Brightness));
             }
             spriteBatch.End();
 
@@ -385,9 +278,8 @@ namespace Generator
             spriteBatch.End();
 
             // Draw the lighting layer
-            Globals.Log(Globals.Clock / 30);
-            spriteBatch.Begin(blendState: lightingBlendStates[2]);
-            spriteBatch.Draw(shadowRenderTarget, screenSize, new Color(new Vector4(1, 1, 1, .5f)));
+            spriteBatch.Begin(blendState: lightingLayerBlendState);
+            spriteBatch.Draw(shadowRenderTarget, screenSize, Color.White);
             spriteBatch.End();
 
             // Draw the object layer
