@@ -7,6 +7,25 @@ namespace Generator
     {
         public HashSet<string> ActiveGameObjects = new HashSet<string>();
 
+        void LogHealth(GameObject gameObject)
+        {
+            Globals.Log(gameObject.Health);
+        }
+
+        void WalkToPlayer(GameObject gameObject)
+            // TODO: Move these to their own AI file
+            // TODO: Why isn't this just Angle(gameObject, Player)? My angle logic seems fundamentally flawed if that's not the calculation
+        {
+            gameObject.Direction = -(float)MathTools.Angle(Globals.Player.Position, gameObject.Position) + MathHelper.PiOver2;
+            gameObject.MoveInDirection(gameObject.Direction);
+        }
+
+        void WalkAwayFromPlayer(GameObject gameObject)
+        {
+            gameObject.Direction = -(float)MathTools.Angle(gameObject.Position, Globals.Player.Position) + MathHelper.PiOver2;
+            gameObject.MoveInDirection(gameObject.Direction);
+        }
+
         public GameObjectManager()
         {
             // Set the name
@@ -27,7 +46,9 @@ namespace Generator
             AddNewObject("angry terrain", new GameObject(
                 new Vector3(55, 56, 0),
                 spriteFile: "Sprites/angry_boy", name: "angry terrain", 
-                brightness: new Vector3(.5f, .1f, .5f)));
+                brightness: new Vector3(.5f, .1f, .5f),
+                strength: 10, speed: 10, perception: 10,
+                ai: WalkToPlayer));
             var terrain1 = ObjectFromName["angry terrain"];
             terrain1.Activate = delegate
             {
@@ -44,10 +65,10 @@ namespace Generator
             };
 
             AddNewObject("medium terrain", new GameObject(
-                new Vector3(57, 59, 0), new Vector3(2, 1, 2), name: "medium terrain"));
+                new Vector3(57, 59, 0), new Vector3(2, 1, 2), name: "medium terrain", strength: 10, speed: 10, perception: 10));
 
             AddNewObject("big terrain", new GameObject(
-                new Vector3(60, 60, 0), new Vector3(5, 1, 5), name: "big terrain"));
+                new Vector3(60, 60, 0), new Vector3(5, 1, 5), name: "big terrain", strength: 10, speed: 10, perception: 10));
             var terrain3 = ObjectFromName["big terrain"];
             terrain3.Activate = delegate
             {

@@ -121,13 +121,12 @@ namespace Generator
             return Math.Atan2(deltaY, deltaX);
         }
 
-        // Gets the distance between two points
-        public static double Distance(Vector3 Point1, Vector3 Point2)
+        // Gets the location where a line between two points intersects the Z plane
+        public static Vector3 IntersectionLocation(Vector3 Point1, Vector3 Point2)
         {
-            return Math.Sqrt(
-                Math.Pow(Point2.X - Point1.X, 2)
-                + Math.Pow(Point2.Y - Point1.Y, 2)
-                + Math.Pow(Point2.Z - Point1.Z, 2));
+            var Direction = Point2 - Point1;
+            var Distance = Point1.Z / Direction.Z;
+            return Point1 + Direction * Distance;
         }
     }
 }

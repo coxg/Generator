@@ -11,11 +11,12 @@ namespace Generator
         public static List<Ability> GenerateDefaultAbilities(GameObject gameObject)
         {
             List<Ability> result = new List<Ability>
-                { CreateDefaultSprintAbility(gameObject),
-                  CreateDefaultAttackAbility(gameObject),
-                  CreateDefaultShootAbility(gameObject),
-                  Globals.CreativeMode ? CreatePlacementAbility(gameObject) : CreateDefaultAlwaysSprintAbility(gameObject)
-                };
+            {
+                CreateDefaultSprintAbility(gameObject),
+                CreateDefaultAttackAbility(gameObject),
+                CreateDefaultShootAbility(gameObject),
+                Globals.CreativeMode ? CreatePlacementAbility(gameObject) : CreateDefaultAlwaysSprintAbility(gameObject)
+            };
 
             return result;
         }
@@ -74,6 +75,12 @@ namespace Generator
 
         public static Ability CreateDefaultShootAbility(GameObject gameObject)
         {
+            void BulletAI(GameObject bullet)
+            {
+                bullet.MoveInDirection(bullet.Direction);
+                Globals.Log(bullet.Position);
+            }
+
             return new Ability(
                 "Shoot",
                 staminaCost: gameObject.EquippedWeapon.Weight + 10,
@@ -81,19 +88,16 @@ namespace Generator
                 {
                     gameObject.IsShooting = true;
 
-                    // Figure out which one you hit
-                    var target = gameObject.GetTargetInRange(gameObject.EquippedWeapon.Range + 20);
-
-                    // Deal damage
-                    if (target != null)
-                    {
-                        Globals.Log(gameObject + " shoots, hitting " + target + ".");
-                        gameObject.DealDamage(target, gameObject.EquippedWeapon.Damage + gameObject.Strength.CurrentValue);
-                    }
-                    else
-                    {
-                        Globals.Log(gameObject + " shoots and misses.");
-                    }
+                    Globals.GameObjects.AddNewObject(
+                        System.Guid.NewGuid().ToString(),
+                        new GameObject(
+                            position: gameObject.Position,
+                            direction: gameObject.Direction,
+                            speed: 10,
+                            ai: BulletAI,
+                            brightness: new Vector3(.5f, .1f, .5f)
+                        )
+                    );
                 }
             );
         }

@@ -23,7 +23,7 @@ namespace Generator
         public bool CanSee(Vector3 position)
         {
             var viewAngle = MathTools.Angle(Center, position);
-            var viewDistance = MathTools.Distance(Center, position);
+            var viewDistance = Vector3.Distance(Center, position);
 
             // Check each active gameObject
             foreach (var gameObjectName in Globals.GameObjects.ActiveGameObjects)
@@ -34,7 +34,7 @@ namespace Generator
                     var gameObject = Globals.GameObjects.ObjectFromName[gameObjectName];
 
                     // Make sure the object is between the two points
-                    if (MathTools.Distance(Center, gameObject.Center) + gameObject.Size.Length() / 4 < viewDistance)
+                    if (Vector3.Distance(Center, gameObject.Center) + gameObject.Size.Length() / 4 < viewDistance)
                     {
                         // Get the angles for each corner of the gameObject
                         var objectAngles = new double[4];

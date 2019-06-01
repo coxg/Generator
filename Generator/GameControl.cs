@@ -178,16 +178,16 @@ namespace Generator
             GraphicsDevice.Clear(Color.Black);
 
             // Draw the light effects from each object into their own renderTargets
-            foreach (var LightSource in Globals.GameObjects.ActiveGameObjects.Select(
+            foreach (var lightSource in Globals.GameObjects.ActiveGameObjects.Select(
                 i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
             {
-                var brightness = 25 * LightSource.Brightness.Length();
+                var brightness = 25 * lightSource.Brightness.Length();
                 if (brightness != 0)
                 {
                     // Give it a unique renderTarget
-                    if (!lightingRenderTargets.ContainsKey(LightSource))
+                    if (!lightingRenderTargets.ContainsKey(lightSource))
                     {
-                        lightingRenderTargets[LightSource] = new RenderTarget2D(
+                        lightingRenderTargets[lightSource] = new RenderTarget2D(
                             GraphicsDevice,
                             GraphicsDevice.PresentationParameters.BackBufferWidth,
                             GraphicsDevice.PresentationParameters.BackBufferHeight,
@@ -195,26 +195,27 @@ namespace Generator
                             GraphicsDevice.PresentationParameters.BackBufferFormat,
                             DepthFormat.Depth24);
                     }
-                    GraphicsDevice.SetRenderTarget(lightingRenderTargets[LightSource]);
+                    GraphicsDevice.SetRenderTarget(lightingRenderTargets[lightSource]);
                     GraphicsDevice.Clear(Color.Transparent);
 
                     // Draw the light
-                    Drawing.DrawLight(LightSource.Center, brightness, Color.White);
+                    Drawing.DrawLight(lightSource.Center, brightness, Color.White);
 
                     // Draw the shadows
                     foreach (var Object in Globals.GameObjects.ActiveGameObjects.Select(
                         i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
                     {
-                        if (Object != LightSource)
+                        if (Object != lightSource)
                         {
-                            var lightAngle = (float)MathTools.Angle(LightSource.Center, Object.Center);
+                            var lightAngle = (float)MathTools.Angle(lightSource.Center, Object.Center);
                             Object.Direction = MathTools.Mod(-Object.Direction - lightAngle + MathHelper.PiOver2, MathHelper.TwoPi);
                             foreach (var component in Object.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
                             {
                                 Drawing.DrawComponentShadow(
                                     component.Value,
                                     Object.Size * component.Value.Size,
-                                    lightAngle);
+                                    lightAngle,
+                                    lightSource);
                             }
                             Object.Direction = MathTools.Mod(-Object.Direction - lightAngle + MathHelper.PiOver2, MathHelper.TwoPi);
                         }

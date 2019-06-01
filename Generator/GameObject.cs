@@ -16,6 +16,7 @@ namespace Generator
 
         // Sprites
         public Dictionary<string, Component> ComponentDictionary;
+        public override Texture2D Sprite { get; set; }
 
         // Toggleables
         private bool _isWalking;
@@ -84,11 +85,13 @@ namespace Generator
         public Attribute Speed;
         public Attribute Weight; // Roughly in pounds
 
-        // ...Other Attributes
+        // Brightness
+        public Vector3 RelativeLightPosition = Vector3.Zero;
+        public Vector3 Brightness;
+
+        // Growth
         public int Level;
         public int Experience;
-        public Vector3 Brightness;
-        public override Texture2D Sprite { get; set; }
 
         // Abilities
         private List<Ability> _abilities;
@@ -114,6 +117,7 @@ namespace Generator
         // Interaction
         public int PartyNumber;
         public Action Activate;
+        public Action<GameObject> AI;
 
         // Equipment
         private Weapon _equippedWeapon =  new Weapon();
@@ -251,6 +255,7 @@ namespace Generator
 
             // Interaction
             int partyNumber = -1,
+            Action<GameObject> ai = null,
 
             // Equipment
             Weapon weapon = null,
@@ -307,6 +312,7 @@ namespace Generator
             {
                 if (this.Name != null) Say("This is just a " + this.Name + ".");
             };
+            this.AI = ai;
 
             // Grid logic
             this.Size = size ?? Vector3.One;
@@ -493,6 +499,9 @@ namespace Generator
         // What to do on each frame
         public void Update()
         {
+            // Perform whatever actions the object wants to perform
+            AI?.Invoke(this);
+
             // Update resources
             Health.Update();
             Stamina.Update();

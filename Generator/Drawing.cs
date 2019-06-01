@@ -151,11 +151,11 @@ namespace Generator
                 .05f);
         }
 
-        public static void DrawComponentShadow(
-                Component component,
-                Vector3 size,
-                float direction)
-        // This should be used to draw shadows for character components.
+        public static VertexPositionColorTexture[] GetComponentVertices(
+            Component component, 
+            Vector3 size, 
+            Vector3 normalizationDirection, 
+            Vector3 normalizationOffset)
         {
             var vertices = new VertexPositionColorTexture[6];
             var bottomLeft = component.Position;
@@ -164,16 +164,6 @@ namespace Generator
                 component.RotationOffset,
                 Vector3.Zero,
                 new Vector3(0, 0, component.Direction));
-
-            var normalizationDirection = new Vector3(-MathHelper.PiOver2, 0, direction + MathHelper.PiOver2);
-            var normalizationOffset = MathTools.PointRotatedAroundPoint(
-                Vector3.Zero,
-                new Vector3(component.SourceObject.Size.X / 2, 0, -component.SourceObject.Size.Z / 2),
-                new Vector3(0, 0, direction));
-            normalizationOffset += new Vector3(
-                -component.SourceObject.Size.X / 2,
-                component.SourceObject.Size.Z / 4 - .25f,
-                0);
 
             // Bottom left
             vertices[0].Position = MathTools.PointRotatedAroundPoint(
@@ -237,6 +227,28 @@ namespace Generator
             vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
             vertices[4].TextureCoordinate = new Vector2(0, 0);
             vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
+
+            return vertices;
+        }
+
+        public static void DrawComponentShadow(
+                Component component,
+                Vector3 size,
+                float direction,
+                GameObject lightSource)
+        // This should be used to draw shadows for character components.
+        // TODO: Use the lightSource's position to calculate shadow size/fade/blur/whatever
+        {
+            var normalizationDirection = new Vector3(-MathHelper.PiOver2, 0, direction + MathHelper.PiOver2);
+            var normalizationOffset = MathTools.PointRotatedAroundPoint(
+                Vector3.Zero,
+                new Vector3(component.SourceObject.Size.X / 2, 0, component.SourceObject.Size.Z / 4 - .25f / 2),
+                new Vector3(0, 0, direction));
+            normalizationOffset += new Vector3(
+                -component.SourceObject.Size.X / 2,
+                component.SourceObject.Size.Z / 4 - .25f,
+                0);
+            var vertices = GetComponentVertices(component, size, normalizationDirection, normalizationOffset);
 
             // Null out color and position
             for (var vertexIndex = 0; vertexIndex < 6; vertexIndex++)
@@ -261,79 +273,11 @@ namespace Generator
             // This should be used to draw characters.
             // These should be able to move, rotate, etc.
         {
-            var vertices = new VertexPositionColorTexture[6];
-            var bottomLeft = component.Position;
-            var rotationPoint = bottomLeft + component.RotationPoint;
-            var rotationDirection = MathTools.PointRotatedAroundPoint(
-                component.RotationOffset,
-                new Vector3(0, 0, 0),
-                new Vector3(0, 0, component.Direction));
-
-            var normalizationDirection = new Vector3(-.5f, 0, 0);
-            var normalizationOffset = new Vector3(0, component.SourceObject.Size.Z / 4 - .25f, 0);
-
-            // Bottom left
-            vertices[0].Position = MathTools.PointRotatedAroundPoint(
-                bottomLeft,
-                rotationPoint,
-                rotationDirection);
-            vertices[0].Position = MathTools.PointRotatedAroundPoint(
-                vertices[0].Position,
-                component.SourceObject.Center,
-                normalizationDirection);
-            vertices[0].Position += normalizationOffset;
-
-            // Top left
-            vertices[1].Position = MathTools.PointRotatedAroundPoint(
-                new Vector3(
-                    bottomLeft.X,
-                    bottomLeft.Y,
-                    bottomLeft.Z + size.Z),
-                rotationPoint,
-                rotationDirection);
-            vertices[1].Position = MathTools.PointRotatedAroundPoint(
-                vertices[1].Position,
-                component.SourceObject.Center,
-                normalizationDirection);
-            vertices[1].Position += normalizationOffset;
-
-            // Bottom right
-            vertices[2].Position = MathTools.PointRotatedAroundPoint(
-                new Vector3(
-                    bottomLeft.X + size.X,
-                    bottomLeft.Y,
-                    bottomLeft.Z),
-                rotationPoint,
-                rotationDirection);
-            vertices[2].Position = MathTools.PointRotatedAroundPoint(
-                vertices[2].Position,
-                component.SourceObject.Center,
-                normalizationDirection);
-            vertices[2].Position += normalizationOffset;
-            vertices[3].Position = vertices[1].Position;
-
-            // Top right
-            vertices[4].Position = MathTools.PointRotatedAroundPoint(
-                new Vector3(
-                    bottomLeft.X + size.X,
-                    bottomLeft.Y,
-                    bottomLeft.Z + size.Z),
-                rotationPoint,
-                rotationDirection);
-            vertices[4].Position = MathTools.PointRotatedAroundPoint(
-                vertices[4].Position,
-                component.SourceObject.Center,
-                normalizationDirection);
-            vertices[4].Position += normalizationOffset;
-            vertices[5].Position = vertices[2].Position;
-
-            // Generate the texture coordinates
-            vertices[0].TextureCoordinate = new Vector2(1, 1);
-            vertices[1].TextureCoordinate = new Vector2(1, 0);
-            vertices[2].TextureCoordinate = new Vector2(0, 1);
-            vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
-            vertices[4].TextureCoordinate = new Vector2(0, 0);
-            vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
+            var vertices = GetComponentVertices(
+                component, 
+                size, 
+                new Vector3(-.5f, 0, 0), 
+                new Vector3(0, component.SourceObject.Size.Z / 4 - .25f, 0));
 
             // Generate shadow gradients by calculating brightness at each vertex
             var leftBrightness = new Color(GetBrightness(
