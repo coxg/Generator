@@ -157,7 +157,8 @@ namespace Generator
             Vector3 normalizationDirection, 
             Vector3 normalizationOffset)
         {
-            var vertices = new VertexPositionColorTexture[6];
+            //var vertices = new VertexPositionColorTexture[6];
+            var vertices = commonVertices["Light"];
             var bottomLeft = component.Position;
             var rotationPoint = bottomLeft + component.RotationPoint;
             var rotationDirection = MathTools.PointRotatedAroundPoint(
@@ -219,14 +220,6 @@ namespace Generator
                 normalizationDirection);
             vertices[4].Position += normalizationOffset;
             vertices[5].Position = vertices[2].Position;
-
-            // Generate the texture coordinates
-            vertices[0].TextureCoordinate = new Vector2(1, 1);
-            vertices[1].TextureCoordinate = new Vector2(1, 0);
-            vertices[2].TextureCoordinate = new Vector2(0, 1);
-            vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
-            vertices[4].TextureCoordinate = new Vector2(0, 0);
-            vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
 
             return vertices;
         }
@@ -464,7 +457,7 @@ namespace Generator
                 Color color)
         {
             // Generate the vertices
-            var vertices = new VertexPositionColorTexture[6];
+            var vertices = commonVertices["Bottom"];
 
             // Bottom left
             var bottomLeft = position - Vector3.One * size / 2;
@@ -480,14 +473,6 @@ namespace Generator
             // Top right
             vertices[4].Position = new Vector3(bottomLeft.X + size, bottomLeft.Y + size, 0);
             vertices[5].Position = vertices[2].Position;
-
-            // Get the texture coordinates
-            vertices[0].TextureCoordinate = new Vector2(0, 1); // Bottom left
-            vertices[1].TextureCoordinate = new Vector2(0, 0); // Top left
-            vertices[2].TextureCoordinate = new Vector2(1, 1); // Bottom right
-            vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
-            vertices[4].TextureCoordinate = new Vector2(1, 0); // Top right
-            vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
 
             // Set the colors to white - the shadows will lay over this
             for (var i = 0; i < 6; i++)
@@ -505,32 +490,11 @@ namespace Generator
             }
         }
 
-        // Draws a single layer of a tile
-        public static void DrawTileLayer(
-                string tileName,
-                Vector2 bottomLeft,
-                string bottomSide = "Bottom",
-                float opacity = 1)
+        public static VertexPositionColorTexture[] GetVertices(string side, Color color)
         {
-            // Generate the vertices
             var vertices = new VertexPositionColorTexture[6];
 
-            // Bottom left
-            vertices[0].Position = new Vector3(bottomLeft.X, bottomLeft.Y, 0);
-
-            // Top left
-            vertices[1].Position = new Vector3(bottomLeft.X, bottomLeft.Y + 1, 0);
-
-            // Bottom right
-            vertices[2].Position = new Vector3(bottomLeft.X + 1, bottomLeft.Y, 0);
-            vertices[3].Position = vertices[1].Position;
-
-            // Top right
-            vertices[4].Position = new Vector3(bottomLeft.X + 1, bottomLeft.Y + 1, 0);
-            vertices[5].Position = vertices[2].Position;
-
-            // Generate the texture coordinates
-            switch (bottomSide)
+            switch (side)
             {
                 case "Bottom":
                     vertices[0].TextureCoordinate = new Vector2(0, 1); // Bottom left
@@ -564,13 +528,57 @@ namespace Generator
                     vertices[4].TextureCoordinate = new Vector2(1, 1); // Top right
                     vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
                     break;
+                case "Light":
+                    vertices[0].TextureCoordinate = new Vector2(1, 1); // Bottom left
+                    vertices[1].TextureCoordinate = new Vector2(1, 0); // Top left
+                    vertices[2].TextureCoordinate = new Vector2(0, 1); // Bottom right
+                    vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
+                    vertices[4].TextureCoordinate = new Vector2(0, 0); // Top right
+                    vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
+                    break;
             }
 
             // Set the colors to white - the shadows will lay over this
             for (var i = 0; i < 6; i++)
             {
-                vertices[i].Color = Color.White;
+                vertices[i].Color = color;
             }
+
+            return vertices;
+        }
+
+        public static Dictionary<string, VertexPositionColorTexture[]> commonVertices = new Dictionary<string, VertexPositionColorTexture[]>()
+        {
+            { "Bottom", GetVertices("Bottom", Color.White) },
+            { "Top", GetVertices("Top", Color.White) },
+            { "Left", GetVertices("Left", Color.White) },
+            { "Right", GetVertices("Right", Color.White) },
+            { "Light", GetVertices("Light", Color.White) },
+        };
+
+        // Draws a single layer of a tile
+        public static void DrawTileLayer(
+                string tileName,
+                Vector2 bottomLeft,
+                string bottomSide = "Bottom",
+                float opacity = 1)
+        {
+            // Generate the vertices
+            var vertices = commonVertices[bottomSide];
+
+            // Bottom left
+            vertices[0].Position = new Vector3(bottomLeft.X, bottomLeft.Y, 0);
+
+            // Top left
+            vertices[1].Position = new Vector3(bottomLeft.X, bottomLeft.Y + 1, 0);
+
+            // Bottom right
+            vertices[2].Position = new Vector3(bottomLeft.X + 1, bottomLeft.Y, 0);
+            vertices[3].Position = vertices[1].Position;
+
+            // Top right
+            vertices[4].Position = new Vector3(bottomLeft.X + 1, bottomLeft.Y + 1, 0);
+            vertices[5].Position = vertices[2].Position;
 
             // Draw it
             GameControl.effect.Texture = Globals.Tiles.ObjectFromName[tileName].Sprite;

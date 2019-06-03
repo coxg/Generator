@@ -50,6 +50,8 @@ namespace Generator
         /// </summary>
         protected override void Initialize()
         {
+            // Create common vertices for reuse
+
             // Set up the GraphicsDevice, which is used for all drawing
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
@@ -76,7 +78,6 @@ namespace Generator
                 DepthFormat.Depth24);
             lightingBlendState = new BlendState { ColorDestinationBlend = Blend.InverseDestinationColor };
             lightingLayerBlendState = new BlendState { ColorSourceBlend = Blend.DestinationColor };
-
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
