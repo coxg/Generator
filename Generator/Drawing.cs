@@ -158,7 +158,7 @@ namespace Generator
             Vector3 normalizationOffset)
         {
             //var vertices = new VertexPositionColorTexture[6];
-            var vertices = commonVertices["Light"];
+            var vertices = commonVertices["Component"];
             var bottomLeft = component.Position;
             var rotationPoint = bottomLeft + component.RotationPoint;
             var rotationDirection = MathTools.PointRotatedAroundPoint(
@@ -235,11 +235,11 @@ namespace Generator
             var normalizationDirection = new Vector3(-MathHelper.PiOver2, 0, direction + MathHelper.PiOver2);
             var normalizationOffset = MathTools.PointRotatedAroundPoint(
                 Vector3.Zero,
-                new Vector3(component.SourceObject.Size.X / 2, 0, component.SourceObject.Size.Z / 4 - .25f / 2),
+                new Vector3(component.SourceObject.Size.X / 2, 0, 0),
                 new Vector3(0, 0, direction));
             normalizationOffset += new Vector3(
                 -component.SourceObject.Size.X / 2,
-                component.SourceObject.Size.Z / 4 - .25f,
+                -component.SourceObject.Size.Z / 2,
                 0);
             var vertices = GetComponentVertices(component, size, normalizationDirection, normalizationOffset);
 
@@ -269,8 +269,8 @@ namespace Generator
             var vertices = GetComponentVertices(
                 component, 
                 size, 
-                new Vector3(-.5f, 0, 0), 
-                new Vector3(0, component.SourceObject.Size.Z / 4 - .25f, 0));
+                new Vector3(-MathHelper.PiOver2, 0, 0), 
+                Vector3.Zero);
 
             // Generate shadow gradients by calculating brightness at each vertex
             var leftBrightness = new Color(GetBrightness(
@@ -283,6 +283,12 @@ namespace Generator
             vertices[3].Color = leftBrightness;
             vertices[4].Color = rightBrightness;
             vertices[5].Color = rightBrightness;
+
+            // Null out color and position
+            for (var vertexIndex = 0; vertexIndex < 6; vertexIndex++)
+            {
+                vertices[vertexIndex].Position.Z = 0;
+            }
 
             // Draw it
             GameControl.effect.Texture = component.Sprite;
@@ -528,7 +534,7 @@ namespace Generator
                     vertices[4].TextureCoordinate = new Vector2(1, 1); // Top right
                     vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
                     break;
-                case "Light":
+                case "Component":
                     vertices[0].TextureCoordinate = new Vector2(1, 1); // Bottom left
                     vertices[1].TextureCoordinate = new Vector2(1, 0); // Top left
                     vertices[2].TextureCoordinate = new Vector2(0, 1); // Bottom right
@@ -553,7 +559,7 @@ namespace Generator
             { "Top", GetVertices("Top", Color.White) },
             { "Left", GetVertices("Left", Color.White) },
             { "Right", GetVertices("Right", Color.White) },
-            { "Light", GetVertices("Light", Color.White) },
+            { "Component", GetVertices("Component", Color.White) },
         };
 
         // Draws a single layer of a tile

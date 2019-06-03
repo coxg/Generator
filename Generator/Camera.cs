@@ -57,8 +57,8 @@ namespace Generator
         {
             Position = new Vector3(
                 Globals.Player.Center.X,
-                Globals.Player.Center.Y - 10,
-                Globals.Player.Center.Z + 10);
+                Globals.Player.Center.Y - 1.00001f,
+                Globals.Player.Center.Z + 20);
             Target = new Vector3(
                 Globals.Player.Center.X,
                 Globals.Player.Center.Y - 1,
@@ -67,12 +67,12 @@ namespace Generator
 
         public Vector2 ViewMinCoordinates()
         {
-            return new Vector2(Position.X - 17, Position.Y + 2);
+            return new Vector2(Position.X - 15, Position.Y - 9);
         }
 
         public Vector2 ViewMaxCoordinates()
         {
-            return new Vector2(Position.X + 17, Position.Y + 2 * Position.Z + 2);
+            return new Vector2(Position.X + 15, Position.Y + 10);
         }
     }
 }
