@@ -26,12 +26,11 @@ namespace Generator
             var viewDistance = Vector3.Distance(Center, position);
 
             // Check each active gameObject
-            foreach (var gameObjectName in Globals.GameObjects.ActiveGameObjects)
+            foreach (var gameObject in Globals.GameObjects.ObjectFromName.Values)
             {
                 // Make sure it's not this object
-                if (gameObjectName != Name)
+                if (gameObject != this)
                 {
-                    var gameObject = Globals.GameObjects.ObjectFromName[gameObjectName];
 
                     // Make sure the object is between the two points
                     if (Vector3.Distance(Center, gameObject.Center) + gameObject.Size.Length() / 4 < viewDistance)

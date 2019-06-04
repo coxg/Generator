@@ -128,5 +128,11 @@ namespace Generator
             var Distance = Point1.Z / Direction.Z;
             return Point1 + Direction * Distance;
         }
+
+        // The distance between two points
+        public static float Distance(Vector3 Point1, Vector3 Point2)
+        {
+            return (Point1 - Point2).Length();
+        }
     }
 }

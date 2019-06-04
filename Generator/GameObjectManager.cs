@@ -5,7 +5,6 @@ namespace Generator
 {
     public class GameObjectManager : Manager<GameObject>
     {
-        public HashSet<string> ActiveGameObjects = new HashSet<string>();
 
         void LogHealth(GameObject gameObject)
         {
@@ -31,9 +30,6 @@ namespace Generator
             // Set the name
             Name = "GameObjects";
 
-            // Create the objects - default comes first
-            AddNewObject("", null);
-
             AddNewObject("Niels", new GameObject(
                 new Vector3(50, 50, 0), stamina: 100, strength: 10, speed: 10, perception: 10,
                 name: "Niels", partyNumber: 0,
@@ -56,7 +52,15 @@ namespace Generator
                 {
                     terrain1.Say("Check it out, I do something weird!");
                     terrain1.Say("Did you see how weird that was?!");
-                    ObjectFromName["big terrain"].AddToGrid();
+
+                    AddNewObject("big terrain", new GameObject(
+                    new Vector3(60, 60, 0), new Vector3(5, 1, 5), name: "big terrain", strength: 10, speed: 10, perception: 10));
+                    var terrain3 = ObjectFromName["big terrain"];
+                    terrain3.Activate = delegate
+                    {
+                        terrain3.Say("I don't do anything weird.");
+                        terrain3.Say("...I'm just really fat.");
+                    };
                 }
                 else
                 {
@@ -66,15 +70,6 @@ namespace Generator
 
             AddNewObject("medium terrain", new GameObject(
                 new Vector3(57, 59, 0), new Vector3(2, 1, 2), name: "medium terrain", strength: 10, speed: 10, perception: 10));
-
-            AddNewObject("big terrain", new GameObject(
-                new Vector3(60, 60, 0), new Vector3(5, 1, 5), name: "big terrain", strength: 10, speed: 10, perception: 10));
-            var terrain3 = ObjectFromName["big terrain"];
-            terrain3.Activate = delegate
-            {
-                terrain3.Say("I don't do anything weird.");
-                terrain3.Say("...I'm just really fat.");
-            };
 
             // Populate the Acres
             PopulateAcres();

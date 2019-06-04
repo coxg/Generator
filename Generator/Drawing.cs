@@ -17,9 +17,8 @@ namespace Generator
             // TODO: Rather than looping through all objects for each tile, 
             // create a mapping layer for brightness which gets computed on each
             // update.
-            foreach (var gameObjectName in Globals.GameObjects.ActiveGameObjects)
+            foreach (var gameObject in Globals.GameObjects.ObjectFromName.Values)
             {
-                var gameObject = Globals.GameObjects.ObjectFromName[gameObjectName];
                 var objectDistance = Math.Sqrt(
                     Math.Pow(gameObject.Center.X - x, 2) + Math.Pow(gameObject.Center.Y - y, 2));
 

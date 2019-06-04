@@ -5,6 +5,7 @@ namespace Generator
 {
     public class Manager <T>
     {
+        // TODO: This shouldn't be by name - what if the player names their character something that's already in here?
         public Dictionary<string, T> ObjectFromName = new Dictionary<string, T>();
         public Dictionary<int, string> NameFromIndex = new Dictionary<int, string>();
         public Dictionary<string, int> IndexFromName = new Dictionary<string, int>();
@@ -39,6 +40,7 @@ namespace Generator
         }
 
         // Gets the index of the object at the location
+        // TODO: Negative indices aren't a thing, so I need to wrap around manually. What should the max distance be?
         public int GetIndex(int x, int y)
         {
             var acre = Acres[AcreX(x), AcreY(y)];
@@ -75,6 +77,15 @@ namespace Generator
             NameFromIndex.Add(Count, Name);
             IndexFromName.Add(Name, Count);
             Count += 1;
+        }
+
+        // Removes an object from the mappings
+        // NOTE: This doesn't impact the count, as this would cause us to overwrite existing values
+        // TODO: Make this impact the count, as that will probably cause some headaches in the future
+        public void RemoveObject(string Name)
+        {
+            ObjectFromName.Remove(Name);
+            IndexFromName.Remove(Name);
         }
 
         // Initially loads in the acres

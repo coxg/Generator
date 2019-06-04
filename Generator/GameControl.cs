@@ -94,13 +94,10 @@ namespace Generator
 
             // Create player
             Globals.Player = Globals.GameObjects.ObjectFromName["Niels"];
-            Globals.Player.AddToGrid();
 
             // Create terrain
             terrain1 = Globals.GameObjects.ObjectFromName["angry terrain"];
             terrain2 = Globals.GameObjects.ObjectFromName["medium terrain"];
-            terrain1.AddToGrid();
-            terrain2.AddToGrid();
 
             base.Initialize();
         }
@@ -149,8 +146,8 @@ namespace Generator
             Input.GetInput(Globals.Player);
 
             // Update the GameObjects
-            foreach (var ObjectName in new HashSet<string>(Globals.GameObjects.ActiveGameObjects))
-                Globals.GameObjects.ObjectFromName[ObjectName].Update();
+            foreach (var gameObject in Globals.GameObjects.ObjectFromName.Values)
+                gameObject.Update();
 
             // TODO: Why is this broken? 
             // Until fixed, I won't be able to move outside of the starting acres
@@ -179,8 +176,7 @@ namespace Generator
             GraphicsDevice.Clear(Color.Black);
 
             // Draw the light effects from each object into their own renderTargets
-            foreach (var lightSource in Globals.GameObjects.ActiveGameObjects.Select(
-                i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
+            foreach (var lightSource in Globals.GameObjects.ObjectFromName.Values.OrderBy(i => -i.Position.Y))
             {
                 var brightness = 25 * lightSource.Brightness.Length();
                 if (brightness != 0)
@@ -203,8 +199,7 @@ namespace Generator
                     Drawing.DrawLight(lightSource.Center, brightness, Color.White);
 
                     // Draw the shadows
-                    foreach (var Object in Globals.GameObjects.ActiveGameObjects.Select(
-                        i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
+                    foreach (var Object in Globals.GameObjects.ObjectFromName.Values.OrderBy(i => -i.Position.Y))
                     {
                         if (Object != lightSource)
                         {
@@ -239,8 +234,7 @@ namespace Generator
             GraphicsDevice.SetRenderTarget(objectRenderTarget);
             GraphicsDevice.Clear(Color.Transparent);
             spriteBatch.Begin(blendState: BlendState.AlphaBlend);
-            foreach (var Object in Globals.GameObjects.ActiveGameObjects.Select(
-                i => Globals.GameObjects.ObjectFromName[i]).OrderBy(i => -i.Position.Y))
+            foreach (var Object in Globals.GameObjects.ObjectFromName.Values.OrderBy(i => -i.Position.Y))
             {
                 // Draw components for the object
                 foreach (var component in Object.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
@@ -268,7 +262,7 @@ namespace Generator
             GraphicsDevice.Clear(Color.Black);
             foreach (var lightingRenderTarget in lightingRenderTargets)
             {
-                if (Globals.GameObjects.ActiveGameObjects.Contains(lightingRenderTarget.Key.Name))
+                if (Globals.GameObjects.ObjectFromName.Keys.Contains(lightingRenderTarget.Key.Name))
                 {
                     spriteBatch.Draw(lightingRenderTarget.Value, screenSize, new Color(lightingRenderTarget.Key.Brightness));
                 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -62,14 +63,7 @@ namespace Generator
             {
                 if (CanMoveTo(value))
                 {
-                    // Null out all previous locations
-                    RemoveFromGrid();
-
-                    // Assing new attributes for object
                     _Position = value;
-
-                    // Assign all new locations
-                    AddToGrid();
                 }
             }
         }
@@ -312,7 +306,7 @@ namespace Generator
             {
                 if (this.Name != null) Say("This is just a " + this.Name + ".");
             };
-            this.AI = ai;
+            this.AI = ai; // Run on each Update
 
             // Grid logic
             this.Size = size ?? Vector3.One;
@@ -514,44 +508,10 @@ namespace Generator
             foreach (var ability in Abilities) ability.Update();
         }
 
-        // Populates grid with self.
-        public void AddToGrid()
-        {
-            // So we're drawn
-            Globals.GameObjects.ActiveGameObjects.Add(Name);
-
-            // So we have collision
-            for (var eachX = (int) Math.Floor(_Position.X);
-                    eachX <= Math.Ceiling(_Position.X + Size.X - 1);
-                    eachX++)
-                for (var eachY = (int) Math.Floor(_Position.Y);
-                        eachY <= Math.Ceiling(_Position.Y + Size.Y - 1);
-                        eachY++)
-                    Globals.GameObjects.Set(eachX, eachY, Name);
-        }
-
-        // Removes self from grid.
-        public void RemoveFromGrid()
-        {
-            // So we're no longer drawn
-            Globals.GameObjects.ActiveGameObjects.Remove(Name);
-
-            // So we no longer have collision
-            for (var eachX = (int) Math.Floor(_Position.X);
-                    eachX <= Math.Ceiling(_Position.X + Size.X - 1);
-                    eachX++)
-                for (var eachY = (int) Math.Floor(_Position.Y);
-                        eachY <= Math.Ceiling(_Position.Y + Size.Y - 1);
-                        eachY++)
-                    Globals.GameObjects.Set(eachX, eachY, "");
-        }
-
         // Plays death animation and despawns
         public void Die()
         {
-
-            // Remove self from grid
-            RemoveFromGrid();
+            Globals.GameObjects.RemoveObject(Name);
 
             // TODO: Drop equipment + inventory
             Globals.Log(this + " has passed away. RIP.");
@@ -592,7 +552,7 @@ namespace Generator
                 (int)Math.Round(_Position.Y + (range + Size.Y / 2) * offsets.Y));
         }
 
-        // Gets whichever object is [distance] away in the current direction
+        // Gets whichever object is exactly [distance] away in the current direction
         public GameObject GetTarget(float range = 1, float? direction = null)
         {
             var targetCoordinates = GetTargetCoordinates(range, direction);
@@ -659,24 +619,21 @@ namespace Generator
         // See if we can move to a location
         public bool CanMoveTo(Vector3 position)
         {
-            // See if any of the locations we'd occupy are already filled
-            for (var eachX = (int)Math.Floor(position.X);
-                    eachX <= Math.Ceiling(position.X + Size.X - 1);
-                    eachX++)
+            // See if we would overlap with any other objects
+            var thisArea = new RectangleF(position.X, position.Y, Size.X, Size.Y);
+            foreach (var gameObject in Globals.GameObjects.ObjectFromName.Values)
             {
-                for (var eachY = (int)Math.Floor(position.Y);
-                        eachY <= Math.Ceiling(position.Y + Size.Y - 1);
-                        eachY++)
+                if (gameObject != this)
                 {
-                    var objectAtLocation = Globals.GameObjects.Get(eachX, eachY);
-                    if (objectAtLocation != null && objectAtLocation != this)
+                    var otherArea = new RectangleF(gameObject.Position.X, gameObject.Position.Y, gameObject.Size.X, gameObject.Size.Y);
+                    if (thisArea.IntersectsWith(otherArea))
                     {
                         return false;
                     }
                 }
             }
 
-            // If none of them are filled then we're clear to move
+            // If not then we're clear to move
             return true;
         }
     }
