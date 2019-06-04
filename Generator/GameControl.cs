@@ -146,7 +146,7 @@ namespace Generator
             Input.GetInput(Globals.Player);
 
             // Update the GameObjects
-            foreach (var gameObject in Globals.GameObjects.ObjectFromName.Values)
+            foreach (var gameObject in Globals.GameObjects.ObjectFromName.Values.ToList())
                 gameObject.Update();
 
             // TODO: Why is this broken? 

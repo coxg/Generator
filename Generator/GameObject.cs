@@ -546,20 +546,30 @@ namespace Generator
         // Gets the coordinates at the range specified
         public Vector2 GetTargetCoordinates(float range = 1, float? direction = null)
         {
-            var offsets = MathTools.OffsetFromRadians(direction ?? Direction);
-            return new Vector2(
-                (int)Math.Round(_Position.X + (range + Size.X / 2) * offsets.X),
-                (int)Math.Round(_Position.Y + (range + Size.Y / 2) * offsets.Y));
+            var offsets = MathTools.OffsetFromRadians(direction ?? Direction) * range;
+            var target = new Vector2(Center.X + offsets.X, Center.Y + offsets.Y);
+            return target;
         }
 
         // Gets whichever object is exactly [distance] away in the current direction
         public GameObject GetTarget(float range = 1, float? direction = null)
         {
-            var targetCoordinates = GetTargetCoordinates(range, direction);
-            var targettedObject = Globals.GameObjects.Get(
-                (int)targetCoordinates.X,
-                (int)targetCoordinates.Y);
-            return targettedObject;
+            // See if we would overlap with any other objects
+            var target = GetTargetCoordinates(range, direction);
+            foreach (var gameObject in Globals.GameObjects.ObjectFromName.Values)
+            {
+                if (gameObject != this)
+                {
+                    var otherArea = new RectangleF(gameObject.Position.X, gameObject.Position.Y, gameObject.Size.X, gameObject.Size.Y);
+                    if (otherArea.Contains(target.X, target.Y))
+                    {
+                        return gameObject;
+                    }
+                }
+            }
+
+            // If not then we're clear to move
+            return null;
         }
 
         // Gets whichever object is [distance] away or closer in the current direction
