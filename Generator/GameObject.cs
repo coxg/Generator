@@ -544,10 +544,11 @@ namespace Generator
         }
 
         // Gets the coordinates at the range specified
-        public Vector2 GetTargetCoordinates(float range = 1, float? direction = null)
+        public Vector3 GetTargetCoordinates(float range = 1, float? direction = null)
         {
             var offsets = MathTools.OffsetFromRadians(direction ?? Direction) * range;
-            var target = new Vector2(Center.X + offsets.X, Center.Y + offsets.Y);
+            var center = Center;
+            var target = new Vector3(center.X + offsets.X, center.Y + offsets.Y, center.Z);
             return target;
         }
 

@@ -78,22 +78,22 @@ namespace Generator
             void BulletAI(GameObject bullet)
             {
                 bullet.MoveInDirection(bullet.Direction);
-                Globals.Log(bullet.Position);
             }
 
             return new Ability(
                 "Shoot",
-                staminaCost: gameObject.EquippedWeapon.Weight + 10,
+                staminaCost: 0, // gameObject.EquippedWeapon.Weight + 10,
                 start: delegate
                 {
                     gameObject.IsShooting = true;
-
+                    var name = System.Guid.NewGuid().ToString();
                     Globals.GameObjects.AddNewObject(
-                        System.Guid.NewGuid().ToString(),
+                        name,
                         new GameObject(
-                            position: gameObject.Position,
+                            name: name,
+                            position: gameObject.GetTargetCoordinates(1.5f),
                             direction: gameObject.Direction,
-                            speed: 10,
+                            speed: 100,
                             ai: BulletAI,
                             brightness: new Vector3(.5f, .1f, .5f)
                         )
