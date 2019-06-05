@@ -18,6 +18,7 @@ namespace Generator
         // Sprites
         public Dictionary<string, Component> Components;
         public override Texture2D Sprite { get; set; }
+        public bool CastsShadow { get; set; }
 
         // Toggleables
         private bool _isWalking;
@@ -228,10 +229,11 @@ namespace Generator
             Vector3 position,
             Vector3? size = null,
 
-            // Sprite attributes
+            // Animation attributes
             string componentSpriteFileName = "Ninja",
             string spriteFile = null,
             Dictionary<string, Component> components = null,
+            bool castsShadow = true,
 
             // Actions
             bool isWalking = false,
@@ -274,11 +276,12 @@ namespace Generator
         )
         {
 
-            // Sprites
+            // Animation attributes
             this.componentSpriteFileName = componentSpriteFileName;
             this.Components = components ?? GenerateDefaultComponentDict();
             LinkComponents();
             this.Sprite = spriteFile == null ? null : Globals.Content.Load<Texture2D>(spriteFile);
+            CastsShadow = castsShadow;
 
             // Actions
             this.IsWalking = isWalking;

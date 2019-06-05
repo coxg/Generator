@@ -107,6 +107,7 @@ namespace Generator
                             ai: BulletAI,
                             collisionEffect: BulletCollision,
                             brightness: new Vector3(.5f, .1f, .5f),
+                            castsShadow: false,
                             components: new Dictionary<string, Component>()
                             {
                                 {"body", new Component(

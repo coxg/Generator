@@ -199,7 +199,7 @@ namespace Generator
                     Drawing.DrawLight(lightSource.Center, brightness, Color.White);
 
                     // Draw the shadows
-                    foreach (var Object in Globals.GameObjects.ObjectFromName.Values.Where(i => i.IsVisible()))
+                    foreach (var Object in Globals.GameObjects.ObjectFromName.Values.Where(i => i.IsVisible() && i.CastsShadow))
                     {
                         if (Object != lightSource)
                         {
