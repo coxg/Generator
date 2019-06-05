@@ -13,9 +13,9 @@ namespace Generator
             List<Ability> result = new List<Ability>
             {
                 CreateDefaultSprintAbility(gameObject),
-                CreateDefaultAttackAbility(gameObject),
                 CreateDefaultShootAbility(gameObject),
-                Globals.CreativeMode ? CreatePlacementAbility(gameObject) : CreateDefaultAlwaysSprintAbility(gameObject)
+                Globals.CreativeMode ? CreatePlacementAbility(gameObject) : CreateDefaultAlwaysSprintAbility(gameObject),
+                CreateDefaultAttackAbility(gameObject),
             };
 
             return result;
@@ -80,6 +80,12 @@ namespace Generator
                 bullet.MoveInDirection(bullet.Direction);
             }
 
+            void BulletCollision(GameObject bullet, GameObject other)
+            {
+                bullet.DealDamage(other, (int)System.Math.Sqrt(bullet.Speed.CurrentValue));
+                bullet.Die();
+            }
+
             return new Ability(
                 "Shoot",
                 staminaCost: 0, // gameObject.EquippedWeapon.Weight + 10,
@@ -87,15 +93,29 @@ namespace Generator
                 {
                     gameObject.IsShooting = true;
                     var name = System.Guid.NewGuid().ToString();
+                    var position = gameObject.GetTargetCoordinates(1);
+                    position.Z += gameObject.Size.Z / 2;
                     Globals.GameObjects.AddNewObject(
                         name,
                         new GameObject(
                             name: name,
-                            position: gameObject.GetTargetCoordinates(1.5f),
+                            health: 1,
+                            position: position,
+                            size: new Vector3(.05f, .05f, .05f),
                             direction: gameObject.Direction,
                             speed: 100,
                             ai: BulletAI,
-                            brightness: new Vector3(.5f, .1f, .5f)
+                            collisionEffect: BulletCollision,
+                            brightness: new Vector3(.5f, .1f, .5f),
+                            components: new Dictionary<string, Component>()
+                            {
+                                {"body", new Component(
+                                    spriteFile: "Ninja/Hand",
+                                    relativePosition: new Vector3(.5f, .5f, .5f),
+                                    relativeSize: 1,
+                                    rotationPoint: new Vector3(.5f, .5f, .5f))
+                                }
+                            }
                         )
                     );
                 }

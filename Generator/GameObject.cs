@@ -16,7 +16,7 @@ namespace Generator
         private string componentSpriteFileName;
 
         // Sprites
-        public Dictionary<string, Component> ComponentDictionary;
+        public Dictionary<string, Component> Components;
         public override Texture2D Sprite { get; set; }
 
         // Toggleables
@@ -28,7 +28,7 @@ namespace Generator
             {
                 if (value & !IsWalking)
                 {
-                    foreach (var component in ComponentDictionary)
+                    foreach (var component in Components)
                     {
                         if (component.Value.Animations.ContainsKey("Walk"))
                         {
@@ -38,7 +38,7 @@ namespace Generator
                 }
                 else if (!value & IsWalking)
                 {
-                    foreach (var component in ComponentDictionary)
+                    foreach (var component in Components)
                     {
                         if (component.Value.Animations.ContainsKey("Walk"))
                         {
@@ -61,10 +61,19 @@ namespace Generator
             get => _Position + AnimationOffset;
             set
             {
-                if (CanMoveTo(value))
+                // If we can move there then move there
+                var targetAtPosition = GetTargetAtPosition(value);
+                if (targetAtPosition == null)
                 {
                     _Position = value;
                     Area = new RectangleF(Position.X, Position.Y, Size.X, Size.Y);
+                }
+
+                // If not then we collide with the object and it collides with us
+                else
+                {
+                    CollisionEffect?.Invoke(this, targetAtPosition);
+                    targetAtPosition.CollisionEffect?.Invoke(targetAtPosition, this);
                 }
             }
         }
@@ -114,6 +123,7 @@ namespace Generator
         public int PartyNumber;
         public Action Activate;
         public Action<GameObject> AI;
+        public Action<GameObject, GameObject> CollisionEffect;
 
         // Equipment
         private Weapon _equippedWeapon =  new Weapon();
@@ -221,7 +231,8 @@ namespace Generator
             // Sprite attributes
             string componentSpriteFileName = "Ninja",
             string spriteFile = null,
-            
+            Dictionary<string, Component> components = null,
+
             // Actions
             bool isWalking = false,
             bool isSwinging = false,
@@ -252,6 +263,7 @@ namespace Generator
             // Interaction
             int partyNumber = -1,
             Action<GameObject> ai = null,
+            Action<GameObject, GameObject> collisionEffect = null,
 
             // Equipment
             Weapon weapon = null,
@@ -264,7 +276,7 @@ namespace Generator
 
             // Sprites
             this.componentSpriteFileName = componentSpriteFileName;
-            this.ComponentDictionary = GenerateDefaultComponentDict();
+            this.Components = components ?? GenerateDefaultComponentDict();
             LinkComponents();
             this.Sprite = spriteFile == null ? null : Globals.Content.Load<Texture2D>(spriteFile);
 
@@ -308,7 +320,8 @@ namespace Generator
             {
                 if (this.Name != null) Say("This is just a " + this.Name + ".");
             };
-            this.AI = ai; // Run on each Update
+            this.AI = ai; // Run on each Update - argument is this
+            this.CollisionEffect = collisionEffect; // Run when attempting to move into another object - arguments are this, other
 
             // Grid logic
             this.Size = size ?? Vector3.One;
@@ -320,7 +333,7 @@ namespace Generator
         // Establish a two-way link between the components and this GameObject
         private void LinkComponents()
         {
-            foreach (var component in this.ComponentDictionary)
+            foreach (var component in this.Components)
             {
                 component.Value.Name = component.Key;
                 component.Value.SourceObject = this;
@@ -505,7 +518,7 @@ namespace Generator
             Electricity.Update();
 
             // Update animation
-            foreach (var component in ComponentDictionary) component.Value.Update();
+            foreach (var component in Components) component.Value.Update();
 
             // Use abilities
             foreach (var ability in Abilities) ability.Update();
@@ -536,7 +549,8 @@ namespace Generator
                         + Health.Current + " -> " + (Health.Current - damage));
 
                 this.IsHurting = true;
-                this.ComponentDictionary["Face"].SpriteFile = this.componentSpriteFileName + "/Face04";
+                // TODO: We can't hardcode "Face"
+                // this.Components["Face"].SpriteFile = this.componentSpriteFileName + "/Face04";
                 this.Health.Current -= damage;
 
                 if (this.Health.Current <= 0)
@@ -568,7 +582,7 @@ namespace Generator
         }
 
         // Gets whichever object is exactly [distance] away in the current direction
-        public GameObject GetTarget(float range = 1, float? direction = null)
+        public GameObject GetTargetAtRange(float range = 1, float? direction = null)
         {
             // See if we would overlap with any other objects
             var target = GetTargetCoordinates(range, direction);
@@ -577,6 +591,25 @@ namespace Generator
                 if (gameObject != this)
                 {
                     if (gameObject.Area.Contains(target.X, target.Y))
+                    {
+                        return gameObject;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        // See if we can move to a location
+        public GameObject GetTargetAtPosition(Vector3 position)
+        {
+            // See if we would overlap with any other objects
+            var targetArea = new RectangleF(position.X, position.Y, Size.X, Size.Y);
+            foreach (var gameObject in Globals.GameObjects.ObjectFromName.Values)
+            {
+                if (gameObject != this)
+                {
+                    if (targetArea.IntersectsWith(gameObject.Area))
                     {
                         return gameObject;
                     }
@@ -596,7 +629,7 @@ namespace Generator
             // Loop from 1 to [range], seeing if anything is in the way
             while (returnObject == null && targetRange <= range)
             {
-                returnObject = GetTarget(targetRange);
+                returnObject = GetTargetAtRange(targetRange);
                 targetRange++;
             }
 
@@ -639,27 +672,6 @@ namespace Generator
         public override string ToString()
         {
             return Name ?? "Unnamed GameObject";
-        }
-
-        // See if we can move to a location
-        public bool CanMoveTo(Vector3 position)
-        {
-            // See if we would overlap with any other objects
-            var thisArea = new RectangleF(position.X, position.Y, Size.X, Size.Y);
-            foreach (var gameObject in Globals.GameObjects.ObjectFromName.Values)
-            {
-                if (gameObject != this)
-                {
-                    var otherArea = new RectangleF(gameObject.Position.X, gameObject.Position.Y, gameObject.Size.X, gameObject.Size.Y);
-                    if (thisArea.IntersectsWith(otherArea))
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            // If not then we're clear to move
-            return true;
         }
     }
 }

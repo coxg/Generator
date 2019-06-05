@@ -102,7 +102,7 @@ namespace Generator
                     if (Globals.DisplayTextQueue.Count != 0)
                     {
                         // Removes text box if player looks away from active object
-                        if (player.GetTarget() != Globals.TalkingObjectQueue.Peek())
+                        if (player.GetTargetAtRange() != Globals.TalkingObjectQueue.Peek())
                         {
                             Globals.DisplayTextQueue.Clear();
                             Globals.TalkingObjectQueue.Clear();
@@ -117,7 +117,7 @@ namespace Generator
                     // If you're trying to activate the object in front of you
                     else
                     {
-                        if (player.GetTarget() != null) player.GetTarget().Activate();
+                        if (player.GetTargetAtRange() != null) player.GetTargetAtRange().Activate();
                     }
                 }
             }

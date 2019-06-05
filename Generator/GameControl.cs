@@ -205,7 +205,7 @@ namespace Generator
                         {
                             var lightAngle = (float)MathTools.Angle(lightSource.Center, Object.Center);
                             Object.Direction = MathTools.Mod(-Object.Direction - lightAngle + MathHelper.PiOver2, MathHelper.TwoPi);
-                            foreach (var component in Object.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
+                            foreach (var component in Object.Components.OrderBy(i => -i.Value.Position.Y))
                             {
                                 Drawing.DrawComponentShadow(
                                     component.Value,
@@ -237,7 +237,7 @@ namespace Generator
             foreach (var Object in Globals.GameObjects.ObjectFromName.Values.Where(i => i.IsVisible()).OrderBy(i => -i.Position.Y))
             {
                 // Draw components for the object
-                foreach (var component in Object.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))
+                foreach (var component in Object.Components.OrderBy(i => -i.Value.Position.Y))
                 {
                     Drawing.DrawComponent(
                         component.Value,
