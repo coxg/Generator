@@ -125,6 +125,7 @@ namespace Generator
         public Action Activate;
         public Action<GameObject> AI;
         public Action<GameObject, GameObject> CollisionEffect;
+        public bool Temporary;
 
         // Equipment
         private Weapon _equippedWeapon =  new Weapon();
@@ -266,6 +267,7 @@ namespace Generator
             int partyNumber = -1,
             Action<GameObject> ai = null,
             Action<GameObject, GameObject> collisionEffect = null,
+            bool temporary = false,
 
             // Equipment
             Weapon weapon = null,
@@ -325,6 +327,7 @@ namespace Generator
             };
             this.AI = ai; // Run on each Update - argument is this
             this.CollisionEffect = collisionEffect; // Run when attempting to move into another object - arguments are this, other
+            this.Temporary = temporary; // If true, destroy this object as soon as it's no longer being updated
 
             // Grid logic
             this.Size = size ?? Vector3.One;
@@ -581,7 +584,12 @@ namespace Generator
         // Gets whether this object is within the logically updating range
         public bool IsUpdating()
         {
-            return GameControl.camera.UpdatingArea.IntersectsWith(Area);
+            var isUpdating = GameControl.camera.UpdatingArea.IntersectsWith(Area);
+            if (!isUpdating && Temporary)
+            {
+                Die();
+            }
+            return isUpdating;
         }
 
         // Gets whichever object is exactly [distance] away in the current direction

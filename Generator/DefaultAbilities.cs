@@ -108,6 +108,7 @@ namespace Generator
                             collisionEffect: BulletCollision,
                             brightness: new Vector3(.5f, .1f, .5f),
                             castsShadow: false,
+                            temporary: true,
                             components: new Dictionary<string, Component>()
                             {
                                 {"body", new Component(

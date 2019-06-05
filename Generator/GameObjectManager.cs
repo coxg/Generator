@@ -54,7 +54,7 @@ namespace Generator
                     terrain1.Say("Did you see how weird that was?!");
 
                     AddNewObject("big terrain", new GameObject(
-                    new Vector3(60, 60, 0), new Vector3(5, 1, 5), name: "big terrain", strength: 10, speed: 10, perception: 10));
+                        new Vector3(60, 60, 0), new Vector3(5, 1, 5), name: "big terrain", strength: 10, speed: 10, perception: 10));
                     var terrain3 = ObjectFromName["big terrain"];
                     terrain3.Activate = delegate
                     {

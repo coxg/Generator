@@ -176,7 +176,7 @@ namespace Generator
             GraphicsDevice.Clear(Color.Black);
 
             // Draw the light effects from each object into their own renderTargets
-            foreach (var lightSource in Globals.GameObjects.ObjectFromName.Values.Where(i => i.IsUpdating()).OrderBy(i => -i.Position.Y))
+            foreach (var lightSource in Globals.GameObjects.ObjectFromName.Values.ToList().Where(i => i.IsUpdating()).OrderBy(i => -i.Position.Y))
             {
                 var brightness = 25 * lightSource.Brightness.Length();
                 if (brightness != 0)
