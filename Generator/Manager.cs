@@ -92,10 +92,8 @@ namespace Generator
         public void PopulateAcres()
         {
             // Get center coordinates
-            var viewMin = GameControl.camera.ViewMinCoordinates();
-            var viewMax = GameControl.camera.ViewMaxCoordinates();
-            CenterAcreX = (int)Math.Floor((viewMax.X + viewMin.X) / 100);
-            CenterAcreY = (int)Math.Floor((viewMax.Y + viewMin.Y) / 100);
+            CenterAcreX = (int)Math.Floor((GameControl.camera.VisibleArea.Left + GameControl.camera.VisibleArea.Right) / 100);
+            CenterAcreY = (int)Math.Floor((GameControl.camera.VisibleArea.Top + GameControl.camera.VisibleArea.Bottom) / 100);
 
             // Populate acres based off of the center
             Acres[0, 0] = new Acre(Name, CenterAcreX - 1, CenterAcreY - 1); // Bottom-left
@@ -113,10 +111,8 @@ namespace Generator
         public void Update()
         {
             // Check to see if we need to make updates to the acres
-            var viewMin = GameControl.camera.ViewMinCoordinates();
-            var viewMax = GameControl.camera.ViewMaxCoordinates();
-            var NewCenterAcreX = (int)Math.Floor((viewMax.X + viewMin.X) / 100);
-            var NewCenterAcreY = (int)Math.Floor((viewMax.Y + viewMin.Y) / 100);
+            var NewCenterAcreX = (int)Math.Floor((GameControl.camera.VisibleArea.Left + GameControl.camera.VisibleArea.Right) / 100);
+            var NewCenterAcreY = (int)Math.Floor((GameControl.camera.VisibleArea.Top + GameControl.camera.VisibleArea.Bottom) / 100);
 
             if (NewCenterAcreX != CenterAcreX | NewCenterAcreY != CenterAcreY)
             {

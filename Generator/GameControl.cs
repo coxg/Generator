@@ -146,7 +146,7 @@ namespace Generator
             Input.GetInput(Globals.Player);
 
             // Update the GameObjects
-            foreach (var gameObject in Globals.GameObjects.ObjectFromName.Values.ToList())
+            foreach (var gameObject in Globals.GameObjects.ObjectFromName.Values.Where(i => i.IsUpdating()).ToList())
                 gameObject.Update();
 
             // TODO: Why is this broken? 
@@ -176,7 +176,7 @@ namespace Generator
             GraphicsDevice.Clear(Color.Black);
 
             // Draw the light effects from each object into their own renderTargets
-            foreach (var lightSource in Globals.GameObjects.ObjectFromName.Values.OrderBy(i => -i.Position.Y))
+            foreach (var lightSource in Globals.GameObjects.ObjectFromName.Values.Where(i => i.IsUpdating()).OrderBy(i => -i.Position.Y))
             {
                 var brightness = 25 * lightSource.Brightness.Length();
                 if (brightness != 0)
@@ -199,7 +199,7 @@ namespace Generator
                     Drawing.DrawLight(lightSource.Center, brightness, Color.White);
 
                     // Draw the shadows
-                    foreach (var Object in Globals.GameObjects.ObjectFromName.Values.OrderBy(i => -i.Position.Y))
+                    foreach (var Object in Globals.GameObjects.ObjectFromName.Values.Where(i => i.IsVisible()))
                     {
                         if (Object != lightSource)
                         {
@@ -222,9 +222,9 @@ namespace Generator
             // Draw the tile layer
             GraphicsDevice.SetRenderTarget(tileRenderTarget);
             GraphicsDevice.Clear(Color.Transparent);
-            for (var x = (int)camera.ViewMinCoordinates().X; x < (int)camera.ViewMaxCoordinates().X; x++)
+            for (var x = (int)camera.VisibleArea.Left; x < (int)camera.VisibleArea.Right; x++)
             {
-                for (var y = (int)camera.ViewMinCoordinates().Y; y < (int)camera.ViewMaxCoordinates().Y; y++)
+                for (var y = (int)camera.VisibleArea.Top; y < (int)camera.VisibleArea.Bottom; y++)
                 {
                     Drawing.DrawTile(x, y);
                 }
@@ -234,7 +234,7 @@ namespace Generator
             GraphicsDevice.SetRenderTarget(objectRenderTarget);
             GraphicsDevice.Clear(Color.Transparent);
             spriteBatch.Begin(blendState: BlendState.AlphaBlend);
-            foreach (var Object in Globals.GameObjects.ObjectFromName.Values.OrderBy(i => -i.Position.Y))
+            foreach (var Object in Globals.GameObjects.ObjectFromName.Values.Where(i => i.IsVisible()).OrderBy(i => -i.Position.Y))
             {
                 // Draw components for the object
                 foreach (var component in Object.ComponentDictionary.OrderBy(i => -i.Value.Position.Y))

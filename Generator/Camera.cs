@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Drawing;
 
 namespace Generator
 {
@@ -8,7 +9,7 @@ namespace Generator
         private float rotation;
 
         public Camera()
-            // Constructor
+        // Constructor
         {
             Up = Vector3.UnitZ;
             Rotation = 0f;
@@ -18,6 +19,8 @@ namespace Generator
         public Vector3 Position { get; set; }
         public Vector3 Target { get; set; }
         public Vector3 Up { get; set; }
+        public RectangleF VisibleArea { get; set; }
+        public RectangleF UpdatingArea { get; set; }
 
         public float Rotation
         {
@@ -63,16 +66,19 @@ namespace Generator
                 Globals.Player.Center.X,
                 Globals.Player.Center.Y - 1,
                 Globals.Player.Center.Z);
-        }
 
-        public Vector2 ViewMinCoordinates()
-        {
-            return new Vector2(Position.X - 15, Position.Y - 9);
-        }
-
-        public Vector2 ViewMaxCoordinates()
-        {
-            return new Vector2(Position.X + 15, Position.Y + 10);
+            var screenWidth = Globals.Resolution.X / 50;
+            var screenHeight = Globals.Resolution.X / 50;
+            VisibleArea = new RectangleF(
+                Position.X - screenWidth / 2, 
+                Position.Y - screenHeight / 2,
+                screenWidth + 1,
+                screenHeight + 1);
+            UpdatingArea = new RectangleF(
+                Position.X - 3 * screenWidth / 2,
+                Position.Y - 3 * screenHeight / 2,
+                3 * screenWidth + 1,
+                3 * screenHeight + 1);
         }
     }
 }

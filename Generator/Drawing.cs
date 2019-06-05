@@ -283,7 +283,7 @@ namespace Generator
             vertices[4].Color = rightBrightness;
             vertices[5].Color = rightBrightness;
 
-            // Null out color and position
+            // Null out position
             for (var vertexIndex = 0; vertexIndex < 6; vertexIndex++)
             {
                 vertices[vertexIndex].Position.Z = 0;

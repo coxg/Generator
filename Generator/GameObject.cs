@@ -64,9 +64,11 @@ namespace Generator
                 if (CanMoveTo(value))
                 {
                     _Position = value;
+                    Area = new RectangleF(Position.X, Position.Y, Size.X, Size.Y);
                 }
             }
         }
+        public RectangleF Area { get; set; }
 
         // Resources
         public Resource Health;
@@ -311,6 +313,7 @@ namespace Generator
             // Grid logic
             this.Size = size ?? Vector3.One;
             this._Position = position;
+            Area = new RectangleF(Position.X, Position.Y, Size.X, Size.Y);
             Globals.Log(Name + " has spawned.");
         }
 
@@ -552,6 +555,18 @@ namespace Generator
             return target;
         }
 
+        // Gets whether this object is visible
+        public bool IsVisible()
+        {
+            return GameControl.camera.VisibleArea.IntersectsWith(Area);
+        }
+
+        // Gets whether this object is within the logically updating range
+        public bool IsUpdating()
+        {
+            return GameControl.camera.UpdatingArea.IntersectsWith(Area);
+        }
+
         // Gets whichever object is exactly [distance] away in the current direction
         public GameObject GetTarget(float range = 1, float? direction = null)
         {
@@ -561,8 +576,7 @@ namespace Generator
             {
                 if (gameObject != this)
                 {
-                    var otherArea = new RectangleF(gameObject.Position.X, gameObject.Position.Y, gameObject.Size.X, gameObject.Size.Y);
-                    if (otherArea.Contains(target.X, target.Y))
+                    if (gameObject.Area.Contains(target.X, target.Y))
                     {
                         return gameObject;
                     }
