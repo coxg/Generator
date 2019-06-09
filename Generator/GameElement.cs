@@ -12,12 +12,23 @@ namespace Generator
         public Vector3 AnimationOffset { get; set; }
         public Vector3 RotationOffset { get; set; }
         public Vector3 RotationPoint { get; set; }
+        public bool CastsShadow { get; set; }
         public Vector3 Size { get; set; }
         public abstract Texture2D Sprite { get; set; }
-        public abstract Vector3 Position { get; set; }
         public abstract float Direction { get; set; }
 
-        public Vector3 Center { get { return Position + Size / 2; } }
+        protected Vector3 _Center { get; set; }
+        public Vector3 Center { get => _Center; }
+        protected Vector3 _Position;
+        public virtual Vector3 Position
+        {
+            get => _Position;
+            set
+            {
+                _Position = value;
+                _Center = Position + Size / 2;
+            }
+        }
 
         // Checks if it can see the specified position or if we're blocked by any gameObjects
         public bool CanSee(Vector3 position)

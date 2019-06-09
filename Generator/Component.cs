@@ -14,6 +14,7 @@ namespace Generator
             Vector3 rotationPoint,
             string name = null,
             bool directional = false,
+            bool castsShadow = true,
             GameObject sourceObject = null,
             float yOffset = 0,
             Dictionary<String, Animation> animations = null
@@ -33,6 +34,7 @@ namespace Generator
             Animations = animations ?? new Dictionary<String, Animation>();
             Sprites = new Dictionary<string, Texture2D>();
             SpriteFile = spriteFile;
+            CastsShadow = castsShadow;
 
         }
 

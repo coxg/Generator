@@ -26,7 +26,7 @@ namespace Generator
                 if (objectDistance < gameObject.Brightness.Length() * 2 * MathHelper.Pi
                     && gameObject.CanSee(new Vector3(x, y, 0)))
                 {
-                    var flutteryBrightness = .01f * (float)Math.Cos(Globals.Clock / 10) * gameObject.Brightness;
+                    var flutteryBrightness = .01f * (float)Math.Cos(Timer.Clock / 10) * gameObject.Brightness;
                     brightness += flutteryBrightness + gameObject.Brightness * (float)
                         Math.Pow(Math.Cos(.25 / gameObject.Brightness.Length() * objectDistance), 2);
                 }

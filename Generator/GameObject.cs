@@ -18,7 +18,6 @@ namespace Generator
         // Sprites
         public Dictionary<string, Component> Components;
         public override Texture2D Sprite { get; set; }
-        public bool CastsShadow { get; set; }
 
         // Toggleables
         private bool _isWalking;
@@ -56,7 +55,6 @@ namespace Generator
 
         // Location
         override public float Direction { get; set; }
-        private Vector3 _Position;
         override public Vector3 Position
         {
             get => _Position + AnimationOffset;
@@ -66,7 +64,7 @@ namespace Generator
                 var targetAtPosition = GetTargetAtPosition(value);
                 if (targetAtPosition == null)
                 {
-                    _Position = value;
+                    base.Position = value;
                     Area = new RectangleF(Position.X, Position.Y, Size.X, Size.Y);
                 }
 
@@ -332,6 +330,7 @@ namespace Generator
             // Grid logic
             this.Size = size ?? Vector3.One;
             this._Position = position;
+            _Center = Position + Size / 2;
             Area = new RectangleF(Position.X, Position.Y, Size.X, Size.Y);
             Globals.Log(Name + " has spawned.");
         }
@@ -370,7 +369,8 @@ namespace Generator
                     relativePosition: new Vector3(.5f, .57f, 1.11f),
                     relativeSize: .128f,
                     rotationPoint: new Vector3(.08f, 0, .066f),
-                    yOffset: -.05f)
+                    yOffset: -.05f,
+                    castsShadow: false)
                 },
                 {"Body", new Component(
                     spriteFile: this.componentSpriteFileName + "/Body",

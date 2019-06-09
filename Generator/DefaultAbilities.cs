@@ -88,7 +88,9 @@ namespace Generator
 
             return new Ability(
                 "Shoot",
-                staminaCost: 0, // gameObject.EquippedWeapon.Weight + 10,
+                staminaCost: gameObject.EquippedWeapon.Weight,
+                cooldown: .1f,
+                keepCasting: true,
                 start: delegate
                 {
                     gameObject.IsShooting = true;

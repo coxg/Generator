@@ -4,6 +4,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Linq;
 
+using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Generator
 {
     /// <summary>
@@ -140,13 +145,15 @@ namespace Generator
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            Globals.Clock += 1;
+            // Launch any scheduled events
+            Timer.Update();
 
             // Get input for character
             Input.GetInput(Globals.Player);
 
             // Update the GameObjects
-            foreach (var gameObject in Globals.GameObjects.ObjectFromName.Values.Where(i => i.IsUpdating()).ToList())
+            // TODO: Errors when the GameObjects destroy each other on update
+            foreach (var gameObject in Globals.GameObjects.ObjectFromName.Values.Where(i => i.IsUpdating()).ToArray())
                 gameObject.Update();
 
             // TODO: Why is this broken? 
@@ -205,11 +212,11 @@ namespace Generator
                         {
                             var lightAngle = (float)MathTools.Angle(lightSource.Center, Object.Center);
                             Object.Direction = MathTools.Mod(-Object.Direction - lightAngle + MathHelper.PiOver2, MathHelper.TwoPi);
-                            foreach (var component in Object.Components.OrderBy(i => -i.Value.Position.Y))
+                            foreach (var component in Object.Components.Values.OrderBy(i => -i.Position.Y).Where(i => i.CastsShadow))
                             {
                                 Drawing.DrawComponentShadow(
-                                    component.Value,
-                                    Object.Size * component.Value.Size,
+                                    component,
+                                    Object.Size * component.Size,
                                     lightAngle,
                                     lightSource);
                             }

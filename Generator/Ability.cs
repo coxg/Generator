@@ -19,6 +19,7 @@ namespace Generator
             int electricityCost = 0,
 
             // How it works
+            bool keepCasting = false,
             bool isChanneled = false,
             bool isToggleable = false,
             bool requiresWalking = false,
@@ -27,6 +28,7 @@ namespace Generator
             Animation animation = null,
 
             // What it does
+            float cooldown = 0,
             Action start = null,
             Action onUpdate = null,
             Action stop = null)
@@ -40,6 +42,7 @@ namespace Generator
             ElectricityCost = electricityCost;
 
             // How the ability works
+            KeepCasting = keepCasting;
             IsChanneled = isChanneled;
             IsToggleable = isToggleable;
             IsActive = false;
@@ -52,6 +55,8 @@ namespace Generator
             Animation = animation;
 
             // What it does
+            OffCooldown = true;
+            Cooldown = cooldown;
             if (start == null) start = delegate { };
             Start = start;
             if (onUpdate == null) onUpdate = delegate { };
@@ -82,6 +87,8 @@ namespace Generator
         public int ElectricityCost { get; set; }
 
         // How it works
+        public bool OffCooldown;
+        public bool KeepCasting { get; set; }
         public bool IsChanneled { get; set; }
         public bool IsToggleable { get; set; }
         private bool IsActive { get; set; }
@@ -117,6 +124,7 @@ namespace Generator
         }
 
         // What it does
+        public float Cooldown;
         public Action Start { get; set; }
         public Action OnUpdate { get; set; }
         public Action Stop { get; set; }
@@ -130,45 +138,11 @@ namespace Generator
         public bool CanUse()
             // Can the SourceObject use the ability?
         {
-            return SourceObject.Health.Current >= HealthCost
+            return OffCooldown
+                   && SourceObject.Health.Current >= HealthCost
                    && SourceObject.Stamina.Current >= StaminaCost
                    && SourceObject.Electricity.Current >= ElectricityCost
                    && (SourceObject.IsWalking || !RequiresWalking);
-        }
-
-        public void Use()
-            // This is what happens when the ability is used.
-        {
-            if (CanUse())
-            {
-                Globals.Log(SourceObject + " uses " + this);
-
-                // If toggle and on, turn off
-                if (IsToggleable && IsActive)
-                {
-                    IsActive = false;
-                }
-
-                // If you can use it
-                else if (IsChanneled || IsToggleable)
-                {
-                    IsActive = true;
-                }
-                else
-                {
-                    // Use resources
-                    SourceObject.Health.Current -= HealthCost;
-                    SourceObject.Stamina.Current -= StaminaCost;
-                    SourceObject.Electricity.Current -= ElectricityCost;
-
-                    // Perform the ability
-                    Start();
-                }
-            }
-            else
-            {
-                Globals.Log(SourceObject + " can't use " + this);
-            }
         }
 
         public void Update()
@@ -208,15 +182,29 @@ namespace Generator
             // Activated abilities
             else
             {
-                if (!WasActive && !WasPressed && IsPressed && CanUse()) IsNowActive = true;
+                if (IsPressed && CanUse())
+                {
+                    if (!WasActive && !WasPressed)
+                        IsNowActive = true;
+
+                    else if (KeepCasting)
+                        IsNowActive = true;
+                }
             }
 
             // What happens when we start
-            if (!WasActive && IsNowActive)
+            if ((!WasActive || KeepCasting) && IsNowActive)
             {
                 Globals.Log(SourceObject + " uses " + this);
                 Start();
                 if (Animation != null) Animation.Start();
+
+                // Start the cooldown
+                if (Cooldown != 0)
+                {
+                    OffCooldown = false;
+                    Timer.AddEvent(Cooldown, delegate { OffCooldown = true; });
+                }
             }
 
             // What happens when we stop

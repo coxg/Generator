@@ -19,7 +19,6 @@ namespace Generator
         public static Vector2 Resolution = new Vector2(1500, 900);
         public static ContentManager Content;
         public static bool Logging = true;
-        public static int Clock = 0;
         public static int RefreshRate = 30;
         public static string Directory = "/Generator/Generator/";
 
@@ -48,8 +47,7 @@ namespace Generator
         public static Dictionary<string, Generation> GeneratorDict = new Dictionary<string, Generation>();
         public static Dictionary<string, Accessory> AccessoryDict = new Dictionary<string, Accessory>();
 
-        [MethodImpl(
-            MethodImplOptions.NoInlining)]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void Log(object text = null)
             // Logs to console with debugging information
         {
