@@ -94,33 +94,28 @@ namespace Generator
                 start: delegate
                 {
                     gameObject.IsShooting = true;
-                    var name = System.Guid.NewGuid().ToString();
                     var position = gameObject.GetTargetCoordinates(1);
                     position.Z += gameObject.Size.Z / 2;
-                    Globals.GameObjects.AddNewObject(
-                        name,
-                        new GameObject(
-                            name: name,
-                            health: 1,
-                            position: position,
-                            size: new Vector3(.05f, .05f, .05f),
-                            direction: gameObject.Direction,
-                            speed: 100,
-                            ai: BulletAI,
-                            collisionEffect: BulletCollision,
-                            brightness: new Vector3(.5f, .1f, .5f),
-                            castsShadow: false,
-                            temporary: true,
-                            components: new Dictionary<string, Component>()
-                            {
-                                {"body", new Component(
-                                    spriteFile: "Ninja/Hand",
-                                    relativePosition: new Vector3(.5f, .5f, .5f),
-                                    relativeSize: 1,
-                                    rotationPoint: new Vector3(.5f, .5f, .5f))
-                                }
+                    new GameObject(
+                        health: 1,
+                        position: position,
+                        size: new Vector3(.05f, .05f, .05f),
+                        direction: gameObject.Direction,
+                        speed: 100,
+                        ai: BulletAI,
+                        collisionEffect: BulletCollision,
+                        brightness: new Vector3(.5f, .1f, .5f),
+                        castsShadow: false,
+                        temporary: true,
+                        components: new Dictionary<string, Component>()
+                        {
+                            {"body", new Component(
+                                spriteFile: "Ninja/Hand",
+                                relativePosition: new Vector3(.5f, .5f, .5f),
+                                relativeSize: 1,
+                                rotationPoint: new Vector3(.5f, .5f, .5f))
                             }
-                        )
+                        }
                     );
                 }
             );
@@ -132,10 +127,10 @@ namespace Generator
                 "Place Object",
                 start: delegate
                 {
-                    var baseTileName = Globals.Tiles.NameFromIndex[Globals.Tiles.BaseTileIndexes[Globals.CreativeObjectIndex]];
-                    var randomBaseTile = Globals.Tiles.GetRandomBaseIndex(Globals.Tiles.ObjectFromName[baseTileName].BaseTileName);
+                    var baseTileName = TileManager.NameFromIndex[TileManager.BaseTileIndexes[Globals.CreativeObjectIndex]];
+                    var randomBaseTile = TileManager.GetRandomBaseIndex(TileManager.ObjectFromName[baseTileName].BaseTileName);
                     var targetCoordinates = gameObject.GetTargetCoordinates(1);
-                    Globals.Tiles.Set((int)targetCoordinates.X, (int)targetCoordinates.Y, Globals.Tiles.NameFromIndex[randomBaseTile]);
+                    TileManager.Set((int)targetCoordinates.X, (int)targetCoordinates.Y, TileManager.NameFromIndex[randomBaseTile]);
                 },
                 animation: new Animation(
                     startFrames: new Frames(

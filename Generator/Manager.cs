@@ -6,20 +6,20 @@ namespace Generator
     public class Manager <T>
     {
         // TODO: This shouldn't be by name - what if the player names their character something that's already in here?
-        public Dictionary<string, T> ObjectFromName = new Dictionary<string, T>();
-        public Dictionary<int, string> NameFromIndex = new Dictionary<int, string>();
-        public Dictionary<string, int> IndexFromName = new Dictionary<string, int>();
+        public static Dictionary<string, T> ObjectFromName = new Dictionary<string, T>();
+        public static Dictionary<int, string> NameFromIndex = new Dictionary<int, string>();
+        public static Dictionary<string, int> IndexFromName = new Dictionary<string, int>();
 
-        public string Name;
+        public static string Name;
 
-        public int Count = 0;
+        public static int Count = 0;
 
-        public int CenterAcreX;
-        public int CenterAcreY;
+        public static int CenterAcreX;
+        public static int CenterAcreY;
 
-        public Acre[,] Acres = new Acre[3, 3];
+        public static Acre[,] Acres = new Acre[3, 3];
 
-        public override string ToString()
+        public static string String()
         {
             return Name + ":\n" 
                 + Acres[0, 2].Name + ", " + Acres[1, 2].Name + ", " + Acres[2, 2].Name + "\n"
@@ -28,20 +28,20 @@ namespace Generator
         }
 
         // Gets the index of the acre from the X position
-        public int AcreX(int x)
+        public static int AcreX(int x)
         {
             return (int)Math.Floor(x / Acre.AcreSize.X) - CenterAcreX + 1;
         }
 
         // Gets the index of the acre from the Y position
-        public int AcreY(int y)
+        public static int AcreY(int y)
         {
             return (int)Math.Floor(y / Acre.AcreSize.Y) - CenterAcreY + 1;
         }
 
         // Gets the index of the object at the location
         // TODO: Negative indices aren't a thing, so I need to wrap around manually. What should the max distance be?
-        public int GetIndex(int x, int y)
+        public static int GetIndex(int x, int y)
         {
             var acre = Acres[AcreX(x), AcreY(y)];
             var index = acre.Get(x, y);
@@ -49,21 +49,21 @@ namespace Generator
         }
 
         // Gets the name of the object at the location
-        public string GetName(int x, int y)
+        public static string GetName(int x, int y)
         {
             return NameFromIndex[GetIndex(x, y)];
         }
 
         // "Getter" - get the object at the location
         // TODO: Replace this with a real getter
-        public T Get(int x, int y)
+        public static T Get(int x, int y)
         {
             return ObjectFromName[GetName(x, y)];
         }
 
         // "Setter" - set the object by name
         // TODO: Replace this with a real setter
-        public void Set(int x, int y, string name)
+        public static void Set(int x, int y, string name)
         {
             var acre = Acres[AcreX(x), AcreY(y)];
             var index = IndexFromName[name];
@@ -71,7 +71,7 @@ namespace Generator
         }
 
         // Adds a new object to the mappings
-        public void AddNewObject(string Name, T Object)
+        public static void AddNewObject(string Name, T Object)
         {
             ObjectFromName.Add(Name, Object);
             NameFromIndex.Add(Count, Name);
@@ -79,17 +79,22 @@ namespace Generator
             Count += 1;
         }
 
-        // Removes an object from the mappings
-        // NOTE: This doesn't impact the count, as this would cause us to overwrite existing values
-        // TODO: Make this impact the count, as that will probably cause some headaches in the future
-        public void RemoveObject(string Name)
+        // Attempts to remove an object from the mappings
+        // Note that an object is not guaranteed to be in the mappings - an object can die for multiple reasons within the same Update, for example
+        // TODO: Make this impact the count, as that will probably cause some headaches in the future. Would currently cause us to overwrite existing values
+        public static void RemoveObject(string Name)
         {
-            ObjectFromName.Remove(Name);
-            IndexFromName.Remove(Name);
+            var removedSuccessfully = ObjectFromName.Remove(Name);
+            if (removedSuccessfully)
+            {
+                var index = IndexFromName[Name];
+                IndexFromName.Remove(Name);
+                NameFromIndex.Remove(index);
+            }
         }
 
         // Initially loads in the acres
-        public void PopulateAcres()
+        public static void PopulateAcres()
         {
             // Get center coordinates
             CenterAcreX = (int)Math.Floor((GameControl.camera.VisibleArea.Left + GameControl.camera.VisibleArea.Right) / 100);
@@ -108,7 +113,7 @@ namespace Generator
         }
 
         // Updates your acres to surround the camera
-        public void Update()
+        public static void Update()
         {
             // Check to see if we need to make updates to the acres
             var NewCenterAcreX = (int)Math.Floor((GameControl.camera.VisibleArea.Left + GameControl.camera.VisibleArea.Right) / 100);
@@ -216,12 +221,6 @@ namespace Generator
                 // Update the Center stats to reflect the current position
                 CenterAcreX = NewCenterAcreX;
                 CenterAcreY = NewCenterAcreY;
-
-                if (Name == "GameObjects")
-                {
-                    Globals.Log("Loaded in:");
-                    Globals.Log(this);
-                }
             }
         }
     }

@@ -18,7 +18,7 @@ namespace Generator
         // Regular old variables
         public static Vector2 Resolution = new Vector2(1500, 900);
         public static ContentManager Content;
-        public static bool Logging = true;
+        public static bool Logging = false;
         public static int RefreshRate = 30;
         public static string Directory = "/Generator/Generator/";
 
@@ -34,10 +34,6 @@ namespace Generator
         public static Texture2D WhiteDot;
         public static SpriteFont Font;
         public static Texture2D LightTexture;
-
-        // Create the maps
-        public static GameObjectManager GameObjects = null;
-        public static TileManager Tiles = null;
 
         // Data storage
         public static Dictionary<string, Weapon> WeaponsDict = new Dictionary<string, Weapon>();

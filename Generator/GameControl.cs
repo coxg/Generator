@@ -29,11 +29,7 @@ namespace Generator
         public static BlendState lightingBlendState;
         public static BlendState lightingLayerBlendState;
         public static Rectangle screenSize = new Rectangle(0, 0, (int)Globals.Resolution.X, (int)Globals.Resolution.Y);
-
-        // Player
         public SpriteBatch spriteBatch;
-        private GameObject terrain1;
-        private GameObject terrain2;
 
         public GameControl()
         {
@@ -90,19 +86,12 @@ namespace Generator
                 TextureEnabled = true, 
                 VertexColorEnabled = true};
 
-            camera = new Camera();
-
             Globals.Content = Content;
 
-            Globals.Tiles = new TileManager();
-            Globals.GameObjects = new GameObjectManager();
+            camera = new Camera();
 
-            // Create player
-            Globals.Player = Globals.GameObjects.ObjectFromName["Niels"];
-
-            // Create terrain
-            terrain1 = Globals.GameObjects.ObjectFromName["angry terrain"];
-            terrain2 = Globals.GameObjects.ObjectFromName["medium terrain"];
+            GameObjectManager.Initialize();
+            TileManager.Initialize();
 
             base.Initialize();
         }
@@ -152,16 +141,12 @@ namespace Generator
             Input.GetInput(Globals.Player);
 
             // Update the GameObjects
-            // TODO: Errors when the GameObjects destroy each other on update
-            foreach (var gameObject in Globals.GameObjects.ObjectFromName.Values.Where(i => i.IsUpdating()).ToArray())
+            foreach (var gameObject in GameObjectManager.Updating.Values.ToList())
                 gameObject.Update();
-
-            // TODO: Why is this broken? 
-            // Until fixed, I won't be able to move outside of the starting acres
-            // Globals.GameObjects.Update();
+            GameObjectManager.Update();
 
             // Update the tiles
-            Globals.Tiles.Update();
+            TileManager.Update();
 
             // Keep the camera focused on the player
             camera.Update();
@@ -183,7 +168,7 @@ namespace Generator
             GraphicsDevice.Clear(Color.Black);
 
             // Draw the light effects from each object into their own renderTargets
-            foreach (var lightSource in Globals.GameObjects.ObjectFromName.Values.ToList().Where(i => i.IsUpdating()).OrderBy(i => -i.Position.Y))
+            foreach (var lightSource in GameObjectManager.Updating.Values.OrderBy(i => -i.Position.Y))
             {
                 var brightness = 25 * lightSource.Brightness.Length();
                 if (brightness != 0)
@@ -206,7 +191,7 @@ namespace Generator
                     Drawing.DrawLight(lightSource.Center, brightness, Color.White);
 
                     // Draw the shadows
-                    foreach (var Object in Globals.GameObjects.ObjectFromName.Values.Where(i => i.IsVisible() && i.CastsShadow))
+                    foreach (var Object in GameObjectManager.Visible.Values.Where(i => i.CastsShadow))
                     {
                         if (Object != lightSource)
                         {
@@ -241,7 +226,7 @@ namespace Generator
             GraphicsDevice.SetRenderTarget(objectRenderTarget);
             GraphicsDevice.Clear(Color.Transparent);
             spriteBatch.Begin(blendState: BlendState.AlphaBlend);
-            foreach (var Object in Globals.GameObjects.ObjectFromName.Values.Where(i => i.IsVisible()).OrderBy(i => -i.Position.Y))
+            foreach (var Object in GameObjectManager.Visible.Values.OrderBy(i => -i.Position.Y))
             {
                 // Draw components for the object
                 foreach (var component in Object.Components.OrderBy(i => -i.Value.Position.Y))
@@ -269,7 +254,7 @@ namespace Generator
             GraphicsDevice.Clear(Color.Black);
             foreach (var lightingRenderTarget in lightingRenderTargets)
             {
-                if (Globals.GameObjects.ObjectFromName.Keys.Contains(lightingRenderTarget.Key.Name))
+                if (GameObjectManager.ObjectFromName.ContainsKey(lightingRenderTarget.Key.Name))
                 {
                     spriteBatch.Draw(lightingRenderTarget.Value, screenSize, new Color(lightingRenderTarget.Key.Brightness));
                 }

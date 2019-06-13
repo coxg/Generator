@@ -13,7 +13,7 @@ namespace Generator
     public class GameObject : GameElement
     {
         // name of component sprite file for this game object
-        private string componentSpriteFileName;
+        private string ComponentSpriteFileName;
 
         // Sprites
         public Dictionary<string, Component> Components;
@@ -104,8 +104,8 @@ namespace Generator
             get => _abilities;
             set 
             {
-                this._abilities = value;
-                foreach (var ability in this._abilities) ability.SourceObject = this;
+                _abilities = value;
+                foreach (var ability in _abilities) ability.SourceObject = this;
 
                 if (Abilities.Count >= 1) Ability1 = Abilities[0];
                 if (Abilities.Count >= 2) Ability2 = Abilities[1];
@@ -124,6 +124,14 @@ namespace Generator
         public Action<GameObject> AI;
         public Action<GameObject, GameObject> CollisionEffect;
         public bool Temporary;
+        public bool IsVisible()
+        {
+            return GameControl.camera.VisibleArea.IntersectsWith(Area);
+        }
+        public bool IsUpdating()
+        {
+            return GameControl.camera.UpdatingArea.IntersectsWith(Area);
+        }
 
         // Equipment
         private Weapon _equippedWeapon =  new Weapon();
@@ -275,70 +283,69 @@ namespace Generator
             Accessory accessory = null
         )
         {
-
             // Animation attributes
-            this.componentSpriteFileName = componentSpriteFileName;
-            this.Components = components ?? GenerateDefaultComponentDict();
+            ComponentSpriteFileName = componentSpriteFileName;
+            Components = components ?? GenerateDefaultComponentDict();
             LinkComponents();
-            this.Sprite = spriteFile == null ? null : Globals.Content.Load<Texture2D>(spriteFile);
+            Sprite = spriteFile == null ? null : Globals.Content.Load<Texture2D>(spriteFile);
             CastsShadow = castsShadow;
 
             // Actions
-            this.IsWalking = isWalking;
-            this.IsSwinging = isSwinging;
-            this.IsShooting = isShooting;
-            this.IsHurting = isHurting;
+            IsWalking = isWalking;
+            IsSwinging = isSwinging;
+            IsShooting = isShooting;
+            IsHurting = isHurting;
 
             // Resources
-            this.Health = new Resource("Health", health);
-            this.Stamina = new Resource("Stamina", stamina, 10);
-            this.Electricity = new Resource("Electricity", electricity);
+            Health = new Resource("Health", health);
+            Stamina = new Resource("Stamina", stamina, 10);
+            Electricity = new Resource("Electricity", electricity);
 
             // Primary Attributes
-            this.Strength = new Attribute(strength);
-            this.Speed = new Attribute(speed);
-            this.Perception = new Attribute(perception);
-            this.Weight = new Attribute(weight); // TODO: Use this in knockback calculation
+            Strength = new Attribute(strength);
+            Speed = new Attribute(speed);
+            Perception = new Attribute(perception);
+            Weight = new Attribute(weight); // TODO: Use this in knockback calculation
 
             // ...Other Attributes
-            this.Name = name;
-            this.Level = level;
-            this.Experience = experience;
-            this.Direction = direction;
-            this.Brightness = brightness ?? Vector3.Zero;
+            Name = name ?? Guid.NewGuid().ToString();
+            Level = level;
+            Experience = experience;
+            Direction = direction;
+            Brightness = brightness ?? Vector3.Zero;
 
             // Equipment
-            this.EquippedWeapon = weapon ?? new Weapon();
-            this.EquippedOffHand = offHand ?? new OffHand();
-            this.EquippedArmor = armor ?? new Armor();
-            this.EquippedGenerator = generator ?? new Generation();
-            this.EquippedAccessory = accessory ?? new Accessory();
+            EquippedWeapon = weapon ?? new Weapon();
+            EquippedOffHand = offHand ?? new OffHand();
+            EquippedArmor = armor ?? new Armor();
+            EquippedGenerator = generator ?? new Generation();
+            EquippedAccessory = accessory ?? new Accessory();
 
             // Abilities
-            this.Abilities = abilities ?? DefaultAbilities.GenerateDefaultAbilities(this);
+            Abilities = abilities ?? DefaultAbilities.GenerateDefaultAbilities(this);
 
             // Interaction
-            this.PartyNumber = partyNumber;
-            this.Activate = delegate // What happens when you try to talk to it
+            PartyNumber = partyNumber;
+            Activate = delegate // What happens when you try to talk to it
             {
-                if (this.Name != null) Say("This is just a " + this.Name + ".");
+                if (Name != null) Say("This is just a " + Name + ".");
             };
-            this.AI = ai; // Run on each Update - argument is this
-            this.CollisionEffect = collisionEffect; // Run when attempting to move into another object - arguments are this, other
-            this.Temporary = temporary; // If true, destroy this object as soon as it's no longer being updated
+            AI = ai; // Run on each Update - argument is this
+            CollisionEffect = collisionEffect; // Run when attempting to move into another object - arguments are this, other
+            Temporary = temporary; // If true, destroy this object as soon as it's no longer being updated
+            GameObjectManager.AddNewObject(Name, this);
 
             // Grid logic
-            this.Size = size ?? Vector3.One;
-            this._Position = position;
-            _Center = Position + Size / 2;
-            Area = new RectangleF(Position.X, Position.Y, Size.X, Size.Y);
+            Size = size ?? Vector3.One;
+            Position = position;
+            
             Globals.Log(Name + " has spawned.");
         }
 
         // Establish a two-way link between the components and this GameObject
         private void LinkComponents()
         {
-            foreach (var component in this.Components)
+            foreach (var component in Components)
             {
                 component.Value.Name = component.Key;
                 component.Value.SourceObject = this;
@@ -356,7 +363,7 @@ namespace Generator
             Dictionary<string, Component> result = new Dictionary<string, Component>()
             {
                 {"Head", new Component(
-                    spriteFile: this.componentSpriteFileName + "/Head",
+                    spriteFile: ComponentSpriteFileName + "/Head",
                     directional: true,
                     relativePosition: new Vector3(.5f, .506f, 1.36f),
                     relativeSize: .32f,
@@ -364,7 +371,7 @@ namespace Generator
                     yOffset: -.05f)
                 },
                 {"Face", new Component(
-                    spriteFile: this.componentSpriteFileName + "/Face01",
+                    spriteFile: ComponentSpriteFileName + "/Face01",
                     directional: true,
                     relativePosition: new Vector3(.5f, .57f, 1.11f),
                     relativeSize: .128f,
@@ -373,14 +380,14 @@ namespace Generator
                     castsShadow: false)
                 },
                 {"Body", new Component(
-                    spriteFile: this.componentSpriteFileName + "/Body",
+                    spriteFile: ComponentSpriteFileName + "/Body",
                     directional: true,
                     relativePosition: new Vector3(.5f, .505f, .52f),
                     relativeSize: .16f,
                     rotationPoint: new Vector3(.08f, 0, .08f))
                 },
                 {"Left Arm", new Component(
-                    spriteFile: this.componentSpriteFileName + "/RightArm",
+                    spriteFile: ComponentSpriteFileName + "/RightArm",
                     directional: true,
                     relativePosition: new Vector3(-.1f, .504f, .6f),
                     relativeSize: .08f,
@@ -402,7 +409,7 @@ namespace Generator
                     })
                 },
                 {"Right Arm", new Component(
-                    spriteFile: this.componentSpriteFileName + "/LeftArm",
+                    spriteFile: ComponentSpriteFileName + "/LeftArm",
                     directional: true,
                     relativePosition: new Vector3(1.1f, .504f, .6f),
                     relativeSize: .08f,
@@ -424,7 +431,7 @@ namespace Generator
                     })
                 },
                 {"Left Hand", new Component(
-                    spriteFile: this.componentSpriteFileName + "/Hand",
+                    spriteFile: ComponentSpriteFileName + "/Hand",
                     relativePosition: new Vector3(-.2f, .5045f, .42f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .032f),
@@ -445,7 +452,7 @@ namespace Generator
                     })
                 },
                 {"Right Hand", new Component(
-                    spriteFile: this.componentSpriteFileName + "/Hand",
+                    spriteFile: ComponentSpriteFileName + "/Hand",
                     relativePosition: new Vector3(1.2f, .5045f, .42f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .032f),
@@ -466,7 +473,7 @@ namespace Generator
                     })
                 },
                 {"Left Leg", new Component(
-                    spriteFile: this.componentSpriteFileName + "/Leg",
+                    spriteFile: ComponentSpriteFileName + "/Leg",
                     relativePosition: new Vector3(.23f, .504f, .14f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .018f),
@@ -487,7 +494,7 @@ namespace Generator
                     })
                 },
                 {"Right Leg", new Component(
-                    spriteFile: this.componentSpriteFileName + "/Leg",
+                    spriteFile: ComponentSpriteFileName + "/Leg",
                     relativePosition: new Vector3(.77f, .504f, .14f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .018f),
@@ -530,12 +537,19 @@ namespace Generator
             foreach (var ability in Abilities) ability.Update();
         }
 
+        public void Remove()
+        {
+            GameObjectManager.RemoveObject(Name);
+            GameObjectManager.Updating.Remove(Name);
+            GameObjectManager.Visible.Remove(Name);
+        }
+
         // Plays death animation and despawns
+        // TODO: Drop equipment + inventory
+        // TODO: Play death animation
         public void Die()
         {
-            Globals.GameObjects.RemoveObject(Name);
-
-            // TODO: Drop equipment + inventory
+            Remove();
             Globals.Log(this + " has passed away. RIP.");
         }
 
@@ -554,12 +568,12 @@ namespace Generator
                 Globals.Log(this + " takes " + damage + " damage. "
                         + Health.Current + " -> " + (Health.Current - damage));
 
-                this.IsHurting = true;
+                IsHurting = true;
                 // TODO: We can't hardcode "Face"
-                // this.Components["Face"].SpriteFile = this.componentSpriteFileName + "/Face04";
-                this.Health.Current -= damage;
+                // Components["Face"].SpriteFile = componentSpriteFileName + "/Face04";
+                Health.Current -= damage;
 
-                if (this.Health.Current <= 0)
+                if (Health.Current <= 0)
                 {
                     Die();
                 }
@@ -575,29 +589,12 @@ namespace Generator
             return target;
         }
 
-        // Gets whether this object is visible
-        public bool IsVisible()
-        {
-            return GameControl.camera.VisibleArea.IntersectsWith(Area);
-        }
-
-        // Gets whether this object is within the logically updating range
-        public bool IsUpdating()
-        {
-            var isUpdating = GameControl.camera.UpdatingArea.IntersectsWith(Area);
-            if (!isUpdating && Temporary)
-            {
-                Die();
-            }
-            return isUpdating;
-        }
-
         // Gets whichever object is exactly [distance] away in the current direction
         public GameObject GetTargetAtRange(float range = 1, float? direction = null)
         {
             // See if we would overlap with any other objects
             var target = GetTargetCoordinates(range, direction);
-            foreach (var gameObject in Globals.GameObjects.ObjectFromName.Values)
+            foreach (var gameObject in GameObjectManager.ObjectFromName.Values)
             {
                 if (gameObject != this)
                 {
@@ -616,7 +613,7 @@ namespace Generator
         {
             // See if we would overlap with any other objects
             var targetArea = new RectangleF(position.X, position.Y, Size.X, Size.Y);
-            foreach (var gameObject in Globals.GameObjects.ObjectFromName.Values)
+            foreach (var gameObject in GameObjectManager.ObjectFromName.Values)
             {
                 if (gameObject != this)
                 {

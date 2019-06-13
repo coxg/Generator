@@ -8,14 +8,14 @@ namespace Generator
     public class TileManager: Manager<Tile>
     {
         // Mappings to help move between the base tile ("Grass") and the unique sprites for it
-        public Dictionary<string, int> BaseTileIndexFromName = new Dictionary<string, int>();
-        public List<int> BaseTileIndexes = new List<int>();
+        public static Dictionary<string, int> BaseTileIndexFromName = new Dictionary<string, int>();
+        public static List<int> BaseTileIndexes = new List<int>();
 
         // Maps each base tile to its other variants and sides, allowing better organization in creative mode
-        public Dictionary<int, Dictionary<string, List<int>>> TileInfo = new Dictionary<int, Dictionary<string, List<int>>>();
+        public static Dictionary<int, Dictionary<string, List<int>>> TileInfo = new Dictionary<int, Dictionary<string, List<int>>>();
 
         // Adds all tiles from a directory to all necessary manager attributes
-        public void AddAllTilesInDirectory(string tileName, string directoryName, int baseTileIndex)
+        public static void AddAllTilesInDirectory(string tileName, string directoryName, int baseTileIndex)
         {
             foreach (var individualTileFile in Directory.GetFiles(
                 Globals.Directory + "/Content/Tiles/" + tileName + "/" + directoryName, "*.png", 
@@ -49,13 +49,13 @@ namespace Generator
         }
 
         // Gets a random base tile for a particular tile type
-        public int GetRandomBaseIndex(string baseObject)
+        public static int GetRandomBaseIndex(string baseObject)
         {
             var baseObjects = TileInfo[BaseTileIndexFromName[baseObject]]["Base"];
             return baseObjects[MathTools.RandInt(baseObjects.Count)];
         }
 
-        public TileManager()
+        public static void Initialize()
         {
             // Set the name
             Name = "Tiles";

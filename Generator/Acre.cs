@@ -35,7 +35,7 @@ namespace Generator
                     // Fill the values with the default value
                     for (int columnNumber = 0; columnNumber < (int)AcreSize.X; columnNumber++)
                     {
-                        if (level == "Tiles" && Globals.Tiles != null) defaultValue = Globals.Tiles.GetRandomBaseIndex("Grass");
+                        if (level == "Tiles") defaultValue = TileManager.GetRandomBaseIndex("Grass");
                         Values[rowNumber, columnNumber] = defaultValue;
                     }
                 }

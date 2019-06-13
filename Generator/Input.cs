@@ -136,7 +136,7 @@ namespace Generator
                     SaveButtonWasDown = true;
 
                     // Write the grids to disk
-                    foreach (Acre acre in Globals.Tiles.Acres) acre.Write();
+                    foreach (Acre acre in TileManager.Acres) acre.Write();
                 }
             }
             else
@@ -154,7 +154,7 @@ namespace Generator
                     {
                         CreativeScrollLeftButton = true;
                         Globals.CreativeObjectIndex = (int)MathTools.Mod(
-                            Globals.CreativeObjectIndex - 1, Globals.Tiles.BaseTileIndexes.Count);
+                            Globals.CreativeObjectIndex - 1, TileManager.BaseTileIndexes.Count);
                     }
                 }
                 else
@@ -169,7 +169,7 @@ namespace Generator
                     {
                         CreativeScrollRightButton = true;
                         Globals.CreativeObjectIndex = (int)MathTools.Mod(
-                            Globals.CreativeObjectIndex + 1, Globals.Tiles.BaseTileIndexes.Count);
+                            Globals.CreativeObjectIndex + 1, TileManager.BaseTileIndexes.Count);
                     }
                 }
                 else
