@@ -156,7 +156,6 @@ namespace Generator
             Vector3 normalizationDirection, 
             Vector3 normalizationOffset)
         {
-            //var vertices = new VertexPositionColorTexture[6];
             var vertices = commonVertices["Component"];
             var bottomLeft = component.Position;
             var rotationPoint = bottomLeft + component.RotationPoint;
@@ -250,7 +249,7 @@ namespace Generator
             }
 
             // Draw it
-            GameControl.effect.Texture = component.Sprite;
+            GameControl.effect.Parameters["Texture"].SetValue(component.Sprite);
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -290,7 +289,7 @@ namespace Generator
             }
 
             // Draw it
-            GameControl.effect.Texture = component.Sprite;
+            GameControl.effect.Parameters["Texture"].SetValue(component.Sprite);
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -486,7 +485,7 @@ namespace Generator
             }
 
             // Draw it
-            GameControl.effect.Texture = Globals.LightTexture;
+            GameControl.effect.Parameters["Texture"].SetValue(Globals.LightTexture);
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -568,30 +567,26 @@ namespace Generator
                 string bottomSide = "Bottom",
                 float opacity = 1)
         {
-            // Generate the vertices
-            var vertices = commonVertices[bottomSide];
+        }
 
-            // Bottom left
-            vertices[0].Position = new Vector3(bottomLeft.X, bottomLeft.Y, 0);
-
-            // Top left
-            vertices[1].Position = new Vector3(bottomLeft.X, bottomLeft.Y + 1, 0);
-
-            // Bottom right
-            vertices[2].Position = new Vector3(bottomLeft.X + 1, bottomLeft.Y, 0);
-            vertices[3].Position = vertices[1].Position;
-
-            // Top right
-            vertices[4].Position = new Vector3(bottomLeft.X + 1, bottomLeft.Y + 1, 0);
-            vertices[5].Position = vertices[2].Position;
-
+        // Draws a single layer of a tile
+        public static void DrawTilesFromBuffer()
+        {
             // Draw it
-            GameControl.effect.Texture = TileManager.ObjectFromName[tileName].Sprite;
+            GameControl.effect.Parameters["Texture"].SetValue(TileManager.ObjectFromName.Values.ToList()[4].Sprite);
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
-                    PrimitiveType.TriangleList, vertices, 0, 2);
+
+                var myVertexBuffer = new VertexBuffer(GameControl.graphics.GraphicsDevice, VertexPositionColorTexture.VertexDeclaration, TileManager.vertices.Length, BufferUsage.WriteOnly);
+                myVertexBuffer.SetData(TileManager.vertices);
+
+                var myIndexBuffer = new IndexBuffer(GameControl.graphics.GraphicsDevice, typeof(Int16), TileManager.indices.Length, BufferUsage.WriteOnly);
+                myIndexBuffer.SetData(TileManager.indices);
+
+                GameControl.graphics.GraphicsDevice.Indices = myIndexBuffer;
+                GameControl.graphics.GraphicsDevice.SetVertexBuffer(myVertexBuffer);
+                GameControl.graphics.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, TileManager.indices.Length / 3);
             }
         }
 

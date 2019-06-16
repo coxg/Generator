@@ -78,8 +78,9 @@ namespace Generator
                 AddAllTilesInDirectory(tileName, "Misc", baseObjectIndex);
             }
 
-            // Populate the Acres
             PopulateAcres();
+            SetUpIndices();
+            SetUpVertices();
         }
     }
 }

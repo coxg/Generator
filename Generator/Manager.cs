@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Generator
 {
@@ -112,6 +114,95 @@ namespace Generator
             Acres[2, 2] = new Acre(Name, CenterAcreX + 1, CenterAcreY + 1); // Top-right
         }
 
+        // Getting the min/max values
+        public static int MinX()
+        {
+            return Acres[0, 0].MinX;
+        }
+        public static int MinY()
+        {
+            return Acres[0, 0].MinY;
+        }
+        public static int MaxX()
+        {
+            return Acres[2, 2].MinX + (int)Acre.AcreSize.X;
+        }
+        public static int MaxY()
+        {
+            return Acres[2, 2].MinY + (int)Acre.AcreSize.Y;
+        }
+
+        public static Int16[] indices = new Int16[(int)Acre.AcreSize.X * (int)Acre.AcreSize.Y * 6 * 9];
+        public static void SetUpIndices()
+        // Sets up the indices. This should only be run once (?)
+        {
+            int counter = 0;
+            for (Int16 y = 0; y < ((Int16)Acre.AcreSize.Y * 3) - 1; y++)
+            {
+                for (Int16 x = 0; x < ((Int16)Acre.AcreSize.X * 3) - 1; x++)
+                {
+                    Int16 lowerLeft = (Int16)(x + y * Acre.AcreSize.X);
+                    Int16 lowerRight = (Int16)((x + 1) + y * Acre.AcreSize.X);
+                    Int16 topLeft = (Int16)(x + (y + 1) * Acre.AcreSize.X);
+                    Int16 topRight = (Int16)((x + 1) + (y + 1) * Acre.AcreSize.X);
+
+                    indices[counter++] = topLeft;
+                    indices[counter++] = lowerRight;
+                    indices[counter++] = lowerLeft;
+
+                    indices[counter++] = topLeft;
+                    indices[counter++] = topRight;
+                    indices[counter++] = lowerRight;
+                }
+            }
+        }
+
+        public static VertexPositionColorTexture[] vertices = new VertexPositionColorTexture[(int)Acre.AcreSize.X * (int)Acre.AcreSize.Y * 6 * 9];
+        public static void SetUpVertices()
+        // Sets up the vertices. This should be run every time the acres change.
+        {
+            var counter = 0;
+            for (int x = MinX(); x < MaxX(); x++)
+            {
+                for (int y = MinY(); y < MaxY(); y++)
+                {
+                    // top left
+                    var topLeft = vertices[counter++];
+                    topLeft.Position = new Vector3(x, y + 1, 0);
+                    topLeft.Color = Color.White; // TODO: Is this the default or do we need to specify?
+                    topLeft.TextureCoordinate.X = 0;
+                    topLeft.TextureCoordinate.Y = 0;
+
+                    // bottom right
+                    var bottomRight = vertices[counter++];
+                    bottomRight.Position = new Vector3(x + 1, y, 0);
+                    bottomRight.Color = Color.White;
+                    bottomRight.TextureCoordinate.X = 1;
+                    bottomRight.TextureCoordinate.Y = 1;
+
+                    // bottom left
+                    var bottomLeft = vertices[counter++];
+                    bottomLeft.Position = new Vector3(x, y, 0);
+                    bottomLeft.Color = Color.White;
+                    bottomLeft.TextureCoordinate.X = 0;
+                    bottomLeft.TextureCoordinate.Y = 1;
+
+                    // bottom right
+                    vertices[counter++] = bottomRight;
+
+                    // top left
+                    vertices[counter++] = topLeft;
+
+                    // top right
+                    var topRight = vertices[counter++];
+                    topRight.Position = new Vector3(x + 1, y + 1, 0);
+                    topRight.Color = Color.White;
+                    topRight.TextureCoordinate.X = 1;
+                    topRight.TextureCoordinate.Y = 0;
+                }
+            }
+        }
+
         // Updates your acres to surround the camera
         public static void Update()
         {
@@ -221,6 +312,8 @@ namespace Generator
                 // Update the Center stats to reflect the current position
                 CenterAcreX = NewCenterAcreX;
                 CenterAcreY = NewCenterAcreY;
+
+                SetUpVertices();
             }
         }
     }

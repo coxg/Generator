@@ -110,6 +110,8 @@ namespace Generator
             // Load in the fonts
             Globals.Font = Content.Load<SpriteFont>("Fonts/Score");
 
+            TileManager.SetUpIndices();
+
         }
 
         /// <summary>
@@ -214,13 +216,7 @@ namespace Generator
             // Draw the tile layer
             GraphicsDevice.SetRenderTarget(tileRenderTarget);
             GraphicsDevice.Clear(Color.Transparent);
-            for (var x = (int)camera.VisibleArea.Left; x < (int)camera.VisibleArea.Right; x++)
-            {
-                for (var y = (int)camera.VisibleArea.Top; y < (int)camera.VisibleArea.Bottom; y++)
-                {
-                    Drawing.DrawTile(x, y);
-                }
-            }
+            Drawing.DrawTilesFromBuffer();
 
             // Draw the GameObjects
             GraphicsDevice.SetRenderTarget(objectRenderTarget);
