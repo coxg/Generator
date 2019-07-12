@@ -249,7 +249,7 @@ namespace Generator
             }
 
             // Draw it
-            GameControl.effect.Parameters["Texture"].SetValue(component.Sprite);
+            GameControl.effect.Texture = component.Sprite;
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -289,7 +289,7 @@ namespace Generator
             }
 
             // Draw it
-            GameControl.effect.Parameters["Texture"].SetValue(component.Sprite);
+            GameControl.effect.Texture = component.Sprite;
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -485,7 +485,7 @@ namespace Generator
             }
 
             // Draw it
-            GameControl.effect.Parameters["Texture"].SetValue(Globals.LightTexture);
+            GameControl.effect.Texture = Globals.LightTexture;
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -567,17 +567,48 @@ namespace Generator
                 string bottomSide = "Bottom",
                 float opacity = 1)
         {
+            // Generate the vertices
+            var vertices = commonVertices[bottomSide];
+
+            // Bottom left
+            vertices[0].Position = new Vector3(bottomLeft.X, bottomLeft.Y, 0);
+
+            // Top left
+            vertices[1].Position = new Vector3(bottomLeft.X, bottomLeft.Y + 1, 0);
+
+            // Bottom right
+            vertices[2].Position = new Vector3(bottomLeft.X + 1, bottomLeft.Y, 0);
+
+            // Top left
+            vertices[3] = vertices[1];
+
+            // Top right
+            vertices[4].Position = new Vector3(bottomLeft.X + 1, bottomLeft.Y + 1, 0);
+
+            // Bottom right
+            vertices[5] = vertices[2];
+
+            // Draw it
+            GameControl.effect.Texture = TileManager.ObjectFromName[tileName].Sprite;
+            foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                
+                GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
+                    PrimitiveType.TriangleList, vertices, 0, 2);
+            }
         }
 
         // Draws a single layer of a tile
         public static void DrawTilesFromBuffer()
         {
             // Draw it
-            GameControl.effect.Parameters["Texture"].SetValue(TileManager.ObjectFromName.Values.ToList()[4].Sprite);
+            GameControl.effect.Texture = TileManager.ObjectFromName.Values.ToList()[11].Sprite;
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
 
+                /*
                 var myVertexBuffer = new VertexBuffer(GameControl.graphics.GraphicsDevice, VertexPositionColorTexture.VertexDeclaration, TileManager.vertices.Length, BufferUsage.WriteOnly);
                 myVertexBuffer.SetData(TileManager.vertices);
 
@@ -587,6 +618,9 @@ namespace Generator
                 GameControl.graphics.GraphicsDevice.Indices = myIndexBuffer;
                 GameControl.graphics.GraphicsDevice.SetVertexBuffer(myVertexBuffer);
                 GameControl.graphics.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, TileManager.indices.Length / 3);
+                */
+
+                GameControl.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, TileManager.vertices, 0, TileManager.vertices.Length / 3);
             }
         }
 

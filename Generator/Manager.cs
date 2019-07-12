@@ -30,13 +30,13 @@ namespace Generator
         }
 
         // Gets the index of the acre from the X position
-        public static int AcreX(int x)
+        public static int GetAcreXIndex(int x)
         {
             return (int)Math.Floor(x / Acre.AcreSize.X) - CenterAcreX + 1;
         }
 
         // Gets the index of the acre from the Y position
-        public static int AcreY(int y)
+        public static int GetAcreYIndex(int y)
         {
             return (int)Math.Floor(y / Acre.AcreSize.Y) - CenterAcreY + 1;
         }
@@ -45,7 +45,7 @@ namespace Generator
         // TODO: Negative indices aren't a thing, so I need to wrap around manually. What should the max distance be?
         public static int GetIndex(int x, int y)
         {
-            var acre = Acres[AcreX(x), AcreY(y)];
+            var acre = Acres[GetAcreXIndex(x), GetAcreYIndex(y)];
             var index = acre.Get(x, y);
             return index;
         }
@@ -67,7 +67,7 @@ namespace Generator
         // TODO: Replace this with a real setter
         public static void Set(int x, int y, string name)
         {
-            var acre = Acres[AcreX(x), AcreY(y)];
+            var acre = Acres[GetAcreXIndex(x), GetAcreYIndex(y)];
             var index = IndexFromName[name];
             acre.Set(x, y, index);
         }
@@ -125,11 +125,11 @@ namespace Generator
         }
         public static int MaxX()
         {
-            return Acres[2, 2].MinX + (int)Acre.AcreSize.X;
+            return Acres[2, 2].MinX + (int)Acre.AcreSize.X - 1;
         }
         public static int MaxY()
         {
-            return Acres[2, 2].MinY + (int)Acre.AcreSize.Y;
+            return Acres[2, 2].MinY + (int)Acre.AcreSize.Y - 1;
         }
 
         public static Int16[] indices = new Int16[(int)Acre.AcreSize.X * (int)Acre.AcreSize.Y * 6 * 9];
@@ -141,18 +141,18 @@ namespace Generator
             {
                 for (Int16 x = 0; x < ((Int16)Acre.AcreSize.X * 3) - 1; x++)
                 {
-                    Int16 lowerLeft = (Int16)(x + y * Acre.AcreSize.X);
-                    Int16 lowerRight = (Int16)((x + 1) + y * Acre.AcreSize.X);
+                    Int16 bottomLeft = (Int16)(x + y * Acre.AcreSize.X);
+                    Int16 bottomRight = (Int16)((x + 1) + y * Acre.AcreSize.X);
                     Int16 topLeft = (Int16)(x + (y + 1) * Acre.AcreSize.X);
                     Int16 topRight = (Int16)((x + 1) + (y + 1) * Acre.AcreSize.X);
 
+                    indices[counter++] = bottomLeft;
                     indices[counter++] = topLeft;
-                    indices[counter++] = lowerRight;
-                    indices[counter++] = lowerLeft;
+                    indices[counter++] = bottomRight;
 
                     indices[counter++] = topLeft;
                     indices[counter++] = topRight;
-                    indices[counter++] = lowerRight;
+                    indices[counter++] = bottomRight;
                 }
             }
         }
@@ -166,39 +166,53 @@ namespace Generator
             {
                 for (int y = MinY(); y < MaxY(); y++)
                 {
-                    // top left
-                    var topLeft = vertices[counter++];
-                    topLeft.Position = new Vector3(x, y + 1, 0);
-                    topLeft.Color = Color.White; // TODO: Is this the default or do we need to specify?
-                    topLeft.TextureCoordinate.X = 0;
-                    topLeft.TextureCoordinate.Y = 0;
-
-                    // bottom right
-                    var bottomRight = vertices[counter++];
-                    bottomRight.Position = new Vector3(x + 1, y, 0);
-                    bottomRight.Color = Color.White;
-                    bottomRight.TextureCoordinate.X = 1;
-                    bottomRight.TextureCoordinate.Y = 1;
-
                     // bottom left
-                    var bottomLeft = vertices[counter++];
-                    bottomLeft.Position = new Vector3(x, y, 0);
-                    bottomLeft.Color = Color.White;
-                    bottomLeft.TextureCoordinate.X = 0;
-                    bottomLeft.TextureCoordinate.Y = 1;
-
-                    // bottom right
-                    vertices[counter++] = bottomRight;
+                    vertices[counter++] = new VertexPositionColorTexture
+                    {
+                        Position = new Vector3(x, y, 0),
+                        Color = Color.White,
+                        TextureCoordinate = new Vector2(0, 1)
+                    };
 
                     // top left
-                    vertices[counter++] = topLeft;
+                    vertices[counter++] = new VertexPositionColorTexture
+                    {
+                        Position = new Vector3(x, y + 1, 0),
+                        Color = Color.White,
+                        TextureCoordinate = new Vector2(0, 0)
+                    };
+
+                    // bottom right
+                    vertices[counter++] = new VertexPositionColorTexture
+                    {
+                        Position = new Vector3(x + 1, y, 0),
+                        Color = Color.White,
+                        TextureCoordinate = new Vector2(1, 1)
+                    };
+
+                    // top left
+                    vertices[counter++] = new VertexPositionColorTexture
+                    {
+                        Position = new Vector3(x, y + 1, 0),
+                        Color = Color.White,
+                        TextureCoordinate = new Vector2(0, 0)
+                    };
 
                     // top right
-                    var topRight = vertices[counter++];
-                    topRight.Position = new Vector3(x + 1, y + 1, 0);
-                    topRight.Color = Color.White;
-                    topRight.TextureCoordinate.X = 1;
-                    topRight.TextureCoordinate.Y = 0;
+                    vertices[counter++] = new VertexPositionColorTexture
+                    {
+                        Position = new Vector3(x + 1, y + 1, 0),
+                        Color = Color.White,
+                        TextureCoordinate = new Vector2(1, 0)
+                    };
+
+                    // bottom right
+                    vertices[counter++] = new VertexPositionColorTexture
+                    {
+                        Position = new Vector3(x + 1, y, 0),
+                        Color = Color.White,
+                        TextureCoordinate = new Vector2(1, 1)
+                    };
                 }
             }
         }
