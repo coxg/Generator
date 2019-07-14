@@ -93,13 +93,14 @@ namespace Generator
                 strength: 10, 
                 speed: 10, 
                 perception: 10,
-                ai: WalkToPlayer);
-            terrain1.Activate = delegate
+                ai: WalkToPlayer,
+                activationTextList: new List<List<string>> {
+                    new List<string> { "Check it out, I do something weird!", "Did you see how weird that was?!" } });
+            terrain1.ActivationEffect = delegate
             {
                 if (!ObjectFromName.ContainsKey("big terrain"))
                 {
-                    terrain1.Say("Check it out, I do something weird!");
-                    terrain1.Say("Did you see how weird that was?!");
+                    terrain1.ActivationText = new List<List<string>> { new List<string> { "There's already a boy!" } };
 
                     new GameObject(
                         new Vector3(60, 60, 0), 
@@ -107,17 +108,13 @@ namespace Generator
                         name: "big terrain", 
                         strength: 10, 
                         speed: 10, 
-                        perception: 10);
+                        perception: 10,
+                        activationTextList: new List<List<string>> {
+                            new List<string> { "I don't do anything weird.", "...I'm just really fat." },
+                            new List<string> { "Well, other than saying something different the second time you talk to me. " +
+                                               "\nThat's pretty cool I guess. \nIf you're into that kind of thing." }
+                        });
                     var terrain3 = ObjectFromName["big terrain"];
-                    terrain3.Activate = delegate
-                    {
-                        terrain3.Say("I don't do anything weird.");
-                        terrain3.Say("...I'm just really fat.");
-                    };
-                }
-                else
-                {
-                    terrain1.Say("There's already a boy!");
                 }
             };
 

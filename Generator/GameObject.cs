@@ -120,7 +120,9 @@ namespace Generator
 
         // Interaction
         public int PartyNumber;
-        public Action Activate;
+        public List<List<string>> ActivationText;
+        public Action ActivationEffect;
+        private int ActivationIndex;
         public Action<GameObject> AI;
         public Action<GameObject, GameObject> CollisionEffect;
         public bool Temporary;
@@ -274,6 +276,9 @@ namespace Generator
             Action<GameObject> ai = null,
             Action<GameObject, GameObject> collisionEffect = null,
             bool temporary = false,
+            Action activationEffect = null,
+            string activationText = null,
+            List<List<string>> activationTextList = null,
 
             // Equipment
             Weapon weapon = null,
@@ -326,20 +331,42 @@ namespace Generator
 
             // Interaction
             PartyNumber = partyNumber;
-            Activate = delegate // What happens when you try to talk to it
-            {
-                if (Name != null) Say("This is just a " + Name + ".");
-            };
+            ActivationEffect = activationEffect;
             AI = ai; // Run on each Update - argument is this
             CollisionEffect = collisionEffect; // Run when attempting to move into another object - arguments are this, other
             Temporary = temporary; // If true, destroy this object as soon as it's no longer being updated
             GameObjectManager.AddNewObject(Name, this);
+
+            // Can either give a string or a list of lists, depending on how complicated the text is
+            if (activationTextList != null)
+            {
+                ActivationText = activationTextList;
+            }
+            else if (activationText != null)
+            {
+                ActivationText = new List<List<string>> { new List<string> { activationText } };
+            }
+            else if (Name != null)
+            {
+                ActivationText = new List<List<string>> { new List<string> { "This is just a " + Name + "." } };
+            }
 
             // Grid logic
             Size = size ?? Vector3.One;
             Position = position;
             
             Globals.Log(Name + " has spawned.");
+        }
+
+        // When activating, say each thing in the ActivationText and perform the ActivationFunction
+        public void Activate()
+        {
+            foreach (var text in ActivationText[ActivationIndex])
+            {
+                Say(text);
+            }
+            ActivationEffect?.Invoke();
+            ActivationIndex = (int)MathTools.Mod(ActivationIndex + 1, ActivationText.Count);
         }
 
         // Establish a two-way link between the components and this GameObject
