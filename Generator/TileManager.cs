@@ -17,34 +17,37 @@ namespace Generator
         // Adds all tiles from a directory to all necessary manager attributes
         public static void AddAllTilesInDirectory(string tileName, string directoryName, int baseTileIndex)
         {
-            foreach (var individualTileFile in Directory.GetFiles(
-                Globals.Directory + "/Content/Tiles/" + tileName + "/" + directoryName, "*.png", 
-                SearchOption.TopDirectoryOnly
-                ).Select(Path.GetFileName).Select(Path.GetFileNameWithoutExtension))
-            {
-                // Add it to the tile info dictionary, allowing us to access different sides
-                if (!TileInfo.ContainsKey(baseTileIndex))
-                {
-                    TileInfo.Add(baseTileIndex, new Dictionary<string, List<int>>());
-                }
-                if (!TileInfo[baseTileIndex].ContainsKey(directoryName))
-                {
-                    TileInfo[baseTileIndex].Add(directoryName, new List<int>());
-                }
-                TileInfo[baseTileIndex][directoryName].Add(Count);
+            var fullDirectoryName = Globals.Directory + "/Content/Tiles/" + tileName + "/" + directoryName;
 
-                // Add it to the mapping dictionaries, allowing us to reference it by name/id
-                Globals.Log(tileName + " " + individualTileFile);
-                AddNewObject(
-                    tileName + " " + individualTileFile, 
-                    new Tile(
+            if (Directory.Exists(fullDirectoryName))
+            {
+                foreach (var individualTileFile in Directory.GetFiles(fullDirectoryName, "*.png", SearchOption.TopDirectoryOnly
+                    ).Select(Path.GetFileName).Select(Path.GetFileNameWithoutExtension))
+                {
+                    // Add it to the tile info dictionary, allowing us to access different sides
+                    if (!TileInfo.ContainsKey(baseTileIndex))
+                    {
+                        TileInfo.Add(baseTileIndex, new Dictionary<string, List<int>>());
+                    }
+                    if (!TileInfo[baseTileIndex].ContainsKey(directoryName))
+                    {
+                        TileInfo[baseTileIndex].Add(directoryName, new List<int>());
+                    }
+                    TileInfo[baseTileIndex][directoryName].Add(Count);
+
+                    // Add it to the mapping dictionaries, allowing us to reference it by name/id
+                    Globals.Log(tileName + " " + individualTileFile);
+                    AddNewObject(
                         tileName + " " + individualTileFile,
-                        Globals.Content.Load<Texture2D>(
-                            "Tiles/" + tileName + "/" + directoryName + "/" + individualTileFile),
-                        baseTileIndex,
-                        tileName
-                    )
-                );
+                        new Tile(
+                            tileName + " " + individualTileFile,
+                            Globals.Content.Load<Texture2D>(
+                                "Tiles/" + tileName + "/" + directoryName + "/" + individualTileFile),
+                            baseTileIndex,
+                            tileName
+                        )
+                    );
+                }
             }
         }
 
