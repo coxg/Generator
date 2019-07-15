@@ -18,7 +18,7 @@ namespace Generator
         // Regular old variables
         public static Vector2 Resolution = new Vector2(1500, 900);
         public static ContentManager Content;
-        public static bool Logging = false;
+        public static bool Logging = true;
         public static int RefreshRate = 30;
         public static string Directory = "/Generator/Generator/";
 

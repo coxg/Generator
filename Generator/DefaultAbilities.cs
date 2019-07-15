@@ -110,7 +110,7 @@ namespace Generator
                         components: new Dictionary<string, Component>()
                         {
                             {"body", new Component(
-                                spriteFile: "Ninja/Hand",
+                                name: "Hand",
                                 relativePosition: new Vector3(.5f, .5f, .5f),
                                 relativeSize: 1,
                                 rotationPoint: new Vector3(.5f, .5f, .5f))

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,12 +9,14 @@ namespace Generator
     public class Component : GameElement
     {
         public Component(
-            string spriteFile,
+            string name,
             Vector3 relativePosition,
             float relativeSize,
             Vector3 rotationPoint,
-            string name = null,
+            Vector3? relativeRotation = null,
+            string spriteFile = null,
             bool directional = false,
+            string side = null,
             bool castsShadow = true,
             GameObject sourceObject = null,
             float yOffset = 0,
@@ -25,9 +28,11 @@ namespace Generator
                 rotationPoint.Y * 6,
                 rotationPoint.Z * 18); // TODO: What's going on here?
             Name = name;
+            Side = side;
             CurrentFrame = 0;
             Directional = directional;
             RelativePosition = relativePosition;
+            RelativeRotation = relativeRotation ?? Vector3.Zero;
             Size = relativeSize * 6; // TODO: Why is this necessary? Why is it 6?
             SourceObject = sourceObject;
             YOffset = yOffset;
@@ -38,57 +43,86 @@ namespace Generator
 
         }
 
-        public int CurrentFrame { get; set; }
-        public bool Directional { get; set; }
-        public Vector3 RelativePosition { get; set; }
-        new public float Size { get; set; }
-        public GameObject SourceObject { get; set; }
-        public float YOffset { get; set; }
-        public Dictionary<String, Animation> Animations { get; set; }
-        public Dictionary<String, Texture2D> Sprites { get; set; }
+        public int CurrentFrame;
+        public bool Directional;
+        public string Side;
+        public Vector3 RelativePosition;
+        public Vector3 RelativeRotation;
+        new public float Size;
+        public GameObject SourceObject;
+        public float YOffset;
+        public Dictionary<String, Animation> Animations;
+        public Dictionary<String, Texture2D> Sprites;
 
-        private float _Direction { get; set; }
+        private float _Direction;
         override public float Direction {
             set { _Direction = value; }
             get { return SourceObject.Direction; }
         }
 
-        private string _spriteFile { get; set; }
+        private string _spriteFile;
         public string SpriteFile
         {
             get { return _spriteFile; }
 
             set
             {
-                Sprites["Front"] = Globals.Content.Load<Texture2D>("Sprites/" + value + (Directional ? "-Front" : ""));
-                Sprites["Back"] = Globals.Content.Load<Texture2D>("Sprites/" + value + (Directional ? "-Back" : ""));
-                Sprites["LView"] = Globals.Content.Load<Texture2D>("Sprites/" + value + (Directional ? "-LView" : ""));
-                Sprites["RView"] = Globals.Content.Load<Texture2D>("Sprites/" + value + (Directional ? "-RView" : ""));
+                // Determine the base path for the component based on the input and what files exists
+                var ComponentPath = "Components/" + Name + "/";
+                if (Directory.Exists(Globals.Directory + "/Content/" + ComponentPath + value))
+                {
+                    ComponentPath += value + "/";
+                }
+
+                // Load up the sprites for each direction
+                if (Directional)
+                {
+                    Sprites["Front"] = Globals.Content.Load<Texture2D>(ComponentPath + "Front");
+                    Sprites["Back"] = Globals.Content.Load<Texture2D>(ComponentPath + "Back");
+                    Sprites["Left"] = Globals.Content.Load<Texture2D>(ComponentPath + "Left");
+                    Sprites["Right"] = Globals.Content.Load<Texture2D>(ComponentPath + "Right");
+                }
+                else if (Side != null && Directory.Exists(Globals.Directory + "/Content/" + ComponentPath + Side))
+                {
+                    Sprites[""] = Globals.Content.Load<Texture2D>(ComponentPath + Side);
+                }
+                else
+                {
+                    Sprites[""] = Globals.Content.Load<Texture2D>(ComponentPath + Name);
+                }
                 _spriteFile = value;
             }
         }
 
         override public Texture2D Sprite
         {
-            get { return Sprites[MathTools.StringFromRadians(Direction)]; }
+            get {
+                if (Directional)
+                {
+                    return Sprites[MathTools.StringFromRadians(Direction)];
+                }
+                else
+                {
+                    return Sprites[""];
+                }
+            }
 
             set { throw new NotImplementedException("Cannot set Component Sprite directly; use SpriteFile instead."); }
         }
-        
-        private Vector3 PositionOffset { get; set; }
+
         override public Vector3 Position
         {
             set { throw new NotImplementedException("Cannot set Component position directly; use an animation instead."); }
 
             get
             {
-                // Get the center point of the object itself - this is what we're rotating around
+                // Get the center point of the source object - this is what we're rotating around
                 var ObjectOffsets = new Vector3(
                     SourceObject.Size.X / 2,
                     SourceObject.Size.Y / 2,
                     0);
 
-                // Get the center point for the component itself - this is what we'll be rotating
+                // Get the center point for the component - this is what we'll be rotating
                 var ComponentSize = SourceObject.Size * Size;
                 var ComponentOffsets = ObjectOffsets + new Vector3(
                     (RelativePosition.X - .5f) * ComponentSize.X,

@@ -390,7 +390,8 @@ namespace Generator
             Dictionary<string, Component> result = new Dictionary<string, Component>()
             {
                 {"Head", new Component(
-                    spriteFile: ComponentSpriteFileName + "/Head",
+                    name: "Head",
+                    spriteFile: ComponentSpriteFileName,
                     directional: true,
                     relativePosition: new Vector3(.5f, .506f, 1.36f),
                     relativeSize: .32f,
@@ -398,7 +399,8 @@ namespace Generator
                     yOffset: -.05f)
                 },
                 {"Face", new Component(
-                    spriteFile: ComponentSpriteFileName + "/Face01",
+                    name: "Face",
+                    spriteFile: ComponentSpriteFileName,
                     directional: true,
                     relativePosition: new Vector3(.5f, .57f, 1.11f),
                     relativeSize: .128f,
@@ -407,17 +409,20 @@ namespace Generator
                     castsShadow: false)
                 },
                 {"Body", new Component(
-                    spriteFile: ComponentSpriteFileName + "/Body",
+                    name: "Body",
+                    spriteFile: ComponentSpriteFileName,
                     directional: true,
                     relativePosition: new Vector3(.5f, .505f, .52f),
                     relativeSize: .16f,
                     rotationPoint: new Vector3(.08f, 0, .08f))
                 },
                 {"Left Arm", new Component(
-                    spriteFile: ComponentSpriteFileName + "/RightArm",
-                    directional: true,
-                    relativePosition: new Vector3(-.1f, .504f, .6f),
+                    name: "Arm",
+                    side: "Left",
+                    spriteFile: ComponentSpriteFileName,
+                    relativePosition: new Vector3(.08f, .504f, .565f),
                     relativeSize: .08f,
+                    relativeRotation: new Vector3(0, .4f, 0),
                     rotationPoint: new Vector3(.04f, 0, .023f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
@@ -436,10 +441,12 @@ namespace Generator
                     })
                 },
                 {"Right Arm", new Component(
-                    spriteFile: ComponentSpriteFileName + "/LeftArm",
-                    directional: true,
-                    relativePosition: new Vector3(1.1f, .504f, .6f),
+                    name: "Arm",
+                    side: "Right",
+                    spriteFile: ComponentSpriteFileName,
+                    relativePosition: new Vector3(.92f, .504f, .565f),
                     relativeSize: .08f,
+                    relativeRotation: new Vector3(0, -.4f, 0),
                     rotationPoint: new Vector3(.04f, 0, .023f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
@@ -458,8 +465,10 @@ namespace Generator
                     })
                 },
                 {"Left Hand", new Component(
-                    spriteFile: ComponentSpriteFileName + "/Hand",
-                    relativePosition: new Vector3(-.2f, .5045f, .42f),
+                    name: "Hand",
+                    side: "Left",
+                    spriteFile: ComponentSpriteFileName,
+                    relativePosition: new Vector3(-.25f, .5045f, .40f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .032f),
                     yOffset: .001f,
@@ -479,8 +488,10 @@ namespace Generator
                     })
                 },
                 {"Right Hand", new Component(
-                    spriteFile: ComponentSpriteFileName + "/Hand",
-                    relativePosition: new Vector3(1.2f, .5045f, .42f),
+                    name: "Hand",
+                    side: "Right",
+                    spriteFile: ComponentSpriteFileName,
+                    relativePosition: new Vector3(1.25f, .5045f, .40f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .032f),
                     yOffset: .001f,
@@ -500,7 +511,9 @@ namespace Generator
                     })
                 },
                 {"Left Leg", new Component(
-                    spriteFile: ComponentSpriteFileName + "/Leg",
+                    name: "Leg",
+                    side: "Left",
+                    spriteFile: ComponentSpriteFileName,
                     relativePosition: new Vector3(.23f, .504f, .14f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .018f),
@@ -521,7 +534,9 @@ namespace Generator
                     })
                 },
                 {"Right Leg", new Component(
-                    spriteFile: ComponentSpriteFileName + "/Leg",
+                    name: "Leg",
+                    side: "Right",
+                    spriteFile: ComponentSpriteFileName,
                     relativePosition: new Vector3(.77f, .504f, .14f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .018f),

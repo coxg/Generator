@@ -156,12 +156,11 @@ namespace Generator
             Vector3 normalizationDirection, 
             Vector3 normalizationOffset)
         {
-            //var vertices = new VertexPositionColorTexture[6];
             var vertices = commonVertices["Component"];
             var bottomLeft = component.Position;
-            var rotationPoint = bottomLeft + component.RotationPoint;
-            var rotationDirection = MathTools.PointRotatedAroundPoint(
-                component.RotationOffset,
+            var rotationPoint = bottomLeft + component.RotationPoint * component.SourceObject.Size;
+            var rotationOffsets = MathTools.PointRotatedAroundPoint(
+                component.RelativeRotation + component.RotationOffset,
                 Vector3.Zero,
                 new Vector3(0, 0, component.Direction));
 
@@ -169,7 +168,7 @@ namespace Generator
             vertices[0].Position = MathTools.PointRotatedAroundPoint(
                 bottomLeft,
                 rotationPoint,
-                rotationDirection);
+                rotationOffsets);
             vertices[0].Position = MathTools.PointRotatedAroundPoint(
                 vertices[0].Position,
                 component.SourceObject.Center,
@@ -183,7 +182,7 @@ namespace Generator
                     bottomLeft.Y,
                     bottomLeft.Z + size.Z),
                 rotationPoint,
-                rotationDirection);
+                rotationOffsets);
             vertices[1].Position = MathTools.PointRotatedAroundPoint(
                 vertices[1].Position,
                 component.SourceObject.Center,
@@ -197,7 +196,7 @@ namespace Generator
                     bottomLeft.Y,
                     bottomLeft.Z),
                 rotationPoint,
-                rotationDirection);
+                rotationOffsets);
             vertices[2].Position = MathTools.PointRotatedAroundPoint(
                 vertices[2].Position,
                 component.SourceObject.Center,
@@ -212,7 +211,7 @@ namespace Generator
                     bottomLeft.Y,
                     bottomLeft.Z + size.Z),
                 rotationPoint,
-                rotationDirection);
+                rotationOffsets);
             vertices[4].Position = MathTools.PointRotatedAroundPoint(
                 vertices[4].Position,
                 component.SourceObject.Center,

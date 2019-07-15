@@ -63,7 +63,7 @@ namespace Generator
             var cardinalDirection = "Back";
             if (radians > MathHelper.PiOver4 & radians < 3 * MathHelper.PiOver4)
             {
-                cardinalDirection = "LView";
+                cardinalDirection = "Left";
             }
             else if (radians >= 3 * MathHelper.PiOver4 & radians <= 5 * MathHelper.PiOver4)
             {
@@ -71,7 +71,7 @@ namespace Generator
             }
             else if (radians > 5 * MathHelper.PiOver4 & radians < 7 * MathHelper.PiOver4)
             {
-                cardinalDirection = "RView";
+                cardinalDirection = "Right";
             }
 
             return cardinalDirection;
@@ -79,34 +79,43 @@ namespace Generator
 
         public static Vector3 PointRotatedAroundPoint(
                         Vector3 RotatedPoint, Vector3 AroundPoint, Vector3 RotationAxis)
-        // Rotates a point around another point
+        // Rotates a point around another point one avis at a time
         {
             // Translate point
             RotatedPoint -= AroundPoint;
 
-            // Precompute sin/cos
-            var sin = new Vector3(
-                (float)Math.Sin(RotationAxis.X),
-                (float)Math.Sin(RotationAxis.Y),
-                (float)Math.Sin(RotationAxis.Z));
-            var cos = new Vector3(
-                (float)Math.Cos(RotationAxis.X),
-                (float)Math.Cos(RotationAxis.Y),
-                (float)Math.Cos(RotationAxis.Z));
+            // Rotate point x-axis
+            if (RotationAxis.X != 0)
+            {
+                var sin = (float)Math.Sin(RotationAxis.X);
+                var cos = (float)Math.Cos(RotationAxis.X);
+                RotatedPoint = new Vector3(
+                    RotatedPoint.X,
+                    RotatedPoint.Y * cos - RotatedPoint.Z * sin,
+                    RotatedPoint.Y * sin + RotatedPoint.Z * cos);
+            }
 
-            // Rotate point around each axis
-            RotatedPoint = new Vector3(
-                RotatedPoint.X,
-                RotatedPoint.Y * cos.X - RotatedPoint.Z * sin.X,
-                RotatedPoint.Y * sin.X + RotatedPoint.Z * cos.X);
-            RotatedPoint = new Vector3(
-                RotatedPoint.X * cos.Y + RotatedPoint.Z * sin.Y,
-                RotatedPoint.Y,
-                -RotatedPoint.X * sin.Y + RotatedPoint.Z * cos.Y);
-            RotatedPoint = new Vector3(
-                RotatedPoint.X * cos.Z - RotatedPoint.Y * sin.Z,
-                RotatedPoint.X * sin.Z + RotatedPoint.Y * cos.Z,
-                RotatedPoint.Z);
+            // Rotate point y-axis
+            if (RotationAxis.Y != 0)
+            {
+                var sin = (float)Math.Sin(RotationAxis.Y);
+                var cos = (float)Math.Cos(RotationAxis.Y);
+                RotatedPoint = new Vector3(
+                    RotatedPoint.X * cos + RotatedPoint.Z * sin,
+                    RotatedPoint.Y,
+                    -RotatedPoint.X * sin + RotatedPoint.Z * cos);
+            }
+
+            // Rotate point z-axis
+            if (RotationAxis.Z != 0)
+            {
+                var sin = (float)Math.Sin(RotationAxis.Z);
+                var cos = (float)Math.Cos(RotationAxis.Z);
+                RotatedPoint = new Vector3(
+                    RotatedPoint.X * cos - RotatedPoint.Y * sin,
+                    RotatedPoint.X * sin + RotatedPoint.Y * cos,
+                    RotatedPoint.Z);
+            }
 
             // Translate point back
             RotatedPoint += AroundPoint;
