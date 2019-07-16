@@ -72,13 +72,14 @@ namespace Generator
             Name = "GameObjects";
 
             Globals.Player = new GameObject(
-                new Vector3(50, 50, 0), 
-                stamina: 100, 
-                strength: 10, 
-                speed: 10, 
+                new Vector3(50, 50, 0),
+                stamina: 100,
+                strength: 10,
+                speed: 10,
                 perception: 10,
-                name: "Niels", 
+                name: "Niels",
                 partyNumber: 0,
+                componentSpriteFileName: "Girl",
                 weapon: new Weapon(
                     name: "Sword",
                     type: "Cut",
@@ -94,6 +95,7 @@ namespace Generator
                 speed: 10, 
                 perception: 10,
                 ai: WalkToPlayer,
+                componentSpriteFileName: "Old",
                 activationTextList: new List<List<string>> {
                     new List<string> { "Check it out, I do something weird!", "Did you see how weird that was?!" } });
             terrain1.ActivationEffect = delegate

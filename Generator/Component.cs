@@ -69,22 +69,28 @@ namespace Generator
             {
                 // Determine the base path for the component based on the input and what files exists
                 var ComponentPath = "Components/" + Name + "/";
-                if (Directory.Exists(Globals.Directory + "/Content/" + ComponentPath + value))
+                if (value != null && Directory.Exists(Globals.Directory + "/Content/" + ComponentPath + value))
                 {
                     ComponentPath += value + "/";
                 }
+                else if (Directory.Exists(Globals.Directory + "/Content/" + ComponentPath + "Default"))
+                {
+                    ComponentPath += "Default/";
+                }
 
-                // Load up the sprites for each direction
+                // Components can have different sprites for each side they're on
+                if (Side != null && Directory.Exists(Globals.Directory + "/Content/" + ComponentPath + Side))
+                {
+                    ComponentPath += Side + "/";
+                }
+
+                // Load up the sprites for each specified direction
                 if (Directional)
                 {
                     Sprites["Front"] = Globals.Content.Load<Texture2D>(ComponentPath + "Front");
                     Sprites["Back"] = Globals.Content.Load<Texture2D>(ComponentPath + "Back");
                     Sprites["Left"] = Globals.Content.Load<Texture2D>(ComponentPath + "Left");
                     Sprites["Right"] = Globals.Content.Load<Texture2D>(ComponentPath + "Right");
-                }
-                else if (Side != null && Directory.Exists(Globals.Directory + "/Content/" + ComponentPath + Side))
-                {
-                    Sprites[""] = Globals.Content.Load<Texture2D>(ComponentPath + Side);
                 }
                 else
                 {

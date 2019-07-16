@@ -393,7 +393,7 @@ namespace Generator
                     name: "Head",
                     spriteFile: ComponentSpriteFileName,
                     directional: true,
-                    relativePosition: new Vector3(.5f, .506f, 1.36f),
+                    relativePosition: new Vector3(.5f, .506f, 1.26f),
                     relativeSize: .32f,
                     rotationPoint: new Vector3(.16f, 0, .256f),
                     yOffset: -.05f)
@@ -402,8 +402,8 @@ namespace Generator
                     name: "Face",
                     spriteFile: ComponentSpriteFileName,
                     directional: true,
-                    relativePosition: new Vector3(.5f, .57f, 1.11f),
-                    relativeSize: .128f,
+                    relativePosition: new Vector3(.5f, .57f, 1),
+                    relativeSize: .14f,
                     rotationPoint: new Vector3(.08f, 0, .066f),
                     yOffset: -.05f,
                     castsShadow: false)
@@ -412,7 +412,7 @@ namespace Generator
                     name: "Body",
                     spriteFile: ComponentSpriteFileName,
                     directional: true,
-                    relativePosition: new Vector3(.5f, .505f, .52f),
+                    relativePosition: new Vector3(.5f, .505f, .47f),
                     relativeSize: .16f,
                     rotationPoint: new Vector3(.08f, 0, .08f))
                 },
@@ -420,7 +420,7 @@ namespace Generator
                     name: "Arm",
                     side: "Left",
                     spriteFile: ComponentSpriteFileName,
-                    relativePosition: new Vector3(.08f, .504f, .565f),
+                    relativePosition: new Vector3(.08f, .504f, .515f),
                     relativeSize: .08f,
                     relativeRotation: new Vector3(0, .4f, 0),
                     rotationPoint: new Vector3(.04f, 0, .023f),
@@ -444,7 +444,7 @@ namespace Generator
                     name: "Arm",
                     side: "Right",
                     spriteFile: ComponentSpriteFileName,
-                    relativePosition: new Vector3(.92f, .504f, .565f),
+                    relativePosition: new Vector3(.92f, .504f, .515f),
                     relativeSize: .08f,
                     relativeRotation: new Vector3(0, -.4f, 0),
                     rotationPoint: new Vector3(.04f, 0, .023f),
@@ -468,7 +468,7 @@ namespace Generator
                     name: "Hand",
                     side: "Left",
                     spriteFile: ComponentSpriteFileName,
-                    relativePosition: new Vector3(-.25f, .5045f, .40f),
+                    relativePosition: new Vector3(-.25f, .5045f, .35f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .032f),
                     yOffset: .001f,
@@ -491,7 +491,7 @@ namespace Generator
                     name: "Hand",
                     side: "Right",
                     spriteFile: ComponentSpriteFileName,
-                    relativePosition: new Vector3(1.25f, .5045f, .40f),
+                    relativePosition: new Vector3(1.25f, .5045f, .35f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .032f),
                     yOffset: .001f,
@@ -517,7 +517,7 @@ namespace Generator
                     relativePosition: new Vector3(.23f, .504f, .14f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .018f),
-                    yOffset: .1f,
+                    yOffset: .15f,
                     animations: new Dictionary<string, Animation>()
                     {
                         {"Walk", new Animation(
@@ -540,7 +540,7 @@ namespace Generator
                     relativePosition: new Vector3(.77f, .504f, .14f),
                     relativeSize: .08f,
                     rotationPoint: new Vector3(.04f, 0, .018f),
-                    yOffset: .1f,
+                    yOffset: .15f,
                     animations: new Dictionary<string, Animation>()
                     {
                         {"Walk", new Animation(
