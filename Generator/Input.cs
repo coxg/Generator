@@ -57,9 +57,10 @@ namespace Generator
             // Convert from actual movement input to direction offsets
             var moveVerticalOffset = 0.0;
             var moveHorizontalOffset = 0.0;
-            var speed = 0.0;
+            var speed = 0f;
 
             // Use controller to calculate movement/direction if available and being used
+
             float directionHorizontalOffset = 0;
             float directionVerticalOffset = 0;
             if (capabilities.IsConnected & !(
@@ -70,10 +71,9 @@ namespace Generator
                 directionVerticalOffset = state.ThumbSticks.Right.Y;
                 moveHorizontalOffset = state.ThumbSticks.Left.X;
                 moveVerticalOffset = state.ThumbSticks.Left.Y;
-                speed = Math.Sqrt(
-                    player.Speed.CurrentValue 
-                    * Math.Sqrt(Math.Pow(state.ThumbSticks.Left.X, 2) 
-                                + Math.Pow(state.ThumbSticks.Left.Y, 2)));
+                speed = (float) Math.Sqrt(
+                    Math.Pow(state.ThumbSticks.Left.X, 2) 
+                    + Math.Pow(state.ThumbSticks.Left.Y, 2));
             }
             
             // If not, just use the keyboard
@@ -83,7 +83,7 @@ namespace Generator
                 if (Keyboard.GetState().IsKeyDown(Keys.Down)) moveVerticalOffset -= 1;
                 if (Keyboard.GetState().IsKeyDown(Keys.Left)) moveHorizontalOffset -= 1;
                 if (Keyboard.GetState().IsKeyDown(Keys.Right)) moveHorizontalOffset += 1;
-                speed = (float)Math.Sqrt(player.Speed.CurrentValue);
+                speed = 1;
             }
 
             // Move in the direction specified
@@ -97,7 +97,7 @@ namespace Generator
                 radianDirection = MathTools.Mod(radianDirection, 2f * (float) Math.PI);
 
                 // Move in that direction
-                player.MoveInDirection(radianDirection, (float)speed);
+                player.MoveInDirection(radianDirection, speed);
             }
             else
             {

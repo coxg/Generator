@@ -655,7 +655,7 @@ namespace Generator
         // Attempts to move the object in a direction (radians).
         public void MoveInDirection(
                 float radians = 0,
-                float? speed = null
+                float speed = 1  // Relative to Speed.CurrentValue; 1 == running, .5 == walking, etc
             )
         {
             // Update sprite visuals
@@ -663,8 +663,7 @@ namespace Generator
             Direction = radians;
 
             // Get distance
-            if (speed == null) speed = (float) Math.Sqrt(Speed.CurrentValue);
-            var distance = (float) speed / Globals.RefreshRate;
+            var distance = speed * (float) Math.Sqrt(Speed.CurrentValue) / Globals.RefreshRate;
 
             // Convert from radian direction to X/Y offsets
             var offsets = MathTools.OffsetFromRadians(radians);

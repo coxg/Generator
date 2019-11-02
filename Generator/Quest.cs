@@ -8,64 +8,36 @@ namespace Generator
         public string Name;
         public string Description;
         public GameObject Giver;
-        public GameObject TurnInner;
-        public List<object> Rewards;
+        public GameObject Receiver;
         public Requirements Completion;
         public Requirements Reception;
+        public int Experience;
+        public int ClassPoints;
+        public int Junk;
+        public List<Item> Items;
 
         // Constructor
         public Quest(
-            string name, string description, GameObject giver, GameObject turnInner, 
-            List<object> rewards, Requirements completion, Requirements reception)
+            string name, string description, GameObject giver, GameObject receiver, 
+            Requirements completion, Requirements reception, List<Item> items = null)
         {
             Name = name;
             Description = description;
             Giver = giver;
-            TurnInner = turnInner;
-            Rewards = rewards;
+            Receiver = receiver;
+            Items = items ?? new List<Item>();
             Completion = completion;
             Reception = reception;
         }
 
         public void AwardRewards()
         {
-            foreach (var reward in Rewards)
+            Globals.Party.AddExperience(Experience);
+            Globals.Party.AddClassPoints(ClassPoints);
+            Globals.Party.AddJunk(Junk);
+            foreach (var item in Items)
             {
-                // Most quests should award experience, which should apply to the party
-                if (reward.GetType() == typeof(Experience))
-                {
-                    Globals.Party.AddExperience(reward as Experience);
-                }
-
-                // I guess some quests can give class points? I don't know
-                else if (reward.GetType() == typeof(ClassPoints))
-                {
-                    Globals.Party.AddClassPoints(reward as ClassPoints);
-                }
-
-                // Sure, some of them might give junk, whatever
-                else if (reward.GetType() == typeof(Junk))
-                {
-                    Globals.Party.AddJunk(reward as Junk);
-                }
-
-                // Plenty of quests will give items
-                else if (reward.GetType() == typeof(Item))
-                {
-                    Globals.Party.AddItem(reward as Item);
-                }
-
-                // Rewards can be anything, so allow arbitrary code as rewards
-                else if (reward.GetType() == typeof(Action))
-                {
-                    (reward as Action).Invoke();
-                }
-
-                // If it's not one of the above... that's not good
-                else
-                {
-                    throw new ApplicationException("You can't reward a " + reward.GetType() + "!");
-                }
+                Globals.Party.AddItem(item);
             }
         }
 

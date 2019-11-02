@@ -64,10 +64,7 @@
     <Compile Include="Acre.cs" />
     <Compile Include="Animation.cs" />
     <Compile Include="Party.cs" />
-    <Compile Include="Junk.cs" />
     <Compile Include="Item.cs" />
-    <Compile Include="ClassPoints.cs" />
-    <Compile Include="Experience.cs" />
     <Compile Include="Requirements.cs" />
     <Compile Include="Quest.cs" />
     <Compile Include="DefaultAbilities.cs" />
