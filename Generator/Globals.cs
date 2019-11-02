@@ -12,8 +12,9 @@ namespace Generator
     // C# doesn't have globals. I do!
     public static class Globals
     {
-        // The player
+        // The party
         public static GameObject Player;
+        public static Party Party;
 
         // Regular old variables
         public static Vector2 Resolution = new Vector2(1500, 900);
@@ -37,10 +38,8 @@ namespace Generator
 
         // Data storage
         public static Dictionary<string, Weapon> WeaponsDict = new Dictionary<string, Weapon>();
-        public static Dictionary<string, OffHand> OffHandDict = new Dictionary<string, OffHand>();
-        public static Dictionary<string, Helmet> HelmetDict = new Dictionary<string, Helmet>();
         public static Dictionary<string, Armor> ArmorDict = new Dictionary<string, Armor>();
-        public static Dictionary<string, Generation> GeneratorDict = new Dictionary<string, Generation>();
+        public static Dictionary<string, GeneratorObj> GeneratorDict = new Dictionary<string, GeneratorObj>();
         public static Dictionary<string, Accessory> AccessoryDict = new Dictionary<string, Accessory>();
 
         [MethodImpl(MethodImplOptions.NoInlining)]

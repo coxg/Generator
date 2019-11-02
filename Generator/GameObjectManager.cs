@@ -82,6 +82,7 @@ namespace Generator
                 componentSpriteFileName: "Girl",
                 weapon: new Weapon(
                     name: "Sword",
+                    sprite: Globals.WhiteDot,
                     type: "Cut",
                     damage: 10),
                 brightness: Vector3.One);

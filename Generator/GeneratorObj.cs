@@ -2,16 +2,16 @@
 
 namespace Generator
 {
-    public class OffHand : Equipment
+    public class GeneratorObj : Equipment
         // Weapons, equipped by GameObjects
     {
         // Constructor
-        public OffHand(
-            // Sprite
-            string spriteFile = "Sprites/black_dot",
+        public GeneratorObj(
+            string name, 
+            Texture2D sprite, 
+            int quantity = 1,
 
             // Stats
-            string name = "",
             int damage = 0,
             int defense = 0,
             int weight = 0,
@@ -25,10 +25,12 @@ namespace Generator
             int strength = 0,
             int speed = 0,
             int perception = 0
-        )
+        ) : base(name, sprite, quantity)
         {
+            Slot = "Generator";
+
             // Sprite
-            Sprite = Globals.Content.Load<Texture2D>(spriteFile);
+            Sprite = sprite;
 
             // Stats
             Name = name;
@@ -47,7 +49,7 @@ namespace Generator
             Perception = perception;
 
             // Populate relevant dictionary
-            Globals.OffHandDict[Name] = this;
+            Globals.GeneratorDict[Name] = this;
         }
     }
 }

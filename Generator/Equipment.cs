@@ -2,27 +2,29 @@
 
 namespace Generator
 {
-    public class Equipment
+    public class Equipment : Item
         // Anything equipped by GameObjects
     {
-
-        // Sprite
-        public Texture2D Sprite { get; set; }
+        public string Slot;
 
         // Stats
-        public string Name { get; set; }
-        public int Damage { get; set; }
-        public int Defense { get; set; }
-        public int Weight { get; set; }
+        public int Damage;
+        public int Defense;
+        public int Weight;
 
         // Resources
-        public int Health { get; set; }
-        public int Stamina { get; set; }
-        public int Capacity { get; set; }
+        public int Health;
+        public int Stamina;
+        public int Capacity;
 
         // Primary Attributes
-        public int Strength { get; set; }
-        public int Speed { get; set; }
-        public int Perception { get; set; }
+        public int Strength;
+        public int Speed;
+        public int Perception;
+
+        // Constructor
+        public Equipment(string name, Texture2D sprite, int quantity = 1) : base(name, sprite, quantity)
+        {
+        }
     }
 }

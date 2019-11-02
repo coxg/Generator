@@ -7,11 +7,11 @@ namespace Generator
     {
         // Constructor
         public Weapon(
-            // Sprite
-            string spriteFile = "Sprites/black_dot",
+            string name,
+            Texture2D sprite,
+            int quantity = 1,
 
             // Stats
-            string name = "Fists",
             int range = 1,
             string type = "Bash", // {"Bash", "Cut", "Shoot"}
             float spread = 0,
@@ -29,10 +29,12 @@ namespace Generator
             int strength = 0,
             int speed = 0,
             int perception = 0
-        )
+        ) : base(name, sprite, quantity)
         {
+            Slot = "Armor";
+
             // Sprite
-            Sprite = Globals.Content.Load<Texture2D>(spriteFile);
+            Sprite = sprite;
 
             // Stats
             Name = name;

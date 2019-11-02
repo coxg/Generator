@@ -136,99 +136,32 @@ namespace Generator
         }
 
         // Equipment
-        private Weapon _equippedWeapon =  new Weapon();
+        private Weapon _equippedWeapon = new Weapon("Fists", Globals.WhiteDot);
         public Weapon EquippedWeapon
         {
             get => _equippedWeapon;
-            set
-            {
-                // Resources
-                Health.Max += value.Health - _equippedWeapon.Health;
-                Stamina.Max += value.Stamina - _equippedWeapon.Stamina;
-                Electricity.Max += value.Capacity - _equippedWeapon.Capacity;
-
-                // Attributes
-                Strength.CurrentValue += value.Strength - _equippedWeapon.Strength;
-                Perception.CurrentValue += value.Perception - _equippedWeapon.Perception;
-                Speed.CurrentValue += value.Speed - _equippedWeapon.Speed;
-                _equippedWeapon = value;
-            }
+            set { Equip(value); }
         }
 
-        private OffHand _equippedOffHand = new OffHand();
-        public OffHand EquippedOffHand
-        {
-            get => _equippedOffHand;
-            set
-            {
-                // Resources
-                Health.Max += value.Health - _equippedOffHand.Health;
-                Stamina.Max += value.Stamina - _equippedOffHand.Stamina;
-                Electricity.Max += value.Capacity - _equippedOffHand.Capacity;
-
-                // Attributes
-                Strength.CurrentValue += value.Strength - _equippedOffHand.Strength;
-                Speed.CurrentValue += value.Speed - _equippedOffHand.Speed;
-                Perception.CurrentValue += value.Perception - _equippedOffHand.Perception;
-                _equippedOffHand = value;
-            }
-        }
-
-        private Armor _equippedArmor = new Armor();
+        private Armor _equippedArmor = new Armor("[No Armor]", Globals.WhiteDot);
         public Armor EquippedArmor
         {
             get => _equippedArmor;
-            set
-            {
-                // Resources
-                Health.Max += value.Health - _equippedArmor.Health;
-                Stamina.Max += value.Stamina - _equippedArmor.Stamina;
-                Electricity.Max += value.Capacity - _equippedArmor.Capacity;
-
-                // Attributes
-                Strength.CurrentValue += value.Strength - _equippedArmor.Strength;
-                Speed.CurrentValue += value.Speed - _equippedArmor.Speed;
-                Perception.CurrentValue += value.Perception - _equippedArmor.Perception;
-                _equippedArmor = value;
-            }
+            set { Equip(value); }
         }
 
-        private Generation _equippedGenerator = new Generation();
-        public Generation EquippedGenerator
+        private GeneratorObj _equippedGenerator = new GeneratorObj("[No Generator]", Globals.WhiteDot);
+        public GeneratorObj EquippedGenerator
         {
             get => _equippedGenerator;
-            set
-            {
-                // Resources
-                Health.Max += value.Health - _equippedGenerator.Health;
-                Stamina.Max += value.Stamina - _equippedGenerator.Stamina;
-                Electricity.Max += value.Capacity - _equippedGenerator.Capacity;
-
-                // Attributes
-                Strength.CurrentValue += value.Strength - _equippedGenerator.Strength;
-                Speed.CurrentValue += value.Speed - _equippedGenerator.Speed;
-                Perception.CurrentValue += value.Perception - _equippedGenerator.Perception;
-                _equippedGenerator = value;
-            }
+            set { Equip(value); }
         }
 
-        private Accessory _equippedAccessory = new Accessory();
+        private Accessory _equippedAccessory = new Accessory("[No Accessory]", Globals.WhiteDot);
         public Accessory EquippedAccessory
         {
             get => _equippedAccessory;
-            set
-            {
-                // Resources
-                Health.Max += value.Health - _equippedAccessory.Health;
-                Stamina.Max += value.Stamina - _equippedAccessory.Stamina;
-                Electricity.Max += value.Capacity - _equippedAccessory.Capacity;
-
-                // Attributes
-                Strength.CurrentValue += value.Strength - _equippedAccessory.Strength;
-                Speed.CurrentValue += value.Speed - _equippedAccessory.Speed;
-                Perception.CurrentValue += value.Perception - _equippedAccessory.Perception;
-                _equippedAccessory = value;
-            }
+            set { Equip(value); }
         }
 
         // Constructor
@@ -282,9 +215,8 @@ namespace Generator
 
             // Equipment
             Weapon weapon = null,
-            OffHand offHand = null,
             Armor armor = null,
-            Generation generator = null,
+            GeneratorObj generator = null,
             Accessory accessory = null
         )
         {
@@ -320,11 +252,10 @@ namespace Generator
             Brightness = brightness ?? Vector3.Zero;
 
             // Equipment
-            EquippedWeapon = weapon ?? new Weapon();
-            EquippedOffHand = offHand ?? new OffHand();
-            EquippedArmor = armor ?? new Armor();
-            EquippedGenerator = generator ?? new Generation();
-            EquippedAccessory = accessory ?? new Accessory();
+            EquippedWeapon = weapon ?? new Weapon("Fists", Globals.WhiteDot);
+            EquippedArmor = armor ?? new Armor("[No Armor]", Globals.WhiteDot);
+            EquippedGenerator = generator ?? new GeneratorObj("[No Generator]", Globals.WhiteDot);
+            EquippedAccessory = accessory ?? new Accessory("[No Accessory]", Globals.WhiteDot);
 
             // Abilities
             Abilities = abilities ?? DefaultAbilities.GenerateDefaultAbilities(this);
@@ -382,6 +313,41 @@ namespace Generator
                     animation.Value.SourceElement = component.Value;
                 }
             }
+        }
+
+        // Equip some equipment!
+        public void Equip(Equipment equipmentToEquip)
+        {
+            Equipment equippedEquipment = null;
+            switch (equipmentToEquip.Slot)
+            {
+                case "Weapon":
+                    equippedEquipment = _equippedWeapon;
+                    break;
+                case "Armor":
+                    equippedEquipment = _equippedArmor;
+                    break;
+                case "Generator":
+                    equippedEquipment = _equippedGenerator;
+                    break;
+                case "Accessory":
+                    equippedEquipment = _equippedAccessory;
+                    break;
+                default:
+                    break;
+            }
+
+            // Resources
+            Health.Max += equipmentToEquip.Health - equippedEquipment.Health;
+            Stamina.Max += equipmentToEquip.Stamina - equippedEquipment.Stamina;
+            Electricity.Max += equipmentToEquip.Capacity - equippedEquipment.Capacity;
+
+            // Attributes
+            Strength.CurrentValue += equipmentToEquip.Strength - equippedEquipment.Strength;
+            Perception.CurrentValue += equipmentToEquip.Perception - equippedEquipment.Perception;
+            Speed.CurrentValue += equipmentToEquip.Speed - equippedEquipment.Speed;
+
+            equippedEquipment = equipmentToEquip;
         }
 
         // Create the default ComponentDictionary
