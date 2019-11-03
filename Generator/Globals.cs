@@ -14,7 +14,7 @@ namespace Generator
     {
         // The party
         public static GameObject Player;
-        public static Party Party;
+        public static Party Party = new Party();
 
         // Regular old variables
         public static Vector2 Resolution = new Vector2(1500, 900);

@@ -85,9 +85,9 @@ namespace Generator
 
         // Primary Attributes
         public Attribute Strength;
-        public Attribute Perception;
+        public Attribute Sense;
         public Attribute Speed;
-        public Attribute Weight; // Roughly in pounds
+        public Attribute Style;  // Right???
 
         // Brightness
         public Vector3 RelativeLightPosition = Vector3.Zero;
@@ -191,8 +191,8 @@ namespace Generator
             // Primary Attributes
             int strength = 0,
             int speed = 0,
-            int perception = 0,
-            int weight = 150,
+            int sense = 0,
+            int style = 0,
 
             // ...Other Attributes
             string name = null,
@@ -241,8 +241,8 @@ namespace Generator
             // Primary Attributes
             Strength = new Attribute(strength);
             Speed = new Attribute(speed);
-            Perception = new Attribute(perception);
-            Weight = new Attribute(weight); // TODO: Use this in knockback calculation
+            Sense = new Attribute(sense);
+            Style = new Attribute(sense);
 
             // ...Other Attributes
             Name = name ?? Guid.NewGuid().ToString();
@@ -344,8 +344,9 @@ namespace Generator
 
             // Attributes
             Strength.CurrentValue += equipmentToEquip.Strength - equippedEquipment.Strength;
-            Perception.CurrentValue += equipmentToEquip.Perception - equippedEquipment.Perception;
+            Sense.CurrentValue += equipmentToEquip.Sense - equippedEquipment.Sense;
             Speed.CurrentValue += equipmentToEquip.Speed - equippedEquipment.Speed;
+            Style.CurrentValue += equipmentToEquip.Style - equippedEquipment.Style;
 
             equippedEquipment = equipmentToEquip;
         }

@@ -10,17 +10,17 @@ namespace Generator
         // Stats
         public int Damage;
         public int Defense;
-        public int Weight;
 
-        // Resources
+        // Resource max values modifiers
         public int Health;
         public int Stamina;
         public int Capacity;
 
-        // Primary Attributes
+        // Primary attribute modifiers
         public int Strength;
         public int Speed;
-        public int Perception;
+        public int Sense;
+        public int Style;
 
         // Constructor
         public Equipment(string name, Texture2D sprite, int quantity = 1) : base(name, sprite, quantity)

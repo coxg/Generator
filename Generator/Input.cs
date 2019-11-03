@@ -60,7 +60,6 @@ namespace Generator
             var speed = 0f;
 
             // Use controller to calculate movement/direction if available and being used
-
             float directionHorizontalOffset = 0;
             float directionVerticalOffset = 0;
             if (capabilities.IsConnected & !(
@@ -71,9 +70,9 @@ namespace Generator
                 directionVerticalOffset = state.ThumbSticks.Right.Y;
                 moveHorizontalOffset = state.ThumbSticks.Left.X;
                 moveVerticalOffset = state.ThumbSticks.Left.Y;
-                speed = (float) Math.Sqrt(
+                speed = (float) Math.Min(1, Math.Sqrt(
                     Math.Pow(state.ThumbSticks.Left.X, 2) 
-                    + Math.Pow(state.ThumbSticks.Left.Y, 2));
+                    + Math.Pow(state.ThumbSticks.Left.Y, 2)));
             }
             
             // If not, just use the keyboard
@@ -98,10 +97,12 @@ namespace Generator
 
                 // Move in that direction
                 player.MoveInDirection(radianDirection, speed);
+                Timer.PlayerMovementMagnitude = speed;
             }
             else
             {
                 player.IsWalking = false;
+                Timer.PlayerMovementMagnitude = 0;
             }
 
             // Convert from direction offsets to radian direction

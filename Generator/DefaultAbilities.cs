@@ -51,7 +51,7 @@ namespace Generator
         {
             return new Ability(
                 "Attack",
-                staminaCost: gameObject.EquippedWeapon.Weight + 10,
+                staminaCost: 10,
                 start: delegate
                 {
                     gameObject.IsSwinging = true;
@@ -88,7 +88,7 @@ namespace Generator
 
             return new Ability(
                 "Shoot",
-                staminaCost: gameObject.EquippedWeapon.Weight,
+                staminaCost: 5,
                 cooldown: .1f,
                 keepCasting: true,
                 start: delegate

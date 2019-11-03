@@ -76,14 +76,13 @@ namespace Generator
                 stamina: 100,
                 strength: 10,
                 speed: 10,
-                perception: 10,
+                sense: 90,
                 name: "Niels",
                 partyNumber: 0,
                 componentSpriteFileName: "Girl",
                 weapon: new Weapon(
                     name: "Sword",
                     sprite: Globals.WhiteDot,
-                    type: "Cut",
                     damage: 10),
                 brightness: Vector3.One);
 
@@ -94,7 +93,7 @@ namespace Generator
                 brightness: new Vector3(.5f, .1f, .5f),
                 strength: 10, 
                 speed: 10, 
-                perception: 10,
+                sense: 10,
                 ai: WalkToPlayer,
                 componentSpriteFileName: "Old",
                 activationTextList: new List<List<string>> {
@@ -111,7 +110,7 @@ namespace Generator
                         name: "big terrain", 
                         strength: 10, 
                         speed: 10, 
-                        perception: 10,
+                        sense: 10,
                         activationTextList: new List<List<string>> {
                             new List<string> { "I don't do anything weird.", "...I'm just really fat." },
                             new List<string> { "Well, other than saying something different the second time you talk to me. " +
@@ -127,7 +126,7 @@ namespace Generator
                 name: "medium terrain", 
                 strength: 10, 
                 speed: 10, 
-                perception: 10);
+                sense: 10);
 
             // Populate the Acres
             PopulateAcres();

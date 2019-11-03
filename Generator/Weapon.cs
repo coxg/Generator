@@ -13,12 +13,10 @@ namespace Generator
 
             // Stats
             int range = 1,
-            string type = "Bash", // {"Bash", "Cut", "Shoot"}
             float spread = 0,
             int area = 0,
             int damage = 0,
             int defense = 0,
-            int weight = 0,
 
             // Resources
             int health = 0,
@@ -39,12 +37,10 @@ namespace Generator
             // Stats
             Name = name;
             Range = range;
-            Type = type; // {"Bash", "Cut", "Shoot"}
             Spread = spread;
             Area = area;
             Damage = damage;
             Defense = defense;
-            Weight = weight;
 
             // Resources
             Health = health;
@@ -54,7 +50,7 @@ namespace Generator
             // Primary Attributes
             Strength = strength;
             Speed = speed;
-            Perception = perception;
+            Sense = perception;
 
             // Populate relevant dictionary
             Globals.WeaponsDict[name] = this;
@@ -62,7 +58,6 @@ namespace Generator
 
         // Stats
         public int Range { get; set; }
-        public string Type { get; set; } // {"Bash", "Cut", "Shoot"}
         public float Spread { get; set; }
         public int Area { get; set; }
     }

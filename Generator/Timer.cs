@@ -6,21 +6,53 @@ namespace Generator
     public static class Timer
     {
         public static int MaxClock = 1000000000;
-        public static int Clock = 0;
+        public static float Clock = 0;
         public static Dictionary<int, List<Action>> Events = new Dictionary<int, List<Action>>();
 
-        public static void Update()
-        // Launch any events scheduled to happen
+        // The speed at which the game time moves relative to IRL time
+        public static float PlayerMovementMagnitude;  // 1 == running, 0 == still
+        public static float? GameSpeedOverride = null;
+        public static float GameSpeed
         {
-            Clock = (int)MathTools.Mod(Clock + 1, MaxClock);
-            if (Events.ContainsKey(Clock))
+            set { GameSpeedOverride = value; }
+            get
             {
-                foreach (Action action in Events[Clock])
+                if (GameSpeedOverride != null)
                 {
-                    action();
+                    return (float)GameSpeedOverride;
                 }
-                Events.Remove(Clock);
+                else if (Globals.Party.InCombat)
+                {
+                    return 1 - ((1 - PlayerMovementMagnitude) * (float)Math.Sqrt(Globals.Player.Sense.CurrentValue / 100f));
+                }
+                else
+                {
+                    return 1;
+                }
             }
+        }
+
+        public static void Update()
+        {
+            
+            // Recompute the in-game time
+            var newClock = MathTools.Mod(Clock + GameSpeed, MaxClock);
+
+            // Launch any events scheduled to happen between the last time and the new time
+            for (int i = (int)Clock; i < (int)newClock; i++)
+            {
+                if (Events.ContainsKey(i))
+                {
+                    foreach (Action action in Events[i])
+                    {
+                        action();
+                    }
+                    Events.Remove(i);
+                }
+            }
+
+            // Update the clock itself
+            Clock = newClock;
         }
 
         public static void AddEvent(float seconds, Action action)

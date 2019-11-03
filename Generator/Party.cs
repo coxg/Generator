@@ -5,11 +5,12 @@ namespace Generator
     public class Party
     {
         public Dictionary<string, GameObject> Members;
+        public bool InCombat = true;
 
         // Constructor
-        public Party(Dictionary<string, GameObject> members)
+        public Party(Dictionary<string, GameObject> members = null)
         {
-            Members = members;
+            Members = members ?? new Dictionary<string, GameObject>();
         }
 
         public void Say(string text)

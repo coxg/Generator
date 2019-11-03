@@ -14,7 +14,6 @@ namespace Generator
             // Stats
             int damage = 0,
             int defense = 0,
-            int weight = 0,
 
             // Resources
             int health = 0,
@@ -36,7 +35,6 @@ namespace Generator
             Name = name;
             Damage = damage;
             Defense = defense;
-            Weight = weight;
 
             // Resources
             Health = health;
@@ -46,7 +44,7 @@ namespace Generator
             // Primary Attributes
             Strength = strength;
             Speed = speed;
-            Perception = perception;
+            Sense = perception;
 
             // Populate relevant dictionary
             Globals.AccessoryDict[Name] = this;
