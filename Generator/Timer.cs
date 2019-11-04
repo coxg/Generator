@@ -10,6 +10,7 @@ namespace Generator
         public static Dictionary<int, List<Action>> Events = new Dictionary<int, List<Action>>();
 
         // The speed at which the game time moves relative to IRL time
+        // TODO: Animations need to check GameSpeed too, should cache it
         public static float PlayerMovementMagnitude;  // 1 == running, 0 == still
         public static float? GameSpeedOverride = null;
         public static float GameSpeed
@@ -39,6 +40,7 @@ namespace Generator
             var newClock = MathTools.Mod(Clock + GameSpeed, MaxClock);
 
             // Launch any events scheduled to happen between the last time and the new time
+            // TODO: Handle the case when exceeding MaxClock... if we expect people to exceed 482 days of game time
             for (int i = (int)Clock; i < (int)newClock; i++)
             {
                 if (Events.ContainsKey(i))

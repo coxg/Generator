@@ -7,47 +7,53 @@ namespace Generator
         // The frames of the animation
     {
         public Frames(
-                float duration,
+                float duration,  // in seconds
                 List<Vector3> offsets = null,
                 List<Vector3> rotations = null,
                 Animation sourceAnimation = null)
             // Constructor
         {
             SourceAnimation = sourceAnimation;
-            Duration = (int) (duration * Globals.RefreshRate);
-            CurrentFrame = 0;
+            Duration = duration;
             Offsets = SmoothFrames(offsets ?? new List<Vector3>(), Duration);
             Rotations = SmoothFrames(rotations ?? new List<Vector3>(), Duration);
         }
 
-        public List<Vector3> Offsets { get; set; }
-        public List<Vector3> Rotations { get; set; }
-        public Animation SourceAnimation { get; set; }
-        public int Duration { get; set; }
-        public int CurrentFrame { get; set; }
+        public List<Vector3> Offsets;
+        public List<Vector3> Rotations;
+        public Animation SourceAnimation;
+        public float Duration;
+        public float CurrentFrame = 0;
 
         public void Play()
-            // Plays a frame of the animation
+        // Plays a frame of the animation
+        // TODO: Can smoothe out animations by adding more frames - but then I don't hit the termination condition, since 
+        //       I skip right over the termination frame! Once I rework my termination conditions I can smoothe things out.
         {
-            // Rotate the difference between the last frame and this one
-            var positionDifference = MathTools.PointRotatedAroundPoint(
-                Offsets[CurrentFrame],
-                new Vector3(0, 0, 0),
-                new Vector3(0, 0, -SourceAnimation.SourceElement.Direction));
+            // See if there are any new animation frames to play
+            var newFrame = MathTools.Mod(CurrentFrame + Timer.GameSpeed, Offsets.Count);
+            if ((int)newFrame != (int)CurrentFrame)
+            {
+                // Rotate the difference between the last frame and this one
+                var positionDifference = MathTools.PointRotatedAroundPoint(
+                    Offsets[(int)newFrame],
+                    new Vector3(0, 0, 0),
+                    new Vector3(0, 0, -SourceAnimation.SourceElement.Direction));
 
-            // Move the object in that direction
-            SourceAnimation.SourceElement.AnimationOffset = positionDifference;
-            SourceAnimation.SourceElement.RotationOffset = Rotations[CurrentFrame];
+                // Move the object in that direction
+                SourceAnimation.SourceElement.AnimationOffset = positionDifference;
+                SourceAnimation.SourceElement.RotationOffset = Rotations[(int)newFrame];
 
-            // Update animation logic
-            SourceAnimation.TotalOffset = positionDifference;
-            SourceAnimation.TotalRotation = Rotations[CurrentFrame];
+                // Update animation logic
+                SourceAnimation.TotalOffset = positionDifference;
+                SourceAnimation.TotalRotation = Rotations[(int)newFrame];
+            }
 
             // Update the current frame
-            CurrentFrame = (int)MathTools.Mod(CurrentFrame + 1, Offsets.Count);
+            CurrentFrame = newFrame;
         }
 
-        public static List<Vector3> SmoothFrames(List<Vector3> frames, int duration)
+        public static List<Vector3> SmoothFrames(List<Vector3> frames, float duration)
             // Lengthen the frames to the specified duration, smoothing along the way.
         {
             // Always start and end with (0, 0, 0)
@@ -60,10 +66,11 @@ namespace Generator
             var zValues = new List<float>();
 
             // But wait - time is also a dimension! We're in 4D, people!
+            var numberOfFrames = (int) (duration * Globals.RefreshRate);
             var timeInputs = MathTools.FloatRange(frames.Count);
             for (var frameIndex = 0; frameIndex < frames.Count; frameIndex++)
-                timeInputs[frameIndex] *= (float) duration / (frames.Count - 1);
-            var timeOutputs = MathTools.FloatRange(duration);
+                timeInputs[frameIndex] *= (float) numberOfFrames / (frames.Count - 1);
+            var timeOutputs = MathTools.FloatRange(numberOfFrames);
 
             // Append X, Y, and Z values from the FrameType to their lists
             foreach (var frame in frames)
@@ -89,7 +96,7 @@ namespace Generator
 
             // Combine dimension lists into a list of Vector3s
             frames = new List<Vector3>();
-            for (var frameIndex = 0; frameIndex < duration; frameIndex++)
+            for (var frameIndex = 0; frameIndex < numberOfFrames; frameIndex++)
                 frames.Add(new Vector3(
                     xSpline[frameIndex],
                     ySpline[frameIndex],
@@ -247,8 +254,8 @@ namespace Generator
                 if (IsUpdating && (
                         UpdateFrames == null 
                         || UpdateFrames.CurrentFrame == 0 
-                        || (UpdateFrames.Offsets[UpdateFrames.CurrentFrame] == new Vector3(0, 0, 0) 
-                            & UpdateFrames.Rotations[UpdateFrames.CurrentFrame] == new Vector3(0, 0, 0))))
+                        || (UpdateFrames.Offsets[(int)UpdateFrames.CurrentFrame] == new Vector3(0, 0, 0) 
+                            & UpdateFrames.Rotations[(int)UpdateFrames.CurrentFrame] == new Vector3(0, 0, 0))))
                 {
                     IsUpdating = false;
                     if (StopFrames == null) IsStopping = false;

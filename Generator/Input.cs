@@ -57,7 +57,7 @@ namespace Generator
             // Convert from actual movement input to direction offsets
             var moveVerticalOffset = 0.0;
             var moveHorizontalOffset = 0.0;
-            var speed = 0f;
+            var speed = 0f;  // Separate from gameSpeed; playerSpeed should be 1 when in combat
 
             // Use controller to calculate movement/direction if available and being used
             float directionHorizontalOffset = 0;

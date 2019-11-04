@@ -664,7 +664,7 @@ namespace Generator
             Direction = radians;
 
             // Get distance
-            var distance = speed * (float) Math.Sqrt(Speed.CurrentValue) / Globals.RefreshRate;
+            var distance = speed * (float) Math.Sqrt(Speed.CurrentValue) * Timer.GameSpeed / Globals.RefreshRate;
 
             // Convert from radian direction to X/Y offsets
             var offsets = MathTools.OffsetFromRadians(radians);
