@@ -23,8 +23,8 @@ namespace Generator
         public int Style;
 
         // Constructor
-        public Equipment(string name, Texture2D sprite, int quantity = 1) : base(name, sprite, quantity)
-        {
-        }
+        public Equipment(
+                string name, Texture2D sprite, int quantity = 1, GameObjectManager.Delegate effect = null
+            ) : base(name, sprite, quantity, effect) { }
     }
 }

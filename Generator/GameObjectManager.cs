@@ -8,6 +8,8 @@ namespace Generator
         public static Dictionary<string, GameObject> Updating = new Dictionary<string, GameObject>();
         public static Dictionary<string, GameObject> Visible = new Dictionary<string, GameObject>();
 
+        public delegate void Delegate(GameObject gameObject);
+
         new public static void Update()
             // TODO: This should use the same logic as the Manager
         {
