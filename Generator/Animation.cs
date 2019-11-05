@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using System.Linq;
+using System;
 
 namespace Generator
 {
@@ -10,39 +12,63 @@ namespace Generator
                 float duration,  // in seconds
                 List<Vector3> offsets = null,
                 List<Vector3> rotations = null,
-                Animation sourceAnimation = null)
+                Animation sourceAnimation = null,
+                int smoothing = 100)
             // Constructor
         {
             SourceAnimation = sourceAnimation;
             Duration = duration;
-            Offsets = SmoothFrames(offsets ?? new List<Vector3>(), Duration);
-            Rotations = SmoothFrames(rotations ?? new List<Vector3>(), Duration);
+            Smoothing = smoothing;  // How many frames to generate per 1 frame under 100% speed
+
+            // Normalize positional and rotational offsets to start and end at 0, 0, 0
+            offsets = offsets ?? new List<Vector3>();
+            offsets.Insert(0, Vector3.Zero);
+            offsets.Add(Vector3.Zero);
+            rotations = rotations ?? new List<Vector3>();
+            rotations.Insert(0, Vector3.Zero);
+            rotations.Add(Vector3.Zero);
+
+            // Derive the termination conditions and smoothed frames
+            Terminators = GetTerminators(offsets, rotations);
+            Offsets = GetSmoothedFrames(offsets);
+            Rotations = GetSmoothedFrames(rotations);
         }
 
         public List<Vector3> Offsets;
         public List<Vector3> Rotations;
+        public IEnumerable<int> Terminators;
         public Animation SourceAnimation;
         public float Duration;
         public float CurrentFrame = 0;
+        public int Smoothing;
+
+        public float FramesPerUpdate()
+            // How many animation frames should actually be played per update of the game clock
+        {
+            float frames = (float)Math.Sqrt(SourceAnimation.SourceObject.Speed.CurrentValue) * Timer.GameSpeed * Smoothing;
+            if (SourceAnimation.SourceObject == Globals.Player)
+            {
+                frames *= Timer.PlayerMovementMagnitude;
+            }
+            return frames;
+        }
 
         public void Play()
         // Plays a frame of the animation
-        // TODO: Can smoothe out animations by adding more frames - but then I don't hit the termination condition, since 
-        //       I skip right over the termination frame! Once I rework my termination conditions I can smoothe things out.
         {
             // See if there are any new animation frames to play
-            var newFrame = MathTools.Mod(CurrentFrame + Timer.GameSpeed, Offsets.Count);
+            var newFrame = MathTools.Mod(CurrentFrame + FramesPerUpdate(), Offsets.Count);
             if ((int)newFrame != (int)CurrentFrame)
             {
                 // Rotate the difference between the last frame and this one
                 var positionDifference = MathTools.PointRotatedAroundPoint(
                     Offsets[(int)newFrame],
-                    new Vector3(0, 0, 0),
-                    new Vector3(0, 0, -SourceAnimation.SourceElement.Direction));
+                    Vector3.Zero,
+                    new Vector3(0, 0, -SourceAnimation.AnimatedElement.Direction));
 
                 // Move the object in that direction
-                SourceAnimation.SourceElement.AnimationOffset = positionDifference;
-                SourceAnimation.SourceElement.RotationOffset = Rotations[(int)newFrame];
+                SourceAnimation.AnimatedElement.AnimationOffset = positionDifference;
+                SourceAnimation.AnimatedElement.RotationOffset = Rotations[(int)newFrame];
 
                 // Update animation logic
                 SourceAnimation.TotalOffset = positionDifference;
@@ -53,12 +79,63 @@ namespace Generator
             CurrentFrame = newFrame;
         }
 
-        public static List<Vector3> SmoothFrames(List<Vector3> frames, float duration)
+        public IEnumerable<int> GetTerminators(List<Vector3> offsets, List<Vector3> rotations)
+        {
+            // Find all places where there are no offsets
+            var offsetTerminators = new List<int>();
+            for (int i = 0; i < offsets.Count; i++)
+            {
+                if (offsets[i] == Vector3.Zero)
+                {
+                    offsetTerminators.Add((int)(i * Globals.RefreshRate * Smoothing * Duration / (offsets.Count - 1)));
+                }
+            }
+
+            // Find all places where there are no rotations
+            var rotationTerminators = new List<int>();
+            for (int i = 0; i < rotations.Count; i++)
+            {
+                if (rotations[i] == Vector3.Zero)
+                {
+                    rotationTerminators.Add((int)(i * Globals.RefreshRate * Smoothing * Duration / (rotations.Count - 1)));
+                }
+            }
+
+            // Return all places where there are no offsets or rotations
+            if (offsets.Count > 2 && rotations.Count <= 2)
+            {
+                return offsetTerminators;
+            }
+            else if (rotations.Count > 2 && offsets.Count <= 2)
+            {
+                return rotationTerminators;
+            }
+            else
+            {
+                return offsetTerminators.Intersect(rotationTerminators);
+            }
+        }
+
+        public bool CanTerminate()
+            // Checks whether or not the CurrentFrame meets any of the termination conditions
+        {
+            foreach (var terminator in Terminators)
+            {
+                if (terminator > CurrentFrame)
+                {
+                    return false;
+                }
+                else if (terminator <= CurrentFrame && CurrentFrame < terminator + FramesPerUpdate())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public List<Vector3> GetSmoothedFrames(List<Vector3> frames)
             // Lengthen the frames to the specified duration, smoothing along the way.
         {
-            // Always start and end with (0, 0, 0)
-            frames.Insert(0, new Vector3(0, 0, 0));
-            frames.Add(new Vector3(0, 0, 0));
 
             // Create lists of values for each dimension
             var xValues = new List<float>();
@@ -66,7 +143,7 @@ namespace Generator
             var zValues = new List<float>();
 
             // But wait - time is also a dimension! We're in 4D, people!
-            var numberOfFrames = (int) (duration * Globals.RefreshRate);
+            var numberOfFrames = (int) (Duration * Globals.RefreshRate * Smoothing);
             var timeInputs = MathTools.FloatRange(frames.Count);
             for (var frameIndex = 0; frameIndex < frames.Count; frameIndex++)
                 timeInputs[frameIndex] *= (float) numberOfFrames / (frames.Count - 1);
@@ -113,7 +190,8 @@ namespace Generator
             string name = null,
 
             // What's being animated
-            GameElement sourceElement = null,
+            GameElement animatedElement = null,
+            GameObject sourceObject = null,
 
             // What it does
             Frames startFrames = null,
@@ -124,11 +202,12 @@ namespace Generator
             Name = name;
 
             // What's being animated
-            SourceElement = sourceElement;
+            AnimatedElement = animatedElement;
+            SourceObject = sourceObject;
 
             // How it does it
-            TotalOffset = new Vector3(0, 0, 0);
-            TotalRotation = new Vector3(0, 0, 0);
+            TotalOffset = Vector3.Zero;
+            TotalRotation = Vector3.Zero;
             IsStarting = false;
             IsUpdating = false;
             IsStopping = false;
@@ -143,13 +222,14 @@ namespace Generator
         }
 
         // Animation name
-        public string Name { get; set; }
+        public string Name;
 
         // What's being animated
-        public GameElement SourceElement { get; set; }
+        public GameElement AnimatedElement;  // This is the element that's actually moving
+        public GameObject SourceObject;  // Can be the same as the AnimatedElement, controls animation speed
 
         // What it does
-        private Frames _startFrames { get; set; }
+        private Frames _startFrames;
         public Frames StartFrames
         {
             get => _startFrames;
@@ -160,7 +240,7 @@ namespace Generator
             }
         }
 
-        private Frames _updateFrames { get; set; }
+        private Frames _updateFrames;
         public Frames UpdateFrames
         {
             get => _updateFrames;
@@ -171,7 +251,7 @@ namespace Generator
             }
         }
 
-        private Frames _stopFrames { get; set; }
+        private Frames _stopFrames;
         public Frames StopFrames
         {
             get => _stopFrames;
@@ -183,11 +263,11 @@ namespace Generator
         }
 
         // How it does it
-        public Vector3 TotalOffset { get; set; }
-        public Vector3 TotalRotation { get; set; }
-        public bool IsStarting { get; set; }
-        public bool IsUpdating { get; set; }
-        public bool IsStopping { get; set; }
+        public Vector3 TotalOffset;
+        public Vector3 TotalRotation;
+        public bool IsStarting;
+        public bool IsUpdating;
+        public bool IsStopping;
 
         public void Start()
             // When the ability is started
@@ -208,9 +288,9 @@ namespace Generator
             // Outside the animation class, one should use Stop().
         {
             // Reset position
-            SourceElement.AnimationOffset -= TotalOffset;
-            TotalOffset = new Vector3(0, 0, 0);
-            SourceElement.RotationOffset = new Vector3(0, 0, 0);
+            AnimatedElement.AnimationOffset -= TotalOffset;
+            TotalOffset = Vector3.Zero;
+            AnimatedElement.RotationOffset = Vector3.Zero;
 
             // Stop all animations
             IsStarting = false;
@@ -251,11 +331,7 @@ namespace Generator
             if (IsStopping)
             {
                 // If we're ending the stopping animation
-                if (IsUpdating && (
-                        UpdateFrames == null 
-                        || UpdateFrames.CurrentFrame == 0 
-                        || (UpdateFrames.Offsets[(int)UpdateFrames.CurrentFrame] == new Vector3(0, 0, 0) 
-                            & UpdateFrames.Rotations[(int)UpdateFrames.CurrentFrame] == new Vector3(0, 0, 0))))
+                if (IsUpdating && (UpdateFrames == null  || UpdateFrames.CanTerminate()))
                 {
                     IsUpdating = false;
                     if (StopFrames == null) IsStopping = false;

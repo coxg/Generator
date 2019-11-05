@@ -310,7 +310,8 @@ namespace Generator
                 foreach (var animation in component.Value.Animations)
                 {
                     animation.Value.Name = animation.Key;
-                    animation.Value.SourceElement = component.Value;
+                    animation.Value.AnimatedElement = component.Value;
+                    animation.Value.SourceObject = this;
                 }
             }
         }
@@ -399,9 +400,10 @@ namespace Generator
                                 rotations: new List<Vector3>
                                 {
                                     new Vector3(.7f, 0, 0),
+                                    Vector3.Zero,
                                     new Vector3(-.7f, 0, 0)
                                 },
-                                duration: 1
+                                duration: 3
                                 )
                             )
                         }
@@ -423,9 +425,10 @@ namespace Generator
                                 rotations: new List<Vector3>
                                 {
                                     new Vector3(-.7f, 0, 0),
+                                    Vector3.Zero,
                                     new Vector3(.7f, 0, 0)
                                 },
-                                duration: 1
+                                duration: 3
                                 )
                             )
                         }
@@ -446,9 +449,10 @@ namespace Generator
                                 rotations: new List<Vector3>
                                 {
                                     new Vector3(.7f, 0, 0),
+                                    Vector3.Zero,
                                     new Vector3(-.7f, 0, 0)
                                 },
-                                duration: 1
+                                duration: 3
                                 )
                             )
                         }
@@ -469,9 +473,10 @@ namespace Generator
                                 rotations: new List<Vector3>
                                 {
                                     new Vector3(-.7f, 0, 0),
+                                    Vector3.Zero,
                                     new Vector3(.7f, 0, 0)
                                 },
-                                duration: 1
+                                duration: 3
                                 )
                             )
                         }
@@ -492,9 +497,10 @@ namespace Generator
                                 rotations: new List<Vector3>
                                 {
                                     new Vector3(-.7f, 0, 0),
+                                    Vector3.Zero,
                                     new Vector3(.7f, 0, 0)
                                 },
-                                duration: 1
+                                duration: 3
                                 )
                             )
                         }
@@ -515,9 +521,10 @@ namespace Generator
                                 rotations: new List<Vector3>
                                 {
                                     new Vector3(.7f, 0, 0),
+                                    Vector3.Zero,
                                     new Vector3(-.7f, 0, 0)
                                 },
-                                duration: 1
+                                duration: 3
                                 )
                             )
                         }

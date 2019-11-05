@@ -5,7 +5,7 @@ namespace Generator
     public class Party
     {
         public Dictionary<string, GameObject> Members;
-        public bool InCombat = true;
+        public bool InCombat = false;
 
         // Constructor
         public Party(Dictionary<string, GameObject> members = null)

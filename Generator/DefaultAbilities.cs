@@ -34,15 +34,15 @@ namespace Generator
                         {
                             new Vector3(0, 0, .2f)
                         },
-                        duration: .5f)),
+                        duration: 1.5f)),
                 start: delegate
                 {
-                    gameObject.Speed.CurrentValue *= 16;
+                    gameObject.Speed.CurrentValue *= 3;
                     gameObject.IsWalking = true;
                 },
                 stop: delegate
                 {
-                    gameObject.Speed.CurrentValue /= 16;
+                    gameObject.Speed.CurrentValue /= 3;
                     gameObject.IsWalking = false;
                 });
         }
@@ -170,6 +170,7 @@ namespace Generator
                         offsets: new List<Vector3>
                         {
                             new Vector3(-.2f, 0, 0),
+                            Vector3.Zero,
                             new Vector3(.2f, 0, 0)
                         },
                         duration: .5f),

@@ -75,7 +75,7 @@
         // Each frame
         public void Update()
         {
-            Current += (float) Regeneration * Timer.GameSpeed / Globals.RefreshRate;
+            Current += Regeneration * Timer.GameSpeed / Globals.RefreshRate;
         }
     }
 }
