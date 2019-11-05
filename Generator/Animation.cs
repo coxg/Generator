@@ -46,7 +46,8 @@ namespace Generator
             // How many animation frames should actually be played per update of the game clock
         {
             float frames = (float)Math.Sqrt(SourceAnimation.SourceObject.Speed.CurrentValue) * Timer.GameSpeed * Smoothing;
-            if (SourceAnimation.SourceObject == Globals.Player)
+            if (SourceAnimation.SourceObject == Globals.Player 
+                && SourceAnimation.Name == "Walk" && Timer.PlayerMovementMagnitude != 0)
             {
                 frames *= Timer.PlayerMovementMagnitude;
             }
@@ -333,8 +334,7 @@ namespace Generator
                 // If we're ending the stopping animation
                 if (IsUpdating && (UpdateFrames == null  || UpdateFrames.CanTerminate()))
                 {
-                    IsUpdating = false;
-                    if (StopFrames == null) IsStopping = false;
+                    Reset();
                 }
 
                 // If we're playing the stopping animation
