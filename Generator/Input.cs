@@ -6,10 +6,12 @@ namespace Generator
 {
     public static class Input
     {
+        // TODO: Refactor, each button should have this ability
         public static bool ActivateButtonWasDown = false;
         public static bool SaveButtonWasDown = false;
         public static bool CreativeScrollLeftButton = false;
         public static bool CreativeScrollRightButton = false;
+        public static bool CreativeButtonWasDown = false;
 
         public static void GetInput(GameObject player)
         {
@@ -144,6 +146,18 @@ namespace Generator
             }
 
             // Creative mode controls
+            if (ButtonOrKeyDown(Buttons.DPadDown, Keys.F1))
+            {
+                if (!CreativeButtonWasDown)
+                {
+                    CreativeButtonWasDown = true;
+                    Globals.CreativeMode = !Globals.CreativeMode;
+                }
+            }
+            else
+            {
+                CreativeButtonWasDown = false;
+            }
             if (Globals.CreativeMode)
             {
                 // Scroll left
@@ -169,6 +183,40 @@ namespace Generator
                         CreativeScrollRightButton = true;
                         Globals.CreativeObjectIndex = (int)MathTools.Mod(
                             Globals.CreativeObjectIndex + 1, TileManager.BaseTileIndexes.Count);
+                    }
+                }
+                else
+                {
+                    CreativeScrollRightButton = false;
+                }
+            }
+
+            // If not in creative mode then use these key bindings to switch characters
+            else
+            {
+                // Scroll left
+                if (ButtonOrKeyDown(Buttons.DPadLeft, Keys.OemMinus))
+                {
+                    if (!CreativeScrollLeftButton)
+                    {
+                        CreativeScrollLeftButton = true;
+                        Globals.PlayerPartyNumber = (int)MathTools.Mod(
+                            Globals.PlayerPartyNumber - 1, Globals.Party.Members.Count);
+                    }
+                }
+                else
+                {
+                    CreativeScrollLeftButton = false;
+                }
+
+                // Scroll right
+                if (ButtonOrKeyDown(Buttons.DPadRight, Keys.OemPlus))
+                {
+                    if (!CreativeScrollRightButton)
+                    {
+                        CreativeScrollRightButton = true;
+                        Globals.PlayerPartyNumber = (int)MathTools.Mod(
+                            Globals.PlayerPartyNumber + 1, Globals.Party.Members.Count);
                     }
                 }
                 else

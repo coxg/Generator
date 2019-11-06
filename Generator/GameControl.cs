@@ -226,26 +226,28 @@ namespace Generator
             GraphicsDevice.SetRenderTarget(objectRenderTarget);
             GraphicsDevice.Clear(Color.Transparent);
             spriteBatch.Begin(blendState: BlendState.AlphaBlend);
-            foreach (var Object in GameObjectManager.Visible.Values.OrderBy(i => -i.Position.Y))
+            foreach (var gameObject in GameObjectManager.Visible.Values.OrderBy(i => -i.Position.Y))
             {
                 // Draw components for the object
-                foreach (var component in Object.Components.OrderBy(i => -i.Value.Position.Y))
+                foreach (var component in gameObject.Components.OrderBy(i => -i.Value.Position.Y))
                 {
                     Drawing.DrawComponent(
                         component.Value,
-                        Object.Size * component.Value.Size);
-                }
-
-                // Draw resource bars if they're in the party
-                if (Object.PartyNumber >= 0)
-                {
-                    Drawing.DrawResource(spriteBatch, Object.Health, Object.PartyNumber);
-                    if (Object.Stamina.Max > 0)
-                        Drawing.DrawResource(spriteBatch, Object.Stamina, Object.PartyNumber);
-                    if (Object.Electricity.Max > 0)
-                        Drawing.DrawResource(spriteBatch, Object.Electricity, Object.PartyNumber);
+                        gameObject.Size * component.Value.Size);
                 }
             }
+
+            // Draw the resource bars
+            for (int i=0; i < Globals.Party.Members.Count; i++)
+            {
+                var gameObject = Globals.Party.Members[i];
+                Drawing.DrawResource(spriteBatch, gameObject.Health, i);
+                if (gameObject.Stamina.Max > 0)
+                    Drawing.DrawResource(spriteBatch, gameObject.Stamina, i);
+                if (gameObject.Electricity.Max > 0)
+                    Drawing.DrawResource(spriteBatch, gameObject.Electricity, i);
+            }
+
             spriteBatch.End();
 
             // Pre-compute the lighting layer

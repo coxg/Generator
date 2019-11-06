@@ -4,13 +4,13 @@ namespace Generator
 {
     public class Party
     {
-        public Dictionary<string, GameObject> Members;
+        public List<GameObject> Members;
         public bool InCombat = true;
 
         // Constructor
-        public Party(Dictionary<string, GameObject> members = null)
+        public Party(List<GameObject> members = null)
         {
-            Members = members ?? new Dictionary<string, GameObject>();
+            Members = members ?? new List<GameObject>();
         }
 
         public void Say(string text)
@@ -22,7 +22,7 @@ namespace Generator
         public void AddExperience(int experience)
             // Grants experience to all conscious members of the party
         {
-            foreach (var member in Members.Values)
+            foreach (var member in Members)
             {
                 if (member.Health.Current > 0)
                 {
@@ -34,7 +34,7 @@ namespace Generator
         public void AddClassPoints(int classPoints)
             // Grants CP to all conscious members of the party
         {
-            foreach (var member in Members.Values)
+            foreach (var member in Members)
             {
                 if (member.Health.Current > 0)
                 {

@@ -12,12 +12,17 @@ namespace Generator
     // C# doesn't have globals. I do!
     public static class Globals
     {
-        // The party
-        public static GameObject Player;
+        // The player's party
         public static Party Party = new Party();
+        public static int PlayerPartyNumber = 0;
+        public static GameObject Player
+        {
+            get { return Party.Members[PlayerPartyNumber]; }
+            set { PlayerPartyNumber = Party.Members.IndexOf(value); }
+        }
 
         // Regular old variables
-        public static Vector2 Resolution = new Vector2(1500, 900);
+        public static Vector2 Resolution = new Vector2(1600, 900);
         public static ContentManager Content;
         public static bool Logging = true;
         public static int RefreshRate = 30;

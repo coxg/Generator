@@ -73,7 +73,7 @@ namespace Generator
             // Set the name
             Name = "GameObjects";
 
-            Globals.Player = new GameObject(
+            var niels = new GameObject(
                 new Vector3(50, 50, 0),
                 stamina: 100,
                 strength: 10,
@@ -81,13 +81,29 @@ namespace Generator
                 sense: 90,
                 style: 100,
                 name: "Niels",
-                partyNumber: 0,
+                componentSpriteFileName: "Ninja",
+                weapon: new Weapon(
+                    name: "Sword",
+                    sprite: Globals.WhiteDot,
+                    damage: 10),
+                brightness: Vector3.One);
+            Globals.Party.Members.Add(niels);
+
+            var farrah = new GameObject(
+                new Vector3(50, 55, 0),
+                stamina: 100,
+                strength: 10,
+                speed: 100,
+                sense: 90,
+                style: 100,
+                name: "Farrah",
                 componentSpriteFileName: "Girl",
                 weapon: new Weapon(
                     name: "Sword",
                     sprite: Globals.WhiteDot,
                     damage: 10),
                 brightness: Vector3.One);
+            Globals.Party.Members.Add(farrah);
 
             var terrain1 = new GameObject(
                 new Vector3(55, 56, 0),

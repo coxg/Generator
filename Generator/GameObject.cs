@@ -119,7 +119,6 @@ namespace Generator
         public Ability Ability4;
 
         // Interaction
-        public int PartyNumber;
         public List<List<string>> ActivationText;
         public Action ActivationEffect;
         private int ActivationIndex;
@@ -205,7 +204,6 @@ namespace Generator
             List<Ability> abilities = null,
 
             // Interaction
-            int partyNumber = -1,
             Action<GameObject> ai = null,
             Action<GameObject, GameObject> collisionEffect = null,
             bool temporary = false,
@@ -261,7 +259,6 @@ namespace Generator
             Abilities = abilities ?? DefaultAbilities.GenerateDefaultAbilities(this);
 
             // Interaction
-            PartyNumber = partyNumber;
             ActivationEffect = activationEffect;
             AI = ai; // Run on each Update - argument is this
             CollisionEffect = collisionEffect; // Run when attempting to move into another object - arguments are this, other
