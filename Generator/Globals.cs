@@ -20,6 +20,19 @@ namespace Generator
             get { return Party.Members[PlayerPartyNumber]; }
             set { PlayerPartyNumber = Party.Members.IndexOf(value); }
         }
+        private static Conversation currentConversation = null;
+        public static Conversation CurrentConversation
+        {
+            get { return currentConversation; }
+            set
+            {
+                if (currentConversation != null)
+                {
+                    currentConversation.Reset();
+                }
+                currentConversation = value;
+            }
+        }
 
         // Regular old variables
         public static Vector2 Resolution = new Vector2(1600, 900);
@@ -31,10 +44,6 @@ namespace Generator
         // Configure the world building mode
         public static bool CreativeMode = true;
         public static int CreativeObjectIndex = 0;
-
-        // For displaying talking stuff
-        public static Queue<string> DisplayTextQueue = new Queue<string>();
-        public static Queue<GameObject> TalkingObjectQueue = new Queue<GameObject>();
 
         // Loading assets
         public static Texture2D WhiteDot;

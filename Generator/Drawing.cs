@@ -79,14 +79,26 @@ namespace Generator
                 SpriteEffects.None,
                 .05f);
 
-            // Draw the sprite
+            // Draw the sprite of the person talking
             var spriteWidthAndExtraMargin = 0;
-            if (Globals.DisplayTextQueue.Count != 0
-                && Globals.TalkingObjectQueue.Count != 0
-                && Globals.TalkingObjectQueue.Peek().Sprite != null)
+            var choices = Globals.CurrentConversation.CurrentChoices;
+            string currentMessage = choices.Nodes[choices.CurrentNodeIndex].Text[
+                choices.Nodes[choices.CurrentNodeIndex].MessageIndex];
+            GameObject talkingObject = null;
+            var messageParts = currentMessage.Split(new string[] { ": " }, 2, StringSplitOptions.None);
+            var talkingObjectName = messageParts[0];
+            currentMessage = messageParts[messageParts.Count() - 1];
+            if (GameObjectManager.ObjectFromName.ContainsKey(talkingObjectName)){
+                talkingObject = GameObjectManager.ObjectFromName[talkingObjectName];
+            }
+            else
+            {
+                talkingObject = Globals.CurrentConversation.SourceObject;
+            }
+            if (talkingObject.Sprite != null)
             {
                 spriteBatch.Draw(
-                    Globals.TalkingObjectQueue.Peek().Sprite,
+                    talkingObject.Sprite,
                     new Rectangle(
                         Margin,
                         (int) Globals.Resolution.Y - TextBoxHeight + Margin,
@@ -101,14 +113,91 @@ namespace Generator
                 spriteWidthAndExtraMargin = TextBoxHeight - Margin;
             }
 
+            // If they don't have a sprite then piece together their components
+            else if (talkingObject.Components.ContainsKey("Head") && talkingObject.Components.ContainsKey("Face"))
+            {
+                var head = talkingObject.Components["Head"];
+                var headSize = TextBoxHeight - 2 * Margin;
+                var face = talkingObject.Components["Face"];
+                var faceSize = (int)(headSize * face.Size / head.Size);
+                spriteBatch.Draw(
+                    head.Sprite,
+                    new Rectangle(
+                        Margin,
+                        (int)Globals.Resolution.Y - TextBoxHeight + Margin,
+                        headSize,
+                        headSize),
+                    null,
+                    Color.White,
+                    0,
+                    new Vector2(0, 0),
+                    SpriteEffects.None,
+                    .04f);
+                spriteBatch.Draw(
+                    face.Sprite,
+                    new Rectangle(
+                        Margin + headSize / 2 - faceSize / 2,
+                        (int)Globals.Resolution.Y - TextBoxHeight + Margin + 5 * headSize / 8 - faceSize / 2,
+                        faceSize,
+                        faceSize),
+                    null,
+                    Color.White,
+                    0,
+                    new Vector2(0, 0),
+                    SpriteEffects.None,
+                    .05f);
+                spriteWidthAndExtraMargin = TextBoxHeight - Margin;
+            }
+
             // Draw the text itself
-            spriteBatch.DrawString(
-                Globals.Font,
-                Globals.DisplayTextQueue.Peek(),
-                new Vector2(
-                    Margin + spriteWidthAndExtraMargin,
-                    Globals.Resolution.Y - (TextBoxHeight - Margin)),
-                Color.White);
+            // If we've selected a choice then just draw that choice
+            if (choices.ChoiceSelected)
+            {
+                spriteBatch.DrawString(
+                    Globals.Font,
+                    currentMessage,
+                    new Vector2(
+                        Margin + spriteWidthAndExtraMargin,
+                        Globals.Resolution.Y - (TextBoxHeight - Margin)),
+                    Color.White);
+            }
+
+            // If we haven't selected a choice yet then show all available choices
+            else
+            {
+                for (int i = 0; i < choices.Nodes.Count; i++)
+                {
+                    // Highlight whichever choice we're 'hovering over'
+                    if (i == choices.CurrentNodeIndex)
+                    {
+                        spriteBatch.Draw(
+                            Globals.WhiteDot,
+                            new Rectangle(
+                                Margin + spriteWidthAndExtraMargin,
+                                (int)Globals.Resolution.Y - (TextBoxHeight - (3 * Margin * i) - Margin),
+                                (int)Globals.Resolution.X - Margin - spriteWidthAndExtraMargin,
+                                2 * Margin),
+                            null,
+                            Color.FromNonPremultiplied(50, 50, 100, 200),
+                            0f,
+                            new Vector2(0, 0),
+                            SpriteEffects.None,
+                            .05f);
+                    }
+
+                    // Draw the choice
+                    currentMessage = choices.Nodes[i].Text[0];
+                    messageParts = currentMessage.Split(new string[] { ": " }, 2, StringSplitOptions.None);
+                    currentMessage = messageParts[messageParts.Count() - 1];
+                    spriteBatch.DrawString(
+                        Globals.Font,
+                        currentMessage,
+                        new Vector2(
+                            Margin + spriteWidthAndExtraMargin,
+                            Globals.Resolution.Y - (TextBoxHeight - (3 * Margin * i) - Margin)),
+                        Color.White);
+                }
+            }
         }
 
         public static void DrawResource(SpriteBatch spriteBatch, Resource resource, int partyNumber)

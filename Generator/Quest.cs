@@ -11,34 +11,20 @@ namespace Generator
         public GameObject Receiver;
         public Requirements Completion;
         public Requirements Reception;
-        public int Experience;
-        public int ClassPoints;
-        public int Junk;
-        public List<Item> Items;
+        public Rewards Rewards;
 
         // Constructor
         public Quest(
             string name, string description, GameObject giver, GameObject receiver, 
-            Requirements completion, Requirements reception, List<Item> items = null)
+            Requirements completion, Requirements reception, Rewards rewards=null)
         {
             Name = name;
             Description = description;
             Giver = giver;
             Receiver = receiver;
-            Items = items ?? new List<Item>();
+            Rewards = rewards;
             Completion = completion;
             Reception = reception;
-        }
-
-        public void AwardRewards()
-        {
-            Globals.Party.AddExperience(Experience);
-            Globals.Party.AddClassPoints(ClassPoints);
-            Globals.Party.AddJunk(Junk);
-            foreach (var item in Items)
-            {
-                Globals.Party.AddItem(item);
-            }
         }
 
         public void TryComplete()
@@ -48,11 +34,12 @@ namespace Generator
             {
                 // TODO: Give completion screen, acceptance screen, whatever
                 // TODO: Parameter for what to say when complete?
-                AwardRewards();
+                Rewards?.Award();
             }
             else
             {
                 // TODO: Parameter for what to say when not complete?
+                Globals.Log("Cannot complete quest " + Name);
             }
         }
     }

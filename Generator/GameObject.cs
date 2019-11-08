@@ -12,6 +12,116 @@ namespace Generator
      */
     public class GameObject : GameElement
     {
+        // Constructor
+        public GameObject(
+
+            // Grid logic
+            Vector3 position,
+            Vector3? size = null,
+
+            // Animation attributes
+            string componentSpriteFileName = "Ninja",
+            string spriteFile = null,
+            Dictionary<string, Component> components = null,
+            bool castsShadow = true,
+
+            // Actions
+            bool isWalking = false,
+            bool isSwinging = false,
+            bool isShooting = false,
+            bool isHurting = false,
+
+            // Resources
+            int health = 100,
+            int stamina = 0,
+            int electricity = 0,
+
+            // Primary Attributes
+            int strength = 0,
+            int speed = 0,
+            int sense = 0,
+            int style = 0,
+
+            // ...Other Attributes
+            string name = null,
+            int level = 1,
+            int experience = 0,
+            float direction = (float)Math.PI,
+            Vector3? brightness = null,
+
+            // Abilities
+            List<Ability> abilities = null,
+
+            // Interaction
+            Conversation conversation = null,
+            Action<GameObject> ai = null,
+            Action<GameObject, GameObject> collisionEffect = null,
+            bool temporary = false,
+            Action activationEffect = null,
+
+            // Equipment
+            Weapon weapon = null,
+            Armor armor = null,
+            GeneratorObj generator = null,
+            Accessory accessory = null
+        )
+        {
+            // Animation attributes
+            ComponentSpriteFileName = componentSpriteFileName;
+            Components = components ?? GenerateDefaultComponentDict();
+            LinkComponents();
+            Sprite = spriteFile == null ? null : Globals.Content.Load<Texture2D>(spriteFile);
+            CastsShadow = castsShadow;
+
+            // Actions
+            IsWalking = isWalking;
+            IsSwinging = isSwinging;
+            IsShooting = isShooting;
+            IsHurting = isHurting;
+
+            // Resources
+            Health = new Resource("Health", health);
+            Stamina = new Resource("Stamina", stamina, 10);
+            Electricity = new Resource("Electricity", electricity);
+
+            // Primary Attributes
+            Strength = new Attribute(strength);
+            Speed = new Attribute(speed);
+            Sense = new Attribute(sense);
+            Style = new Attribute(sense);
+
+            // ...Other Attributes
+            Name = name ?? Guid.NewGuid().ToString();
+            Level = level;
+            Experience = experience;
+            Direction = direction;
+            Brightness = brightness ?? Vector3.Zero;
+
+            // Equipment
+            EquippedWeapon = weapon ?? new Weapon("Fists", Globals.WhiteDot);
+            EquippedArmor = armor ?? new Armor("[No Armor]", Globals.WhiteDot);
+            EquippedGenerator = generator ?? new GeneratorObj("[No Generator]", Globals.WhiteDot);
+            EquippedAccessory = accessory ?? new Accessory("[No Accessory]", Globals.WhiteDot);
+
+            // Abilities
+            Abilities = abilities ?? DefaultAbilities.GenerateDefaultAbilities(this);
+
+            // Interaction
+            Conversation = conversation;
+            if (Conversation != null) Conversation.SourceObject = this;
+            ActivationEffect = activationEffect;
+            AI = ai; // Run on each Update - argument is this
+            CollisionEffect = collisionEffect; // Run when attempting to move into another object - arguments are this, other
+            Temporary = temporary; // If true, destroy this object as soon as it's no longer being updated
+            GameObjectManager.AddNewObject(Name, this);
+
+            // Grid logic
+            Size = size ?? Vector3.One;
+            Position = position;
+
+            Globals.Log(Name + " has spawned.");
+        }
+
         // name of component sprite file for this game object
         private string ComponentSpriteFileName;
 
@@ -119,7 +229,7 @@ namespace Generator
         public Ability Ability4;
 
         // Interaction
-        public List<List<string>> ActivationText;
+        public Conversation Conversation;
         public Action ActivationEffect;
         private int ActivationIndex;
         public Action<GameObject> AI;
@@ -163,138 +273,10 @@ namespace Generator
             set { Equip(value); }
         }
 
-        // Constructor
-        public GameObject(
-
-            // Grid logic
-            Vector3 position,
-            Vector3? size = null,
-
-            // Animation attributes
-            string componentSpriteFileName = "Ninja",
-            string spriteFile = null,
-            Dictionary<string, Component> components = null,
-            bool castsShadow = true,
-
-            // Actions
-            bool isWalking = false,
-            bool isSwinging = false,
-            bool isShooting = false,
-            bool isHurting = false,
-
-            // Resources
-            int health = 100,
-            int stamina = 0,
-            int electricity = 0,
-
-            // Primary Attributes
-            int strength = 0,
-            int speed = 0,
-            int sense = 0,
-            int style = 0,
-
-            // ...Other Attributes
-            string name = null,
-            int level = 1,
-            int experience = 0,
-            float direction = (float)Math.PI,
-            Vector3? brightness = null,
-
-            // Abilities
-            List<Ability> abilities = null,
-
-            // Interaction
-            Action<GameObject> ai = null,
-            Action<GameObject, GameObject> collisionEffect = null,
-            bool temporary = false,
-            Action activationEffect = null,
-            string activationText = null,
-            List<List<string>> activationTextList = null,
-
-            // Equipment
-            Weapon weapon = null,
-            Armor armor = null,
-            GeneratorObj generator = null,
-            Accessory accessory = null
-        )
-        {
-            // Animation attributes
-            ComponentSpriteFileName = componentSpriteFileName;
-            Components = components ?? GenerateDefaultComponentDict();
-            LinkComponents();
-            Sprite = spriteFile == null ? null : Globals.Content.Load<Texture2D>(spriteFile);
-            CastsShadow = castsShadow;
-
-            // Actions
-            IsWalking = isWalking;
-            IsSwinging = isSwinging;
-            IsShooting = isShooting;
-            IsHurting = isHurting;
-
-            // Resources
-            Health = new Resource("Health", health);
-            Stamina = new Resource("Stamina", stamina, 10);
-            Electricity = new Resource("Electricity", electricity);
-
-            // Primary Attributes
-            Strength = new Attribute(strength);
-            Speed = new Attribute(speed);
-            Sense = new Attribute(sense);
-            Style = new Attribute(sense);
-
-            // ...Other Attributes
-            Name = name ?? Guid.NewGuid().ToString();
-            Level = level;
-            Experience = experience;
-            Direction = direction;
-            Brightness = brightness ?? Vector3.Zero;
-
-            // Equipment
-            EquippedWeapon = weapon ?? new Weapon("Fists", Globals.WhiteDot);
-            EquippedArmor = armor ?? new Armor("[No Armor]", Globals.WhiteDot);
-            EquippedGenerator = generator ?? new GeneratorObj("[No Generator]", Globals.WhiteDot);
-            EquippedAccessory = accessory ?? new Accessory("[No Accessory]", Globals.WhiteDot);
-
-            // Abilities
-            Abilities = abilities ?? DefaultAbilities.GenerateDefaultAbilities(this);
-
-            // Interaction
-            ActivationEffect = activationEffect;
-            AI = ai; // Run on each Update - argument is this
-            CollisionEffect = collisionEffect; // Run when attempting to move into another object - arguments are this, other
-            Temporary = temporary; // If true, destroy this object as soon as it's no longer being updated
-            GameObjectManager.AddNewObject(Name, this);
-
-            // Can either give a string or a list of lists, depending on how complicated the text is
-            if (activationTextList != null)
-            {
-                ActivationText = activationTextList;
-            }
-            else if (activationText != null)
-            {
-                ActivationText = new List<List<string>> { new List<string> { activationText } };
-            }
-            else if (Name != null)
-            {
-                ActivationText = new List<List<string>> { new List<string> { "This is just a " + Name + "." } };
-            }
-
-            // Grid logic
-            Size = size ?? Vector3.One;
-            Position = position;
-            
-            Globals.Log(Name + " has spawned.");
-        }
-
         // When activating, say each thing in the ActivationText and perform the ActivationFunction
         public void Activate()
         {
-            foreach (var text in ActivationText[ActivationIndex])
-            {
-                Say(text);
-            }
-            ActivationEffect?.Invoke();
-            ActivationIndex = (int)MathTools.Mod(ActivationIndex + 1, ActivationText.Count);
+            Conversation?.Start();
         }
 
         // Establish a two-way link between the components and this GameObject
@@ -684,8 +666,7 @@ namespace Generator
         // Submit message to the screen with icon
         public void Say(string message)
         {
-            Globals.DisplayTextQueue.Enqueue(message);
-            Globals.TalkingObjectQueue.Enqueue(this);
+            // TODO: Floating text bubbles
         }
 
         // Return name, useful for debugging.

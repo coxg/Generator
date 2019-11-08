@@ -80,7 +80,7 @@ namespace Generator
                 speed: 100,
                 sense: 90,
                 style: 100,
-                name: "Niels",
+                name: "niels",
                 componentSpriteFileName: "Ninja",
                 weapon: new Weapon(
                     name: "Sword",
@@ -89,6 +89,16 @@ namespace Generator
                 brightness: Vector3.One);
             Globals.Party.Members.Add(niels);
 
+            var notSaidName = new Requirements(
+                new Dictionary<string, int>()
+                {
+                    { "notSaidName", 1 }
+                });
+            var saidName = new Requirements(
+                new Dictionary<string, int>()
+                {
+                    { "saidName", 1 }
+                });
             var farrah = new GameObject(
                 new Vector3(50, 55, 0),
                 stamina: 100,
@@ -96,13 +106,89 @@ namespace Generator
                 speed: 100,
                 sense: 90,
                 style: 100,
-                name: "Farrah",
+                name: "farrah",
                 componentSpriteFileName: "Girl",
                 weapon: new Weapon(
                     name: "Sword",
                     sprite: Globals.WhiteDot,
                     damage: 10),
-                brightness: Vector3.One);
+                brightness: Vector3.One,
+                conversation: new Conversation(
+                    choicesList: new List<Conversation.Choices>()
+                    {
+                        new Conversation.Choices(
+                            index: 0,
+                            nodes: new List<Conversation.Choices.Node>()
+                            {
+                                new Conversation.Choices.Node(
+                                    text: new List<string>()
+                                    {
+                                        "niels: Yo.",
+                                        "farrah: Yo."
+                                    }),
+                                new Conversation.Choices.Node(
+                                    text: new List<string>()
+                                    {
+                                        "niels: Who are you?.",
+                                        "farrah: _sigh..._ Farrah."
+                                    },
+                                    rewards: new Rewards(experience: 100),
+                                    effects: () => { notSaidName.Progress["notSaidName"] = 1 - notSaidName.Progress["notSaidName"]; },
+                                    requirements: notSaidName),
+                                new Conversation.Choices.Node(
+                                    text: new List<string>()
+                                    {
+                                        "niels: Who are you again?",
+                                        "farrah: I *JUST* told you."
+                                    },
+                                    rewards: new Rewards(experience: 1),
+                                    effects: () => { saidName.Progress["saidName"] = 1 - saidName.Progress["saidName"]; },
+                                    requirements: saidName),
+                                new Conversation.Choices.Node(
+                                    text: new List<string>()
+                                    {
+                                        "niels: Let me tinker with the settings.",
+                                        "farrah: Alright."
+                                    },
+                                    goToChoicesIndex: 1),
+                                new Conversation.Choices.Node(
+                                    text: "niels: Let me OUT of here!!",
+                                    exitsConversation: true),
+                            }),
+                        new Conversation.Choices(
+                            index: 1,
+                            nodes: new List<Conversation.Choices.Node>()
+                            {
+                                new Conversation.Choices.Node(
+                                    text: new List<string>()
+                                    {
+                                        "niels: Don't fight me.",
+                                        "farrah: Okay."
+                                    },
+                                    effects: () => { Globals.Party.InCombat = false; }),
+                                new Conversation.Choices.Node(
+                                    text: new List<string>()
+                                    {
+                                        "niels: Fight me.",
+                                        "farrah: Okay."
+                                    },
+                                    effects: () => { Globals.Party.InCombat = true; }),
+                                new Conversation.Choices.Node(
+                                    text: new List<string>()
+                                    {
+                                        "niels: Are we fighting?",
+                                        "farrah: " + Globals.Party.InCombat.ToString()
+                                    },
+                                    effects: () => { Globals.Party.InCombat = true; }),
+                                new Conversation.Choices.Node(
+                                    text: new List<string>()
+                                    {
+                                        "niels: I want to ask your name again.",
+                                        "farrah: ...great."
+                                    },
+                                    goToChoicesIndex: 0),
+                            })
+                    }));
             Globals.Party.Members.Add(farrah);
 
             var terrain1 = new GameObject(
@@ -115,13 +201,17 @@ namespace Generator
                 sense: 10,
                 ai: WalkToPlayer,
                 componentSpriteFileName: "Old",
-                activationTextList: new List<List<string>> {
-                    new List<string> { "Check it out, I do something weird!", "Did you see how weird that was?!" } });
+                conversation: new Conversation(
+                    new List<string> {
+                        "Check it out, I do something weird!",
+                        "Did you see how weird that was?!"
+                    } )
+                );
             terrain1.ActivationEffect = delegate
             {
                 if (!ObjectFromName.ContainsKey("big terrain"))
                 {
-                    terrain1.ActivationText = new List<List<string>> { new List<string> { "There's already a boy!" } };
+                    terrain1.Conversation = new Conversation("There's already a boy!");
 
                     new GameObject(
                         new Vector3(60, 60, 0), 
@@ -130,11 +220,29 @@ namespace Generator
                         strength: 10, 
                         speed: 10, 
                         sense: 10,
-                        activationTextList: new List<List<string>> {
-                            new List<string> { "I don't do anything weird.", "...I'm just really fat." },
-                            new List<string> { "Well, other than saying something different the second time you talk to me. " +
-                                               "\nThat's pretty cool I guess. \nIf you're into that kind of thing." }
-                        });
+                        conversation: new Conversation(
+                            new List<Conversation.Choices>()
+                            {
+                                new Conversation.Choices(
+                                    new Conversation.Choices.Node(
+                                        new List<string> {
+                                            "I don't do anything weird.",
+                                            "...I'm just really fat."
+                                        },
+                                        goToChoicesIndex: 1,
+                                        exitsConversation: true),
+                                    index: 0),
+                                new Conversation.Choices(
+                                    new Conversation.Choices.Node(
+                                        new List<string> {
+                                            "Well, other than saying something different the second time you talk to me.",
+                                            "That's pretty cool I guess.",
+                                            "If you're into that kind of thing."
+                                        },
+                                        goToChoicesIndex: 0,
+                                        exitsConversation: true),
+                                    index: 1)
+                            }));
                     var terrain3 = ObjectFromName["big terrain"];
                 }
             };

@@ -286,7 +286,7 @@ namespace Generator
             }
 
             // Draw text box
-            if (Globals.DisplayTextQueue.Count != 0) Drawing.DrawTextBox(spriteBatch);
+            if (Globals.CurrentConversation != null) Drawing.DrawTextBox(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
