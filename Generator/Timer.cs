@@ -22,7 +22,11 @@ namespace Generator
         public static void UpdateGameSpeed()
         // Update the game speed based on any overrides, whether or not we're in combat, and the player's Sense
         {
-            if (GameSpeedOverride != null)
+            if (Globals.CurrentConversation != null)
+            {
+                gameSpeed = 0;
+            }
+            else if (GameSpeedOverride != null)
             {
                 gameSpeed = (float)GameSpeedOverride;
             }
