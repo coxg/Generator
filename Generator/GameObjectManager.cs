@@ -129,6 +129,12 @@ namespace Generator
                                 new Conversation.Choices.Node(
                                     text: new List<string>()
                                     {
+                                        "niels: Ya!",
+                                        "farrah: Nah!"
+                                    }),
+                                new Conversation.Choices.Node(
+                                    text: new List<string>()
+                                    {
                                         "niels: Hello my friend! This is a very long option - why am I suddenly so talkative? Did you know I was supposed to be the silent protagonist? Funny in hindsight, right???",
                                         "farrah: k."
                                     }),

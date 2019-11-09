@@ -286,7 +286,7 @@ namespace Generator
             }
 
             // Draw text box
-            if (Globals.CurrentConversation != null) Drawing.DrawTextBox(spriteBatch);
+            if (Globals.CurrentConversation != null) Drawing.DrawConversation(spriteBatch);
 
             // Draw FPS counter
             Timing.NumDraws++;
