@@ -45,11 +45,11 @@ namespace Generator
         public float FramesPerUpdate()
             // How many animation frames should actually be played per update of the game clock
         {
-            float frames = (float)Math.Sqrt(SourceAnimation.SourceObject.Speed.CurrentValue) * Timer.GameSpeed * Smoothing;
+            float frames = (float)Math.Sqrt(SourceAnimation.SourceObject.Speed.CurrentValue) * Timing.GameSpeed * Smoothing;
             if (SourceAnimation.SourceObject == Globals.Player 
-                && SourceAnimation.Name == "Walk" && Timer.PlayerMovementMagnitude != 0)
+                && SourceAnimation.Name == "Walk" && Timing.PlayerMovementMagnitude != 0)
             {
-                frames *= Timer.PlayerMovementMagnitude;
+                frames *= Timing.PlayerMovementMagnitude;
             }
             return frames;
         }

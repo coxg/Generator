@@ -135,7 +135,7 @@ namespace Generator
                 Exit();
 
             // Launch any scheduled events
-            Timer.Update();
+            Timing.Update();
 
             // Get input for character
             Input.GetInput(Globals.Player);
@@ -287,8 +287,13 @@ namespace Generator
 
             // Draw text box
             if (Globals.CurrentConversation != null) Drawing.DrawTextBox(spriteBatch);
-            spriteBatch.End();
 
+            // Draw FPS counter
+            Timing.NumDraws++;
+            Timing.FrameTimes[(int)MathTools.Mod(Timing.NumDraws, Timing.FrameTimes.Length)] = DateTime.Now;
+            Drawing.DrawFPS(spriteBatch);
+
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }

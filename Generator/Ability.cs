@@ -208,7 +208,7 @@ namespace Generator
                 if (Cooldown != 0)
                 {
                     OffCooldown = false;
-                    Timer.AddEvent(Cooldown, delegate { OffCooldown = true; });
+                    Timing.AddEvent(Cooldown, delegate { OffCooldown = true; });
                 }
             }
 

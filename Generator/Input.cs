@@ -163,12 +163,12 @@ namespace Generator
 
                     // Move in that direction
                     player.MoveInDirection(radianDirection, speed);
-                    Timer.PlayerMovementMagnitude = speed;
+                    Timing.PlayerMovementMagnitude = speed;
                 }
                 else
                 {
                     player.IsWalking = false;
-                    Timer.PlayerMovementMagnitude = 0;
+                    Timing.PlayerMovementMagnitude = 0;
                 }
 
                 // Convert from direction offsets to radian direction

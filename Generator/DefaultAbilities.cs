@@ -88,7 +88,7 @@ namespace Generator
 
             return new Ability(
                 "Shoot",
-                staminaCost: 5,
+                staminaCost: 3,
                 cooldown: .1f,
                 keepCasting: true,
                 start: delegate

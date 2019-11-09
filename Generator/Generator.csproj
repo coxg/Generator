@@ -90,7 +90,7 @@
     <Compile Include="Resource.cs" />
     <Compile Include="Rewards.cs" />
     <Compile Include="Spline.cs" />
-    <Compile Include="Timer.cs" />
+    <Compile Include="Timing.cs" />
     <Compile Include="TileManager.cs" />
     <Compile Include="TriDiagonalMatrix.cs" />
     <Compile Include="Tile.cs" />

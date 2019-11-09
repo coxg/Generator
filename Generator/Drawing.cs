@@ -26,7 +26,7 @@ namespace Generator
                 if (objectDistance < gameObject.Brightness.Length() * 2 * MathHelper.Pi
                     && gameObject.CanSee(new Vector3(x, y, 0)))
                 {
-                    var flutteryBrightness = .01f * (float)Math.Cos(Timer.Clock / 10) * gameObject.Brightness;
+                    var flutteryBrightness = .01f * (float)Math.Cos(Timing.GameClock / 10) * gameObject.Brightness;
                     brightness += flutteryBrightness + gameObject.Brightness * (float)
                         Math.Pow(Math.Cos(.25 / gameObject.Brightness.Length() * objectDistance), 2);
                 }
@@ -56,6 +56,21 @@ namespace Generator
                 new Vector2(0, 0),
                 SpriteEffects.None,
                 .04f);
+        }
+
+        public static void DrawFPS(SpriteBatch spriteBatch)
+        // Display FPS at top right
+        {
+            if (Timing.ShowFPS & Timing.NumDraws >= Timing.FrameTimes.Length)
+            {
+                spriteBatch.DrawString(
+                    Globals.Font,
+                    String.Format("{0:0.0}", Timing.FPS),
+                    new Vector2(
+                        Globals.Resolution.X - 100,
+                        30),
+                    Color.Yellow);
+            }
         }
 
         public static void DrawTextBox(SpriteBatch spriteBatch)
