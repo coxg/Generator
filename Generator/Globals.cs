@@ -38,7 +38,7 @@ namespace Generator
         public static Vector2 Resolution = new Vector2(1600, 900);
         public static ContentManager Content;
         public static bool Logging = true;
-        public static int RefreshRate = 30;
+        public static int RefreshRate = 30; // TODO: Change to 60, modify other calculations to reflects this
         public static string Directory = "/Generator/Generator/";
 
         // Configure the world building mode
