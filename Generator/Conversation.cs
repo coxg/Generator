@@ -71,9 +71,6 @@ namespace Generator
         {
             Choices choices = CurrentChoices;
             Choices.Node node = CurrentNode;
-            Globals.Log("Choice selected: " + choices.ChoiceSelected);
-            Globals.Log("MessageIndex: " + node.MessageIndex);
-            Globals.Log("Exits conversation: " + node.ExitsConversation);
 
             // If we haven't selected a choice yet then select it
             if (!choices.ChoiceSelected)
@@ -91,6 +88,8 @@ namespace Generator
             // If we're at the final message
             else
             {
+                node.Effects?.Invoke();
+                node.Rewards?.Award();
                 choices.ChoiceSelected = false;
                 node.MessageIndex = 0;
 

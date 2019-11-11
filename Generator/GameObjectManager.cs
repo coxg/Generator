@@ -94,6 +94,7 @@ namespace Generator
                 {
                     { "notSaidName", 1 }
                 });
+            notSaidName.Progress["notSaidName"] = 1;
             var saidName = new Requirements(
                 new Dictionary<string, int>()
                 {
@@ -141,11 +142,14 @@ namespace Generator
                                 new Conversation.Choices.Node(
                                     text: new List<string>()
                                     {
-                                        "niels: Who are you?.",
+                                        "niels: Who are you?",
                                         "farrah: _sigh..._ Farrah."
                                     },
                                     rewards: new Rewards(experience: 100),
-                                    effects: () => { notSaidName.Progress["notSaidName"] = 1 - notSaidName.Progress["notSaidName"]; },
+                                    effects: () => {
+                                        notSaidName.Progress["notSaidName"] = 0;
+                                        saidName.Progress["saidName"] = 1;
+                                    },
                                     requirements: notSaidName),
                                 new Conversation.Choices.Node(
                                     text: new List<string>()
@@ -154,7 +158,10 @@ namespace Generator
                                         "farrah: I *JUST* told you."
                                     },
                                     rewards: new Rewards(experience: 1),
-                                    effects: () => { saidName.Progress["saidName"] = 1 - saidName.Progress["saidName"]; },
+                                    effects: () => {
+                                        notSaidName.Progress["notSaidName"] = 1;
+                                        saidName.Progress["saidName"] = 0;
+                                    },
                                     requirements: saidName),
                                 new Conversation.Choices.Node(
                                     text: new List<string>()

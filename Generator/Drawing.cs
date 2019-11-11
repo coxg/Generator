@@ -209,7 +209,7 @@ namespace Generator
                 var face = talkingObject.Components["Face"];
                 var faceSize = (int)(headSize * face.Size / head.Size);
                 spriteBatch.Draw(
-                    head.Sprite,
+                    head.Sprites["Front"],
                     new Rectangle(
                         Margin,
                         (int)Globals.Resolution.Y - TextBoxHeight + Margin,
@@ -222,7 +222,7 @@ namespace Generator
                     SpriteEffects.None,
                     .04f);
                 spriteBatch.Draw(
-                    face.Sprite,
+                    face.Sprites["Front"],
                     new Rectangle(
                         Margin + headSize / 2 - faceSize / 2,
                         (int)Globals.Resolution.Y - TextBoxHeight + Margin + 5 * headSize / 8 - faceSize / 2,

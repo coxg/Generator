@@ -231,7 +231,6 @@ namespace Generator
         // Interaction
         public Conversation Conversation;
         public Action ActivationEffect;
-        private int ActivationIndex;
         public Action<GameObject> AI;
         public Action<GameObject, GameObject> CollisionEffect;
         public bool Temporary;
