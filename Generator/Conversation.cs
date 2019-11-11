@@ -160,7 +160,7 @@ namespace Generator
             {
                 get
                 {
-                    return nodes.Where(node => node.Requirements == null || node.Requirements.IsComplete()).ToList();
+                    return nodes.Where(node => node.Conditional == null || (bool) node.Conditional?.Invoke()).ToList();
                 }
                 set { nodes = value; }
             }
@@ -197,7 +197,7 @@ namespace Generator
 
             public class Node
             {
-                public Requirements Requirements = null;
+                public Func<bool> Conditional = null;
                 public Rewards Rewards = null;
                 public Action Effects = null;
                 public int? GoToChoicesIndex = null;
@@ -221,11 +221,11 @@ namespace Generator
                 }
 
                 // Constructor - single message
-                public Node(string text, Requirements requirements = null, Rewards rewards = null,
+                public Node(string text, Func<bool> conditional = null, Rewards rewards = null,
                     Action effects = null, int? goToChoicesIndex = null, bool exitsConversation = false)
                 {
                     this.text = new List<string>() { text };
-                    Requirements = requirements;
+                    Conditional = conditional;
                     Rewards = rewards;
                     Effects = effects;
                     GoToChoicesIndex = goToChoicesIndex;
@@ -233,11 +233,11 @@ namespace Generator
                 }
 
                 // Constructor - list of messages
-                public Node(List<string> text, Requirements requirements = null, Rewards rewards = null,
+                public Node(List<string> text, Func<bool> conditional = null, Rewards rewards = null,
                     Action effects = null, int? goToChoicesIndex = null, bool exitsConversation = false)
                 {
                     this.text = text;
-                    Requirements = requirements;
+                    Conditional = conditional;
                     Rewards = rewards;
                     Effects = effects;
                     GoToChoicesIndex = goToChoicesIndex;

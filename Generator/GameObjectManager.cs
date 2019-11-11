@@ -89,17 +89,7 @@ namespace Generator
                 brightness: Vector3.One);
             Globals.Party.Members.Add(niels);
 
-            var notSaidName = new Requirements(
-                new Dictionary<string, int>()
-                {
-                    { "notSaidName", 1 }
-                });
-            notSaidName.Progress["notSaidName"] = 1;
-            var saidName = new Requirements(
-                new Dictionary<string, int>()
-                {
-                    { "saidName", 1 }
-                });
+            bool saidName = false;
             var farrah = new GameObject(
                 new Vector3(50, 55, 0),
                 stamina: 100,
@@ -146,11 +136,8 @@ namespace Generator
                                         "farrah: _sigh..._ Farrah."
                                     },
                                     rewards: new Rewards(experience: 100),
-                                    effects: () => {
-                                        notSaidName.Progress["notSaidName"] = 0;
-                                        saidName.Progress["saidName"] = 1;
-                                    },
-                                    requirements: notSaidName),
+                                    effects: () => { saidName = true; },
+                                    conditional: () => { return saidName == false; }),
                                 new Conversation.Choices.Node(
                                     text: new List<string>()
                                     {
@@ -158,11 +145,8 @@ namespace Generator
                                         "farrah: I *JUST* told you."
                                     },
                                     rewards: new Rewards(experience: 1),
-                                    effects: () => {
-                                        notSaidName.Progress["notSaidName"] = 1;
-                                        saidName.Progress["saidName"] = 0;
-                                    },
-                                    requirements: saidName),
+                                    effects: () => { saidName = false; },
+                                    conditional: () => { return saidName == true; }),
                                 new Conversation.Choices.Node(
                                     text: new List<string>()
                                     {
