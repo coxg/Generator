@@ -67,7 +67,7 @@ namespace Generator
         }
 
         public void Advance()
-            // Advance the conversation based on what's currently selected
+        // Advance the conversation based on what's currently selected
         {
             Choices choices = CurrentChoices;
             Choices.Node node = CurrentNode;
@@ -113,7 +113,7 @@ namespace Generator
         }
 
         public void Reset()
-            // Reset all indices to restart the conversation
+        // Reset all indices to restart the conversation
         {
             CurrentChoicesIndex = StartingChoicesIndex;
             foreach (Choices choices in ChoicesList)
@@ -197,7 +197,6 @@ namespace Generator
 
             public class Node
             {
-                public List<string> Text;
                 public Requirements Requirements = null;
                 public Rewards Rewards = null;
                 public Action Effects = null;
@@ -206,11 +205,26 @@ namespace Generator
                 public bool ExitsConversation;
                 public int MessageIndex = 0;
 
+                private List<string> text;
+                public List<string> Text
+                {
+                    get
+                    {
+                        var output = new List<string>();
+                        foreach (string elem in text)
+                        {
+                            output.Add(Keywords.Aggregate(elem, (current, value) => 
+                                current.Replace("{" + value.Key + "}", value.Value().ToString())));
+                        }
+                        return output;
+                    }
+                }
+
                 // Constructor - single message
                 public Node(string text, Requirements requirements = null, Rewards rewards = null,
                     Action effects = null, int? goToChoicesIndex = null, bool exitsConversation = false)
                 {
-                    Text = new List<string>() { text };
+                    this.text = new List<string>() { text };
                     Requirements = requirements;
                     Rewards = rewards;
                     Effects = effects;
@@ -222,7 +236,7 @@ namespace Generator
                 public Node(List<string> text, Requirements requirements = null, Rewards rewards = null,
                     Action effects = null, int? goToChoicesIndex = null, bool exitsConversation = false)
                 {
-                    Text = text;
+                    this.text = text;
                     Requirements = requirements;
                     Rewards = rewards;
                     Effects = effects;
@@ -231,5 +245,11 @@ namespace Generator
                 }
             }
         }
+
+        public static Dictionary<string, Func<object>> Keywords = new Dictionary<string, Func<object>>()
+        // Used for string replacement - for example, "{inCombat}" would be replaced with Globals.Party.InCombat
+        {
+            { "inCombat", () => Globals.Party.InCombat }
+        };
     }
 }

@@ -196,7 +196,7 @@ namespace Generator
                                     text: new List<string>()
                                     {
                                         "niels: Are we fighting?",
-                                        "farrah: " + Globals.Party.InCombat.ToString()
+                                        "farrah: {inCombat}"
                                     },
                                     effects: () => { Globals.Party.InCombat = true; }),
                                 new Conversation.Choices.Node(
