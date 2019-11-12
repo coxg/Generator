@@ -13,6 +13,8 @@
     <AssemblyName>Generator</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Windows</MonoGamePlatform>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -25,10 +27,9 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -58,12 +59,44 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>18FF59941DD59A2449C1BB28F0ED0B105BA942A9</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>Generator_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Ability.cs" />
     <Compile Include="Accessory.cs" />
     <Compile Include="Acre.cs" />
     <Compile Include="Animation.cs" />
     <Compile Include="Conversation.cs" />
+    <Compile Include="LilyPath\Brush.cs" />
+    <Compile Include="LilyPath\Brushes\CheckerBrush.cs" />
+    <Compile Include="LilyPath\DrawBatch.cs" />
+    <Compile Include="LilyPath\DrawCache.cs" />
+    <Compile Include="LilyPath\Enums.cs" />
+    <Compile Include="LilyPath\GraphicsPath.cs" />
+    <Compile Include="LilyPath\LineCapInfo.cs" />
+    <Compile Include="LilyPath\PathBuilder.cs" />
+    <Compile Include="LilyPath\Pen.cs" />
+    <Compile Include="LilyPath\Pens\GradientPen.cs" />
+    <Compile Include="LilyPath\Pens\PathGradientPen.cs" />
+    <Compile Include="LilyPath\Shapes\Grid.cs" />
+    <Compile Include="LilyPath\SolidColorBrush.cs" />
+    <Compile Include="LilyPath\TextureBrush.cs" />
+    <Compile Include="LilyPath\Triangulator.cs" />
+    <Compile Include="LilyPath\Utility\Buffer.cs" />
+    <Compile Include="LilyPath\Utility\PenWorkspace.cs" />
+    <Compile Include="LilyPath\Utility\Pool.cs" />
+    <Compile Include="LilyPath\Utility\Pools.cs" />
+    <Compile Include="LilyPath\Utility\ZeroList.cs" />
     <Compile Include="Party.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Requirements.cs" />
@@ -110,6 +143,7 @@
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
+    <None Include="Generator_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.manifest" />
@@ -158,7 +192,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -29,7 +29,8 @@ namespace Generator
         public static BlendState lightingBlendState;
         public static BlendState lightingLayerBlendState;
         public static Rectangle screenSize = new Rectangle(0, 0, (int)Globals.Resolution.X, (int)Globals.Resolution.Y);
-        public SpriteBatch spriteBatch;
+        public static SpriteBatch spriteBatch;
+        public static LilyPath.DrawBatch drawBatch;
 
         public GameControl()
         {
@@ -82,6 +83,7 @@ namespace Generator
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            drawBatch = new LilyPath.DrawBatch(GraphicsDevice);
             effect = new BasicEffect(GraphicsDevice) { 
                 TextureEnabled = true, 
                 VertexColorEnabled = true};
@@ -269,13 +271,14 @@ namespace Generator
             spriteBatch.End();
 
             // Draw the UI layer
-            spriteBatch.Begin();
             if (Globals.CurrentConversation != null)
             {
                 Drawing.DrawConversation(spriteBatch);
             }
             else
             {
+                spriteBatch.Begin();
+
                 // Draw the resource bars
                 for (int i = 0; i < Globals.Party.Members.Count; i++)
                 {
@@ -292,6 +295,7 @@ namespace Generator
                 {
                     Drawing.DrawCreativeUI(spriteBatch);
                 }
+                spriteBatch.End();
             }
 
             // Draw FPS counter
@@ -299,10 +303,11 @@ namespace Generator
             {
                 Timing.NumDraws++;
                 Timing.FrameTimes[(int)MathTools.Mod(Timing.NumDraws, Timing.FrameTimes.Length)] = DateTime.Now;
+                spriteBatch.Begin();
                 Drawing.DrawFPS(spriteBatch);
+                spriteBatch.End();
             }
 
-            spriteBatch.End();
             base.Draw(gameTime);
         }
     }

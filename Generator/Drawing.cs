@@ -73,10 +73,67 @@ namespace Generator
             }
         }
 
-        public static Vector2 DrawTextToWidth(
+        public static void DrawRoundedRectangle(
+            Rectangle rectangle, int radius, Color? color = null, int borderWidth = 0, Color? borderColor = null)
+            // Draw a rounded rectangle
+        {
+            GameControl.drawBatch.Begin();
+
+            var top = rectangle.Y + radius;
+            var bottom = rectangle.Y + rectangle.Height - radius;
+            var left = rectangle.X + radius;
+            var right = rectangle.X + rectangle.Width - radius;
+
+            // If a color was provided, fill the inside of the shape
+            if (color != null)
+            {
+                // Draw the rectangle excluding its corners
+                var brush = new LilyPath.SolidColorBrush((Color)color);
+                GameControl.drawBatch.FillRectangle(
+                    brush, new Rectangle(rectangle.X, rectangle.Y + radius, rectangle.Width, rectangle.Height - 2 * radius));
+                GameControl.drawBatch.FillRectangle(
+                    brush, new Rectangle(rectangle.X + radius, rectangle.Y, rectangle.Width - 2 * radius, rectangle.Height));
+
+                // Draw the corners
+                GameControl.drawBatch.FillArc(brush, new Vector2(left, top), radius,
+                    MathHelper.Pi, MathHelper.PiOver2, LilyPath.ArcType.Sector);
+                GameControl.drawBatch.FillArc(brush, new Vector2(right, top), radius,
+                    3 * MathHelper.PiOver2, MathHelper.PiOver2, LilyPath.ArcType.Sector);
+                GameControl.drawBatch.FillArc(brush, new Vector2(left, bottom), radius,
+                    MathHelper.PiOver2, MathHelper.PiOver2, LilyPath.ArcType.Sector);
+                GameControl.drawBatch.FillArc(brush, new Vector2(right, bottom), radius,
+                    0, MathHelper.PiOver2, LilyPath.ArcType.Sector);
+            }
+
+            // If a border width was provided, draw a border
+            if (borderWidth != 0)
+            {
+                // Draw the curves
+                var pen = new LilyPath.Pen(borderColor ?? Color.White, borderWidth);
+                GameControl.drawBatch.DrawArc(pen, new Vector2(left, top), radius, MathHelper.Pi, MathHelper.PiOver2);
+                GameControl.drawBatch.DrawArc(pen, new Vector2(right, top), radius, 3 * MathHelper.PiOver2, MathHelper.PiOver2);
+                GameControl.drawBatch.DrawArc(pen, new Vector2(left, bottom), radius, MathHelper.PiOver2, MathHelper.PiOver2);
+                GameControl.drawBatch.DrawArc(pen, new Vector2(right, bottom), radius, 0, MathHelper.PiOver2);
+
+                // Draw the lines
+                top = rectangle.Y;
+                bottom = rectangle.Y + rectangle.Height;
+                left = rectangle.X;
+                right = rectangle.X + rectangle.Width;
+                GameControl.drawBatch.DrawLine(pen, new Vector2(left + radius, top), new Vector2(right - radius, top));
+                GameControl.drawBatch.DrawLine(pen, new Vector2(right, bottom - radius), new Vector2(right, top + radius));
+                GameControl.drawBatch.DrawLine(pen, new Vector2(left + radius, bottom), new Vector2(right - radius, bottom));
+                GameControl.drawBatch.DrawLine(pen, new Vector2(left, top + radius), new Vector2(left, bottom - radius));
+            }
+
+            GameControl.drawBatch.End();
+        }
+
+        public static Vector2 DrawTextBox(
             SpriteBatch spriteBatch, string text, int x, int y, int maxWidth, Color? color=null, 
-            bool draw=true, string align="left", Color? highlightColor=null, int highlightMargin = 0)
-        // Use this to draw any text boxes
+            bool drawText=true, string align="left", Color? highlightColor=null, int highlightMargin = 0, int borderThickness = 0)
+        // Use this to draw any text boxes.
+        // This is super overloaded - also draws speech bubbles, for example. Should this be split up? Or renamed?
         {
             void _draw(string _text, int _x, int _y, Vector2 _dimensions)
             {
@@ -90,39 +147,41 @@ namespace Generator
                 }
 
 
-                if (highlightColor != null)
+                if (highlightColor != null || borderThickness > 0)
                 {
-                    spriteBatch.Draw(
-                        Globals.WhiteDot,
+                    DrawRoundedRectangle(
                         new Rectangle(
                             _x - highlightMargin,
                             _y - highlightMargin,
                             (int)_dimensions.X + 2 * highlightMargin,
                             (int)_dimensions.Y + 2 * highlightMargin),
-                        null,
-                        (Color)highlightColor,
-                        0f,
-                        new Vector2(0, 0),
-                        SpriteEffects.None,
-                        .05f);
+                        highlightMargin,
+                        highlightColor,
+                        borderThickness,
+                        color);
                 }
 
-                if (draw)
+                if (drawText)
                 {
+                    spriteBatch.Begin();
                     spriteBatch.DrawString(
                         Globals.Font,
                         _text,
                         new Vector2(_x, _y),
                         color ?? Color.White);
+                    spriteBatch.End();
                 }
             }
 
-            // Super janky, but highlight everything and THEN draw the text
-            if (draw && highlightColor != null)
+            // Super janky, but draw the border and THEN highlight everything and THEN draw the text
+            if (drawText && highlightColor != null)
             {
-                DrawTextToWidth(spriteBatch, text, x, y, maxWidth, color, draw: false, align: align, 
+                DrawTextBox(spriteBatch, text, x, y, maxWidth, drawText: false, align: align,
+                    highlightMargin: highlightMargin, borderThickness: borderThickness);
+                DrawTextBox(spriteBatch, text, x, y, maxWidth, drawText: false, align: align, 
                     highlightColor: highlightColor, highlightMargin: highlightMargin);
-                return DrawTextToWidth(spriteBatch, text, x, y, maxWidth, color, draw: draw, align: align);
+                return DrawTextBox(spriteBatch, text, x, y, maxWidth, color, drawText: drawText, align: align, 
+                    highlightMargin: highlightMargin);
             }
 
             // Get the dimensions of the text
@@ -250,6 +309,7 @@ namespace Generator
             Color? selectionColor = Color.FromNonPremultiplied(50, 50, 100, 255);
 
             // Draw the background
+            spriteBatch.Begin();
             spriteBatch.Draw(
                 Globals.WhiteDot,
                 new Rectangle(
@@ -270,13 +330,13 @@ namespace Generator
             var TextBoxHeight = Margin;
             for (int i = 0; i < choices.Nodes.Count; i++)
             {
-                var textDimensions = DrawTextToWidth(
+                var textDimensions = DrawTextBox(
                     spriteBatch,
                     choices.Nodes[i].Text[0],
                     0,
                     0,
                     maxWidth: maxWidth,
-                    draw: false);
+                    drawText: false);
 
                 TextWidth = Math.Max(TextWidth, (int)textDimensions.X);
                 TextBoxHeight += (int)textDimensions.Y + 2 * Margin;
@@ -303,6 +363,7 @@ namespace Generator
             DrawCharacter(spriteBatch, talkingObject, spriteSize, xOffset, (int)(Globals.Resolution.Y - spriteSize) / 2);
             DrawCharacter(spriteBatch, Globals.CurrentConversation.SourceObject,
                 spriteSize, xOffset + spriteSize + TextWidth + 2 * Margin, (int)(Globals.Resolution.Y - spriteSize) / 2);
+            spriteBatch.End();
 
             // Draw the text itself
             // If we've selected a choice then just draw that choice
@@ -310,14 +371,14 @@ namespace Generator
             {
                 var currentNode = choices.GetCurrentNode();
                 var currentMessage = currentNode.GetCurrentMessage();
-                var textDimensions = DrawTextToWidth(
+                var textDimensions = DrawTextBox(
                     spriteBatch,
                     currentMessage,
                     0,
                     0,
                     TextWidth,
-                    draw: false);
-                DrawTextToWidth(
+                    drawText: false);
+                DrawTextBox(
                     spriteBatch, 
                     currentMessage,
                     xOffset + spriteSize + Margin,
@@ -325,7 +386,8 @@ namespace Generator
                     TextWidth,
                     align: currentNode.GetCurrentSpeaker() == Globals.CurrentConversation.SourceObject ? "right" : "left",
                     highlightColor: selectionColor,
-                    highlightMargin: Margin);
+                    highlightMargin: Margin,
+                    borderThickness: 5);
             }
 
             // If we haven't selected a choice yet then show all available choices
@@ -335,14 +397,15 @@ namespace Generator
                 foreach (Conversation.Choices.Node node in choices.Nodes)
                 {
                     // Draw the choice
-                    Vector2 textDimensions = DrawTextToWidth(
+                    Vector2 textDimensions = DrawTextBox(
                         spriteBatch,
                         node.GetCurrentMessage(),
                         xOffset + spriteSize + Margin,
                         yOffset,
                         TextWidth,
                         highlightColor: node == choices.GetCurrentNode() ? selectionColor : null,
-                        highlightMargin: Margin);
+                        highlightMargin: Margin,
+                        borderThickness: node == choices.GetCurrentNode() ? 5 : 0);
                     yOffset += (int)textDimensions.Y + 2 * Margin;
                 }
             }
