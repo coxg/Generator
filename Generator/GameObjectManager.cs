@@ -127,7 +127,10 @@ namespace Generator
                                     text: new List<string>()
                                     {
                                         "niels: Hello my friend! This is a very long option - why am I suddenly so talkative? Did you know I was supposed to be the silent protagonist? Funny in hindsight, right???",
-                                        "farrah: k."
+                                        "farrah: Right???? And I have such a long, non-sassy response! I love giving extremely verbose responses in order to test out text alignment!",
+                                        "niels: And I love responding multiple times!",
+                                        "niels: And saying multiple things in a row!",
+                                        "farrah: Me too!"
                                     }),
                                 new Conversation.Choices.Node(
                                     text: new List<string>()

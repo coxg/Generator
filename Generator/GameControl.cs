@@ -236,18 +236,6 @@ namespace Generator
                         gameObject.Size * component.Value.Size);
                 }
             }
-
-            // Draw the resource bars
-            for (int i=0; i < Globals.Party.Members.Count; i++)
-            {
-                var gameObject = Globals.Party.Members[i];
-                Drawing.DrawResource(spriteBatch, gameObject.Health, i);
-                if (gameObject.Stamina.Max > 0)
-                    Drawing.DrawResource(spriteBatch, gameObject.Stamina, i);
-                if (gameObject.Electricity.Max > 0)
-                    Drawing.DrawResource(spriteBatch, gameObject.Electricity, i);
-            }
-
             spriteBatch.End();
 
             // Pre-compute the lighting layer
@@ -278,20 +266,41 @@ namespace Generator
             // Draw the object layer
             spriteBatch.Begin();
             spriteBatch.Draw(objectRenderTarget, screenSize, Color.White);
+            spriteBatch.End();
 
-            // Draw the selected objects in creative mode
-            if (Globals.CreativeMode)
+            // Draw the UI layer
+            spriteBatch.Begin();
+            if (Globals.CurrentConversation != null)
             {
-                Drawing.DrawCreativeUI(spriteBatch);
+                Drawing.DrawConversation(spriteBatch);
+            }
+            else
+            {
+                // Draw the resource bars
+                for (int i = 0; i < Globals.Party.Members.Count; i++)
+                {
+                    var gameObject = Globals.Party.Members[i];
+                    Drawing.DrawResource(spriteBatch, gameObject.Health, i);
+                    if (gameObject.Stamina.Max > 0)
+                        Drawing.DrawResource(spriteBatch, gameObject.Stamina, i);
+                    if (gameObject.Electricity.Max > 0)
+                        Drawing.DrawResource(spriteBatch, gameObject.Electricity, i);
+                }
+
+                // Show which tiles are selected
+                if (Globals.CreativeMode)
+                {
+                    Drawing.DrawCreativeUI(spriteBatch);
+                }
             }
 
-            // Draw text box
-            if (Globals.CurrentConversation != null) Drawing.DrawConversation(spriteBatch);
-
             // Draw FPS counter
-            Timing.NumDraws++;
-            Timing.FrameTimes[(int)MathTools.Mod(Timing.NumDraws, Timing.FrameTimes.Length)] = DateTime.Now;
-            Drawing.DrawFPS(spriteBatch);
+            if (Timing.ShowFPS)
+            {
+                Timing.NumDraws++;
+                Timing.FrameTimes[(int)MathTools.Mod(Timing.NumDraws, Timing.FrameTimes.Length)] = DateTime.Now;
+                Drawing.DrawFPS(spriteBatch);
+            }
 
             spriteBatch.End();
             base.Draw(gameTime);

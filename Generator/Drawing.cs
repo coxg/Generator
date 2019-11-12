@@ -61,7 +61,7 @@ namespace Generator
         public static void DrawFPS(SpriteBatch spriteBatch)
         // Display FPS at top right
         {
-            if (Timing.ShowFPS & Timing.NumDraws >= Timing.FrameTimes.Length)
+            if (Timing.NumDraws >= Timing.FrameTimes.Length)
             {
                 spriteBatch.DrawString(
                     Globals.Font,
@@ -74,11 +74,39 @@ namespace Generator
         }
 
         public static Vector2 DrawTextToWidth(
-            SpriteBatch spriteBatch, string text, int x = 0, int y = 0, int? maxWidth=null, Color? color=null, bool draw=true)
+            SpriteBatch spriteBatch, string text, int x, int y, int maxWidth, Color? color=null, 
+            bool draw=true, string align="left", Color? highlightColor=null, int highlightMargin = 0)
         // Use this to draw any text boxes
         {
-            void DrawString(string _text, int _x, int _y)
+            void _draw(string _text, int _x, int _y, Vector2 _dimensions)
             {
+                if (align == "right")
+                {
+                    _x = _x + (int)(maxWidth - _dimensions.X);
+                }
+                else if (align == "center")
+                {
+                    _x = (int)(_x + maxWidth - _dimensions.X) / 2;
+                }
+
+
+                if (highlightColor != null)
+                {
+                    spriteBatch.Draw(
+                        Globals.WhiteDot,
+                        new Rectangle(
+                            _x - highlightMargin,
+                            _y - highlightMargin,
+                            (int)_dimensions.X + 2 * highlightMargin,
+                            (int)_dimensions.Y + 2 * highlightMargin),
+                        null,
+                        (Color)highlightColor,
+                        0f,
+                        new Vector2(0, 0),
+                        SpriteEffects.None,
+                        .05f);
+                }
+
                 if (draw)
                 {
                     spriteBatch.DrawString(
@@ -89,11 +117,19 @@ namespace Generator
                 }
             }
 
+            // Super janky, but highlight everything and THEN draw the text
+            if (draw && highlightColor != null)
+            {
+                DrawTextToWidth(spriteBatch, text, x, y, maxWidth, color, draw: false, align: align, 
+                    highlightColor: highlightColor, highlightMargin: highlightMargin);
+                return DrawTextToWidth(spriteBatch, text, x, y, maxWidth, color, draw: draw, align: align);
+            }
+
             // Get the dimensions of the text
             Vector2 dimensions = Globals.Font.MeasureString(text);
 
             // If we are too large then walk through the words one by one, appending as we go
-            if (maxWidth != null && dimensions.X > maxWidth)
+            if (dimensions.X > maxWidth)
             {
                 int maxX = 0;
                 int totalY = 0;
@@ -108,10 +144,10 @@ namespace Generator
                     }
 
                     // If this word puts us over the edge then write the prior line and set this as the new line
-                    if (Globals.Font.MeasureString(newLine).X > (int)maxWidth)
+                    if (Globals.Font.MeasureString(newLine).X > maxWidth)
                     {
                         var currentLineDimensions = Globals.Font.MeasureString(currentLine);
-                        DrawString(currentLine, x, y + totalY);
+                        _draw(currentLine, x, y + totalY, currentLineDimensions);
                         totalY += (int)currentLineDimensions.Y;
                         if (currentLineDimensions.X > maxX)
                         {
@@ -131,7 +167,7 @@ namespace Generator
                 if (currentLine != "")
                 {
                     var finalLineDimensions = Globals.Font.MeasureString(currentLine);
-                    DrawString(currentLine, x, y + totalY);
+                    _draw(currentLine, x, y + totalY, finalLineDimensions);
                     totalY += (int)finalLineDimensions.Y;
                     if (finalLineDimensions.X > maxX)
                     {
@@ -144,7 +180,7 @@ namespace Generator
             // If we fit then just go ahead and write it
             else
             {
-                DrawString(text, x, y);
+                _draw(text, x, y, dimensions);
                 return dimensions;
             }
         }
@@ -211,7 +247,22 @@ namespace Generator
             var spriteSize = 256;
             var choices = Globals.CurrentConversation.CurrentChoices;
             var backGroundColor = Color.FromNonPremultiplied(0, 0, 0, 150);
-            var selectionColor = Color.FromNonPremultiplied(50, 50, 100, 255);
+            Color? selectionColor = Color.FromNonPremultiplied(50, 50, 100, 255);
+
+            // Draw the background
+            spriteBatch.Draw(
+                Globals.WhiteDot,
+                new Rectangle(
+                    0,
+                    0,
+                    (int)Globals.Resolution.X,
+                    (int)Globals.Resolution.Y),
+                null,
+                backGroundColor,
+                0f,
+                new Vector2(0, 0),
+                SpriteEffects.None,
+                .05f);
 
             // Get dimensions for the different conversation options
             int maxWidth = (int)Globals.Resolution.X - 4 * Margin - 2 * spriteSize;
@@ -222,56 +273,25 @@ namespace Generator
                 var textDimensions = DrawTextToWidth(
                     spriteBatch,
                     choices.Nodes[i].Text[0],
+                    0,
+                    0,
                     maxWidth: maxWidth,
                     draw: false);
 
                 TextWidth = Math.Max(TextWidth, (int)textDimensions.X);
-                TextBoxHeight += (int)textDimensions.Y + Margin;
+                TextBoxHeight += (int)textDimensions.Y + 2 * Margin;
             }
-            TextBoxHeight = Math.Max(TextBoxHeight, spriteSize);
             int xOffset = (maxWidth - TextWidth) / 2 + Margin;
-            int yOffset = (int)Globals.Resolution.Y - TextBoxHeight - 2 * Margin;
-
-            // Draw the background
-            spriteBatch.Draw(
-                Globals.WhiteDot,
-                new Rectangle(
-                    xOffset + spriteSize,
-                    yOffset,
-                    TextWidth + 2 * Margin,
-                    TextBoxHeight),
-                null,
-                backGroundColor,
-                0f,
-                new Vector2(0, 0),
-                SpriteEffects.None,
-                .05f);
+            int yOffset = (int)(Globals.Resolution.Y - TextBoxHeight) / 2;
 
             // Figure out who from the party is talking
             GameObject talkingObject = null;
-            var isTalking = false;
             for (int i = 0; i <= choices.CurrentNodeIndex; i++)
             {
-                string currentMessage = choices.Nodes[i].Text[choices.Nodes[i].MessageIndex];
-                var messageParts = currentMessage.Split(new string[] { ": " }, 2, StringSplitOptions.None);
-                var talkingObjectName = messageParts[0];
-                currentMessage = messageParts[messageParts.Count() - 1];
-                if (GameObjectManager.ObjectFromName.ContainsKey(talkingObjectName))
+                var currentTalkingObject = choices.Nodes[i].GetCurrentSpeaker();
+                if (currentTalkingObject != Globals.CurrentConversation.SourceObject)
                 {
-                    var currentTalkingObject = GameObjectManager.ObjectFromName[talkingObjectName];
-                    if (currentTalkingObject != Globals.CurrentConversation.SourceObject)
-                    {
-                        talkingObject = GameObjectManager.ObjectFromName[talkingObjectName];
-                        isTalking = true;
-                    }
-                    else
-                    {
-                        isTalking = false;
-                    }
-                }
-                else
-                {
-                    isTalking = false;
+                    talkingObject = currentTalkingObject;
                 }
             }
             if (talkingObject == null)
@@ -279,99 +299,51 @@ namespace Generator
                 talkingObject = Globals.Player;
             }
 
-            // Draw party character sprite and background
-            spriteBatch.Draw(
-                Globals.WhiteDot,
-                new Rectangle(
-                    xOffset,
-                    yOffset,
-                    spriteSize,
-                    spriteSize),
-                null,
-                isTalking? selectionColor : backGroundColor,
-                0f,
-                new Vector2(0, 0),
-                SpriteEffects.None,
-                .05f);
-            DrawCharacter(spriteBatch, talkingObject, spriteSize, xOffset, yOffset);
-
-            // Draw the character we're talking to and their background
-            spriteBatch.Draw(
-                Globals.WhiteDot,
-                new Rectangle(
-                    xOffset + spriteSize + TextWidth + 2 * Margin,
-                    yOffset,
-                    spriteSize,
-                    spriteSize),
-                null,
-                isTalking ? backGroundColor : selectionColor,
-                0f,
-                new Vector2(0, 0),
-                SpriteEffects.None,
-                .05f);
+            // Draw the characters who are talking
+            DrawCharacter(spriteBatch, talkingObject, spriteSize, xOffset, (int)(Globals.Resolution.Y - spriteSize) / 2);
             DrawCharacter(spriteBatch, Globals.CurrentConversation.SourceObject,
-                spriteSize, xOffset + spriteSize + TextWidth + 2 * Margin, yOffset);
+                spriteSize, xOffset + spriteSize + TextWidth + 2 * Margin, (int)(Globals.Resolution.Y - spriteSize) / 2);
 
             // Draw the text itself
             // If we've selected a choice then just draw that choice
-            yOffset += Margin;
             if (choices.ChoiceSelected)
             {
-                var currentNode = choices.Nodes[choices.CurrentNodeIndex];
-                var currentMessage = currentNode.Text[currentNode.MessageIndex];
-                var messageParts = currentMessage.Split(new string[] { ": " }, 2, StringSplitOptions.None);
-                currentMessage = messageParts[messageParts.Count() - 1];
+                var currentNode = choices.GetCurrentNode();
+                var currentMessage = currentNode.GetCurrentMessage();
+                var textDimensions = DrawTextToWidth(
+                    spriteBatch,
+                    currentMessage,
+                    0,
+                    0,
+                    TextWidth,
+                    draw: false);
                 DrawTextToWidth(
                     spriteBatch, 
                     currentMessage,
-                    xOffset + spriteSize + Margin, 
-                    yOffset,
-                    TextWidth);
+                    xOffset + spriteSize + Margin,
+                    (int)(Globals.Resolution.Y - textDimensions.Y) / 2,
+                    TextWidth,
+                    align: currentNode.GetCurrentSpeaker() == Globals.CurrentConversation.SourceObject ? "right" : "left",
+                    highlightColor: selectionColor,
+                    highlightMargin: Margin);
             }
 
             // If we haven't selected a choice yet then show all available choices
             else
             {
-                for (int i = 0; i < choices.Nodes.Count; i++)
+                yOffset += Margin;
+                foreach (Conversation.Choices.Node node in choices.Nodes)
                 {
                     // Draw the choice
-                    var currentMessage = choices.Nodes[i].Text[0];
-                    var messageParts = currentMessage.Split(new string[] { ": " }, 2, StringSplitOptions.None);
-                    currentMessage = messageParts[messageParts.Count() - 1];
                     Vector2 textDimensions = DrawTextToWidth(
                         spriteBatch,
-                        currentMessage,
+                        node.GetCurrentMessage(),
                         xOffset + spriteSize + Margin,
                         yOffset,
-                        TextWidth);
-
-                    // Highlight whichever choice we're hovering
-                    if (i == choices.CurrentNodeIndex)
-                    {
-                        spriteBatch.Draw(
-                            Globals.WhiteDot,
-                            new Rectangle(
-                                xOffset + spriteSize,
-                                yOffset - Margin,
-                                (int)textDimensions.X + 2 * Margin,
-                                (int)textDimensions.Y + 2 * Margin),
-                            null,
-                            selectionColor,
-                            0f,
-                            new Vector2(0, 0),
-                            SpriteEffects.None,
-                            .05f);
-
-                        // TODO: Don't draw it twice
-                        DrawTextToWidth(
-                            spriteBatch,
-                            currentMessage,
-                            xOffset + spriteSize + Margin,
-                            yOffset,
-                            TextWidth);
-                    }
-
-                    yOffset += (int)textDimensions.Y + Margin;
+                        TextWidth,
+                        highlightColor: node == choices.GetCurrentNode() ? selectionColor : null,
+                        highlightMargin: Margin);
+                    yOffset += (int)textDimensions.Y + 2 * Margin;
                 }
             }
         }

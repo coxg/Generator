@@ -76,11 +76,10 @@ namespace Generator
             if (!choices.ChoiceSelected)
             {
                 choices.ChoiceSelected = true;
-                return;
             }
 
             // If we've already selected a choice, and there's more messages to display, then advance the message
-            else if (node.MessageIndex < node.Text.Count - 1)
+            if (node.MessageIndex < node.Text.Count - 1)
             {
                 node.MessageIndex += 1;
             }
@@ -165,6 +164,11 @@ namespace Generator
                 set { nodes = value; }
             }
 
+            public Node GetCurrentNode()
+            {
+                return Nodes[CurrentNodeIndex];
+            }
+
             // Constructor - list of nodes
             public Choices(List<Node> nodes, int index = 0)
             {
@@ -217,6 +221,28 @@ namespace Generator
                                 current.Replace("{" + value.Key + "}", value.Value().ToString())));
                         }
                         return output;
+                    }
+                }
+
+                public string GetCurrentMessage()
+                {
+                    var fullMessage = Text[MessageIndex];
+                    var messageParts = fullMessage.Split(new string[] { ": " }, 2, StringSplitOptions.None);
+                    return messageParts[messageParts.Count() - 1];
+                }
+
+                public GameObject GetCurrentSpeaker()
+                {
+                    var fullMessage = Text[MessageIndex];
+                    var messageParts = fullMessage.Split(new string[] { ": " }, 2, StringSplitOptions.None);
+                    var talkingObjectName = messageParts[0];
+                    if (GameObjectManager.ObjectFromName.ContainsKey(talkingObjectName))
+                    {
+                        return GameObjectManager.ObjectFromName[talkingObjectName];
+                    }
+                    else
+                    {
+                        return null;
                     }
                 }
 
