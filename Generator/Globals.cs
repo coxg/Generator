@@ -42,7 +42,7 @@ namespace Generator
         public static string Directory = "/Generator/Generator/";
 
         // Configure the world building mode
-        public static bool CreativeMode = true;
+        public static bool CreativeMode = false;
         public static int CreativeObjectIndex = 0;
 
         // Loading assets

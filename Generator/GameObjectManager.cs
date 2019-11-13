@@ -62,6 +62,19 @@ namespace Generator
             gameObject.MoveInDirection(gameObject.Direction);
         }
 
+        static void WalkNearPlayer(GameObject gameObject)
+        {
+            if (MathTools.Distance(Globals.Player.Position, gameObject.Position) > 5)
+            {
+                gameObject.Direction = -(float)MathTools.Angle(Globals.Player.Position, gameObject.Position) + MathHelper.PiOver2;
+                gameObject.MoveInDirection(gameObject.Direction);
+            }
+            else
+            {
+                gameObject.IsWalking = false;
+            }
+        }
+
         static void WalkAwayFromPlayer(GameObject gameObject)
         {
             gameObject.Direction = -(float)MathTools.Angle(gameObject.Position, Globals.Player.Position) + MathHelper.PiOver2;
@@ -94,10 +107,11 @@ namespace Generator
                 new Vector3(50, 55, 0),
                 stamina: 100,
                 strength: 10,
-                speed: 100,
+                speed: 20,
                 sense: 90,
                 style: 100,
                 name: "farrah",
+                ai: WalkNearPlayer,
                 componentSpriteFileName: "Girl",
                 weapon: new Weapon(
                     name: "Sword",
@@ -151,16 +165,24 @@ namespace Generator
                                     effects: () => { saidName = false; },
                                     conditional: () => { return saidName == true; }),
                                 new Conversation.Choices.Node(
-                                    text: new List<string>()
-                                    {
-                                        "niels: Let me tinker with the settings.",
-                                        "farrah: Alright."
-                                    },
-                                    goToChoicesIndex: 1),
-                                new Conversation.Choices.Node(
                                     text: "niels: Let me OUT of here!!",
                                     exitsConversation: true),
-                            }),
+                            })
+                    }));
+            Globals.Party.Members.Add(farrah);
+
+            var terrain1 = new GameObject(
+                new Vector3(55, 56, 0),
+                name: "angry terrain", 
+                brightness: new Vector3(.5f, .1f, .5f),
+                strength: 10, 
+                speed: 10, 
+                sense: 10,
+                ai: WalkNearPlayer,
+                componentSpriteFileName: "Old",
+                conversation: new Conversation(
+                    choicesList: new List<Conversation.Choices>()
+                    {
                         new Conversation.Choices(
                             index: 1,
                             nodes: new List<Conversation.Choices.Node>()
@@ -168,57 +190,31 @@ namespace Generator
                                 new Conversation.Choices.Node(
                                     text: new List<string>()
                                     {
-                                        "niels: Don't fight me.",
-                                        "farrah: Okay."
+                                        "niels: Toggle inCombat.",
+                                        "inCombat is now {wasInCombat}."
                                     },
-                                    effects: () => { Globals.Party.InCombat = false; }),
+                                    effects: () => { Globals.Party.InCombat = !Globals.Party.InCombat; }),
                                 new Conversation.Choices.Node(
                                     text: new List<string>()
                                     {
-                                        "niels: Fight me.",
-                                        "farrah: Okay."
+                                        "niels: Toggle creativeMode.",
+                                        "creativeMode is now {wasCreativeMode}."
                                     },
-                                    effects: () => { Globals.Party.InCombat = true; }),
+                                    effects: () => { Globals.CreativeMode = !Globals.CreativeMode; }),
                                 new Conversation.Choices.Node(
                                     text: new List<string>()
                                     {
-                                        "niels: Are we fighting?",
-                                        "farrah: {inCombat}"
+                                        "niels: I'm done changing settings.",
+                                        "Roger."
                                     },
-                                    effects: () => { Globals.Party.InCombat = true; }),
-                                new Conversation.Choices.Node(
-                                    text: new List<string>()
-                                    {
-                                        "niels: I want to ask your name again.",
-                                        "farrah: ...great."
-                                    },
-                                    goToChoicesIndex: 0),
+                                    exitsConversation: true),
                             })
                     }));
-            Globals.Party.Members.Add(farrah);
-
-            var terrain1 = new GameObject(
-                new Vector3(55, 56, 0),
-                spriteFile: "Sprites/angry_boy", 
-                name: "angry terrain", 
-                brightness: new Vector3(.5f, .1f, .5f),
-                strength: 10, 
-                speed: 10, 
-                sense: 10,
-                ai: WalkToPlayer,
-                componentSpriteFileName: "Old",
-                conversation: new Conversation(
-                    new List<string> {
-                        "Check it out, I do something weird!",
-                        "Did you see how weird that was?!"
-                    } )
-                );
+            Globals.Party.Members.Add(terrain1);
             terrain1.ActivationEffect = delegate
             {
                 if (!ObjectFromName.ContainsKey("big terrain"))
                 {
-                    terrain1.Conversation = new Conversation("There's already a boy!");
-
                     new GameObject(
                         new Vector3(60, 60, 0), 
                         new Vector3(5, 1, 5), 

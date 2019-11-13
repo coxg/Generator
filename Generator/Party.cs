@@ -6,7 +6,7 @@ namespace Generator
     {
         public List<GameObject> Members;
         public List<Item> Inventory;
-        public bool InCombat = true;
+        public bool InCombat = false;
         public int Junk = 0;
 
         // Constructor

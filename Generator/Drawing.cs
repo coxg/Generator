@@ -77,8 +77,6 @@ namespace Generator
             Rectangle rectangle, int radius, Color? color = null, int borderWidth = 0, Color? borderColor = null)
             // Draw a rounded rectangle
         {
-            GameControl.drawBatch.Begin();
-
             var top = rectangle.Y + radius;
             var bottom = rectangle.Y + rectangle.Height - radius;
             var left = rectangle.X + radius;
@@ -110,10 +108,10 @@ namespace Generator
             {
                 // Draw the curves
                 var pen = new LilyPath.Pen(borderColor ?? Color.White, borderWidth);
-                GameControl.drawBatch.DrawArc(pen, new Vector2(left, top), radius, MathHelper.Pi, MathHelper.PiOver2);
-                GameControl.drawBatch.DrawArc(pen, new Vector2(right, top), radius, 3 * MathHelper.PiOver2, MathHelper.PiOver2);
-                GameControl.drawBatch.DrawArc(pen, new Vector2(left, bottom), radius, MathHelper.PiOver2, MathHelper.PiOver2);
-                GameControl.drawBatch.DrawArc(pen, new Vector2(right, bottom), radius, 0, MathHelper.PiOver2);
+                GameControl.drawBatch.DrawCircle(pen, new Vector2(left, top), radius);
+                GameControl.drawBatch.DrawCircle(pen, new Vector2(right, top), radius);
+                GameControl.drawBatch.DrawCircle(pen, new Vector2(left, bottom), radius);
+                GameControl.drawBatch.DrawCircle(pen, new Vector2(right, bottom), radius);
 
                 // Draw the lines
                 top = rectangle.Y;
@@ -125,8 +123,6 @@ namespace Generator
                 GameControl.drawBatch.DrawLine(pen, new Vector2(left + radius, bottom), new Vector2(right - radius, bottom));
                 GameControl.drawBatch.DrawLine(pen, new Vector2(left, top + radius), new Vector2(left, bottom - radius));
             }
-
-            GameControl.drawBatch.End();
         }
 
         public static Vector2 DrawTextBox(
@@ -173,7 +169,7 @@ namespace Generator
                 }
             }
 
-            // Super janky, but draw the border and THEN highlight everything and THEN draw the text
+            // Super janky, but draw the border and THEN the background and THEN the text
             if (drawText && highlightColor != null)
             {
                 DrawTextBox(spriteBatch, text, x, y, maxWidth, drawText: false, align: align,
@@ -183,6 +179,8 @@ namespace Generator
                 return DrawTextBox(spriteBatch, text, x, y, maxWidth, color, drawText: drawText, align: align, 
                     highlightMargin: highlightMargin);
             }
+
+            GameControl.drawBatch.Begin();
 
             // Get the dimensions of the text
             Vector2 dimensions = Globals.Font.MeasureString(text);
@@ -233,15 +231,17 @@ namespace Generator
                         maxX = (int)finalLineDimensions.X;
                     }
                 }
-                return new Vector2(maxX, totalY);
+                dimensions = new Vector2(maxX, totalY);
             }
 
             // If we fit then just go ahead and write it
             else
             {
                 _draw(text, x, y, dimensions);
-                return dimensions;
             }
+
+            GameControl.drawBatch.End();
+            return dimensions;
         }
 
         public static void DrawCharacter(SpriteBatch spriteBatch, GameObject character, int size, int x, int y)
@@ -306,7 +306,7 @@ namespace Generator
             var spriteSize = 256;
             var choices = Globals.CurrentConversation.CurrentChoices;
             var backGroundColor = Color.FromNonPremultiplied(0, 0, 0, 150);
-            Color? selectionColor = Color.FromNonPremultiplied(50, 50, 100, 255);
+            Color? selectionColor = Color.FromNonPremultiplied(105, 69, 169, 255);
 
             // Draw the background
             spriteBatch.Begin();
