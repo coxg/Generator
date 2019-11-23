@@ -246,12 +246,14 @@ namespace Generator
             GraphicsDevice.Clear(Color.Black);
             foreach (var lightingRenderTarget in lightingRenderTargets)
             {
-                if (GameObjectManager.ObjectFromName.ContainsKey(lightingRenderTarget.Key.Name))
+                if (GameObjectManager.ObjectFromID.ContainsKey(lightingRenderTarget.Key.ID))
                 {
                     spriteBatch.Draw(lightingRenderTarget.Value, screenSize, new Color(lightingRenderTarget.Key.Brightness));
                 }
             }
             spriteBatch.End();
+
+            Globals.Log(Globals.Zone);
 
             // Draw the tile layer
             GraphicsDevice.SetRenderTarget(null);

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
 
 namespace Generator
 {
@@ -14,30 +16,30 @@ namespace Generator
             // TODO: This should use the same logic as the Manager
         {
             List<GameObject> objectsToRemove = new List<GameObject>();
-            foreach (var gameObject in ObjectFromName.Values)
+            foreach (var gameObject in ObjectFromID.Values)
             {
                 // See if the object should be visible
-                var IsVisible = Visible.ContainsKey(gameObject.Name);
+                var IsVisible = Visible.ContainsKey(gameObject.ID);
                 var ShouldBeVisible = gameObject.IsVisible();
                 if (!IsVisible && ShouldBeVisible)
                 {
-                    Visible[gameObject.Name] = gameObject;
+                    Visible[gameObject.ID] = gameObject;
                 }
                 else if (IsVisible && !ShouldBeVisible)
                 {
-                    Visible.Remove(gameObject.Name);
+                    Visible.Remove(gameObject.ID);
                 }
 
                 // See if the object should be updating
-                var IsUpdating = Updating.ContainsKey(gameObject.Name);
+                var IsUpdating = Updating.ContainsKey(gameObject.ID);
                 var ShouldBeUpdating = gameObject.IsUpdating();
                 if (!IsUpdating && ShouldBeUpdating)
                 {
-                    Updating[gameObject.Name] = gameObject;
+                    Updating[gameObject.ID] = gameObject;
                 }
                 else if (IsUpdating && !ShouldBeUpdating)
                 {
-                    Updating.Remove(gameObject.Name);
+                    Updating.Remove(gameObject.ID);
                 }
 
                 // If it's not updating then it should be deleted
@@ -51,6 +53,58 @@ namespace Generator
             foreach (var gameObject in objectsToRemove)
             {
                 gameObject.Remove();
+            }
+        }
+
+        public static void Save(string saveFile)
+        {
+            using (StreamWriter file = File.CreateText(Globals.SaveDirectory + saveFile + "/gameObjects.json"))
+            {
+                Globals.Serializer.Serialize(file, ObjectFromID);
+            }
+        }
+
+        public static void Load(string saveFile)
+        {
+            using (StreamReader file = File.OpenText(Globals.SaveDirectory + saveFile + "/gameObjects.json"))
+            {
+                ObjectFromID = (Dictionary<string, GameObject>)Globals.Serializer.Deserialize(
+                    file, typeof(Dictionary<string, GameObject>));
+            }
+            foreach(var gameObject in ObjectFromID.Values)
+            {
+                // We're ignoring various source objects to avoid circular references, so add it back in when loading
+                gameObject.Conversation.SourceObject = gameObject;
+                foreach (var choices in gameObject.Conversation.ChoicesList)
+                {
+                    choices.SourceConversation = gameObject.Conversation;
+                    foreach (var node in choices.Nodes)
+                    {
+                        node.SourceChoices = choices;
+                    }
+                }
+                foreach (var component in gameObject.Components.Values)
+                {
+                    component.SourceObject = gameObject;
+                    foreach (var animation in component.Animations.Values)
+                    {
+                        animation.SourceObject = gameObject;
+                        animation.AnimatedElement = component;
+                        animation.StartFrames.SourceAnimation = animation;
+                        animation.UpdateFrames.SourceAnimation = animation;
+                        animation.StopFrames.SourceAnimation = animation;
+                    }
+                }
+                foreach (var ability in gameObject.Abilities)
+                {
+                    ability.SourceObject = gameObject;
+                    var animation = ability.Animation;
+                    animation.SourceObject = gameObject;
+                    animation.AnimatedElement = gameObject;
+                    animation.StartFrames.SourceAnimation = animation;
+                    animation.UpdateFrames.SourceAnimation = animation;
+                    animation.StopFrames.SourceAnimation = animation;
+                }
             }
         }
 
@@ -88,29 +142,33 @@ namespace Generator
 
             var niels = new GameObject(
                 new Vector3(50, 50, 0),
-                stamina: 100,
-                strength: 10,
-                speed: 100,
-                sense: 90,
-                style: 100,
-                name: "niels",
+                baseStamina: 100,
+                baseStrength: 10,
+                baseSpeed: 100,
+                baseSense: 90,
+                baseStyle: 100,
+                id: "niels",
+                name: "Niels",
                 componentSpriteFileName: "Ninja",
                 weapon: new Weapon(
                     name: "Sword",
                     sprite: Globals.WhiteDot,
                     damage: 10),
-                brightness: Vector3.One);
+                brightness: Vector3.One,
+                abilities: new List<string>() {
+                    "Sprint", "Shoot", "Place Object", "Attack" });
             Globals.Party.Members.Add(niels);
 
             bool saidName = false;
             var farrah = new GameObject(
                 new Vector3(50, 55, 0),
-                stamina: 100,
-                strength: 10,
-                speed: 20,
-                sense: 90,
-                style: 100,
-                name: "farrah",
+                baseStamina: 100,
+                baseStrength: 10,
+                baseSpeed: 20,
+                baseSense: 90,
+                baseStyle: 100,
+                id: "farrah",
+                name: "Farrah",
                 ai: WalkNearPlayer,
                 componentSpriteFileName: "Girl",
                 weapon: new Weapon(
@@ -173,11 +231,11 @@ namespace Generator
 
             var terrain1 = new GameObject(
                 new Vector3(55, 56, 0),
-                name: "angry terrain", 
+                id: "angry terrain", 
                 brightness: new Vector3(.5f, .1f, .5f),
-                strength: 10, 
-                speed: 10, 
-                sense: 10,
+                baseStrength: 10, 
+                baseSpeed: 10, 
+                baseSense: 10,
                 ai: WalkNearPlayer,
                 componentSpriteFileName: "Old",
                 conversation: new Conversation(
@@ -204,6 +262,13 @@ namespace Generator
                                 new Conversation.Choices.Node(
                                     text: new List<string>()
                                     {
+                                        "niels: Load save1.",
+                                        "Okay."
+                                    },
+                                    effects: () => { Load("save1"); }),
+                                new Conversation.Choices.Node(
+                                    text: new List<string>()
+                                    {
                                         "niels: I'm done changing settings.",
                                         "Roger."
                                     },
@@ -213,15 +278,15 @@ namespace Generator
             Globals.Party.Members.Add(terrain1);
             terrain1.ActivationEffect = delegate
             {
-                if (!ObjectFromName.ContainsKey("big terrain"))
+                if (!ObjectFromID.ContainsKey("big terrain"))
                 {
                     new GameObject(
                         new Vector3(60, 60, 0), 
                         new Vector3(5, 1, 5), 
-                        name: "big terrain", 
-                        strength: 10, 
-                        speed: 10, 
-                        sense: 10,
+                        id: "big terrain", 
+                        baseStrength: 10, 
+                        baseSpeed: 10, 
+                        baseSense: 10,
                         conversation: new Conversation(
                             new List<Conversation.Choices>()
                             {
@@ -245,20 +310,29 @@ namespace Generator
                                         exitsConversation: true),
                                     index: 1)
                             }));
-                    var terrain3 = ObjectFromName["big terrain"];
+                    var terrain3 = ObjectFromID["big terrain"];
                 }
             };
 
             new GameObject(
                 new Vector3(57, 59, 0), 
-                new Vector3(2, 1, 2), 
-                name: "medium terrain", 
-                strength: 10, 
-                speed: 10, 
-                sense: 10);
-
-            // Populate the Acres
-            PopulateAcres();
+                new Vector3(6, 9, 9), 
+                id: "building", 
+                baseStrength: 10, 
+                baseSpeed: 10, 
+                baseSense: 10,
+                castsShadow: false,
+                activationEffect: delegate { Globals.Zone = "Buildings"; },
+                components: new Dictionary<string, Component>()
+                {
+                    {"body", new Component(
+                        id: "building",
+                        relativePosition: new Vector3(.5f, .5f, .5f),
+                        relativeSize: .2f,
+                        rotationPoint: new Vector3(.5f, .5f, .5f),
+                        spriteFile: "Sprites/building")
+                    }
+                });
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-
+using Newtonsoft.Json;
 
 namespace Generator
 {
@@ -10,6 +10,7 @@ namespace Generator
         public int StartingChoicesIndex;
         public int CurrentChoicesIndex;
         public List<Choices> ChoicesList;
+        [JsonIgnore]
         public GameObject SourceObject;
 
         // Constructor - most flexible
@@ -150,6 +151,7 @@ namespace Generator
         public class Choices
         {
             public int Index;
+            [JsonIgnore]
             public Conversation SourceConversation;
             public int CurrentNodeIndex;
             public bool ChoiceSelected = false;
@@ -176,7 +178,7 @@ namespace Generator
                 Nodes = nodes;
                 foreach (Node node in Nodes)
                 {
-                    node.SourceChoice = this;
+                    node.SourceChoices = this;
                 }
             }
 
@@ -185,7 +187,7 @@ namespace Generator
             {
                 Index = index;
                 Nodes = new List<Node>() { node };
-                node.SourceChoice = this;
+                node.SourceChoices = this;
             }
 
             // Constructor - single message
@@ -195,7 +197,7 @@ namespace Generator
                 Nodes = new List<Node>() { new Node(message, exitsConversation: true) };
                 foreach (Node node in Nodes)
                 {
-                    node.SourceChoice = this;
+                    node.SourceChoices = this;
                 }
             }
 
@@ -205,7 +207,8 @@ namespace Generator
                 public Rewards Rewards = null;
                 public Action Effects = null;
                 public int? GoToChoicesIndex = null;
-                public Choices SourceChoice;
+                [JsonIgnore]
+                public Choices SourceChoices;
                 public bool ExitsConversation;
                 public int MessageIndex = 0;
 
@@ -236,13 +239,13 @@ namespace Generator
                     var fullMessage = Text[MessageIndex];
                     var messageParts = fullMessage.Split(new string[] { ": " }, 2, StringSplitOptions.None);
                     var talkingObjectName = messageParts[0];
-                    if (GameObjectManager.ObjectFromName.ContainsKey(talkingObjectName))
+                    if (GameObjectManager.ObjectFromID.ContainsKey(talkingObjectName))
                     {
-                        return GameObjectManager.ObjectFromName[talkingObjectName];
+                        return GameObjectManager.ObjectFromID[talkingObjectName];
                     }
                     else
                     {
-                        return SourceChoice.SourceConversation.SourceObject;
+                        return SourceChoices.SourceConversation.SourceObject;
                     }
                 }
 

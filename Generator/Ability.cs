@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
 
 namespace Generator
 {
@@ -29,9 +32,9 @@ namespace Generator
 
             // What it does
             float cooldown = 0,
-            Action start = null,
-            Action onUpdate = null,
-            Action stop = null)
+            Action<GameObject> start = null,
+            Action<GameObject> onUpdate = null,
+            Action<GameObject> stop = null)
         {
             // Ability name
             Name = name;
@@ -66,10 +69,12 @@ namespace Generator
         }
 
         // Ability name
-        public string Name { get; set; }
+        public string Name;
 
         // What's using the ability
-        private GameObject _sourceObject { get; set; }
+        [JsonIgnore]
+        private GameObject _sourceObject;
+        [JsonIgnore]
         public GameObject SourceObject
         {
             get => _sourceObject;
@@ -86,19 +91,19 @@ namespace Generator
         }
 
         // Resource costs
-        public int HealthCost { get; set; }
-        public int StaminaCost { get; set; }
-        public int ElectricityCost { get; set; }
+        public int HealthCost;
+        public int StaminaCost;
+        public int ElectricityCost;
 
         // How it works
         public bool OffCooldown;
-        public bool KeepCasting { get; set; }
-        public bool IsChanneled { get; set; }
-        public bool IsToggleable { get; set; }
-        private bool IsActive { get; set; }
-        private bool WasPressed { get; set; }
-        private bool _isPressed { get; set; }
-        private bool RequiresWalking { get; set; }
+        public bool KeepCasting;
+        public bool IsChanneled;
+        public bool IsToggleable;
+        private bool IsActive;
+        private bool WasPressed;
+        private bool _isPressed;
+        private bool RequiresWalking;
 
         public bool IsPressed
         {
@@ -111,7 +116,8 @@ namespace Generator
         }
 
         // What it looks like
-        private Animation _animation { get; set; }
+        [JsonIgnore]
+        private Animation _animation;
         public Animation Animation
         {
             get => _animation;
@@ -130,9 +136,9 @@ namespace Generator
 
         // What it does
         public float Cooldown;
-        public Action Start { get; set; }
-        public Action OnUpdate { get; set; }
-        public Action Stop { get; set; }
+        public Action<GameObject> Start;
+        public Action<GameObject> OnUpdate;
+        public Action<GameObject> Stop;
 
         public override string ToString()
             // Return name, useful for debugging.
@@ -201,7 +207,7 @@ namespace Generator
             if ((!WasActive || KeepCasting) && IsNowActive)
             {
                 Globals.Log(SourceObject + " uses " + this);
-                Start();
+                Start(SourceObject);
                 if (Animation != null) Animation.Start();
 
                 // Start the cooldown
@@ -216,14 +222,14 @@ namespace Generator
             else if (WasActive && !IsNowActive)
             {
                 Globals.Log(SourceObject + " stops using " + this);
-                Stop();
+                Stop(SourceObject);
                 if (Animation != null) Animation.Stop();
             }
 
             // What happens when we stay on
             else if (WasActive && IsNowActive)
             {
-                OnUpdate();
+                OnUpdate(SourceObject);
             }
 
             // Update variable
@@ -240,5 +246,167 @@ namespace Generator
             // Play the animation
             if (Animation != null) Animation.Update();
         }
+
+        static void BulletAI(GameObject bullet)
+        {
+            bullet.MoveInDirection(bullet.Direction);
+        }
+
+        static void BulletCollision(GameObject bullet, GameObject other)
+        {
+            bullet.DealDamage(other, (int)Math.Sqrt(bullet.Speed.CurrentValue));
+            bullet.Die();
+        }
+
+        public static Dictionary<String, Ability> StandardAbilities = new Dictionary<string, Ability>()
+        // Eventually I'll want to serialize this or move it to its own file or something
+        {
+            {
+                "Sprint",
+                new Ability(
+                    "Sprint",
+                    staminaCost: 0,
+                    isChanneled: true,
+                    requiresWalking: true,
+                    animation: new Animation(
+                        updateFrames: new Frames(
+                            offsets: new List<Vector3>
+                            {
+                                new Vector3(0, 0, .2f)
+                            },
+                            duration: 1.5f)),
+                    start: (GameObject gameObject) =>
+                    {
+                        gameObject.Speed.Multiplier *= 3;
+                        gameObject.IsWalking = true;
+                    },
+                    stop: (GameObject gameObject) =>
+                    {
+                        gameObject.Speed.Multiplier /= 3;
+                        gameObject.IsWalking = false;
+                    })
+            },
+            {
+                "Attack",
+                new Ability(
+                    "Attack",
+                    staminaCost: 10,
+                    start: (GameObject gameObject) =>
+                    {
+                        gameObject.IsSwinging = true;
+
+                        // Figure out which one you hit
+                        var target = gameObject.GetTargetInRange(gameObject.EquippedWeapon.Range);
+
+                        // Deal damage
+                        if (target != null)
+                        {
+                            Globals.Log(gameObject + " attacks, hitting " + target + ".");
+                            gameObject.DealDamage(target, gameObject.EquippedWeapon.Damage + gameObject.Strength.CurrentValue);
+                        }
+                        else
+                        {
+                            Globals.Log(gameObject + " attacks and misses.");
+                        }
+                    }
+                )
+            },
+            {
+                "Shoot",
+                new Ability(
+                    "Shoot",
+                    staminaCost: 3,
+                    cooldown: .1f,
+                    keepCasting: true,
+                    start: (GameObject gameObject) =>
+                    {
+                        gameObject.IsShooting = true;
+                        var position = gameObject.GetTargetCoordinates(1);
+                        position.Z += gameObject.Size.Z / 2;
+                        new GameObject(
+                            baseHealth: 1,
+                            position: position,
+                            size: new Vector3(.05f, .05f, .05f),
+                            direction: gameObject.Direction,
+                            baseSpeed: 100,
+                            ai: BulletAI,
+                            collisionEffect: BulletCollision,
+                            brightness: new Vector3(.5f, .1f, .5f),
+                            castsShadow: false,
+                            temporary: true,
+                            components: new Dictionary<string, Component>()
+                            {
+                                {"body", new Component(
+                                    id: "Hand",
+                                    relativePosition: new Vector3(.5f, .5f, .5f),
+                                    relativeSize: 1,
+                                    rotationPoint: new Vector3(.5f, .5f, .5f))
+                                }
+                            }
+                        );
+                    }
+                )
+            },
+            {
+                "Place Object",
+                new Ability(
+                    "Place Object",
+                    start: (GameObject gameObject) =>
+                    {
+                        var baseTileName = TileManager.IDFromIndex[TileManager.BaseTileIndexes[Globals.CreativeObjectIndex]];
+                        var randomBaseTile = TileManager.GetRandomBaseIndex(TileManager.ObjectFromID[baseTileName].BaseTileName);
+                        var targetCoordinates = gameObject.GetTargetCoordinates(1);
+                        TileManager.Set((int)targetCoordinates.X, (int)targetCoordinates.Y, TileManager.IDFromIndex[randomBaseTile]);
+                    },
+                    animation: new Animation(
+                        startFrames: new Frames(
+                            rotations: new List<Vector3>
+                            {
+                                new Vector3(0, 0, 1)
+                            },
+                            duration: .5f))
+                )
+            },
+            {
+                "Always Sprint",
+                new Ability(
+                    "Always Sprint",
+                    staminaCost: 1,
+                    isToggleable: true,
+                    requiresWalking: true,
+                    start: (GameObject gameObject) =>
+                    {
+                        gameObject.Speed.Multiplier *= 4;
+                        gameObject.IsWalking = true;
+                    },
+                    stop: (GameObject gameObject) =>
+                    {
+                        gameObject.Speed.Multiplier /= 4;
+                        gameObject.IsWalking = false;
+                    },
+                    animation: new Animation(
+                        startFrames: new Frames(
+                            offsets: new List<Vector3>
+                            {
+                                new Vector3(0, 0, 1)
+                            },
+                            duration: 1),
+                        updateFrames: new Frames(
+                            offsets: new List<Vector3>
+                            {
+                                new Vector3(-.2f, 0, 0),
+                                Vector3.Zero,
+                                new Vector3(.2f, 0, 0)
+                            },
+                            duration: .5f),
+                        stopFrames: new Frames(
+                            offsets: new List<Vector3>
+                            {
+                                new Vector3(0, 0, 1)
+                            },
+                            duration: 1))
+                )
+            }
+        };
     }
 }

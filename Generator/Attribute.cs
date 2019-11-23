@@ -1,29 +1,37 @@
 ﻿namespace Generator
 {
     public class Attribute
-        // Strength, Intellect, Speed, Perception, Weight
+        // Strength, Speed, Sense, Style
     {
-        private int baseValue;
+        private int BaseValue = 0;
+        public int Multiplier = 1;
+        public int Modifier = 0;
 
         // Constructor
         public Attribute(int baseValue)
         {
             BaseValue = baseValue;
-            CurrentValue = baseValue;
-        }
-
-        public int BaseValue
-            // This is the person's base for the attribute.
-        {
-            get => baseValue;
-            set
-            {
-                CurrentValue += value - baseValue;
-                baseValue = value;
-            }
         }
 
         // This is the current value
-        public int CurrentValue { get; set; }
+        public int CurrentValue
+        {
+            get
+            {
+                var currentValue = (BaseValue + Modifier) * Multiplier;
+                if (currentValue < 1)
+                {
+                    return 1;
+                }
+                else if (currentValue > 100)
+                {
+                    return 100;
+                }
+                else
+                {
+                    return currentValue;
+                }
+            }
+        }
     }
 }

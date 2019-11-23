@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using System.Linq;
 using System;
+using Newtonsoft.Json;
 
 namespace Generator
 {
@@ -37,6 +38,7 @@ namespace Generator
         public List<Vector3> Offsets;
         public List<Vector3> Rotations;
         public IEnumerable<int> Terminators;
+        [JsonIgnore]
         public Animation SourceAnimation;
         public float Duration;
         public float CurrentFrame = 0;
@@ -226,7 +228,9 @@ namespace Generator
         public string Name;
 
         // What's being animated
+        [JsonIgnore]
         public GameElement AnimatedElement;  // This is the element that's actually moving
+        [JsonIgnore]
         public GameObject SourceObject;  // Can be the same as the AnimatedElement, controls animation speed
 
         // What it does

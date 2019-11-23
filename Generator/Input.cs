@@ -197,7 +197,10 @@ namespace Generator
                     Globals.Log("Saving game");
 
                     // Write the grids to disk
-                    foreach (Acre acre in TileManager.Acres) acre.Write();
+                    foreach (Acre acre in TileManager.Acres) acre.Save();
+
+                    System.IO.Directory.CreateDirectory(Globals.SaveDirectory + "save1");
+                    GameObjectManager.Save("save1");
                 }
 
                 // Creative mode controls

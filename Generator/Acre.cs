@@ -16,7 +16,7 @@ namespace Generator
         public Acre(string level, int x, int y)
         {
             Name = x.ToString() + "_" + y.ToString();
-            FileName = Globals.Directory + "/Maps/" + level + "/" + Name + ".csv";
+            FileName = Globals.Directory + "/Maps/" + Globals.Zone + "/" + level + "/" + Name + ".csv";
             MinX = x * (int)AcreSize.X;
             MinY = y * (int)AcreSize.Y;
 
@@ -58,7 +58,7 @@ namespace Generator
         }
 
         // Writes the acre to a file
-        public void Write()
+        public void Save()
         {
             var csv = new StringBuilder();
             for (var rowNumber = 0; rowNumber < Values.GetLength(0); rowNumber++)

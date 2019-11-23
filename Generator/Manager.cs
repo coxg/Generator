@@ -6,9 +6,9 @@ namespace Generator
     public class Manager <T>
     {
         // TODO: This shouldn't be by name - what if the player names their character something that's already in here?
-        public static Dictionary<string, T> ObjectFromName = new Dictionary<string, T>();
-        public static Dictionary<int, string> NameFromIndex = new Dictionary<int, string>();
-        public static Dictionary<string, int> IndexFromName = new Dictionary<string, int>();
+        public static Dictionary<string, T> ObjectFromID = new Dictionary<string, T>();
+        public static Dictionary<int, string> IDFromIndex = new Dictionary<int, string>();
+        public static Dictionary<string, int> IndexFromID = new Dictionary<string, int>();
 
         public static string Name;
 
@@ -51,14 +51,14 @@ namespace Generator
         // Gets the name of the object at the location
         public static string GetName(int x, int y)
         {
-            return NameFromIndex[GetIndex(x, y)];
+            return IDFromIndex[GetIndex(x, y)];
         }
 
         // "Getter" - get the object at the location
         // TODO: Replace this with a real getter
         public static T Get(int x, int y)
         {
-            return ObjectFromName[GetName(x, y)];
+            return ObjectFromID[GetName(x, y)];
         }
 
         // "Setter" - set the object by name
@@ -66,16 +66,16 @@ namespace Generator
         public static void Set(int x, int y, string name)
         {
             var acre = Acres[AcreX(x), AcreY(y)];
-            var index = IndexFromName[name];
+            var index = IndexFromID[name];
             acre.Set(x, y, index);
         }
 
         // Adds a new object to the mappings
         public static void AddNewObject(string Name, T Object)
         {
-            ObjectFromName.Add(Name, Object);
-            NameFromIndex.Add(Count, Name);
-            IndexFromName.Add(Name, Count);
+            ObjectFromID.Add(Name, Object);
+            IDFromIndex.Add(Count, Name);
+            IndexFromID.Add(Name, Count);
             Count += 1;
         }
 
@@ -84,12 +84,12 @@ namespace Generator
         // TODO: Make this impact the count, as that will probably cause some headaches in the future. Would currently cause us to overwrite existing values
         public static void RemoveObject(string Name)
         {
-            var removedSuccessfully = ObjectFromName.Remove(Name);
+            var removedSuccessfully = ObjectFromID.Remove(Name);
             if (removedSuccessfully)
             {
-                var index = IndexFromName[Name];
-                IndexFromName.Remove(Name);
-                NameFromIndex.Remove(index);
+                var index = IndexFromID[Name];
+                IndexFromID.Remove(Name);
+                IDFromIndex.Remove(index);
             }
         }
 
@@ -128,9 +128,9 @@ namespace Generator
                 if (NewCenterAcreX + 1 == CenterAcreX & NewCenterAcreY == CenterAcreY)
                 {
                     // Write the acres to unload to disk
-                    Acres[2, 0].Write();
-                    Acres[2, 1].Write();
-                    Acres[2, 2].Write();
+                    Acres[2, 0].Save();
+                    Acres[2, 1].Save();
+                    Acres[2, 2].Save();
 
                     // Slide acres we're keeping over
                     Acres[2, 0] = Acres[1, 0];
@@ -150,9 +150,9 @@ namespace Generator
                 else if (NewCenterAcreX - 1 == CenterAcreX & NewCenterAcreY == CenterAcreY)
                 {
                     // Write the acres to unload to disk
-                    Acres[0, 0].Write();
-                    Acres[0, 1].Write();
-                    Acres[0, 2].Write();
+                    Acres[0, 0].Save();
+                    Acres[0, 1].Save();
+                    Acres[0, 2].Save();
 
                     // Slide acres we're keeping over
                     Acres[0, 0] = Acres[1, 0];
@@ -172,9 +172,9 @@ namespace Generator
                 else if (NewCenterAcreX == CenterAcreX & NewCenterAcreY + 1 == CenterAcreY)
                 {
                     // Write the acres to unload to disk
-                    Acres[0, 2].Write();
-                    Acres[1, 2].Write();
-                    Acres[2, 2].Write();
+                    Acres[0, 2].Save();
+                    Acres[1, 2].Save();
+                    Acres[2, 2].Save();
 
                     // Slide acres we're keeping over
                     Acres[0, 2] = Acres[0, 1];
@@ -194,9 +194,9 @@ namespace Generator
                 else if (NewCenterAcreX == CenterAcreX & NewCenterAcreY - 1 == CenterAcreY)
                 {
                     // Write the acres to unload to disk
-                    Acres[0, 0].Write();
-                    Acres[1, 0].Write();
-                    Acres[2, 0].Write();
+                    Acres[0, 0].Save();
+                    Acres[1, 0].Save();
+                    Acres[2, 0].Save();
 
                     // Slide acres we're keeping over
                     Acres[0, 0] = Acres[0, 1];

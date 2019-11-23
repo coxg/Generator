@@ -8,16 +8,17 @@ namespace Generator
     public abstract class GameElement
         // GameObjects and their components
     {
-        public string Name { get; set; }
-        public Vector3 AnimationOffset { get; set; }
-        public Vector3 RotationOffset { get; set; }
-        public Vector3 RotationPoint { get; set; }
-        public bool CastsShadow { get; set; }
-        public Vector3 Size { get; set; }
+        public string ID;
+        public string Name;
+        public Vector3 AnimationOffset;
+        public Vector3 RotationOffset;
+        public Vector3 RotationPoint;
+        public bool CastsShadow;
+        public Vector3 Size;
         public abstract Texture2D Sprite { get; set; }
         public abstract float Direction { get; set; }
 
-        protected Vector3 _Center { get; set; }
+        protected Vector3 _Center;
         public Vector3 Center { get => _Center; }
         protected Vector3 _Position;
         public virtual Vector3 Position
@@ -37,7 +38,7 @@ namespace Generator
             var viewDistance = Vector3.Distance(Center, position);
 
             // Check each active gameObject
-            foreach (var gameObject in GameObjectManager.ObjectFromName.Values)
+            foreach (var gameObject in GameObjectManager.ObjectFromID.Values)
             {
                 // Make sure it's not this object
                 if (gameObject != this)

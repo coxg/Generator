@@ -3,20 +3,20 @@ using System.IO;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 
 namespace Generator
 {
     public class Component : GameElement
     {
         public Component(
-            string name,
+            string id,
             Vector3 relativePosition,
             float relativeSize,
             Vector3 rotationPoint,
             Vector3? relativeRotation = null,
             string spriteFile = null,
             bool directional = false,
-            string side = null,
             bool castsShadow = true,
             GameObject sourceObject = null,
             float yOffset = 0,
@@ -27,8 +27,12 @@ namespace Generator
                 rotationPoint.X * 6,
                 rotationPoint.Y * 6,
                 rotationPoint.Z * 18); // TODO: What's going on here?
-            Name = name;
-            Side = side;
+            var idParts = id.Split('/');
+            ID = idParts[0];
+            if (idParts.Length == 2)
+            {
+                Side = idParts[1];
+            }
             CurrentFrame = 0;
             Directional = directional;
             RelativePosition = relativePosition;
@@ -37,7 +41,6 @@ namespace Generator
             SourceObject = sourceObject;
             YOffset = yOffset;
             Animations = animations ?? new Dictionary<String, Animation>();
-            Sprites = new Dictionary<string, Texture2D>();
             SpriteFile = spriteFile;
             CastsShadow = castsShadow;
 
@@ -49,14 +52,29 @@ namespace Generator
         public Vector3 RelativePosition;
         public Vector3 RelativeRotation;
         new public float Size;
+        [JsonIgnore]
         public GameObject SourceObject;
         public float YOffset;
         public Dictionary<String, Animation> Animations;
-        public Dictionary<String, Texture2D> Sprites;
+        [JsonIgnore]
+        private Dictionary<String, Texture2D> _Sprites;
+        [JsonIgnore]
+        public Dictionary<String, Texture2D> Sprites
+        {
+            get
+            {
+                if (_Sprites == null)
+                {
+                    SpriteFile = SpriteFile;
+                }
+                return _Sprites;
+            }
+            set { throw new NotSupportedException("Set the _Sprites instead."); }
+        }
 
-        private float _Direction;
+        [JsonIgnore]
         override public float Direction {
-            set { _Direction = value; }
+            set { throw new NotSupportedException("Set the SourceObject Direction instead."); }
             get { return SourceObject.Direction; }
         }
 
@@ -68,7 +86,7 @@ namespace Generator
             set
             {
                 // Determine the base path for the component based on the input and what files exists
-                var ComponentPath = "Components/" + Name + "/";
+                var ComponentPath = "Components/" + ID + "/";
                 if (value != null && Directory.Exists(Globals.Directory + "/Content/" + ComponentPath + value))
                 {
                     ComponentPath += value + "/";
@@ -85,21 +103,27 @@ namespace Generator
                 }
 
                 // Load up the sprites for each specified direction
+                _Sprites = new Dictionary<string, Texture2D>();
                 if (Directional)
                 {
-                    Sprites["Front"] = Globals.Content.Load<Texture2D>(ComponentPath + "Front");
-                    Sprites["Back"] = Globals.Content.Load<Texture2D>(ComponentPath + "Back");
-                    Sprites["Left"] = Globals.Content.Load<Texture2D>(ComponentPath + "Left");
-                    Sprites["Right"] = Globals.Content.Load<Texture2D>(ComponentPath + "Right");
+                    _Sprites["Front"] = Globals.Content.Load<Texture2D>(ComponentPath + "Front");
+                    _Sprites["Back"] = Globals.Content.Load<Texture2D>(ComponentPath + "Back");
+                    _Sprites["Left"] = Globals.Content.Load<Texture2D>(ComponentPath + "Left");
+                    _Sprites["Right"] = Globals.Content.Load<Texture2D>(ComponentPath + "Right");
+                }
+                else if (File.Exists(Globals.Directory + "/Content/" + ComponentPath + ID + ".png"))
+                {
+                    _Sprites[""] = Globals.Content.Load<Texture2D>(ComponentPath + ID);
                 }
                 else
                 {
-                    Sprites[""] = Globals.Content.Load<Texture2D>(ComponentPath + Name);
+                    _Sprites[""] = Globals.Content.Load<Texture2D>(value);
                 }
                 _spriteFile = value;
             }
         }
 
+        [JsonIgnore]
         override public Texture2D Sprite
         {
             get {
@@ -116,6 +140,7 @@ namespace Generator
             set { throw new NotImplementedException("Cannot set Component Sprite directly; use SpriteFile instead."); }
         }
 
+        [JsonIgnore]
         override public Vector3 Position
         {
             set { throw new NotImplementedException("Cannot set Component position directly; use an animation instead."); }

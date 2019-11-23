@@ -17,7 +17,7 @@ namespace Generator
             // TODO: Rather than looping through all objects for each tile, 
             // create a mapping layer for brightness which gets computed on each
             // update.
-            foreach (var gameObject in GameObjectManager.ObjectFromName.Values)
+            foreach (var gameObject in GameObjectManager.ObjectFromID.Values)
             {
                 var objectDistance = Math.Sqrt(
                     Math.Pow(gameObject.Center.X - x, 2) + Math.Pow(gameObject.Center.Y - y, 2));
@@ -604,7 +604,7 @@ namespace Generator
             // Draw the base tile itself
             var tileIndex = TileManager.GetIndex(x, y);
             var bottomLeft = new Vector2(x, y);
-            DrawTileLayer(TileManager.NameFromIndex[tileIndex], bottomLeft, opacity: opacity);
+            DrawTileLayer(TileManager.IDFromIndex[tileIndex], bottomLeft, opacity: opacity);
 
             // Figure which tiles surround the current tile
             var surroundingTileMap = new Dictionary<string, Tile>
@@ -636,7 +636,7 @@ namespace Generator
             // Loop through each unique tile from smallest to largest index, applying all layers for each
             foreach (var uniqueSurroundingTile in uniqueSurroundingTileMap.OrderBy(uniqueSurroundingTile => uniqueSurroundingTile.Key))
             {
-                var tileName = TileManager.NameFromIndex[uniqueSurroundingTile.Key].Split(' ')[0];
+                var tileName = TileManager.IDFromIndex[uniqueSurroundingTile.Key].Split(' ')[0];
 
                 // If we are being drawn over the tiles on all sides
                 if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Bottom")
@@ -885,7 +885,7 @@ namespace Generator
             vertices[5].Position = vertices[2].Position;
 
             // Draw it
-            GameControl.effect.Texture = TileManager.ObjectFromName[tileName].Sprite;
+            GameControl.effect.Texture = TileManager.ObjectFromID[tileName].Sprite;
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -900,8 +900,8 @@ namespace Generator
             // Draw the object on the left
             DrawSprite(
                 spriteBatch,
-                TileManager.ObjectFromName[
-                    TileManager.NameFromIndex[
+                TileManager.ObjectFromID[
+                    TileManager.IDFromIndex[
                         TileManager.BaseTileIndexes[
                             (int)MathTools.Mod(Globals.CreativeObjectIndex - 1, TileManager.BaseTileIndexes.Count)]]].Sprite,
                 new Vector2(Globals.Resolution.X / 2 - 125, 10),
@@ -910,8 +910,8 @@ namespace Generator
             // Draw the object in the middle
             DrawSprite(
                 spriteBatch,
-                TileManager.ObjectFromName[
-                    TileManager.NameFromIndex[
+                TileManager.ObjectFromID[
+                    TileManager.IDFromIndex[
                          TileManager.BaseTileIndexes[
                             Globals.CreativeObjectIndex]]].Sprite,
                 new Vector2(Globals.Resolution.X / 2 - 50, 10),
@@ -920,8 +920,8 @@ namespace Generator
             // Draw the object on the right
             DrawSprite(
                 spriteBatch,
-                TileManager.ObjectFromName[
-                    TileManager.NameFromIndex[
+                TileManager.ObjectFromID[
+                    TileManager.IDFromIndex[
                          TileManager.BaseTileIndexes[
                             (int)MathTools.Mod(Globals.CreativeObjectIndex + 1, TileManager.BaseTileIndexes.Count)]]].Sprite,
                 new Vector2(Globals.Resolution.X / 2 + 75, 10),

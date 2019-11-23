@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 
 namespace Generator
 {
@@ -32,17 +33,18 @@ namespace Generator
             bool isHurting = false,
 
             // Resources
-            int health = 100,
-            int stamina = 0,
-            int electricity = 0,
+            int baseHealth = 100,
+            int baseStamina = 0,
+            int baseElectricity = 0,
 
             // Primary Attributes
-            int strength = 0,
-            int speed = 0,
-            int sense = 0,
-            int style = 0,
+            int baseStrength = 0,
+            int baseSpeed = 0,
+            int baseSense = 0,
+            int baseStyle = 0,
 
             // ...Other Attributes
+            string id = null,
             string name = null,
             int level = 1,
             int experience = 0,
@@ -50,7 +52,7 @@ namespace Generator
             Vector3? brightness = null,
 
             // Abilities
-            List<Ability> abilities = null,
+            List<string> abilities = null,
 
             // Interaction
             Conversation conversation = null,
@@ -70,7 +72,7 @@ namespace Generator
             ComponentSpriteFileName = componentSpriteFileName;
             Components = components ?? GenerateDefaultComponentDict();
             LinkComponents();
-            Sprite = spriteFile == null ? null : Globals.Content.Load<Texture2D>(spriteFile);
+            SpriteFile = spriteFile;
             CastsShadow = castsShadow;
 
             // Actions
@@ -80,18 +82,19 @@ namespace Generator
             IsHurting = isHurting;
 
             // Resources
-            Health = new Resource("Health", health);
-            Stamina = new Resource("Stamina", stamina, 10);
-            Electricity = new Resource("Electricity", electricity);
+            Health = new Resource("Health", baseHealth);
+            Stamina = new Resource("Stamina", baseStamina, 10);
+            Electricity = new Resource("Electricity", baseElectricity);
 
             // Primary Attributes
-            Strength = new Attribute(strength);
-            Speed = new Attribute(speed);
-            Sense = new Attribute(sense);
-            Style = new Attribute(sense);
+            Strength = new Attribute(baseStrength);
+            Speed = new Attribute(baseSpeed);
+            Sense = new Attribute(baseSense);
+            Style = new Attribute(baseSense);
 
             // ...Other Attributes
-            Name = name ?? Guid.NewGuid().ToString();
+            ID = id ?? Guid.NewGuid().ToString();
+            Name = name;
             Level = level;
             Experience = experience;
             Direction = direction;
@@ -104,7 +107,15 @@ namespace Generator
             EquippedAccessory = accessory ?? new Accessory("[No Accessory]", Globals.WhiteDot);
 
             // Abilities
-            Abilities = abilities ?? DefaultAbilities.GenerateDefaultAbilities(this);
+            if (abilities != null)
+            {
+                var abilityList = new List<Ability>();
+                foreach (var ability in abilities)
+                {
+                    abilityList.Add(Ability.StandardAbilities[ability]);
+                }
+                Abilities = abilityList;
+            }
 
             // Interaction
             Conversation = conversation;
@@ -113,13 +124,13 @@ namespace Generator
             AI = ai; // Run on each Update - argument is this
             CollisionEffect = collisionEffect; // Run when attempting to move into another object - arguments are this, other
             Temporary = temporary; // If true, destroy this object as soon as it's no longer being updated
-            GameObjectManager.AddNewObject(Name, this);
+            GameObjectManager.AddNewObject(ID, this);
 
             // Grid logic
             Size = size ?? Vector3.One;
             Position = position;
 
-            Globals.Log(Name + " has spawned.");
+            Globals.Log(ID + " has spawned.");
         }
 
         // name of component sprite file for this game object
@@ -127,7 +138,21 @@ namespace Generator
 
         // Sprites
         public Dictionary<string, Component> Components;
-        public override Texture2D Sprite { get; set; }
+        private string SpriteFile;
+        [JsonIgnore]
+        private Texture2D _Sprite;
+        [JsonIgnore]
+        public override Texture2D Sprite {
+            get
+            {
+                if (_Sprite == null && SpriteFile != null)
+                {
+                    _Sprite = Globals.Content.Load<Texture2D>(SpriteFile);
+                }
+                return _Sprite;
+            }
+            set { throw new NotSupportedException("Set the _Sprite instead."); }
+        }
 
         // Toggleables
         private bool _isWalking;
@@ -208,7 +233,7 @@ namespace Generator
         public int Experience;
 
         // Abilities
-        private List<Ability> _abilities;
+        private List<Ability> _abilities = new List<Ability>();
         public List<Ability> Abilities
         {
             get => _abilities;
@@ -275,6 +300,7 @@ namespace Generator
         // When activating, say each thing in the ActivationText and perform the ActivationFunction
         public void Activate()
         {
+            ActivationEffect();
             Conversation?.Start();
         }
 
@@ -283,7 +309,7 @@ namespace Generator
         {
             foreach (var component in Components)
             {
-                component.Value.Name = component.Key;
+                component.Value.ID = component.Key;
                 component.Value.SourceObject = this;
                 foreach (var animation in component.Value.Animations)
                 {
@@ -322,10 +348,10 @@ namespace Generator
             Electricity.Max += equipmentToEquip.Capacity - equippedEquipment.Capacity;
 
             // Attributes
-            Strength.CurrentValue += equipmentToEquip.Strength - equippedEquipment.Strength;
-            Sense.CurrentValue += equipmentToEquip.Sense - equippedEquipment.Sense;
-            Speed.CurrentValue += equipmentToEquip.Speed - equippedEquipment.Speed;
-            Style.CurrentValue += equipmentToEquip.Style - equippedEquipment.Style;
+            Strength.Modifier += equipmentToEquip.Strength - equippedEquipment.Strength;
+            Sense.Modifier += equipmentToEquip.Sense - equippedEquipment.Sense;
+            Speed.Modifier += equipmentToEquip.Speed - equippedEquipment.Speed;
+            Style.Modifier += equipmentToEquip.Style - equippedEquipment.Style;
 
             equippedEquipment = equipmentToEquip;
         }
@@ -336,7 +362,7 @@ namespace Generator
             Dictionary<string, Component> result = new Dictionary<string, Component>()
             {
                 {"Head", new Component(
-                    name: "Head",
+                    id: "Head",
                     spriteFile: ComponentSpriteFileName,
                     directional: true,
                     relativePosition: new Vector3(.5f, .506f, 1.26f),
@@ -345,7 +371,7 @@ namespace Generator
                     yOffset: -.05f)
                 },
                 {"Face", new Component(
-                    name: "Face",
+                    id: "Face",
                     spriteFile: ComponentSpriteFileName,
                     directional: true,
                     relativePosition: new Vector3(.5f, .57f, 1),
@@ -355,16 +381,15 @@ namespace Generator
                     castsShadow: false)
                 },
                 {"Body", new Component(
-                    name: "Body",
+                    id: "Body",
                     spriteFile: ComponentSpriteFileName,
                     directional: true,
                     relativePosition: new Vector3(.5f, .505f, .47f),
                     relativeSize: .16f,
                     rotationPoint: new Vector3(.08f, 0, .08f))
                 },
-                {"Left Arm", new Component(
-                    name: "Arm",
-                    side: "Left",
+                {"Arm/Left", new Component(
+                    id: "Arm/Left",
                     spriteFile: ComponentSpriteFileName,
                     relativePosition: new Vector3(.08f, .504f, .515f),
                     relativeSize: .08f,
@@ -387,9 +412,8 @@ namespace Generator
                         }
                     })
                 },
-                {"Right Arm", new Component(
-                    name: "Arm",
-                    side: "Right",
+                {"Arm/Right", new Component(
+                    id: "Arm/Righ",
                     spriteFile: ComponentSpriteFileName,
                     relativePosition: new Vector3(.92f, .504f, .515f),
                     relativeSize: .08f,
@@ -412,9 +436,8 @@ namespace Generator
                         }
                     })
                 },
-                {"Left Hand", new Component(
-                    name: "Hand",
-                    side: "Left",
+                {"Hand/Left", new Component(
+                    id: "Hand/Left",
                     spriteFile: ComponentSpriteFileName,
                     relativePosition: new Vector3(-.25f, .5045f, .35f),
                     relativeSize: .08f,
@@ -436,9 +459,8 @@ namespace Generator
                         }
                     })
                 },
-                {"Right Hand", new Component(
-                    name: "Hand",
-                    side: "Right",
+                {"Hand/Right", new Component(
+                    id: "Hand/Right",
                     spriteFile: ComponentSpriteFileName,
                     relativePosition: new Vector3(1.25f, .5045f, .35f),
                     relativeSize: .08f,
@@ -460,9 +482,8 @@ namespace Generator
                         }
                     })
                 },
-                {"Left Leg", new Component(
-                    name: "Leg",
-                    side: "Left",
+                {"Leg/Left", new Component(
+                    id: "Leg/Left",
                     spriteFile: ComponentSpriteFileName,
                     relativePosition: new Vector3(.23f, .504f, .14f),
                     relativeSize: .08f,
@@ -484,9 +505,8 @@ namespace Generator
                         }
                     })
                 },
-                {"Right Leg", new Component(
-                    name: "Leg",
-                    side: "Right",
+                {"Leg/Right", new Component(
+                    id: "Leg/Right",
                     spriteFile: ComponentSpriteFileName,
                     relativePosition: new Vector3(.77f, .504f, .14f),
                     relativeSize: .08f,
@@ -533,9 +553,9 @@ namespace Generator
 
         public void Remove()
         {
-            GameObjectManager.RemoveObject(Name);
-            GameObjectManager.Updating.Remove(Name);
-            GameObjectManager.Visible.Remove(Name);
+            GameObjectManager.RemoveObject(ID);
+            GameObjectManager.Updating.Remove(ID);
+            GameObjectManager.Visible.Remove(ID);
         }
 
         // Plays death animation and despawns
@@ -588,7 +608,7 @@ namespace Generator
         {
             // See if we would overlap with any other objects
             var target = GetTargetCoordinates(range, direction);
-            foreach (var gameObject in GameObjectManager.ObjectFromName.Values)
+            foreach (var gameObject in GameObjectManager.ObjectFromID.Values)
             {
                 if (gameObject != this)
                 {
@@ -607,7 +627,7 @@ namespace Generator
         {
             // See if we would overlap with any other objects
             var targetArea = new RectangleF(position.X, position.Y, Size.X, Size.Y);
-            foreach (var gameObject in GameObjectManager.ObjectFromName.Values)
+            foreach (var gameObject in GameObjectManager.ObjectFromID.Values)
             {
                 if (gameObject != this)
                 {
@@ -671,7 +691,7 @@ namespace Generator
         // Return name, useful for debugging.
         public override string ToString()
         {
-            return Name ?? "Unnamed GameObject";
+            return ID ?? "Unnamed GameObject";
         }
     }
 }

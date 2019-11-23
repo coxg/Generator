@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 
 namespace Generator
 {
@@ -20,6 +21,8 @@ namespace Generator
             get { return Party.Members[PlayerPartyNumber]; }
             set { PlayerPartyNumber = Party.Members.IndexOf(value); }
         }
+
+        // The current conversation - there can be only one
         private static Conversation currentConversation = null;
         public static Conversation CurrentConversation
         {
@@ -40,6 +43,23 @@ namespace Generator
         public static bool Logging = true;
         public static int RefreshRate = 30; // TODO: Change to 60, modify other calculations to reflects this
         public static string Directory = "/Generator/Generator/";
+        public static string SaveDirectory = Directory + "/Saves/";
+        public static JsonSerializer Serializer = new JsonSerializer();
+
+        // World management
+        public static string zone = "Overworld";
+        public static string Zone
+        {
+            get { return zone; }
+            set
+            {
+                if (value != zone)
+                {
+                    Zone = value;
+                    GameObjectManager.Initialize();
+                }
+            }
+        }
 
         // Configure the world building mode
         public static bool CreativeMode = false;
