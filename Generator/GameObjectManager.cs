@@ -56,6 +56,16 @@ namespace Generator
             }
         }
 
+        public static void Clear()
+            // Clear all objects from memory, resetting it
+        {
+            ObjectFromID = new Dictionary<string, GameObject>();
+            IDFromIndex = new Dictionary<int, string>();
+            IndexFromID = new Dictionary<string, int>();
+            Updating = new Dictionary<string, GameObject>();
+            Visible = new Dictionary<string, GameObject>();
+        }
+
         public static void Save(string saveFile)
         {
             using (StreamWriter file = File.CreateText(Globals.SaveDirectory + saveFile + "/gameObjects.json"))
@@ -68,19 +78,23 @@ namespace Generator
         {
             using (StreamReader file = File.OpenText(Globals.SaveDirectory + saveFile + "/gameObjects.json"))
             {
-                ObjectFromID = (Dictionary<string, GameObject>)Globals.Serializer.Deserialize(
-                    file, typeof(Dictionary<string, GameObject>));
+                // GameObjects add themselves to the manager, so just clear it and let them do their thing
+                Clear();
+                Globals.Serializer.Deserialize(file, typeof(Dictionary<string, GameObject>));
             }
             foreach(var gameObject in ObjectFromID.Values)
             {
                 // We're ignoring various source objects to avoid circular references, so add it back in when loading
-                gameObject.Conversation.SourceObject = gameObject;
-                foreach (var choices in gameObject.Conversation.ChoicesList)
+                if (gameObject.Conversation != null)
                 {
-                    choices.SourceConversation = gameObject.Conversation;
-                    foreach (var node in choices.Nodes)
+                    gameObject.Conversation.SourceObject = gameObject;
+                    foreach (var choices in gameObject.Conversation.ChoicesList)
                     {
-                        node.SourceChoices = choices;
+                        choices.SourceConversation = gameObject.Conversation;
+                        foreach (var node in choices.Nodes)
+                        {
+                            node.SourceChoices = choices;
+                        }
                     }
                 }
                 foreach (var component in gameObject.Components.Values)
@@ -88,24 +102,20 @@ namespace Generator
                     component.SourceObject = gameObject;
                     foreach (var animation in component.Animations.Values)
                     {
-                        animation.SourceObject = gameObject;
                         animation.AnimatedElement = component;
-                        animation.StartFrames.SourceAnimation = animation;
-                        animation.UpdateFrames.SourceAnimation = animation;
-                        animation.StopFrames.SourceAnimation = animation;
+                        animation.SetSource(gameObject);
                     }
                 }
                 foreach (var ability in gameObject.Abilities)
                 {
                     ability.SourceObject = gameObject;
                     var animation = ability.Animation;
-                    animation.SourceObject = gameObject;
                     animation.AnimatedElement = gameObject;
-                    animation.StartFrames.SourceAnimation = animation;
-                    animation.UpdateFrames.SourceAnimation = animation;
-                    animation.StopFrames.SourceAnimation = animation;
+                    animation.SetSource(gameObject);
                 }
             }
+            Globals.Party.Members.Add(ObjectFromID["niels"]);
+            Globals.Player = ObjectFromID["niels"];
         }
 
         static void WalkToPlayer(GameObject gameObject)
@@ -158,6 +168,7 @@ namespace Generator
                 abilities: new List<string>() {
                     "Sprint", "Shoot", "Place Object", "Attack" });
             Globals.Party.Members.Add(niels);
+
 
             bool saidName = false;
             var farrah = new GameObject(

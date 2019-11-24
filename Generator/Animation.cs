@@ -206,7 +206,6 @@ namespace Generator
 
             // What's being animated
             AnimatedElement = animatedElement;
-            SourceObject = sourceObject;
 
             // How it does it
             TotalOffset = Vector3.Zero;
@@ -219,9 +218,7 @@ namespace Generator
             StartFrames = startFrames;
             UpdateFrames = updateFrames;
             StopFrames = stopFrames;
-            if (StartFrames != null) StartFrames.SourceAnimation = this;
-            if (UpdateFrames != null) UpdateFrames.SourceAnimation = this;
-            if (StopFrames != null) StopFrames.SourceAnimation = this;
+            SetSource(sourceObject);
         }
 
         // Animation name
@@ -352,6 +349,14 @@ namespace Generator
                     }
                 }
             }
+        }
+
+        public void SetSource(GameObject sourceObject)
+        {
+            SourceObject = sourceObject;
+            if (StartFrames != null) StartFrames.SourceAnimation = this;
+            if (UpdateFrames != null) UpdateFrames.SourceAnimation = this;
+            if (StopFrames != null) StopFrames.SourceAnimation = this;
         }
     }
 }

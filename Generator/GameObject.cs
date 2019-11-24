@@ -156,6 +156,7 @@ namespace Generator
 
         // Toggleables
         private bool _isWalking;
+        [JsonIgnore]
         public bool IsWalking
         {
             get => _isWalking;
@@ -234,6 +235,7 @@ namespace Generator
 
         // Abilities
         private List<Ability> _abilities = new List<Ability>();
+        [JsonIgnore]
         public List<Ability> Abilities
         {
             get => _abilities;
@@ -248,14 +250,21 @@ namespace Generator
                 if (Abilities.Count >= 4) Ability4 = Abilities[3];
             }
         }
+        [JsonIgnore]
         public Ability Ability1;
+        [JsonIgnore]
         public Ability Ability2;
+        [JsonIgnore]
         public Ability Ability3;
+        [JsonIgnore]
         public Ability Ability4;
 
         // Interaction
+        [JsonIgnore]
         public Conversation Conversation;
+        [JsonIgnore]
         public Action ActivationEffect;
+        [JsonIgnore]
         public Action<GameObject> AI;
         public Action<GameObject, GameObject> CollisionEffect;
         public bool Temporary;
@@ -300,7 +309,7 @@ namespace Generator
         // When activating, say each thing in the ActivationText and perform the ActivationFunction
         public void Activate()
         {
-            ActivationEffect();
+            ActivationEffect?.Invoke();
             Conversation?.Start();
         }
 

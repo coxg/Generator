@@ -253,8 +253,6 @@ namespace Generator
             }
             spriteBatch.End();
 
-            Globals.Log(Globals.Zone);
-
             // Draw the tile layer
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.AliceBlue);

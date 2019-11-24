@@ -203,6 +203,13 @@ namespace Generator
                     GameObjectManager.Save("save1");
                 }
 
+                // Load the game
+                if (KeyBindings["up"].IsBeingPressed)
+                {
+                    Globals.Log("Loading game");
+                    GameObjectManager.Load("save1");
+                }
+
                 // Creative mode controls
                 if (Globals.CreativeMode)
                 {
