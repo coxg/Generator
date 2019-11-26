@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
-using Newtonsoft.Json;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Generator
 {
@@ -9,8 +9,6 @@ namespace Generator
     {
         public static Dictionary<string, GameObject> Updating = new Dictionary<string, GameObject>();
         public static Dictionary<string, GameObject> Visible = new Dictionary<string, GameObject>();
-
-        public delegate void Delegate(GameObject gameObject);
 
         new public static void Update()
             // TODO: This should use the same logic as the Manager
@@ -118,33 +116,6 @@ namespace Generator
             Globals.Player = ObjectFromID["niels"];
         }
 
-        static void WalkToPlayer(GameObject gameObject)
-            // TODO: Move these to their own AI file
-            // TODO: Why isn't this just Angle(gameObject, Player)? My angle logic seems fundamentally flawed if that's not the calculation
-        {
-            gameObject.Direction = -(float)MathTools.Angle(Globals.Player.Position, gameObject.Position) + MathHelper.PiOver2;
-            gameObject.MoveInDirection(gameObject.Direction);
-        }
-
-        static void WalkNearPlayer(GameObject gameObject)
-        {
-            if (MathTools.Distance(Globals.Player.Position, gameObject.Position) > 5)
-            {
-                gameObject.Direction = -(float)MathTools.Angle(Globals.Player.Position, gameObject.Position) + MathHelper.PiOver2;
-                gameObject.MoveInDirection(gameObject.Direction);
-            }
-            else
-            {
-                gameObject.IsWalking = false;
-            }
-        }
-
-        static void WalkAwayFromPlayer(GameObject gameObject)
-        {
-            gameObject.Direction = -(float)MathTools.Angle(gameObject.Position, Globals.Player.Position) + MathHelper.PiOver2;
-            gameObject.MoveInDirection(gameObject.Direction);
-        }
-
         public static void Initialize()
         {
             // Set the name
@@ -162,11 +133,14 @@ namespace Generator
                 componentSpriteFileName: "Ninja",
                 weapon: new Weapon(
                     name: "Sword",
-                    sprite: Globals.WhiteDot,
+                    sprite: new Loaded<Texture2D>("Sprites/white_dot"),
                     damage: 10),
                 brightness: Vector3.One,
-                abilities: new List<string>() {
-                    "Sprint", "Shoot", "Place Object", "Attack" });
+                abilities: new List<Ability>() {
+                    Ability.Abilities["Sprint"],
+                    Ability.Abilities["Shoot"],
+                    Ability.Abilities["Place Object"],
+                    Ability.Abilities["Attack"] });
             Globals.Party.Members.Add(niels);
 
 
@@ -180,11 +154,11 @@ namespace Generator
                 baseStyle: 100,
                 id: "farrah",
                 name: "Farrah",
-                ai: WalkNearPlayer,
+                ai: new Loaded<System.Action<GameObject>>("WalkNearPlayer"),
                 componentSpriteFileName: "Girl",
                 weapon: new Weapon(
                     name: "Sword",
-                    sprite: Globals.WhiteDot,
+                    sprite: new Loaded<Texture2D>("Sprites/white_dot"),
                     damage: 10),
                 brightness: Vector3.One,
                 conversation: new Conversation(
@@ -247,8 +221,9 @@ namespace Generator
                 baseStrength: 10, 
                 baseSpeed: 10, 
                 baseSense: 10,
-                ai: WalkNearPlayer,
+                ai: new Loaded<System.Action<GameObject>>("WalkNearPlayer"),
                 componentSpriteFileName: "Old",
+                activationEffect: new Loaded<System.Action<GameObject, GameObject>>("CreateBigBoy"),
                 conversation: new Conversation(
                     choicesList: new List<Conversation.Choices>()
                     {
@@ -287,43 +262,6 @@ namespace Generator
                             })
                     }));
             Globals.Party.Members.Add(terrain1);
-            terrain1.ActivationEffect = delegate
-            {
-                if (!ObjectFromID.ContainsKey("big terrain"))
-                {
-                    new GameObject(
-                        new Vector3(60, 60, 0), 
-                        new Vector3(5, 1, 5), 
-                        id: "big terrain", 
-                        baseStrength: 10, 
-                        baseSpeed: 10, 
-                        baseSense: 10,
-                        conversation: new Conversation(
-                            new List<Conversation.Choices>()
-                            {
-                                new Conversation.Choices(
-                                    new Conversation.Choices.Node(
-                                        new List<string> {
-                                            "I don't do anything weird.",
-                                            "...I'm just really fat."
-                                        },
-                                        goToChoicesIndex: 1,
-                                        exitsConversation: true),
-                                    index: 0),
-                                new Conversation.Choices(
-                                    new Conversation.Choices.Node(
-                                        new List<string> {
-                                            "Well, other than saying something different the second time you talk to me.",
-                                            "That's pretty cool I guess.",
-                                            "If you're into that kind of thing."
-                                        },
-                                        goToChoicesIndex: 0,
-                                        exitsConversation: true),
-                                    index: 1)
-                            }));
-                    var terrain3 = ObjectFromID["big terrain"];
-                }
-            };
 
             new GameObject(
                 new Vector3(57, 59, 0), 
@@ -333,7 +271,7 @@ namespace Generator
                 baseSpeed: 10, 
                 baseSense: 10,
                 castsShadow: false,
-                activationEffect: delegate { Globals.Zone = "Buildings"; },
+                activationEffect: new Loaded<System.Action<GameObject, GameObject>>("SetZoneBuildings"),
                 components: new Dictionary<string, Component>()
                 {
                     {"body", new Component(

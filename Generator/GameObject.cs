@@ -52,14 +52,14 @@ namespace Generator
             Vector3? brightness = null,
 
             // Abilities
-            List<string> abilities = null,
+            List<Ability> abilities = null,
 
             // Interaction
             Conversation conversation = null,
-            Action<GameObject> ai = null,
-            Action<GameObject, GameObject> collisionEffect = null,
+            Loaded<Action<GameObject>> ai = null,
+            Loaded<Action<GameObject, GameObject>> collisionEffect = null,
             bool temporary = false,
-            Action activationEffect = null,
+            Loaded<Action<GameObject, GameObject>> activationEffect = null,
 
             // Equipment
             Weapon weapon = null,
@@ -101,21 +101,13 @@ namespace Generator
             Brightness = brightness ?? Vector3.Zero;
 
             // Equipment
-            EquippedWeapon = weapon ?? new Weapon("Fists", Globals.WhiteDot);
-            EquippedArmor = armor ?? new Armor("[No Armor]", Globals.WhiteDot);
-            EquippedGenerator = generator ?? new GeneratorObj("[No Generator]", Globals.WhiteDot);
-            EquippedAccessory = accessory ?? new Accessory("[No Accessory]", Globals.WhiteDot);
+            EquippedWeapon = weapon ?? new Weapon("Fists", new Loaded<Texture2D>("Sprites/white_dot"));
+            EquippedArmor = armor ?? new Armor("[No Armor]", new Loaded<Texture2D>("Sprites/white_dot"));
+            EquippedGenerator = generator ?? new GeneratorObj("[No Generator]", new Loaded<Texture2D>("Sprites/white_dot"));
+            EquippedAccessory = accessory ?? new Accessory("[No Accessory]", new Loaded<Texture2D>("Sprites/white_dot"));
 
             // Abilities
-            if (abilities != null)
-            {
-                var abilityList = new List<Ability>();
-                foreach (var ability in abilities)
-                {
-                    abilityList.Add(Ability.StandardAbilities[ability]);
-                }
-                Abilities = abilityList;
-            }
+            Abilities = abilities != null ? (List<Ability>) Globals.Copy(abilities) : new List<Ability>();
 
             // Interaction
             Conversation = conversation;
@@ -207,8 +199,8 @@ namespace Generator
                 // If not then we collide with the object and it collides with us
                 else
                 {
-                    CollisionEffect?.Invoke(this, targetAtPosition);
-                    targetAtPosition.CollisionEffect?.Invoke(targetAtPosition, this);
+                    CollisionEffect?.Value(this, targetAtPosition);
+                    targetAtPosition.CollisionEffect?.Value(targetAtPosition, this);
                 }
             }
         }
@@ -260,13 +252,10 @@ namespace Generator
         public Ability Ability4;
 
         // Interaction
-        [JsonIgnore]
         public Conversation Conversation;
-        [JsonIgnore]
-        public Action ActivationEffect;
-        [JsonIgnore]
-        public Action<GameObject> AI;
-        public Action<GameObject, GameObject> CollisionEffect;
+        public Loaded<Action<GameObject, GameObject>> ActivationEffect;
+        public Loaded<Action<GameObject>> AI;
+        public Loaded<Action<GameObject, GameObject>> CollisionEffect;
         public bool Temporary;
         public bool IsVisible()
         {
@@ -278,28 +267,28 @@ namespace Generator
         }
 
         // Equipment
-        private Weapon _equippedWeapon = new Weapon("Fists", Globals.WhiteDot);
+        private Weapon _equippedWeapon = new Weapon("Fists", new Loaded<Texture2D>("Sprites/white_dot"));
         public Weapon EquippedWeapon
         {
             get => _equippedWeapon;
             set { Equip(value); }
         }
 
-        private Armor _equippedArmor = new Armor("[No Armor]", Globals.WhiteDot);
+        private Armor _equippedArmor = new Armor("[No Armor]", new Loaded<Texture2D>("Sprites/white_dot"));
         public Armor EquippedArmor
         {
             get => _equippedArmor;
             set { Equip(value); }
         }
 
-        private GeneratorObj _equippedGenerator = new GeneratorObj("[No Generator]", Globals.WhiteDot);
+        private GeneratorObj _equippedGenerator = new GeneratorObj("[No Generator]", new Loaded<Texture2D>("Sprites/white_dot"));
         public GeneratorObj EquippedGenerator
         {
             get => _equippedGenerator;
             set { Equip(value); }
         }
 
-        private Accessory _equippedAccessory = new Accessory("[No Accessory]", Globals.WhiteDot);
+        private Accessory _equippedAccessory = new Accessory("[No Accessory]", new Loaded<Texture2D>("Sprites/white_dot"));
         public Accessory EquippedAccessory
         {
             get => _equippedAccessory;
@@ -307,9 +296,9 @@ namespace Generator
         }
 
         // When activating, say each thing in the ActivationText and perform the ActivationFunction
-        public void Activate()
+        public void Activate(GameObject other)
         {
-            ActivationEffect?.Invoke();
+            ActivationEffect?.Value(this, other);
             Conversation?.Start();
         }
 
@@ -409,7 +398,7 @@ namespace Generator
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                rotations: new List<Vector3>
+                                baseRotations: new List<Vector3>
                                 {
                                     new Vector3(.7f, 0, 0),
                                     Vector3.Zero,
@@ -433,7 +422,7 @@ namespace Generator
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                rotations: new List<Vector3>
+                                baseRotations: new List<Vector3>
                                 {
                                     new Vector3(-.7f, 0, 0),
                                     Vector3.Zero,
@@ -456,7 +445,7 @@ namespace Generator
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                rotations: new List<Vector3>
+                                baseRotations: new List<Vector3>
                                 {
                                     new Vector3(.7f, 0, 0),
                                     Vector3.Zero,
@@ -479,7 +468,7 @@ namespace Generator
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                rotations: new List<Vector3>
+                                baseRotations: new List<Vector3>
                                 {
                                     new Vector3(-.7f, 0, 0),
                                     Vector3.Zero,
@@ -502,7 +491,7 @@ namespace Generator
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                rotations: new List<Vector3>
+                                baseRotations: new List<Vector3>
                                 {
                                     new Vector3(-.7f, 0, 0),
                                     Vector3.Zero,
@@ -525,7 +514,7 @@ namespace Generator
                     {
                         {"Walk", new Animation(
                             updateFrames: new Frames(
-                                rotations: new List<Vector3>
+                                baseRotations: new List<Vector3>
                                 {
                                     new Vector3(.7f, 0, 0),
                                     Vector3.Zero,
@@ -546,7 +535,7 @@ namespace Generator
         public void Update()
         {
             // Perform whatever actions the object wants to perform
-            AI?.Invoke(this);
+            AI?.Value(this);
 
             // Update resources
             Health.Update();

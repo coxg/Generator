@@ -32,9 +32,9 @@ namespace Generator
 
             // What it does
             float cooldown = 0,
-            Action<GameObject> start = null,
-            Action<GameObject> onUpdate = null,
-            Action<GameObject> stop = null)
+            Loaded<Action<GameObject>> start = null,
+            Loaded<Action<GameObject>> onUpdate = null,
+            Loaded<Action<GameObject>> stop = null)
         {
             // Ability name
             Name = name;
@@ -60,11 +60,8 @@ namespace Generator
             // What it does
             OffCooldown = true;
             Cooldown = cooldown;
-            if (start == null) start = delegate { };
             Start = start;
-            if (onUpdate == null) onUpdate = delegate { };
             OnUpdate = onUpdate;
-            if (stop == null) stop = delegate { };
             Stop = stop;
         }
 
@@ -136,9 +133,9 @@ namespace Generator
 
         // What it does
         public float Cooldown;
-        public Action<GameObject> Start;
-        public Action<GameObject> OnUpdate;
-        public Action<GameObject> Stop;
+        public Loaded<Action<GameObject>> Start;
+        public Loaded<Action<GameObject>> OnUpdate;
+        public Loaded<Action<GameObject>> Stop;
 
         public override string ToString()
             // Return name, useful for debugging.
@@ -207,8 +204,8 @@ namespace Generator
             if ((!WasActive || KeepCasting) && IsNowActive)
             {
                 Globals.Log(SourceObject + " uses " + this);
-                Start(SourceObject);
-                if (Animation != null) Animation.Start();
+                Start?.Value(SourceObject);
+                Animation?.Start();
 
                 // Start the cooldown
                 if (Cooldown != 0)
@@ -222,14 +219,14 @@ namespace Generator
             else if (WasActive && !IsNowActive)
             {
                 Globals.Log(SourceObject + " stops using " + this);
-                Stop(SourceObject);
-                if (Animation != null) Animation.Stop();
+                Stop?.Value(SourceObject);
+                Animation?.Stop();
             }
 
             // What happens when we stay on
             else if (WasActive && IsNowActive)
             {
-                OnUpdate(SourceObject);
+                OnUpdate?.Value(SourceObject);
             }
 
             // Update variable
@@ -247,18 +244,7 @@ namespace Generator
             if (Animation != null) Animation.Update();
         }
 
-        static void BulletAI(GameObject bullet)
-        {
-            bullet.MoveInDirection(bullet.Direction);
-        }
-
-        static void BulletCollision(GameObject bullet, GameObject other)
-        {
-            bullet.DealDamage(other, (int)Math.Sqrt(bullet.Speed.CurrentValue));
-            bullet.Die();
-        }
-
-        public static Dictionary<String, Ability> StandardAbilities = new Dictionary<string, Ability>()
+        public static Dictionary<String, Ability> Abilities = new Dictionary<string, Ability>()
         // Eventually I'll want to serialize this or move it to its own file or something
         {
             {
@@ -270,46 +256,20 @@ namespace Generator
                     requiresWalking: true,
                     animation: new Animation(
                         updateFrames: new Frames(
-                            offsets: new List<Vector3>
+                            baseOffsets: new List<Vector3>
                             {
                                 new Vector3(0, 0, .2f)
                             },
                             duration: 1.5f)),
-                    start: (GameObject gameObject) =>
-                    {
-                        gameObject.Speed.Multiplier *= 3;
-                        gameObject.IsWalking = true;
-                    },
-                    stop: (GameObject gameObject) =>
-                    {
-                        gameObject.Speed.Multiplier /= 3;
-                        gameObject.IsWalking = false;
-                    })
+                    start: new Loaded<Action<GameObject>>("SprintStart"),
+                    stop: new Loaded<Action<GameObject>>("SprintStop"))
             },
             {
                 "Attack",
                 new Ability(
                     "Attack",
                     staminaCost: 10,
-                    start: (GameObject gameObject) =>
-                    {
-                        gameObject.IsSwinging = true;
-
-                        // Figure out which one you hit
-                        var target = gameObject.GetTargetInRange(gameObject.EquippedWeapon.Range);
-
-                        // Deal damage
-                        if (target != null)
-                        {
-                            Globals.Log(gameObject + " attacks, hitting " + target + ".");
-                            gameObject.DealDamage(target, gameObject.EquippedWeapon.Damage + gameObject.Strength.CurrentValue);
-                        }
-                        else
-                        {
-                            Globals.Log(gameObject + " attacks and misses.");
-                        }
-                    }
-                )
+                    start: new Loaded<Action<GameObject>>("Attack"))
             },
             {
                 "Shoot",
@@ -318,54 +278,13 @@ namespace Generator
                     staminaCost: 3,
                     cooldown: .1f,
                     keepCasting: true,
-                    start: (GameObject gameObject) =>
-                    {
-                        gameObject.IsShooting = true;
-                        var position = gameObject.GetTargetCoordinates(1);
-                        position.Z += gameObject.Size.Z / 2;
-                        new GameObject(
-                            baseHealth: 1,
-                            position: position,
-                            size: new Vector3(.05f, .05f, .05f),
-                            direction: gameObject.Direction,
-                            baseSpeed: 100,
-                            ai: BulletAI,
-                            collisionEffect: BulletCollision,
-                            brightness: new Vector3(.5f, .1f, .5f),
-                            castsShadow: false,
-                            temporary: true,
-                            components: new Dictionary<string, Component>()
-                            {
-                                {"body", new Component(
-                                    id: "Hand",
-                                    relativePosition: new Vector3(.5f, .5f, .5f),
-                                    relativeSize: 1,
-                                    rotationPoint: new Vector3(.5f, .5f, .5f))
-                                }
-                            }
-                        );
-                    }
-                )
+                    start: new Loaded<Action<GameObject>>("Shoot"))
             },
             {
                 "Place Object",
                 new Ability(
                     "Place Object",
-                    start: (GameObject gameObject) =>
-                    {
-                        var baseTileName = TileManager.IDFromIndex[TileManager.BaseTileIndexes[Globals.CreativeObjectIndex]];
-                        var randomBaseTile = TileManager.GetRandomBaseIndex(TileManager.ObjectFromID[baseTileName].BaseTileName);
-                        var targetCoordinates = gameObject.GetTargetCoordinates(1);
-                        TileManager.Set((int)targetCoordinates.X, (int)targetCoordinates.Y, TileManager.IDFromIndex[randomBaseTile]);
-                    },
-                    animation: new Animation(
-                        startFrames: new Frames(
-                            rotations: new List<Vector3>
-                            {
-                                new Vector3(0, 0, 1)
-                            },
-                            duration: .5f))
-                )
+                    start: new Loaded<Action<GameObject>>("Place Object"))
             },
             {
                 "Always Sprint",
@@ -374,25 +293,17 @@ namespace Generator
                     staminaCost: 1,
                     isToggleable: true,
                     requiresWalking: true,
-                    start: (GameObject gameObject) =>
-                    {
-                        gameObject.Speed.Multiplier *= 4;
-                        gameObject.IsWalking = true;
-                    },
-                    stop: (GameObject gameObject) =>
-                    {
-                        gameObject.Speed.Multiplier /= 4;
-                        gameObject.IsWalking = false;
-                    },
+                    start: new Loaded<Action<GameObject>>("SprintStart"),
+                    stop: new Loaded<Action<GameObject>>("SprintStop"),
                     animation: new Animation(
                         startFrames: new Frames(
-                            offsets: new List<Vector3>
+                            baseOffsets: new List<Vector3>
                             {
                                 new Vector3(0, 0, 1)
                             },
                             duration: 1),
                         updateFrames: new Frames(
-                            offsets: new List<Vector3>
+                            baseOffsets: new List<Vector3>
                             {
                                 new Vector3(-.2f, 0, 0),
                                 Vector3.Zero,
@@ -400,7 +311,7 @@ namespace Generator
                             },
                             duration: .5f),
                         stopFrames: new Frames(
-                            offsets: new List<Vector3>
+                            baseOffsets: new List<Vector3>
                             {
                                 new Vector3(0, 0, 1)
                             },

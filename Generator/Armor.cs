@@ -8,7 +8,7 @@ namespace Generator
         // Constructor
         public Armor(
             string name,
-            Texture2D sprite,
+            Loaded<Texture2D> sprite,
             int quantity = 1,
 
             // Stats

@@ -7,12 +7,12 @@ namespace Generator
         // Anything which can be in the party's inventory. Potions, quest items, equipments, whatever.
     {
         public int Quantity;
-        public Texture2D Sprite;
+        public Loaded<Texture2D> Sprite;
         public string Name;
-        public GameObjectManager.Delegate Effect;
+        public Loaded<Action<GameObject>> Effect;
 
         // Constructor
-        public Item(string name, Texture2D sprite, int quantity=1, GameObjectManager.Delegate effect=null)
+        public Item(string name, Loaded<Texture2D> sprite, int quantity=1, Loaded<Action<GameObject>> effect=null)
         {
             Name = name;
             Sprite = sprite;
@@ -23,7 +23,7 @@ namespace Generator
         public void Use(GameObject gameObject)
             // Use the item
         {
-            Effect(gameObject);
+            Effect?.Value(gameObject);
         }
     }
 }

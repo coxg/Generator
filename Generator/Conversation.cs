@@ -14,6 +14,7 @@ namespace Generator
         public GameObject SourceObject;
 
         // Constructor - most flexible
+        [JsonConstructor]
         public Conversation(List<Choices> choicesList, int startingChoicesIndex = 0)
         {
             StartingChoicesIndex = startingChoicesIndex;
@@ -172,6 +173,7 @@ namespace Generator
             }
 
             // Constructor - list of nodes
+            [JsonConstructor]
             public Choices(List<Node> nodes, int index = 0)
             {
                 Index = index;
@@ -203,8 +205,10 @@ namespace Generator
 
             public class Node
             {
+                [JsonIgnore]
                 public Func<bool> Conditional = null;
                 public Rewards Rewards = null;
+                [JsonIgnore]
                 public Action Effects = null;
                 public int? GoToChoicesIndex = null;
                 [JsonIgnore]
@@ -262,6 +266,7 @@ namespace Generator
                 }
 
                 // Constructor - list of messages
+                [JsonConstructor]
                 public Node(List<string> text, Func<bool> conditional = null, Rewards rewards = null,
                     Action effects = null, int? goToChoicesIndex = null, bool exitsConversation = false)
                 {

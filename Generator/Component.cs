@@ -115,7 +115,7 @@ namespace Generator
                 {
                     _Sprites[""] = Globals.Content.Load<Texture2D>(ComponentPath + ID);
                 }
-                else
+                else if (value != null)
                 {
                     _Sprites[""] = Globals.Content.Load<Texture2D>(value);
                 }

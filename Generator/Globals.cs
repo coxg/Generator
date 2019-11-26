@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.IO;
 using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -44,7 +45,8 @@ namespace Generator
         public static int RefreshRate = 30; // TODO: Change to 60, modify other calculations to reflects this
         public static string Directory = "/Generator/Generator/";
         public static string SaveDirectory = Directory + "/Saves/";
-        public static JsonSerializer Serializer = new JsonSerializer();
+        // TODO: Remove formatting before release - this roughly doubles the size of the save files
+        public static JsonSerializer Serializer = new JsonSerializer { Formatting = Formatting.Indented };
 
         // World management
         public static string zone = "Overworld";
@@ -55,7 +57,7 @@ namespace Generator
             {
                 if (value != zone)
                 {
-                    Zone = value;
+                    zone = value;
                     GameObjectManager.Initialize();
                 }
             }
@@ -66,9 +68,10 @@ namespace Generator
         public static int CreativeObjectIndex = 0;
 
         // Loading assets
+        public static Dictionary<string, Texture2D> Textures = new Dictionary<string, Texture2D>();
+        public static Texture2D LightTexture;
         public static Texture2D WhiteDot;
         public static SpriteFont Font;
-        public static Texture2D LightTexture;
 
         // Data storage
         public static Dictionary<string, Weapon> WeaponsDict = new Dictionary<string, Weapon>();
@@ -78,17 +81,31 @@ namespace Generator
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void Log(object text = null)
-            // Logs to console with debugging information
+        // Logs to console with debugging information
         {
             if (Logging)
             {
                 var CallingFrame = new StackTrace(1, true).GetFrame(0);
                 Console.WriteLine(
                     CallingFrame.GetFileName().Split('\\').Last() + " line "
-                    + CallingFrame.GetFileLineNumber() + ", in " 
-                    + CallingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First() 
+                    + CallingFrame.GetFileLineNumber() + ", in "
+                    + CallingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First()
                     + ": " + text);
             }
+        }
+
+        public static object Copy(object copyObj)
+            // C# doesn't have a native copy method, so just serialize and deserialize
+        {
+            using (StreamWriter file = File.CreateText(Directory + "tmp.json"))
+            {
+                Serializer.Serialize(file, copyObj);
+            }
+            using (StreamReader file = File.OpenText(Directory + "tmp.json"))
+            {
+                copyObj = Serializer.Deserialize(file, copyObj.GetType());
+            }
+            return copyObj;
         }
     }
 }

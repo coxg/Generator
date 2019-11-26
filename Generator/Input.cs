@@ -117,7 +117,7 @@ namespace Generator
                 // The "Activate" button
                 if (KeyBindings["a"].IsBeingPressed)
                 {
-                    if (player.GetTargetAtRange() != null) player.GetTargetAtRange().Activate();
+                    if (player.GetTargetAtRange() != null) player.GetTargetAtRange().Activate(player);
                 }
 
                 // Convert from actual movement input to direction offsets

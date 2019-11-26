@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using System;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Generator
 {
@@ -24,7 +25,7 @@ namespace Generator
 
         // Constructor
         public Equipment(
-                string name, Texture2D sprite, int quantity = 1, GameObjectManager.Delegate effect = null
+                string name, Loaded<Texture2D> sprite, int quantity = 1, Loaded<Action<GameObject>> effect = null
             ) : base(name, sprite, quantity, effect) { }
     }
 }

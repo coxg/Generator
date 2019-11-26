@@ -104,8 +104,7 @@ namespace Generator
         /// </summary>
         protected override void LoadContent()
         {
-
-            // Load in the sprites
+            // Load in the textures
             Globals.WhiteDot = Content.Load<Texture2D>("Sprites/white_dot");
             Globals.LightTexture = Content.Load<Texture2D>("Sprites/light");
 

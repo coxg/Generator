@@ -76,6 +76,7 @@
     <Compile Include="Accessory.cs" />
     <Compile Include="Acre.cs" />
     <Compile Include="Animation.cs" />
+    <Compile Include="Actions.cs" />
     <Compile Include="Conversation.cs" />
     <Compile Include="LilyPath\Brush.cs" />
     <Compile Include="LilyPath\Brushes\CheckerBrush.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="LilyPath\Utility\Pool.cs" />
     <Compile Include="LilyPath\Utility\Pools.cs" />
     <Compile Include="LilyPath\Utility\ZeroList.cs" />
+    <Compile Include="Loaded.cs" />
     <Compile Include="Party.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Requirements.cs" />

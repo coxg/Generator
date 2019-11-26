@@ -11,8 +11,8 @@ namespace Generator
     {
         public Frames(
                 float duration,  // in seconds
-                List<Vector3> offsets = null,
-                List<Vector3> rotations = null,
+                List<Vector3> baseOffsets = null,
+                List<Vector3> baseRotations = null,
                 Animation sourceAnimation = null,
                 int smoothing = 100)
             // Constructor
@@ -22,21 +22,27 @@ namespace Generator
             Smoothing = smoothing;  // How many frames to generate per 1 frame under 100% speed
 
             // Normalize positional and rotational offsets to start and end at 0, 0, 0
-            offsets = offsets ?? new List<Vector3>();
-            offsets.Insert(0, Vector3.Zero);
-            offsets.Add(Vector3.Zero);
-            rotations = rotations ?? new List<Vector3>();
-            rotations.Insert(0, Vector3.Zero);
-            rotations.Add(Vector3.Zero);
+            baseOffsets = baseOffsets ?? new List<Vector3>();
+            baseOffsets.Insert(0, Vector3.Zero);
+            baseOffsets.Add(Vector3.Zero);
+            BaseOffsets = baseOffsets;
+            baseRotations = baseRotations ?? new List<Vector3>();
+            baseRotations.Insert(0, Vector3.Zero);
+            baseRotations.Add(Vector3.Zero);
+            BaseRotations = baseRotations;
 
             // Derive the termination conditions and smoothed frames
-            Terminators = GetTerminators(offsets, rotations);
-            Offsets = GetSmoothedFrames(offsets);
-            Rotations = GetSmoothedFrames(rotations);
+            Terminators = GetTerminators(baseOffsets, baseRotations);
+            SmoothedOffsets = GetSmoothedFrames(baseOffsets);
+            SmoothedRotations = GetSmoothedFrames(baseRotations);
         }
 
-        public List<Vector3> Offsets;
-        public List<Vector3> Rotations;
+        public List<Vector3> BaseOffsets;
+        public List<Vector3> BaseRotations;
+        [JsonIgnore]
+        public List<Vector3> SmoothedOffsets;
+        [JsonIgnore]
+        public List<Vector3> SmoothedRotations;
         public IEnumerable<int> Terminators;
         [JsonIgnore]
         public Animation SourceAnimation;
@@ -60,22 +66,22 @@ namespace Generator
         // Plays a frame of the animation
         {
             // See if there are any new animation frames to play
-            var newFrame = MathTools.Mod(CurrentFrame + FramesPerUpdate(), Offsets.Count);
+            var newFrame = MathTools.Mod(CurrentFrame + FramesPerUpdate(), SmoothedOffsets.Count);
             if ((int)newFrame != (int)CurrentFrame)
             {
                 // Rotate the difference between the last frame and this one
                 var positionDifference = MathTools.PointRotatedAroundPoint(
-                    Offsets[(int)newFrame],
+                    SmoothedOffsets[(int)newFrame],
                     Vector3.Zero,
                     new Vector3(0, 0, -SourceAnimation.AnimatedElement.Direction));
 
                 // Move the object in that direction
                 SourceAnimation.AnimatedElement.AnimationOffset = positionDifference;
-                SourceAnimation.AnimatedElement.RotationOffset = Rotations[(int)newFrame];
+                SourceAnimation.AnimatedElement.RotationOffset = SmoothedRotations[(int)newFrame];
 
                 // Update animation logic
                 SourceAnimation.TotalOffset = positionDifference;
-                SourceAnimation.TotalRotation = Rotations[(int)newFrame];
+                SourceAnimation.TotalRotation = SmoothedRotations[(int)newFrame];
             }
 
             // Update the current frame
