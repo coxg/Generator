@@ -108,8 +108,11 @@ namespace Generator
                 {
                     ability.SourceObject = gameObject;
                     var animation = ability.Animation;
-                    animation.AnimatedElement = gameObject;
-                    animation.SetSource(gameObject);
+                    if (animation != null)
+                    {
+                        animation.AnimatedElement = gameObject;
+                        animation.SetSource(gameObject);
+                    }
                 }
             }
             Globals.Party.Members.Add(ObjectFromID["niels"]);

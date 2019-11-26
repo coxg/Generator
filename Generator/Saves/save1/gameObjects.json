@@ -10,6 +10,7 @@
         "Size": 1.92,
         "YOffset": -0.05,
         "Animations": {},
+        "_spriteFile": "Ninja",
         "ID": "Head",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
@@ -28,6 +29,7 @@
         "Size": 0.840000033,
         "YOffset": -0.05,
         "Animations": {},
+        "_spriteFile": "Ninja",
         "ID": "Face",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
@@ -46,6 +48,7 @@
         "Size": 0.96,
         "YOffset": 0.0,
         "Animations": {},
+        "_spriteFile": "Ninja",
         "ID": "Body",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
@@ -67,7 +70,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.0540853739, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -96,6 +99,7 @@
             "StopFrames": null
           }
         },
+        "_spriteFile": "Ninja",
         "ID": "Arm/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
@@ -117,7 +121,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.0540853739, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -146,6 +150,7 @@
             "StopFrames": null
           }
         },
+        "_spriteFile": "Ninja",
         "ID": "Arm/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
@@ -167,7 +172,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.0540853739, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -196,6 +201,7 @@
             "StopFrames": null
           }
         },
+        "_spriteFile": "Ninja",
         "ID": "Hand/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
@@ -217,7 +223,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.0540853739, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -246,6 +252,7 @@
             "StopFrames": null
           }
         },
+        "_spriteFile": "Ninja",
         "ID": "Hand/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
@@ -267,7 +274,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.0540853739, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -296,6 +303,7 @@
             "StopFrames": null
           }
         },
+        "_spriteFile": "Ninja",
         "ID": "Leg/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
@@ -317,7 +325,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.0540853739, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -346,6 +354,7 @@
             "StopFrames": null
           }
         },
+        "_spriteFile": "Ninja",
         "ID": "Leg/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
@@ -357,7 +366,7 @@
       }
     },
     "IsSwinging": false,
-    "IsShooting": true,
+    "IsShooting": false,
     "IsHurting": false,
     "Health": {
       "Name": "Health",
@@ -404,6 +413,113 @@
     "Brightness": "1, 1, 1",
     "Level": 1,
     "Experience": 0,
+    "Abilities": [
+      {
+        "Name": "Sprint",
+        "HealthCost": 0,
+        "StaminaCost": 0,
+        "ElectricityCost": 0,
+        "OffCooldown": true,
+        "KeepCasting": false,
+        "IsChanneled": true,
+        "IsToggleable": false,
+        "Cooldown": 0.0,
+        "Start": {
+          "Name": "SprintStart"
+        },
+        "OnUpdate": null,
+        "Stop": {
+          "Name": "SprintStop"
+        },
+        "IsPressed": false,
+        "Animation": {
+          "Name": null,
+          "TotalOffset": "0, 0, 0",
+          "TotalRotation": "0, 0, 0",
+          "IsStarting": false,
+          "IsUpdating": false,
+          "IsStopping": false,
+          "StartFrames": null,
+          "UpdateFrames": {
+            "BaseOffsets": [
+              "0, 0, 0",
+              "0, 0, 0",
+              "0, 0, 0.2",
+              "0, 0, 0",
+              "0, 0, 0"
+            ],
+            "BaseRotations": [
+              "0, 0, 0",
+              "0, 0, 0",
+              "0, 0, 0",
+              "0, 0, 0"
+            ],
+            "Terminators": [
+              0,
+              4500
+            ],
+            "Duration": 1.5,
+            "CurrentFrame": 0.0,
+            "Smoothing": 100
+          },
+          "StopFrames": null
+        }
+      },
+      {
+        "Name": "Shoot",
+        "HealthCost": 0,
+        "StaminaCost": 3,
+        "ElectricityCost": 0,
+        "OffCooldown": true,
+        "KeepCasting": true,
+        "IsChanneled": false,
+        "IsToggleable": false,
+        "Cooldown": 0.1,
+        "Start": {
+          "Name": "Shoot"
+        },
+        "OnUpdate": null,
+        "Stop": null,
+        "IsPressed": false,
+        "Animation": null
+      },
+      {
+        "Name": "Place Object",
+        "HealthCost": 0,
+        "StaminaCost": 0,
+        "ElectricityCost": 0,
+        "OffCooldown": true,
+        "KeepCasting": false,
+        "IsChanneled": false,
+        "IsToggleable": false,
+        "Cooldown": 0.0,
+        "Start": {
+          "Name": "Place Object"
+        },
+        "OnUpdate": null,
+        "Stop": null,
+        "IsPressed": false,
+        "Animation": null
+      },
+      {
+        "Name": "Attack",
+        "HealthCost": 0,
+        "StaminaCost": 10,
+        "ElectricityCost": 0,
+        "OffCooldown": true,
+        "KeepCasting": false,
+        "IsChanneled": false,
+        "IsToggleable": false,
+        "Cooldown": 0.0,
+        "Start": {
+          "Name": "Attack"
+        },
+        "OnUpdate": null,
+        "Stop": null,
+        "IsPressed": false,
+        "Animation": null
+      }
+    ],
     "Conversation": null,
     "ActivationEffect": null,
     "AI": null,
@@ -416,23 +532,23 @@
     "RotationPoint": "0, 0, 0",
     "CastsShadow": true,
     "Size": "1, 1, 1",
-    "Direction": 1.56807768,
-    "Position": "55.6984673, 46.38279, 0",
+    "Direction": 3.14159274,
+    "Position": "50, 50, 0",
     "Area": {
       "Location": {
         "IsEmpty": false,
-        "X": 55.6984673,
-        "Y": 46.38279
+        "X": 50.0,
+        "Y": 50.0
       },
       "Size": "1, 1",
-      "X": 55.6984673,
-      "Y": 46.38279,
+      "X": 50.0,
+      "Y": 50.0,
       "Width": 1.0,
       "Height": 1.0,
-      "Left": 55.6984673,
-      "Top": 46.38279,
-      "Right": 56.6984673,
-      "Bottom": 47.38279,
+      "Left": 50.0,
+      "Top": 50.0,
+      "Right": 51.0,
+      "Bottom": 51.0,
       "IsEmpty": false
     },
     "EquippedWeapon": {
@@ -510,7 +626,7 @@
       "Name": "[No Accessory]",
       "Effect": null
     },
-    "Center": "56.1984673, 46.88279, 0.5"
+    "Center": "50.5, 50.5, 0.5"
   },
   "farrah": {
     "Components": {
@@ -523,6 +639,7 @@
         "Size": 1.92,
         "YOffset": -0.05,
         "Animations": {},
+        "_spriteFile": "Girl",
         "ID": "Head",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
@@ -541,6 +658,7 @@
         "Size": 0.840000033,
         "YOffset": -0.05,
         "Animations": {},
+        "_spriteFile": "Girl",
         "ID": "Face",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
@@ -559,6 +677,7 @@
         "Size": 0.96,
         "YOffset": 0.0,
         "Animations": {},
+        "_spriteFile": "Girl",
         "ID": "Body",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
@@ -580,9 +699,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.02612792, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
+            "IsUpdating": false,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -603,16 +722,17 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 8944.27051,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
           }
         },
+        "_spriteFile": "Girl",
         "ID": "Arm/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "-0.02612792, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "SpriteFile": "Girl",
@@ -630,9 +750,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.02612792, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
+            "IsUpdating": false,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -653,16 +773,17 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 8944.27051,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
           }
         },
+        "_spriteFile": "Girl",
         "ID": "Arm/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0.02612792, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "SpriteFile": "Girl",
@@ -680,9 +801,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.02612792, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
+            "IsUpdating": false,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -703,16 +824,17 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 8944.27051,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
           }
         },
+        "_spriteFile": "Girl",
         "ID": "Hand/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "-0.02612792, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "SpriteFile": "Girl",
@@ -730,9 +852,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.02612792, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
+            "IsUpdating": false,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -753,16 +875,17 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 8944.27051,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
           }
         },
+        "_spriteFile": "Girl",
         "ID": "Hand/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0.02612792, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "SpriteFile": "Girl",
@@ -780,9 +903,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.02612792, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
+            "IsUpdating": false,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -803,16 +926,17 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 8944.27051,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
           }
         },
+        "_spriteFile": "Girl",
         "ID": "Leg/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0.02612792, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "SpriteFile": "Girl",
@@ -830,9 +954,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.02612792, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
+            "IsUpdating": false,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -853,16 +977,17 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 8944.27051,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
           }
         },
+        "_spriteFile": "Girl",
         "ID": "Leg/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "-0.02612792, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "SpriteFile": "Girl",
@@ -917,6 +1042,7 @@
     "Brightness": "1, 1, 1",
     "Level": 1,
     "Experience": 0,
+    "Abilities": [],
     "Conversation": {
       "StartingChoicesIndex": 0,
       "CurrentChoicesIndex": 0,
@@ -1078,23 +1204,23 @@
     "RotationPoint": "0, 0, 0",
     "CastsShadow": true,
     "Size": "1, 1, 1",
-    "Direction": 2.50356913,
-    "Position": "52.648632, 50.4959831, 0",
+    "Direction": 3.14159322,
+    "Position": "50, 55, 0",
     "Area": {
       "Location": {
         "IsEmpty": false,
-        "X": 52.648632,
-        "Y": 50.4959831
+        "X": 50.0,
+        "Y": 55.0
       },
       "Size": "1, 1",
-      "X": 52.648632,
-      "Y": 50.4959831,
+      "X": 50.0,
+      "Y": 55.0,
       "Width": 1.0,
       "Height": 1.0,
-      "Left": 52.648632,
-      "Top": 50.4959831,
-      "Right": 53.648632,
-      "Bottom": 51.4959831,
+      "Left": 50.0,
+      "Top": 55.0,
+      "Right": 51.0,
+      "Bottom": 56.0,
       "IsEmpty": false
     },
     "EquippedWeapon": {
@@ -1172,7 +1298,7 @@
       "Name": "[No Accessory]",
       "Effect": null
     },
-    "Center": "53.148632, 50.9959831, 0.5"
+    "Center": "50.5, 55.5, 0.5"
   },
   "angry terrain": {
     "Components": {
@@ -1185,6 +1311,7 @@
         "Size": 1.92,
         "YOffset": -0.05,
         "Animations": {},
+        "_spriteFile": "Old",
         "ID": "Head",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
@@ -1203,6 +1330,7 @@
         "Size": 0.840000033,
         "YOffset": -0.05,
         "Animations": {},
+        "_spriteFile": "Old",
         "ID": "Face",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
@@ -1221,6 +1349,7 @@
         "Size": 0.96,
         "YOffset": 0.0,
         "Animations": {},
+        "_spriteFile": "Old",
         "ID": "Body",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
@@ -1242,10 +1371,10 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.180177316, 0, 0",
+            "TotalRotation": "0.07918237, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
-            "IsStopping": true,
+            "IsUpdating": false,
+            "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
@@ -1265,16 +1394,17 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 4110.961,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
           }
         },
+        "_spriteFile": "Old",
         "ID": "Arm/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0.180177316, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "SpriteFile": "Old",
@@ -1292,10 +1422,10 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.180177316, 0, 0",
+            "TotalRotation": "-0.07918237, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
-            "IsStopping": true,
+            "IsUpdating": false,
+            "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
@@ -1315,16 +1445,17 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 4110.961,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
           }
         },
+        "_spriteFile": "Old",
         "ID": "Arm/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "-0.180177316, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "SpriteFile": "Old",
@@ -1342,10 +1473,10 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.180177316, 0, 0",
+            "TotalRotation": "0.07918237, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
-            "IsStopping": true,
+            "IsUpdating": false,
+            "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
@@ -1365,16 +1496,17 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 4110.961,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
           }
         },
+        "_spriteFile": "Old",
         "ID": "Hand/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0.180177316, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "SpriteFile": "Old",
@@ -1392,10 +1524,10 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.180177316, 0, 0",
+            "TotalRotation": "-0.07918237, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
-            "IsStopping": true,
+            "IsUpdating": false,
+            "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
@@ -1415,16 +1547,17 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 4110.961,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
           }
         },
+        "_spriteFile": "Old",
         "ID": "Hand/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "-0.180177316, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "SpriteFile": "Old",
@@ -1442,10 +1575,10 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.180177316, 0, 0",
+            "TotalRotation": "-0.07918237, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
-            "IsStopping": true,
+            "IsUpdating": false,
+            "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
@@ -1465,16 +1598,17 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 4110.961,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
           }
         },
+        "_spriteFile": "Old",
         "ID": "Leg/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "-0.180177316, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "SpriteFile": "Old",
@@ -1492,10 +1626,10 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.180177316, 0, 0",
+            "TotalRotation": "0.07918237, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
-            "IsStopping": true,
+            "IsUpdating": false,
+            "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
@@ -1515,16 +1649,17 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 4110.961,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
           }
         },
+        "_spriteFile": "Old",
         "ID": "Leg/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0.180177316, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "SpriteFile": "Old",
@@ -1579,6 +1714,7 @@
     "Brightness": "0.5, 0.1, 0.5",
     "Level": 1,
     "Experience": 0,
+    "Abilities": [],
     "Conversation": {
       "StartingChoicesIndex": 0,
       "CurrentChoicesIndex": 0,
@@ -1704,23 +1840,23 @@
     "RotationPoint": "0, 0, 0",
     "CastsShadow": true,
     "Size": "1, 1, 1",
-    "Direction": 2.72438836,
-    "Position": "53.7135963, 50.8610535, 0",
+    "Direction": 3.836331,
+    "Position": "53.1779861, 53.8135834, 0",
     "Area": {
       "Location": {
         "IsEmpty": false,
-        "X": 53.7135963,
-        "Y": 50.8610535
+        "X": 53.1779861,
+        "Y": 53.8135834
       },
       "Size": "1, 1",
-      "X": 53.7135963,
-      "Y": 50.8610535,
+      "X": 53.1779861,
+      "Y": 53.8135834,
       "Width": 1.0,
       "Height": 1.0,
-      "Left": 53.7135963,
-      "Top": 50.8610535,
-      "Right": 54.7135963,
-      "Bottom": 51.8610535,
+      "Left": 53.1779861,
+      "Top": 53.8135834,
+      "Right": 54.1779861,
+      "Bottom": 54.8135834,
       "IsEmpty": false
     },
     "EquippedWeapon": {
@@ -1798,7 +1934,7 @@
       "Name": "[No Accessory]",
       "Effect": null
     },
-    "Center": "54.2135963, 51.3610535, 0.5"
+    "Center": "53.6779861, 54.3135834, 0.5"
   },
   "building": {
     "Components": {
@@ -1811,6 +1947,7 @@
         "Size": 1.2,
         "YOffset": 0.0,
         "Animations": {},
+        "_spriteFile": "Sprites/building",
         "ID": "body",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
@@ -1869,6 +2006,7 @@
     "Brightness": "0, 0, 0",
     "Level": 1,
     "Experience": 0,
+    "Abilities": [],
     "Conversation": null,
     "ActivationEffect": {
       "Name": "SetZoneBuildings"
@@ -1978,367 +2116,5 @@
       "Effect": null
     },
     "Center": "60, 63.5, 4.5"
-  },
-  "111fb254-0deb-4d8c-9fa3-1a705a3ad72f": {
-    "Components": {
-      "body": {
-        "CurrentFrame": 0,
-        "Directional": false,
-        "Side": null,
-        "RelativePosition": "0.5, 0.5, 0.5",
-        "RelativeRotation": "0, 0, 0",
-        "Size": 6.0,
-        "YOffset": 0.0,
-        "Animations": {},
-        "ID": "body",
-        "Name": null,
-        "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
-        "RotationPoint": "3, 3, 9",
-        "CastsShadow": true,
-        "SpriteFile": null,
-        "Center": "0, 0, 0"
-      }
-    },
-    "IsSwinging": false,
-    "IsShooting": false,
-    "IsHurting": false,
-    "Health": {
-      "Name": "Health",
-      "BaseValue": 1,
-      "Current": 1.0,
-      "Max": 1,
-      "Regeneration": 0
-    },
-    "Stamina": {
-      "Name": "Stamina",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 10
-    },
-    "Electricity": {
-      "Name": "Electricity",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 0
-    },
-    "Strength": {
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Sense": {
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Speed": {
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 100
-    },
-    "Style": {
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
-    "Level": 1,
-    "Experience": 0,
-    "Conversation": null,
-    "ActivationEffect": null,
-    "AI": {
-      "Name": "WalkInStraightLine"
-    },
-    "CollisionEffect": {
-      "Name": "BulletCollision"
-    },
-    "Temporary": true,
-    "ID": "111fb254-0deb-4d8c-9fa3-1a705a3ad72f",
-    "Name": null,
-    "AnimationOffset": "0, 0, 0",
-    "RotationOffset": "0, 0, 0",
-    "RotationPoint": "0, 0, 0",
-    "CastsShadow": false,
-    "Size": "0.05, 0.05, 0.05",
-    "Direction": 2.58512878,
-    "Position": "83.24781, -2.145976, 1",
-    "Area": {
-      "Location": {
-        "IsEmpty": false,
-        "X": 83.24781,
-        "Y": -2.145976
-      },
-      "Size": "0.05, 0.05",
-      "X": 83.24781,
-      "Y": -2.145976,
-      "Width": 0.05,
-      "Height": 0.05,
-      "Left": 83.24781,
-      "Top": -2.145976,
-      "Right": 83.29781,
-      "Bottom": -2.095976,
-      "IsEmpty": false
-    },
-    "EquippedWeapon": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "Fists",
-      "Effect": null,
-      "Range": 1,
-      "Spread": 0.0,
-      "Area": 0
-    },
-    "EquippedArmor": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Armor]",
-      "Effect": null
-    },
-    "EquippedGenerator": {
-      "Slot": "Generator",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Generator]",
-      "Effect": null
-    },
-    "EquippedAccessory": {
-      "Slot": "Accessory",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Accessory]",
-      "Effect": null
-    },
-    "Center": "83.27281, -2.120976, 1.025"
-  },
-  "6bec0927-3aeb-4686-937b-2cea45aad140": {
-    "Components": {
-      "body": {
-        "CurrentFrame": 0,
-        "Directional": false,
-        "Side": null,
-        "RelativePosition": "0.5, 0.5, 0.5",
-        "RelativeRotation": "0, 0, 0",
-        "Size": 6.0,
-        "YOffset": 0.0,
-        "Animations": {},
-        "ID": "body",
-        "Name": null,
-        "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
-        "RotationPoint": "3, 3, 9",
-        "CastsShadow": true,
-        "SpriteFile": null,
-        "Center": "0, 0, 0"
-      }
-    },
-    "IsSwinging": false,
-    "IsShooting": false,
-    "IsHurting": false,
-    "Health": {
-      "Name": "Health",
-      "BaseValue": 1,
-      "Current": 1.0,
-      "Max": 1,
-      "Regeneration": 0
-    },
-    "Stamina": {
-      "Name": "Stamina",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 10
-    },
-    "Electricity": {
-      "Name": "Electricity",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 0
-    },
-    "Strength": {
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Sense": {
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Speed": {
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 100
-    },
-    "Style": {
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
-    "Level": 1,
-    "Experience": 0,
-    "Conversation": null,
-    "ActivationEffect": null,
-    "AI": {
-      "Name": "WalkInStraightLine"
-    },
-    "CollisionEffect": {
-      "Name": "BulletCollision"
-    },
-    "Temporary": true,
-    "ID": "6bec0927-3aeb-4686-937b-2cea45aad140",
-    "Name": null,
-    "AnimationOffset": "0, 0, 0",
-    "RotationOffset": "0, 0, 0",
-    "RotationPoint": "0, 0, 0",
-    "CastsShadow": false,
-    "Size": "0.05, 0.05, 0.05",
-    "Direction": 3.77724814,
-    "Position": "15.2734852, 2.75560951, 1",
-    "Area": {
-      "Location": {
-        "IsEmpty": false,
-        "X": 15.2734852,
-        "Y": 2.75560951
-      },
-      "Size": "0.05, 0.05",
-      "X": 15.2734852,
-      "Y": 2.75560951,
-      "Width": 0.05,
-      "Height": 0.05,
-      "Left": 15.2734852,
-      "Top": 2.75560951,
-      "Right": 15.3234854,
-      "Bottom": 2.80560946,
-      "IsEmpty": false
-    },
-    "EquippedWeapon": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "Fists",
-      "Effect": null,
-      "Range": 1,
-      "Spread": 0.0,
-      "Area": 0
-    },
-    "EquippedArmor": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Armor]",
-      "Effect": null
-    },
-    "EquippedGenerator": {
-      "Slot": "Generator",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Generator]",
-      "Effect": null
-    },
-    "EquippedAccessory": {
-      "Slot": "Accessory",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Accessory]",
-      "Effect": null
-    },
-    "Center": "15.2984848, 2.78060961, 1.025"
   }
 }

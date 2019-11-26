@@ -108,6 +108,7 @@ namespace Generator
 
             // Abilities
             Abilities = abilities != null ? (List<Ability>) Globals.Copy(abilities) : new List<Ability>();
+            foreach (var ability in Abilities) ability.SourceObject = this;
 
             // Interaction
             Conversation = conversation;
@@ -226,30 +227,9 @@ namespace Generator
         public int Experience;
 
         // Abilities
-        private List<Ability> _abilities = new List<Ability>();
-        [JsonIgnore]
-        public List<Ability> Abilities
-        {
-            get => _abilities;
-            set 
-            {
-                _abilities = value;
-                foreach (var ability in _abilities) ability.SourceObject = this;
-
-                if (Abilities.Count >= 1) Ability1 = Abilities[0];
-                if (Abilities.Count >= 2) Ability2 = Abilities[1];
-                if (Abilities.Count >= 3) Ability3 = Abilities[2];
-                if (Abilities.Count >= 4) Ability4 = Abilities[3];
-            }
-        }
-        [JsonIgnore]
-        public Ability Ability1;
-        [JsonIgnore]
-        public Ability Ability2;
-        [JsonIgnore]
-        public Ability Ability3;
-        [JsonIgnore]
-        public Ability Ability4;
+        // TODO: Function to add new ability, should not be able to add it directly
+        // This would make a copy and set the sourceObject
+        public List<Ability> Abilities = new List<Ability>();
 
         // Interaction
         public Conversation Conversation;

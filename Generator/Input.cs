@@ -186,10 +186,10 @@ namespace Generator
                 }
 
                 // Abilities
-                if (player.Ability1 != null) player.Ability1.IsPressed = KeyBindings["l"].IsPressed;
-                if (player.Ability2 != null) player.Ability2.IsPressed = KeyBindings["r"].IsPressed;
-                if (player.Ability3 != null) player.Ability3.IsPressed = KeyBindings["lb"].IsPressed;
-                if (player.Ability4 != null) player.Ability4.IsPressed = KeyBindings["rb"].IsPressed;
+                if (player.Abilities.Count > 0) player.Abilities[0].IsPressed = KeyBindings["l"].IsPressed;
+                if (player.Abilities.Count > 1) player.Abilities[1].IsPressed = KeyBindings["r"].IsPressed;
+                if (player.Abilities.Count > 2) player.Abilities[2].IsPressed = KeyBindings["lb"].IsPressed;
+                if (player.Abilities.Count > 3) player.Abilities[3].IsPressed = KeyBindings["rb"].IsPressed;
 
                 // Save the game
                 if (KeyBindings["start"].IsBeingPressed)

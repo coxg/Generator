@@ -78,7 +78,7 @@ namespace Generator
             get { return SourceObject.Direction; }
         }
 
-        private string _spriteFile;
+        public string _spriteFile;
         public string SpriteFile
         {
             get { return _spriteFile; }
