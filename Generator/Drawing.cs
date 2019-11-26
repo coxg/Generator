@@ -271,7 +271,7 @@ namespace Generator
                 var face = character.Components["Face"];
                 var faceSize = (int)(size * face.Size / head.Size);
                 spriteBatch.Draw(
-                    head.Sprites["Front"],
+                    head.Sprites["Front"].Value,
                     new Rectangle(
                         x,
                         y,
@@ -284,7 +284,7 @@ namespace Generator
                     SpriteEffects.None,
                     .04f);
                 spriteBatch.Draw(
-                    face.Sprites["Front"],
+                    face.Sprites["Front"].Value,
                     new Rectangle(
                         x + size / 2 - faceSize / 2,
                         y + 5 * size / 8 - faceSize / 2,

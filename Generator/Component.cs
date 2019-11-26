@@ -41,7 +41,7 @@ namespace Generator
             SourceObject = sourceObject;
             YOffset = yOffset;
             Animations = animations ?? new Dictionary<String, Animation>();
-            SpriteFile = spriteFile;
+            if (spriteFile != null) SpriteFile = spriteFile;
             CastsShadow = castsShadow;
 
         }
@@ -56,21 +56,7 @@ namespace Generator
         public GameObject SourceObject;
         public float YOffset;
         public Dictionary<String, Animation> Animations;
-        [JsonIgnore]
-        private Dictionary<String, Texture2D> _Sprites;
-        [JsonIgnore]
-        public Dictionary<String, Texture2D> Sprites
-        {
-            get
-            {
-                if (_Sprites == null)
-                {
-                    SpriteFile = SpriteFile;
-                }
-                return _Sprites;
-            }
-            set { throw new NotSupportedException("Set the _Sprites instead."); }
-        }
+        public Dictionary<String, Loaded<Texture2D>> Sprites = new Dictionary<string, Loaded<Texture2D>>();
 
         [JsonIgnore]
         override public float Direction {
@@ -78,7 +64,9 @@ namespace Generator
             get { return SourceObject.Direction; }
         }
 
+        [JsonIgnore]
         public string _spriteFile;
+        [JsonIgnore]
         public string SpriteFile
         {
             get { return _spriteFile; }
@@ -103,21 +91,20 @@ namespace Generator
                 }
 
                 // Load up the sprites for each specified direction
-                _Sprites = new Dictionary<string, Texture2D>();
                 if (Directional)
                 {
-                    _Sprites["Front"] = Globals.Content.Load<Texture2D>(ComponentPath + "Front");
-                    _Sprites["Back"] = Globals.Content.Load<Texture2D>(ComponentPath + "Back");
-                    _Sprites["Left"] = Globals.Content.Load<Texture2D>(ComponentPath + "Left");
-                    _Sprites["Right"] = Globals.Content.Load<Texture2D>(ComponentPath + "Right");
+                    Sprites["Front"] = new Loaded<Texture2D>(ComponentPath + "Front");
+                    Sprites["Back"] = new Loaded<Texture2D>(ComponentPath + "Back");
+                    Sprites["Left"] = new Loaded<Texture2D>(ComponentPath + "Left");
+                    Sprites["Right"] = new Loaded<Texture2D>(ComponentPath + "Right");
                 }
                 else if (File.Exists(Globals.Directory + "/Content/" + ComponentPath + ID + ".png"))
                 {
-                    _Sprites[""] = Globals.Content.Load<Texture2D>(ComponentPath + ID);
+                    Sprites[""] = new Loaded<Texture2D>(ComponentPath + ID);
                 }
                 else if (value != null)
                 {
-                    _Sprites[""] = Globals.Content.Load<Texture2D>(value);
+                    Sprites[""] = new Loaded<Texture2D>(value);
                 }
                 _spriteFile = value;
             }
@@ -129,11 +116,11 @@ namespace Generator
             get {
                 if (Directional)
                 {
-                    return Sprites[MathTools.StringFromRadians(Direction)];
+                    return Sprites[MathTools.StringFromRadians(Direction)].Value;
                 }
                 else
                 {
-                    return Sprites[""];
+                    return Sprites[""].Value;
                 }
             }
 

@@ -103,6 +103,7 @@ public static class Actions
                         {
                             {"body", new Component(
                                 id: "Hand",
+                                spriteFile: "Ninja",
                                 relativePosition: new Vector3(.5f, .5f, .5f),
                                 relativeSize: 1,
                                 baseRotationPoint: new Vector3(.5f, .5f, .5f))

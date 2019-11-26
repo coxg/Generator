@@ -139,7 +139,7 @@ namespace Generator
                     name: "Sword",
                     sprite: new Loaded<Texture2D>("Sprites/white_dot"),
                     damage: 10),
-                brightness: Vector3.One,
+                brightness: Vector3.Zero,
                 abilities: new List<Ability>() {
                     Ability.Abilities["Sprint"],
                     Ability.Abilities["Shoot"],
@@ -164,7 +164,7 @@ namespace Generator
                     name: "Sword",
                     sprite: new Loaded<Texture2D>("Sprites/white_dot"),
                     damage: 10),
-                brightness: Vector3.One,
+                brightness: Vector3.Zero,
                 conversation: new Conversation(
                     choicesList: new List<Conversation.Choices>()
                     {
@@ -221,7 +221,7 @@ namespace Generator
             var terrain1 = new GameObject(
                 new Vector3(55, 56, 0),
                 id: "angry terrain", 
-                brightness: new Vector3(.5f, .1f, .5f),
+                brightness: Vector3.Zero,
                 baseStrength: 10, 
                 baseSpeed: 10, 
                 baseSense: 10,
@@ -275,6 +275,7 @@ namespace Generator
                 baseSpeed: 10, 
                 baseSense: 10,
                 castsShadow: false,
+                brightness: new Vector3(2, 2, 2),
                 activationEffect: new Loaded<System.Action<GameObject, GameObject>>("SetZoneBuildings"),
                 components: new Dictionary<string, Component>()
                 {
