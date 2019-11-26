@@ -204,7 +204,7 @@ namespace Generator
                 }
 
                 // Load the game
-                if (KeyBindings["up"].IsBeingPressed)
+                if (KeyBindings["select"].IsBeingPressed)
                 {
                     Globals.Log("Loading game");
                     GameObjectManager.Load("save1");

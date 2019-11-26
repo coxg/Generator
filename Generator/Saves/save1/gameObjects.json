@@ -106,29 +106,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "0.225940555, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0.7, 0, 0",
                 "0, 0, 0",
                 "-0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -137,7 +129,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 492.951172,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -151,7 +143,7 @@
         "ID": "Arm/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "0.225940555, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -168,29 +160,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "-0.225940555, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "-0.7, 0, 0",
                 "0, 0, 0",
                 "0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -199,7 +183,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 492.951172,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -213,7 +197,7 @@
         "ID": "Arm/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "-0.225940555, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -230,29 +214,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "0.225940555, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0.7, 0, 0",
                 "0, 0, 0",
                 "-0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -261,7 +237,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 492.951172,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -275,7 +251,7 @@
         "ID": "Hand/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "0.225940555, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -292,29 +268,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "-0.225940555, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "-0.7, 0, 0",
                 "0, 0, 0",
                 "0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -323,7 +291,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 492.951172,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -337,7 +305,7 @@
         "ID": "Hand/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "-0.225940555, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -354,29 +322,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "-0.225940555, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "-0.7, 0, 0",
                 "0, 0, 0",
                 "0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -385,7 +345,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 492.951172,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -399,7 +359,7 @@
         "ID": "Leg/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "-0.225940555, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -416,29 +376,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "0.225940555, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0.7, 0, 0",
                 "0, 0, 0",
                 "-0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -447,7 +399,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 492.951172,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -461,14 +413,14 @@
         "ID": "Leg/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "0.225940555, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "Center": "0, 0, 0"
       }
     },
     "IsSwinging": false,
-    "IsShooting": true,
+    "IsShooting": false,
     "IsHurting": false,
     "Health": {
       "Name": "Health",
@@ -480,7 +432,7 @@
     "Stamina": {
       "Name": "Stamina",
       "BaseValue": 100,
-      "Current": 83.6668854,
+      "Current": 100.0,
       "Max": 100,
       "Regeneration": 10
     },
@@ -516,7 +468,7 @@
       "CurrentValue": 90
     },
     "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "1, 1, 1",
+    "Brightness": "0, 0, 0",
     "Level": 1,
     "Experience": 0,
     "Abilities": [
@@ -550,27 +502,11 @@
             "BaseOffsets": [
               "0, 0, 0",
               "0, 0, 0",
-              "0, 0, 0",
-              "0, 0, 0",
-              "0, 0, 0",
-              "0, 0, 0",
               "0, 0, 0.2",
-              "0, 0, 0",
-              "0, 0, 0",
-              "0, 0, 0",
-              "0, 0, 0",
               "0, 0, 0",
               "0, 0, 0"
             ],
             "BaseRotations": [
-              "0, 0, 0",
-              "0, 0, 0",
-              "0, 0, 0",
-              "0, 0, 0",
-              "0, 0, 0",
-              "0, 0, 0",
-              "0, 0, 0",
-              "0, 0, 0",
               "0, 0, 0",
               "0, 0, 0",
               "0, 0, 0",
@@ -592,7 +528,7 @@
         "HealthCost": 0,
         "StaminaCost": 3,
         "ElectricityCost": 0,
-        "OffCooldown": false,
+        "OffCooldown": true,
         "KeepCasting": true,
         "IsChanneled": false,
         "IsToggleable": false,
@@ -602,7 +538,7 @@
         },
         "OnUpdate": null,
         "Stop": null,
-        "IsPressed": true,
+        "IsPressed": false,
         "Animation": null
       },
       {
@@ -654,23 +590,23 @@
     "RotationPoint": "0, 0, 0",
     "CastsShadow": true,
     "Size": "1, 1, 1",
-    "Direction": 4.712389,
-    "Position": "50, 50, 0",
+    "Direction": 1.48213971,
+    "Position": "65.53562, 51.19328, 0",
     "Area": {
       "Location": {
         "IsEmpty": false,
-        "X": 50.0,
-        "Y": 50.0
+        "X": 65.53562,
+        "Y": 51.19328
       },
       "Size": "1, 1",
-      "X": 50.0,
-      "Y": 50.0,
+      "X": 65.53562,
+      "Y": 51.19328,
       "Width": 1.0,
       "Height": 1.0,
-      "Left": 50.0,
-      "Top": 50.0,
-      "Right": 51.0,
-      "Bottom": 51.0,
+      "Left": 65.53562,
+      "Top": 51.19328,
+      "Right": 66.53562,
+      "Bottom": 52.19328,
       "IsEmpty": false
     },
     "EquippedWeapon": {
@@ -748,7 +684,7 @@
       "Name": "[No Accessory]",
       "Effect": null
     },
-    "Center": "50.5, 50.5, 0.5"
+    "Center": "66.03562, 51.69328, 0.5"
   },
   "farrah": {
     "Components": {
@@ -857,29 +793,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "-0.0522235259, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0.7, 0, 0",
                 "0, 0, 0",
                 "-0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -888,7 +816,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 8888.541,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -902,7 +830,7 @@
         "ID": "Arm/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "-0.0522235259, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -919,29 +847,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "0.0522235259, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "-0.7, 0, 0",
                 "0, 0, 0",
                 "0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -950,7 +870,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 8888.541,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -964,7 +884,7 @@
         "ID": "Arm/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "0.0522235259, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -981,29 +901,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "-0.0522235259, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0.7, 0, 0",
                 "0, 0, 0",
                 "-0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -1012,7 +924,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 8888.541,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1026,7 +938,7 @@
         "ID": "Hand/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "-0.0522235259, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1043,29 +955,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "0.0522235259, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "-0.7, 0, 0",
                 "0, 0, 0",
                 "0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -1074,7 +978,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 8888.541,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1088,7 +992,7 @@
         "ID": "Hand/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "0.0522235259, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1105,29 +1009,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "0.0522235259, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "-0.7, 0, 0",
                 "0, 0, 0",
                 "0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -1136,7 +1032,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 8888.541,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1150,7 +1046,7 @@
         "ID": "Leg/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "0.0522235259, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1167,29 +1063,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "-0.0522235259, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0.7, 0, 0",
                 "0, 0, 0",
                 "-0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -1198,7 +1086,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 8888.541,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1212,7 +1100,7 @@
         "ID": "Leg/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "-0.0522235259, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1267,7 +1155,7 @@
       "CurrentValue": 90
     },
     "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "1, 1, 1",
+    "Brightness": "0, 0, 0",
     "Level": 1,
     "Experience": 0,
     "Abilities": [],
@@ -1432,23 +1320,23 @@
     "RotationPoint": "0, 0, 0",
     "CastsShadow": true,
     "Size": "1, 1, 1",
-    "Direction": 3.1415906,
-    "Position": "50, 55, 0",
+    "Direction": 1.67933607,
+    "Position": "54.55163, 52.32449, 0",
     "Area": {
       "Location": {
         "IsEmpty": false,
-        "X": 50.0,
-        "Y": 55.0
+        "X": 54.55163,
+        "Y": 52.32449
       },
       "Size": "1, 1",
-      "X": 50.0,
-      "Y": 55.0,
+      "X": 54.55163,
+      "Y": 52.32449,
       "Width": 1.0,
       "Height": 1.0,
-      "Left": 50.0,
-      "Top": 55.0,
-      "Right": 51.0,
-      "Bottom": 56.0,
+      "Left": 54.55163,
+      "Top": 52.32449,
+      "Right": 55.55163,
+      "Bottom": 53.32449,
       "IsEmpty": false
     },
     "EquippedWeapon": {
@@ -1526,7 +1414,7 @@
       "Name": "[No Accessory]",
       "Effect": null
     },
-    "Center": "50.5, 55.5, 0.5"
+    "Center": "55.05163, 52.82449, 0.5"
   },
   "angry terrain": {
     "Components": {
@@ -1635,29 +1523,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.07918237, 0, 0",
+            "TotalRotation": "-0.4706575, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0.7, 0, 0",
                 "0, 0, 0",
                 "-0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -1666,7 +1546,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 7905.69141,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1680,7 +1560,7 @@
         "ID": "Arm/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "-0.4706575, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1697,29 +1577,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.07918237, 0, 0",
+            "TotalRotation": "0.4706575, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "-0.7, 0, 0",
                 "0, 0, 0",
                 "0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -1728,7 +1600,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 7905.69141,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1742,7 +1614,7 @@
         "ID": "Arm/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "0.4706575, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1759,29 +1631,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.07918237, 0, 0",
+            "TotalRotation": "-0.4706575, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0.7, 0, 0",
                 "0, 0, 0",
                 "-0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -1790,7 +1654,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 7905.69141,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1804,7 +1668,7 @@
         "ID": "Hand/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "-0.4706575, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1821,29 +1685,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.07918237, 0, 0",
+            "TotalRotation": "0.4706575, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "-0.7, 0, 0",
                 "0, 0, 0",
                 "0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -1852,7 +1708,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 7905.69141,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1866,7 +1722,7 @@
         "ID": "Hand/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "0.4706575, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1883,29 +1739,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.07918237, 0, 0",
+            "TotalRotation": "0.4706575, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "-0.7, 0, 0",
                 "0, 0, 0",
                 "0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -1914,7 +1762,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 7905.69141,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1928,7 +1776,7 @@
         "ID": "Leg/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "0.4706575, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1945,29 +1793,21 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.07918237, 0, 0",
+            "TotalRotation": "-0.4706575, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
               "BaseOffsets": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "BaseRotations": [
                 "0, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0.7, 0, 0",
                 "0, 0, 0",
                 "-0.7, 0, 0",
-                "0, 0, 0",
-                "0, 0, 0",
                 "0, 0, 0"
               ],
               "Terminators": [
@@ -1976,7 +1816,7 @@
                 9000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 7905.69141,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1990,7 +1830,7 @@
         "ID": "Leg/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "-0.4706575, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -2045,7 +1885,7 @@
       "CurrentValue": 10
     },
     "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
+    "Brightness": "0, 0, 0",
     "Level": 1,
     "Experience": 0,
     "Abilities": [],
@@ -2174,23 +2014,23 @@
     "RotationPoint": "0, 0, 0",
     "CastsShadow": true,
     "Size": "1, 1, 1",
-    "Direction": 3.83633041,
-    "Position": "53.1779861, 53.8135834, 0",
+    "Direction": 1.74223328,
+    "Position": "55.68769, 52.8113136, 0",
     "Area": {
       "Location": {
         "IsEmpty": false,
-        "X": 53.1779861,
-        "Y": 53.8135834
+        "X": 55.68769,
+        "Y": 52.8113136
       },
       "Size": "1, 1",
-      "X": 53.1779861,
-      "Y": 53.8135834,
+      "X": 55.68769,
+      "Y": 52.8113136,
       "Width": 1.0,
       "Height": 1.0,
-      "Left": 53.1779861,
-      "Top": 53.8135834,
-      "Right": 54.1779861,
-      "Bottom": 54.8135834,
+      "Left": 55.68769,
+      "Top": 52.8113136,
+      "Right": 56.68769,
+      "Bottom": 53.8113136,
       "IsEmpty": false
     },
     "EquippedWeapon": {
@@ -2268,7 +2108,7 @@
       "Name": "[No Accessory]",
       "Effect": null
     },
-    "Center": "53.6779861, 54.3135834, 0.5"
+    "Center": "56.18769, 53.3113136, 0.5"
   },
   "building": {
     "Components": {
@@ -2344,7 +2184,7 @@
       "CurrentValue": 10
     },
     "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0, 0, 0",
+    "Brightness": "2, 2, 2",
     "Level": 1,
     "Experience": 0,
     "Abilities": [],
@@ -2457,2855 +2297,5 @@
       "Effect": null
     },
     "Center": "60, 63.5, 4.5"
-  },
-  "ef5b626a-b507-4fe2-a1f5-32027dde39d4": {
-    "Components": {
-      "body": {
-        "CurrentFrame": 0,
-        "Directional": false,
-        "Side": null,
-        "RelativePosition": "0.5, 0.5, 0.5",
-        "RelativeRotation": "0, 0, 0",
-        "Size": 6.0,
-        "YOffset": 0.0,
-        "Animations": {},
-        "Sprites": {
-          "": {
-            "Name": "Components/Hand/Default/Hand"
-          }
-        },
-        "ID": "body",
-        "Name": null,
-        "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
-        "RotationPoint": "3, 3, 9",
-        "CastsShadow": true,
-        "Center": "0, 0, 0"
-      }
-    },
-    "IsSwinging": false,
-    "IsShooting": false,
-    "IsHurting": false,
-    "Health": {
-      "Name": "Health",
-      "BaseValue": 1,
-      "Current": 1.0,
-      "Max": 1,
-      "Regeneration": 0
-    },
-    "Stamina": {
-      "Name": "Stamina",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 10
-    },
-    "Electricity": {
-      "Name": "Electricity",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 0
-    },
-    "Strength": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Sense": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Speed": {
-      "BaseValue": 100,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 100
-    },
-    "Style": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
-    "Level": 1,
-    "Experience": 0,
-    "Abilities": [],
-    "Conversation": null,
-    "ActivationEffect": null,
-    "AI": {
-      "Name": "WalkInStraightLine"
-    },
-    "CollisionEffect": {
-      "Name": "BulletCollision"
-    },
-    "Temporary": true,
-    "ID": "ef5b626a-b507-4fe2-a1f5-32027dde39d4",
-    "Name": null,
-    "AnimationOffset": "0, 0, 0",
-    "RotationOffset": "0, 0, 0",
-    "RotationPoint": "0, 0, 0",
-    "CastsShadow": false,
-    "Size": "0.05, 0.05, 0.05",
-    "Direction": 1.57079649,
-    "Position": "78.8334, 50.5, 1",
-    "Area": {
-      "Location": {
-        "IsEmpty": false,
-        "X": 78.8334,
-        "Y": 50.5
-      },
-      "Size": "0.05, 0.05",
-      "X": 78.8334,
-      "Y": 50.5,
-      "Width": 0.05,
-      "Height": 0.05,
-      "Left": 78.8334,
-      "Top": 50.5,
-      "Right": 78.8834,
-      "Bottom": 50.55,
-      "IsEmpty": false
-    },
-    "EquippedWeapon": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "Fists",
-      "Effect": null,
-      "Range": 1,
-      "Spread": 0.0,
-      "Area": 0
-    },
-    "EquippedArmor": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Armor]",
-      "Effect": null
-    },
-    "EquippedGenerator": {
-      "Slot": "Generator",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Generator]",
-      "Effect": null
-    },
-    "EquippedAccessory": {
-      "Slot": "Accessory",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Accessory]",
-      "Effect": null
-    },
-    "Center": "78.8584, 50.525, 1.025"
-  },
-  "ba34a202-494f-41d8-96ab-6dfb27181a10": {
-    "Components": {
-      "body": {
-        "CurrentFrame": 0,
-        "Directional": false,
-        "Side": null,
-        "RelativePosition": "0.5, 0.5, 0.5",
-        "RelativeRotation": "0, 0, 0",
-        "Size": 6.0,
-        "YOffset": 0.0,
-        "Animations": {},
-        "Sprites": {
-          "": {
-            "Name": "Components/Hand/Default/Hand"
-          }
-        },
-        "ID": "body",
-        "Name": null,
-        "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
-        "RotationPoint": "3, 3, 9",
-        "CastsShadow": true,
-        "Center": "0, 0, 0"
-      }
-    },
-    "IsSwinging": false,
-    "IsShooting": false,
-    "IsHurting": false,
-    "Health": {
-      "Name": "Health",
-      "BaseValue": 1,
-      "Current": 1.0,
-      "Max": 1,
-      "Regeneration": 0
-    },
-    "Stamina": {
-      "Name": "Stamina",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 10
-    },
-    "Electricity": {
-      "Name": "Electricity",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 0
-    },
-    "Strength": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Sense": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Speed": {
-      "BaseValue": 100,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 100
-    },
-    "Style": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
-    "Level": 1,
-    "Experience": 0,
-    "Abilities": [],
-    "Conversation": null,
-    "ActivationEffect": null,
-    "AI": {
-      "Name": "WalkInStraightLine"
-    },
-    "CollisionEffect": {
-      "Name": "BulletCollision"
-    },
-    "Temporary": true,
-    "ID": "ba34a202-494f-41d8-96ab-6dfb27181a10",
-    "Name": null,
-    "AnimationOffset": "0, 0, 0",
-    "RotationOffset": "0, 0, 0",
-    "RotationPoint": "0, 0, 0",
-    "CastsShadow": false,
-    "Size": "0.05, 0.05, 0.05",
-    "Direction": 1.57079649,
-    "Position": "80.16674, 50.5, 1",
-    "Area": {
-      "Location": {
-        "IsEmpty": false,
-        "X": 80.16674,
-        "Y": 50.5
-      },
-      "Size": "0.05, 0.05",
-      "X": 80.16674,
-      "Y": 50.5,
-      "Width": 0.05,
-      "Height": 0.05,
-      "Left": 80.16674,
-      "Top": 50.5,
-      "Right": 80.21674,
-      "Bottom": 50.55,
-      "IsEmpty": false
-    },
-    "EquippedWeapon": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "Fists",
-      "Effect": null,
-      "Range": 1,
-      "Spread": 0.0,
-      "Area": 0
-    },
-    "EquippedArmor": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Armor]",
-      "Effect": null
-    },
-    "EquippedGenerator": {
-      "Slot": "Generator",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Generator]",
-      "Effect": null
-    },
-    "EquippedAccessory": {
-      "Slot": "Accessory",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Accessory]",
-      "Effect": null
-    },
-    "Center": "80.19174, 50.525, 1.025"
-  },
-  "c9f4a566-77c4-420b-a12d-5ebe239d18f9": {
-    "Components": {
-      "body": {
-        "CurrentFrame": 0,
-        "Directional": false,
-        "Side": null,
-        "RelativePosition": "0.5, 0.5, 0.5",
-        "RelativeRotation": "0, 0, 0",
-        "Size": 6.0,
-        "YOffset": 0.0,
-        "Animations": {},
-        "Sprites": {
-          "": {
-            "Name": "Components/Hand/Default/Hand"
-          }
-        },
-        "ID": "body",
-        "Name": null,
-        "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
-        "RotationPoint": "3, 3, 9",
-        "CastsShadow": true,
-        "Center": "0, 0, 0"
-      }
-    },
-    "IsSwinging": false,
-    "IsShooting": false,
-    "IsHurting": false,
-    "Health": {
-      "Name": "Health",
-      "BaseValue": 1,
-      "Current": 1.0,
-      "Max": 1,
-      "Regeneration": 0
-    },
-    "Stamina": {
-      "Name": "Stamina",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 10
-    },
-    "Electricity": {
-      "Name": "Electricity",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 0
-    },
-    "Strength": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Sense": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Speed": {
-      "BaseValue": 100,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 100
-    },
-    "Style": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
-    "Level": 1,
-    "Experience": 0,
-    "Abilities": [],
-    "Conversation": null,
-    "ActivationEffect": null,
-    "AI": {
-      "Name": "WalkInStraightLine"
-    },
-    "CollisionEffect": {
-      "Name": "BulletCollision"
-    },
-    "Temporary": true,
-    "ID": "c9f4a566-77c4-420b-a12d-5ebe239d18f9",
-    "Name": null,
-    "AnimationOffset": "0, 0, 0",
-    "RotationOffset": "0, 0, 0",
-    "RotationPoint": "0, 0, 0",
-    "CastsShadow": false,
-    "Size": "0.05, 0.05, 0.05",
-    "Direction": 3.14159274,
-    "Position": "50.5, 23.50005, 1",
-    "Area": {
-      "Location": {
-        "IsEmpty": false,
-        "X": 50.5,
-        "Y": 23.50005
-      },
-      "Size": "0.05, 0.05",
-      "X": 50.5,
-      "Y": 23.50005,
-      "Width": 0.05,
-      "Height": 0.05,
-      "Left": 50.5,
-      "Top": 23.50005,
-      "Right": 50.55,
-      "Bottom": 23.5500488,
-      "IsEmpty": false
-    },
-    "EquippedWeapon": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "Fists",
-      "Effect": null,
-      "Range": 1,
-      "Spread": 0.0,
-      "Area": 0
-    },
-    "EquippedArmor": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Armor]",
-      "Effect": null
-    },
-    "EquippedGenerator": {
-      "Slot": "Generator",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Generator]",
-      "Effect": null
-    },
-    "EquippedAccessory": {
-      "Slot": "Accessory",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Accessory]",
-      "Effect": null
-    },
-    "Center": "50.525, 23.52505, 1.025"
-  },
-  "d38935a2-a478-4eb8-8daf-cd073b0abfb7": {
-    "Components": {
-      "body": {
-        "CurrentFrame": 0,
-        "Directional": false,
-        "Side": null,
-        "RelativePosition": "0.5, 0.5, 0.5",
-        "RelativeRotation": "0, 0, 0",
-        "Size": 6.0,
-        "YOffset": 0.0,
-        "Animations": {},
-        "Sprites": {
-          "": {
-            "Name": "Components/Hand/Default/Hand"
-          }
-        },
-        "ID": "body",
-        "Name": null,
-        "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
-        "RotationPoint": "3, 3, 9",
-        "CastsShadow": true,
-        "Center": "0, 0, 0"
-      }
-    },
-    "IsSwinging": false,
-    "IsShooting": false,
-    "IsHurting": false,
-    "Health": {
-      "Name": "Health",
-      "BaseValue": 1,
-      "Current": 1.0,
-      "Max": 1,
-      "Regeneration": 0
-    },
-    "Stamina": {
-      "Name": "Stamina",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 10
-    },
-    "Electricity": {
-      "Name": "Electricity",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 0
-    },
-    "Strength": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Sense": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Speed": {
-      "BaseValue": 100,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 100
-    },
-    "Style": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
-    "Level": 1,
-    "Experience": 0,
-    "Abilities": [],
-    "Conversation": null,
-    "ActivationEffect": null,
-    "AI": {
-      "Name": "WalkInStraightLine"
-    },
-    "CollisionEffect": {
-      "Name": "BulletCollision"
-    },
-    "Temporary": true,
-    "ID": "d38935a2-a478-4eb8-8daf-cd073b0abfb7",
-    "Name": null,
-    "AnimationOffset": "0, 0, 0",
-    "RotationOffset": "0, 0, 0",
-    "RotationPoint": "0, 0, 0",
-    "CastsShadow": false,
-    "Size": "0.05, 0.05, 0.05",
-    "Direction": 3.60493612,
-    "Position": "39.0286, 27.5395813, 1",
-    "Area": {
-      "Location": {
-        "IsEmpty": false,
-        "X": 39.0286,
-        "Y": 27.5395813
-      },
-      "Size": "0.05, 0.05",
-      "X": 39.0286,
-      "Y": 27.5395813,
-      "Width": 0.05,
-      "Height": 0.05,
-      "Left": 39.0286,
-      "Top": 27.5395813,
-      "Right": 39.078598,
-      "Bottom": 27.58958,
-      "IsEmpty": false
-    },
-    "EquippedWeapon": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "Fists",
-      "Effect": null,
-      "Range": 1,
-      "Spread": 0.0,
-      "Area": 0
-    },
-    "EquippedArmor": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Armor]",
-      "Effect": null
-    },
-    "EquippedGenerator": {
-      "Slot": "Generator",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Generator]",
-      "Effect": null
-    },
-    "EquippedAccessory": {
-      "Slot": "Accessory",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Accessory]",
-      "Effect": null
-    },
-    "Center": "39.0536, 27.56458, 1.025"
-  },
-  "b5e99d92-0204-44b8-a82c-fb0665bb3c54": {
-    "Components": {
-      "body": {
-        "CurrentFrame": 0,
-        "Directional": false,
-        "Side": null,
-        "RelativePosition": "0.5, 0.5, 0.5",
-        "RelativeRotation": "0, 0, 0",
-        "Size": 6.0,
-        "YOffset": 0.0,
-        "Animations": {},
-        "Sprites": {
-          "": {
-            "Name": "Components/Hand/Default/Hand"
-          }
-        },
-        "ID": "body",
-        "Name": null,
-        "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
-        "RotationPoint": "3, 3, 9",
-        "CastsShadow": true,
-        "Center": "0, 0, 0"
-      }
-    },
-    "IsSwinging": false,
-    "IsShooting": false,
-    "IsHurting": false,
-    "Health": {
-      "Name": "Health",
-      "BaseValue": 1,
-      "Current": 1.0,
-      "Max": 1,
-      "Regeneration": 0
-    },
-    "Stamina": {
-      "Name": "Stamina",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 10
-    },
-    "Electricity": {
-      "Name": "Electricity",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 0
-    },
-    "Strength": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Sense": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Speed": {
-      "BaseValue": 100,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 100
-    },
-    "Style": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
-    "Level": 1,
-    "Experience": 0,
-    "Abilities": [],
-    "Conversation": null,
-    "ActivationEffect": null,
-    "AI": {
-      "Name": "WalkInStraightLine"
-    },
-    "CollisionEffect": {
-      "Name": "BulletCollision"
-    },
-    "Temporary": true,
-    "ID": "b5e99d92-0204-44b8-a82c-fb0665bb3c54",
-    "Name": null,
-    "AnimationOffset": "0, 0, 0",
-    "RotationOffset": "0, 0, 0",
-    "RotationPoint": "0, 0, 0",
-    "CastsShadow": false,
-    "Size": "0.05, 0.05, 0.05",
-    "Direction": 3.97854233,
-    "Position": "32.4298973, 34.20321, 1",
-    "Area": {
-      "Location": {
-        "IsEmpty": false,
-        "X": 32.4298973,
-        "Y": 34.20321
-      },
-      "Size": "0.05, 0.05",
-      "X": 32.4298973,
-      "Y": 34.20321,
-      "Width": 0.05,
-      "Height": 0.05,
-      "Left": 32.4298973,
-      "Top": 34.20321,
-      "Right": 32.4798965,
-      "Bottom": 34.25321,
-      "IsEmpty": false
-    },
-    "EquippedWeapon": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "Fists",
-      "Effect": null,
-      "Range": 1,
-      "Spread": 0.0,
-      "Area": 0
-    },
-    "EquippedArmor": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Armor]",
-      "Effect": null
-    },
-    "EquippedGenerator": {
-      "Slot": "Generator",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Generator]",
-      "Effect": null
-    },
-    "EquippedAccessory": {
-      "Slot": "Accessory",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Accessory]",
-      "Effect": null
-    },
-    "Center": "32.4549, 34.22821, 1.025"
-  },
-  "294b0ffc-ae11-4d33-bc40-4a3b5602a1bf": {
-    "Components": {
-      "body": {
-        "CurrentFrame": 0,
-        "Directional": false,
-        "Side": null,
-        "RelativePosition": "0.5, 0.5, 0.5",
-        "RelativeRotation": "0, 0, 0",
-        "Size": 6.0,
-        "YOffset": 0.0,
-        "Animations": {},
-        "Sprites": {
-          "": {
-            "Name": "Components/Hand/Default/Hand"
-          }
-        },
-        "ID": "body",
-        "Name": null,
-        "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
-        "RotationPoint": "3, 3, 9",
-        "CastsShadow": true,
-        "Center": "0, 0, 0"
-      }
-    },
-    "IsSwinging": false,
-    "IsShooting": false,
-    "IsHurting": false,
-    "Health": {
-      "Name": "Health",
-      "BaseValue": 1,
-      "Current": 1.0,
-      "Max": 1,
-      "Regeneration": 0
-    },
-    "Stamina": {
-      "Name": "Stamina",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 10
-    },
-    "Electricity": {
-      "Name": "Electricity",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 0
-    },
-    "Strength": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Sense": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Speed": {
-      "BaseValue": 100,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 100
-    },
-    "Style": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
-    "Level": 1,
-    "Experience": 0,
-    "Abilities": [],
-    "Conversation": null,
-    "ActivationEffect": null,
-    "AI": {
-      "Name": "WalkInStraightLine"
-    },
-    "CollisionEffect": {
-      "Name": "BulletCollision"
-    },
-    "Temporary": true,
-    "ID": "294b0ffc-ae11-4d33-bc40-4a3b5602a1bf",
-    "Name": null,
-    "AnimationOffset": "0, 0, 0",
-    "RotationOffset": "0, 0, 0",
-    "RotationPoint": "0, 0, 0",
-    "CastsShadow": false,
-    "Size": "0.05, 0.05, 0.05",
-    "Direction": 4.10427475,
-    "Position": "31.623333, 37.3595657, 1",
-    "Area": {
-      "Location": {
-        "IsEmpty": false,
-        "X": 31.623333,
-        "Y": 37.3595657
-      },
-      "Size": "0.05, 0.05",
-      "X": 31.623333,
-      "Y": 37.3595657,
-      "Width": 0.05,
-      "Height": 0.05,
-      "Left": 31.623333,
-      "Top": 37.3595657,
-      "Right": 31.6733322,
-      "Bottom": 37.409565,
-      "IsEmpty": false
-    },
-    "EquippedWeapon": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "Fists",
-      "Effect": null,
-      "Range": 1,
-      "Spread": 0.0,
-      "Area": 0
-    },
-    "EquippedArmor": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Armor]",
-      "Effect": null
-    },
-    "EquippedGenerator": {
-      "Slot": "Generator",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Generator]",
-      "Effect": null
-    },
-    "EquippedAccessory": {
-      "Slot": "Accessory",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Accessory]",
-      "Effect": null
-    },
-    "Center": "31.6483326, 37.3845673, 1.025"
-  },
-  "2ae132c6-c4f7-4adc-894c-0ce9096cf28e": {
-    "Components": {
-      "body": {
-        "CurrentFrame": 0,
-        "Directional": false,
-        "Side": null,
-        "RelativePosition": "0.5, 0.5, 0.5",
-        "RelativeRotation": "0, 0, 0",
-        "Size": 6.0,
-        "YOffset": 0.0,
-        "Animations": {},
-        "Sprites": {
-          "": {
-            "Name": "Components/Hand/Default/Hand"
-          }
-        },
-        "ID": "body",
-        "Name": null,
-        "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
-        "RotationPoint": "3, 3, 9",
-        "CastsShadow": true,
-        "Center": "0, 0, 0"
-      }
-    },
-    "IsSwinging": false,
-    "IsShooting": false,
-    "IsHurting": false,
-    "Health": {
-      "Name": "Health",
-      "BaseValue": 1,
-      "Current": 1.0,
-      "Max": 1,
-      "Regeneration": 0
-    },
-    "Stamina": {
-      "Name": "Stamina",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 10
-    },
-    "Electricity": {
-      "Name": "Electricity",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 0
-    },
-    "Strength": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Sense": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Speed": {
-      "BaseValue": 100,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 100
-    },
-    "Style": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
-    "Level": 1,
-    "Experience": 0,
-    "Abilities": [],
-    "Conversation": null,
-    "ActivationEffect": null,
-    "AI": {
-      "Name": "WalkInStraightLine"
-    },
-    "CollisionEffect": {
-      "Name": "BulletCollision"
-    },
-    "Temporary": true,
-    "ID": "2ae132c6-c4f7-4adc-894c-0ce9096cf28e",
-    "Name": null,
-    "AnimationOffset": "0, 0, 0",
-    "RotationOffset": "0, 0, 0",
-    "RotationPoint": "0, 0, 0",
-    "CastsShadow": false,
-    "Size": "0.05, 0.05, 0.05",
-    "Direction": 4.43118858,
-    "Position": "29.68438, 44.48733, 1",
-    "Area": {
-      "Location": {
-        "IsEmpty": false,
-        "X": 29.68438,
-        "Y": 44.48733
-      },
-      "Size": "0.05, 0.05",
-      "X": 29.68438,
-      "Y": 44.48733,
-      "Width": 0.05,
-      "Height": 0.05,
-      "Left": 29.68438,
-      "Top": 44.48733,
-      "Right": 29.7343788,
-      "Bottom": 44.53733,
-      "IsEmpty": false
-    },
-    "EquippedWeapon": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "Fists",
-      "Effect": null,
-      "Range": 1,
-      "Spread": 0.0,
-      "Area": 0
-    },
-    "EquippedArmor": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Armor]",
-      "Effect": null
-    },
-    "EquippedGenerator": {
-      "Slot": "Generator",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Generator]",
-      "Effect": null
-    },
-    "EquippedAccessory": {
-      "Slot": "Accessory",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Accessory]",
-      "Effect": null
-    },
-    "Center": "29.70938, 44.5123329, 1.025"
-  },
-  "e50ac471-fe6d-4339-ad0b-012a4186fdc2": {
-    "Components": {
-      "body": {
-        "CurrentFrame": 0,
-        "Directional": false,
-        "Side": null,
-        "RelativePosition": "0.5, 0.5, 0.5",
-        "RelativeRotation": "0, 0, 0",
-        "Size": 6.0,
-        "YOffset": 0.0,
-        "Animations": {},
-        "Sprites": {
-          "": {
-            "Name": "Components/Hand/Default/Hand"
-          }
-        },
-        "ID": "body",
-        "Name": null,
-        "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
-        "RotationPoint": "3, 3, 9",
-        "CastsShadow": true,
-        "Center": "0, 0, 0"
-      }
-    },
-    "IsSwinging": false,
-    "IsShooting": false,
-    "IsHurting": false,
-    "Health": {
-      "Name": "Health",
-      "BaseValue": 1,
-      "Current": 1.0,
-      "Max": 1,
-      "Regeneration": 0
-    },
-    "Stamina": {
-      "Name": "Stamina",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 10
-    },
-    "Electricity": {
-      "Name": "Electricity",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 0
-    },
-    "Strength": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Sense": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Speed": {
-      "BaseValue": 100,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 100
-    },
-    "Style": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
-    "Level": 1,
-    "Experience": 0,
-    "Abilities": [],
-    "Conversation": null,
-    "ActivationEffect": null,
-    "AI": {
-      "Name": "WalkInStraightLine"
-    },
-    "CollisionEffect": {
-      "Name": "BulletCollision"
-    },
-    "Temporary": true,
-    "ID": "e50ac471-fe6d-4339-ad0b-012a4186fdc2",
-    "Name": null,
-    "AnimationOffset": "0, 0, 0",
-    "RotationOffset": "0, 0, 0",
-    "RotationPoint": "0, 0, 0",
-    "CastsShadow": false,
-    "Size": "0.05, 0.05, 0.05",
-    "Direction": 4.712389,
-    "Position": "30.166729, 50.5, 1",
-    "Area": {
-      "Location": {
-        "IsEmpty": false,
-        "X": 30.166729,
-        "Y": 50.5
-      },
-      "Size": "0.05, 0.05",
-      "X": 30.166729,
-      "Y": 50.5,
-      "Width": 0.05,
-      "Height": 0.05,
-      "Left": 30.166729,
-      "Top": 50.5,
-      "Right": 30.2167282,
-      "Bottom": 50.55,
-      "IsEmpty": false
-    },
-    "EquippedWeapon": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "Fists",
-      "Effect": null,
-      "Range": 1,
-      "Spread": 0.0,
-      "Area": 0
-    },
-    "EquippedArmor": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Armor]",
-      "Effect": null
-    },
-    "EquippedGenerator": {
-      "Slot": "Generator",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Generator]",
-      "Effect": null
-    },
-    "EquippedAccessory": {
-      "Slot": "Accessory",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Accessory]",
-      "Effect": null
-    },
-    "Center": "30.1917286, 50.525, 1.025"
-  },
-  "2c784571-f168-41b0-95db-165b484d6a38": {
-    "Components": {
-      "body": {
-        "CurrentFrame": 0,
-        "Directional": false,
-        "Side": null,
-        "RelativePosition": "0.5, 0.5, 0.5",
-        "RelativeRotation": "0, 0, 0",
-        "Size": 6.0,
-        "YOffset": 0.0,
-        "Animations": {},
-        "Sprites": {
-          "": {
-            "Name": "Components/Hand/Default/Hand"
-          }
-        },
-        "ID": "body",
-        "Name": null,
-        "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
-        "RotationPoint": "3, 3, 9",
-        "CastsShadow": true,
-        "Center": "0, 0, 0"
-      }
-    },
-    "IsSwinging": false,
-    "IsShooting": false,
-    "IsHurting": false,
-    "Health": {
-      "Name": "Health",
-      "BaseValue": 1,
-      "Current": 1.0,
-      "Max": 1,
-      "Regeneration": 0
-    },
-    "Stamina": {
-      "Name": "Stamina",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 10
-    },
-    "Electricity": {
-      "Name": "Electricity",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 0
-    },
-    "Strength": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Sense": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Speed": {
-      "BaseValue": 100,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 100
-    },
-    "Style": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
-    "Level": 1,
-    "Experience": 0,
-    "Abilities": [],
-    "Conversation": null,
-    "ActivationEffect": null,
-    "AI": {
-      "Name": "WalkInStraightLine"
-    },
-    "CollisionEffect": {
-      "Name": "BulletCollision"
-    },
-    "Temporary": true,
-    "ID": "2c784571-f168-41b0-95db-165b484d6a38",
-    "Name": null,
-    "AnimationOffset": "0, 0, 0",
-    "RotationOffset": "0, 0, 0",
-    "RotationPoint": "0, 0, 0",
-    "CastsShadow": false,
-    "Size": "0.05, 0.05, 0.05",
-    "Direction": 4.712389,
-    "Position": "40.8333664, 50.5, 1",
-    "Area": {
-      "Location": {
-        "IsEmpty": false,
-        "X": 40.8333664,
-        "Y": 50.5
-      },
-      "Size": "0.05, 0.05",
-      "X": 40.8333664,
-      "Y": 50.5,
-      "Width": 0.05,
-      "Height": 0.05,
-      "Left": 40.8333664,
-      "Top": 50.5,
-      "Right": 40.8833656,
-      "Bottom": 50.55,
-      "IsEmpty": false
-    },
-    "EquippedWeapon": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "Fists",
-      "Effect": null,
-      "Range": 1,
-      "Spread": 0.0,
-      "Area": 0
-    },
-    "EquippedArmor": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Armor]",
-      "Effect": null
-    },
-    "EquippedGenerator": {
-      "Slot": "Generator",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Generator]",
-      "Effect": null
-    },
-    "EquippedAccessory": {
-      "Slot": "Accessory",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Accessory]",
-      "Effect": null
-    },
-    "Center": "40.8583679, 50.525, 1.025"
-  },
-  "1cd7b42f-e865-4e63-b391-4784d3f11713": {
-    "Components": {
-      "body": {
-        "CurrentFrame": 0,
-        "Directional": false,
-        "Side": null,
-        "RelativePosition": "0.5, 0.5, 0.5",
-        "RelativeRotation": "0, 0, 0",
-        "Size": 6.0,
-        "YOffset": 0.0,
-        "Animations": {},
-        "Sprites": {
-          "": {
-            "Name": "Components/Hand/Default/Hand"
-          }
-        },
-        "ID": "body",
-        "Name": null,
-        "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
-        "RotationPoint": "3, 3, 9",
-        "CastsShadow": true,
-        "Center": "0, 0, 0"
-      }
-    },
-    "IsSwinging": false,
-    "IsShooting": false,
-    "IsHurting": false,
-    "Health": {
-      "Name": "Health",
-      "BaseValue": 1,
-      "Current": 1.0,
-      "Max": 1,
-      "Regeneration": 0
-    },
-    "Stamina": {
-      "Name": "Stamina",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 10
-    },
-    "Electricity": {
-      "Name": "Electricity",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 0
-    },
-    "Strength": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Sense": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Speed": {
-      "BaseValue": 100,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 100
-    },
-    "Style": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
-    "Level": 1,
-    "Experience": 0,
-    "Abilities": [],
-    "Conversation": null,
-    "ActivationEffect": null,
-    "AI": {
-      "Name": "WalkInStraightLine"
-    },
-    "CollisionEffect": {
-      "Name": "BulletCollision"
-    },
-    "Temporary": true,
-    "ID": "1cd7b42f-e865-4e63-b391-4784d3f11713",
-    "Name": null,
-    "AnimationOffset": "0, 0, 0",
-    "RotationOffset": "0, 0, 0",
-    "RotationPoint": "0, 0, 0",
-    "CastsShadow": false,
-    "Size": "0.05, 0.05, 0.05",
-    "Direction": 4.712389,
-    "Position": "42.1666946, 50.5, 1",
-    "Area": {
-      "Location": {
-        "IsEmpty": false,
-        "X": 42.1666946,
-        "Y": 50.5
-      },
-      "Size": "0.05, 0.05",
-      "X": 42.1666946,
-      "Y": 50.5,
-      "Width": 0.05,
-      "Height": 0.05,
-      "Left": 42.1666946,
-      "Top": 50.5,
-      "Right": 42.2166939,
-      "Bottom": 50.55,
-      "IsEmpty": false
-    },
-    "EquippedWeapon": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "Fists",
-      "Effect": null,
-      "Range": 1,
-      "Spread": 0.0,
-      "Area": 0
-    },
-    "EquippedArmor": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Armor]",
-      "Effect": null
-    },
-    "EquippedGenerator": {
-      "Slot": "Generator",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Generator]",
-      "Effect": null
-    },
-    "EquippedAccessory": {
-      "Slot": "Accessory",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Accessory]",
-      "Effect": null
-    },
-    "Center": "42.1916962, 50.525, 1.025"
-  },
-  "b3d1a265-9241-4ee3-ac98-4ab2e2bd2c9b": {
-    "Components": {
-      "body": {
-        "CurrentFrame": 0,
-        "Directional": false,
-        "Side": null,
-        "RelativePosition": "0.5, 0.5, 0.5",
-        "RelativeRotation": "0, 0, 0",
-        "Size": 6.0,
-        "YOffset": 0.0,
-        "Animations": {},
-        "Sprites": {
-          "": {
-            "Name": "Components/Hand/Default/Hand"
-          }
-        },
-        "ID": "body",
-        "Name": null,
-        "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
-        "RotationPoint": "3, 3, 9",
-        "CastsShadow": true,
-        "Center": "0, 0, 0"
-      }
-    },
-    "IsSwinging": false,
-    "IsShooting": false,
-    "IsHurting": false,
-    "Health": {
-      "Name": "Health",
-      "BaseValue": 1,
-      "Current": 1.0,
-      "Max": 1,
-      "Regeneration": 0
-    },
-    "Stamina": {
-      "Name": "Stamina",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 10
-    },
-    "Electricity": {
-      "Name": "Electricity",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 0
-    },
-    "Strength": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Sense": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Speed": {
-      "BaseValue": 100,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 100
-    },
-    "Style": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
-    "Level": 1,
-    "Experience": 0,
-    "Abilities": [],
-    "Conversation": null,
-    "ActivationEffect": null,
-    "AI": {
-      "Name": "WalkInStraightLine"
-    },
-    "CollisionEffect": {
-      "Name": "BulletCollision"
-    },
-    "Temporary": true,
-    "ID": "b3d1a265-9241-4ee3-ac98-4ab2e2bd2c9b",
-    "Name": null,
-    "AnimationOffset": "0, 0, 0",
-    "RotationOffset": "0, 0, 0",
-    "RotationPoint": "0, 0, 0",
-    "CastsShadow": false,
-    "Size": "0.05, 0.05, 0.05",
-    "Direction": 4.712389,
-    "Position": "43.5000229, 50.5, 1",
-    "Area": {
-      "Location": {
-        "IsEmpty": false,
-        "X": 43.5000229,
-        "Y": 50.5
-      },
-      "Size": "0.05, 0.05",
-      "X": 43.5000229,
-      "Y": 50.5,
-      "Width": 0.05,
-      "Height": 0.05,
-      "Left": 43.5000229,
-      "Top": 50.5,
-      "Right": 43.5500221,
-      "Bottom": 50.55,
-      "IsEmpty": false
-    },
-    "EquippedWeapon": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "Fists",
-      "Effect": null,
-      "Range": 1,
-      "Spread": 0.0,
-      "Area": 0
-    },
-    "EquippedArmor": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Armor]",
-      "Effect": null
-    },
-    "EquippedGenerator": {
-      "Slot": "Generator",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Generator]",
-      "Effect": null
-    },
-    "EquippedAccessory": {
-      "Slot": "Accessory",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Accessory]",
-      "Effect": null
-    },
-    "Center": "43.5250244, 50.525, 1.025"
-  },
-  "3fbdc5ed-103e-4a84-accd-1454181b0843": {
-    "Components": {
-      "body": {
-        "CurrentFrame": 0,
-        "Directional": false,
-        "Side": null,
-        "RelativePosition": "0.5, 0.5, 0.5",
-        "RelativeRotation": "0, 0, 0",
-        "Size": 6.0,
-        "YOffset": 0.0,
-        "Animations": {},
-        "Sprites": {
-          "": {
-            "Name": "Components/Hand/Default/Hand"
-          }
-        },
-        "ID": "body",
-        "Name": null,
-        "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
-        "RotationPoint": "3, 3, 9",
-        "CastsShadow": true,
-        "Center": "0, 0, 0"
-      }
-    },
-    "IsSwinging": false,
-    "IsShooting": false,
-    "IsHurting": false,
-    "Health": {
-      "Name": "Health",
-      "BaseValue": 1,
-      "Current": 1.0,
-      "Max": 1,
-      "Regeneration": 0
-    },
-    "Stamina": {
-      "Name": "Stamina",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 10
-    },
-    "Electricity": {
-      "Name": "Electricity",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 0
-    },
-    "Strength": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Sense": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Speed": {
-      "BaseValue": 100,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 100
-    },
-    "Style": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
-    "Level": 1,
-    "Experience": 0,
-    "Abilities": [],
-    "Conversation": null,
-    "ActivationEffect": null,
-    "AI": {
-      "Name": "WalkInStraightLine"
-    },
-    "CollisionEffect": {
-      "Name": "BulletCollision"
-    },
-    "Temporary": true,
-    "ID": "3fbdc5ed-103e-4a84-accd-1454181b0843",
-    "Name": null,
-    "AnimationOffset": "0, 0, 0",
-    "RotationOffset": "0, 0, 0",
-    "RotationPoint": "0, 0, 0",
-    "CastsShadow": false,
-    "Size": "0.05, 0.05, 0.05",
-    "Direction": 4.712389,
-    "Position": "44.83335, 50.5, 1",
-    "Area": {
-      "Location": {
-        "IsEmpty": false,
-        "X": 44.83335,
-        "Y": 50.5
-      },
-      "Size": "0.05, 0.05",
-      "X": 44.83335,
-      "Y": 50.5,
-      "Width": 0.05,
-      "Height": 0.05,
-      "Left": 44.83335,
-      "Top": 50.5,
-      "Right": 44.88335,
-      "Bottom": 50.55,
-      "IsEmpty": false
-    },
-    "EquippedWeapon": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "Fists",
-      "Effect": null,
-      "Range": 1,
-      "Spread": 0.0,
-      "Area": 0
-    },
-    "EquippedArmor": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Armor]",
-      "Effect": null
-    },
-    "EquippedGenerator": {
-      "Slot": "Generator",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Generator]",
-      "Effect": null
-    },
-    "EquippedAccessory": {
-      "Slot": "Accessory",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Accessory]",
-      "Effect": null
-    },
-    "Center": "44.8583527, 50.525, 1.025"
-  },
-  "dfc323cf-ed0d-491d-ae85-c245c6c8f9ab": {
-    "Components": {
-      "body": {
-        "CurrentFrame": 0,
-        "Directional": false,
-        "Side": null,
-        "RelativePosition": "0.5, 0.5, 0.5",
-        "RelativeRotation": "0, 0, 0",
-        "Size": 6.0,
-        "YOffset": 0.0,
-        "Animations": {},
-        "Sprites": {
-          "": {
-            "Name": "Components/Hand/Default/Hand"
-          }
-        },
-        "ID": "body",
-        "Name": null,
-        "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
-        "RotationPoint": "3, 3, 9",
-        "CastsShadow": true,
-        "Center": "0, 0, 0"
-      }
-    },
-    "IsSwinging": false,
-    "IsShooting": false,
-    "IsHurting": false,
-    "Health": {
-      "Name": "Health",
-      "BaseValue": 1,
-      "Current": 1.0,
-      "Max": 1,
-      "Regeneration": 0
-    },
-    "Stamina": {
-      "Name": "Stamina",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 10
-    },
-    "Electricity": {
-      "Name": "Electricity",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 0
-    },
-    "Strength": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Sense": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Speed": {
-      "BaseValue": 100,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 100
-    },
-    "Style": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
-    "Level": 1,
-    "Experience": 0,
-    "Abilities": [],
-    "Conversation": null,
-    "ActivationEffect": null,
-    "AI": {
-      "Name": "WalkInStraightLine"
-    },
-    "CollisionEffect": {
-      "Name": "BulletCollision"
-    },
-    "Temporary": true,
-    "ID": "dfc323cf-ed0d-491d-ae85-c245c6c8f9ab",
-    "Name": null,
-    "AnimationOffset": "0, 0, 0",
-    "RotationOffset": "0, 0, 0",
-    "RotationPoint": "0, 0, 0",
-    "CastsShadow": false,
-    "Size": "0.05, 0.05, 0.05",
-    "Direction": 4.712389,
-    "Position": "46.16668, 50.5, 1",
-    "Area": {
-      "Location": {
-        "IsEmpty": false,
-        "X": 46.16668,
-        "Y": 50.5
-      },
-      "Size": "0.05, 0.05",
-      "X": 46.16668,
-      "Y": 50.5,
-      "Width": 0.05,
-      "Height": 0.05,
-      "Left": 46.16668,
-      "Top": 50.5,
-      "Right": 46.21668,
-      "Bottom": 50.55,
-      "IsEmpty": false
-    },
-    "EquippedWeapon": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "Fists",
-      "Effect": null,
-      "Range": 1,
-      "Spread": 0.0,
-      "Area": 0
-    },
-    "EquippedArmor": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Armor]",
-      "Effect": null
-    },
-    "EquippedGenerator": {
-      "Slot": "Generator",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Generator]",
-      "Effect": null
-    },
-    "EquippedAccessory": {
-      "Slot": "Accessory",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Accessory]",
-      "Effect": null
-    },
-    "Center": "46.19168, 50.525, 1.025"
-  },
-  "6017dfd3-c827-48ef-badb-06879dfb272f": {
-    "Components": {
-      "body": {
-        "CurrentFrame": 0,
-        "Directional": false,
-        "Side": null,
-        "RelativePosition": "0.5, 0.5, 0.5",
-        "RelativeRotation": "0, 0, 0",
-        "Size": 6.0,
-        "YOffset": 0.0,
-        "Animations": {},
-        "Sprites": {
-          "": {
-            "Name": "Components/Hand/Default/Hand"
-          }
-        },
-        "ID": "body",
-        "Name": null,
-        "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
-        "RotationPoint": "3, 3, 9",
-        "CastsShadow": true,
-        "Center": "0, 0, 0"
-      }
-    },
-    "IsSwinging": false,
-    "IsShooting": false,
-    "IsHurting": false,
-    "Health": {
-      "Name": "Health",
-      "BaseValue": 1,
-      "Current": 1.0,
-      "Max": 1,
-      "Regeneration": 0
-    },
-    "Stamina": {
-      "Name": "Stamina",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 10
-    },
-    "Electricity": {
-      "Name": "Electricity",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 0
-    },
-    "Strength": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Sense": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Speed": {
-      "BaseValue": 100,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 100
-    },
-    "Style": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
-    "Level": 1,
-    "Experience": 0,
-    "Abilities": [],
-    "Conversation": null,
-    "ActivationEffect": null,
-    "AI": {
-      "Name": "WalkInStraightLine"
-    },
-    "CollisionEffect": {
-      "Name": "BulletCollision"
-    },
-    "Temporary": true,
-    "ID": "6017dfd3-c827-48ef-badb-06879dfb272f",
-    "Name": null,
-    "AnimationOffset": "0, 0, 0",
-    "RotationOffset": "0, 0, 0",
-    "RotationPoint": "0, 0, 0",
-    "CastsShadow": false,
-    "Size": "0.05, 0.05, 0.05",
-    "Direction": 4.712389,
-    "Position": "47.5000076, 50.5, 1",
-    "Area": {
-      "Location": {
-        "IsEmpty": false,
-        "X": 47.5000076,
-        "Y": 50.5
-      },
-      "Size": "0.05, 0.05",
-      "X": 47.5000076,
-      "Y": 50.5,
-      "Width": 0.05,
-      "Height": 0.05,
-      "Left": 47.5000076,
-      "Top": 50.5,
-      "Right": 47.5500069,
-      "Bottom": 50.55,
-      "IsEmpty": false
-    },
-    "EquippedWeapon": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "Fists",
-      "Effect": null,
-      "Range": 1,
-      "Spread": 0.0,
-      "Area": 0
-    },
-    "EquippedArmor": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Armor]",
-      "Effect": null
-    },
-    "EquippedGenerator": {
-      "Slot": "Generator",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Generator]",
-      "Effect": null
-    },
-    "EquippedAccessory": {
-      "Slot": "Accessory",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Accessory]",
-      "Effect": null
-    },
-    "Center": "47.52501, 50.525, 1.025"
-  },
-  "57cd9cc3-d00a-4b99-bff4-5636f7a46fd4": {
-    "Components": {
-      "body": {
-        "CurrentFrame": 0,
-        "Directional": false,
-        "Side": null,
-        "RelativePosition": "0.5, 0.5, 0.5",
-        "RelativeRotation": "0, 0, 0",
-        "Size": 6.0,
-        "YOffset": 0.0,
-        "Animations": {},
-        "Sprites": {
-          "": {
-            "Name": "Components/Hand/Default/Hand"
-          }
-        },
-        "ID": "body",
-        "Name": null,
-        "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
-        "RotationPoint": "3, 3, 9",
-        "CastsShadow": true,
-        "Center": "0, 0, 0"
-      }
-    },
-    "IsSwinging": false,
-    "IsShooting": false,
-    "IsHurting": false,
-    "Health": {
-      "Name": "Health",
-      "BaseValue": 1,
-      "Current": 1.0,
-      "Max": 1,
-      "Regeneration": 0
-    },
-    "Stamina": {
-      "Name": "Stamina",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 10
-    },
-    "Electricity": {
-      "Name": "Electricity",
-      "BaseValue": 0,
-      "Current": 0.0,
-      "Max": 0,
-      "Regeneration": 0
-    },
-    "Strength": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Sense": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "Speed": {
-      "BaseValue": 100,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 100
-    },
-    "Style": {
-      "BaseValue": 0,
-      "Multiplier": 1,
-      "Modifier": 0,
-      "CurrentValue": 1
-    },
-    "RelativeLightPosition": "0, 0, 0",
-    "Brightness": "0.5, 0.1, 0.5",
-    "Level": 1,
-    "Experience": 0,
-    "Abilities": [],
-    "Conversation": null,
-    "ActivationEffect": null,
-    "AI": {
-      "Name": "WalkInStraightLine"
-    },
-    "CollisionEffect": {
-      "Name": "BulletCollision"
-    },
-    "Temporary": true,
-    "ID": "57cd9cc3-d00a-4b99-bff4-5636f7a46fd4",
-    "Name": null,
-    "AnimationOffset": "0, 0, 0",
-    "RotationOffset": "0, 0, 0",
-    "RotationPoint": "0, 0, 0",
-    "CastsShadow": false,
-    "Size": "0.05, 0.05, 0.05",
-    "Direction": 4.712389,
-    "Position": "48.8333359, 50.5, 1",
-    "Area": {
-      "Location": {
-        "IsEmpty": false,
-        "X": 48.8333359,
-        "Y": 50.5
-      },
-      "Size": "0.05, 0.05",
-      "X": 48.8333359,
-      "Y": 50.5,
-      "Width": 0.05,
-      "Height": 0.05,
-      "Left": 48.8333359,
-      "Top": 50.5,
-      "Right": 48.8833351,
-      "Bottom": 50.55,
-      "IsEmpty": false
-    },
-    "EquippedWeapon": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "Fists",
-      "Effect": null,
-      "Range": 1,
-      "Spread": 0.0,
-      "Area": 0
-    },
-    "EquippedArmor": {
-      "Slot": "Armor",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Armor]",
-      "Effect": null
-    },
-    "EquippedGenerator": {
-      "Slot": "Generator",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Generator]",
-      "Effect": null
-    },
-    "EquippedAccessory": {
-      "Slot": "Accessory",
-      "Damage": 0,
-      "Defense": 0,
-      "Health": 0,
-      "Stamina": 0,
-      "Capacity": 0,
-      "Strength": 0,
-      "Speed": 0,
-      "Sense": 0,
-      "Style": 0,
-      "Quantity": 1,
-      "Sprite": {
-        "Name": "Sprites/white_dot"
-      },
-      "Name": "[No Accessory]",
-      "Effect": null
-    },
-    "Center": "48.8583374, 50.525, 1.025"
   }
 }
