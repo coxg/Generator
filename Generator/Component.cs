@@ -13,7 +13,7 @@ namespace Generator
             string id,
             Vector3 relativePosition,
             float relativeSize,
-            Vector3 rotationPoint,
+            Vector3 baseRotationPoint,
             Vector3? relativeRotation = null,
             string spriteFile = null,
             bool directional = false,
@@ -24,9 +24,9 @@ namespace Generator
         )
         {
             RotationPoint = new Vector3(
-                rotationPoint.X * 6,
-                rotationPoint.Y * 6,
-                rotationPoint.Z * 18); // TODO: What's going on here?
+                baseRotationPoint.X * 6,
+                baseRotationPoint.Y * 6,
+                baseRotationPoint.Z * 18); // TODO: What's going on here?
             var idParts = id.Split('/');
             ID = idParts[0];
             if (idParts.Length == 2)

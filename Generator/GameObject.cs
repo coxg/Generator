@@ -345,7 +345,7 @@ namespace Generator
                     directional: true,
                     relativePosition: new Vector3(.5f, .506f, 1.26f),
                     relativeSize: .32f,
-                    rotationPoint: new Vector3(.16f, 0, .256f),
+                    baseRotationPoint: new Vector3(.16f, 0, .256f),
                     yOffset: -.05f)
                 },
                 {"Face", new Component(
@@ -354,7 +354,7 @@ namespace Generator
                     directional: true,
                     relativePosition: new Vector3(.5f, .57f, 1),
                     relativeSize: .14f,
-                    rotationPoint: new Vector3(.08f, 0, .066f),
+                    baseRotationPoint: new Vector3(.08f, 0, .066f),
                     yOffset: -.05f,
                     castsShadow: false)
                 },
@@ -364,7 +364,7 @@ namespace Generator
                     directional: true,
                     relativePosition: new Vector3(.5f, .505f, .47f),
                     relativeSize: .16f,
-                    rotationPoint: new Vector3(.08f, 0, .08f))
+                    baseRotationPoint: new Vector3(.08f, 0, .08f))
                 },
                 {"Arm/Left", new Component(
                     id: "Arm/Left",
@@ -372,7 +372,7 @@ namespace Generator
                     relativePosition: new Vector3(.08f, .504f, .515f),
                     relativeSize: .08f,
                     relativeRotation: new Vector3(0, .4f, 0),
-                    rotationPoint: new Vector3(.04f, 0, .023f),
+                    baseRotationPoint: new Vector3(.04f, 0, .023f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -396,7 +396,7 @@ namespace Generator
                     relativePosition: new Vector3(.92f, .504f, .515f),
                     relativeSize: .08f,
                     relativeRotation: new Vector3(0, -.4f, 0),
-                    rotationPoint: new Vector3(.04f, 0, .023f),
+                    baseRotationPoint: new Vector3(.04f, 0, .023f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -419,7 +419,7 @@ namespace Generator
                     spriteFile: ComponentSpriteFileName,
                     relativePosition: new Vector3(-.25f, .5045f, .35f),
                     relativeSize: .08f,
-                    rotationPoint: new Vector3(.04f, 0, .032f),
+                    baseRotationPoint: new Vector3(.04f, 0, .032f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -442,7 +442,7 @@ namespace Generator
                     spriteFile: ComponentSpriteFileName,
                     relativePosition: new Vector3(1.25f, .5045f, .35f),
                     relativeSize: .08f,
-                    rotationPoint: new Vector3(.04f, 0, .032f),
+                    baseRotationPoint: new Vector3(.04f, 0, .032f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -465,7 +465,7 @@ namespace Generator
                     spriteFile: ComponentSpriteFileName,
                     relativePosition: new Vector3(.23f, .504f, .14f),
                     relativeSize: .08f,
-                    rotationPoint: new Vector3(.04f, 0, .018f),
+                    baseRotationPoint: new Vector3(.04f, 0, .018f),
                     yOffset: .15f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -488,7 +488,7 @@ namespace Generator
                     spriteFile: ComponentSpriteFileName,
                     relativePosition: new Vector3(.77f, .504f, .14f),
                     relativeSize: .08f,
-                    rotationPoint: new Vector3(.04f, 0, .018f),
+                    baseRotationPoint: new Vector3(.04f, 0, .018f),
                     yOffset: .15f,
                     animations: new Dictionary<string, Animation>()
                     {

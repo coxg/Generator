@@ -105,7 +105,7 @@ public static class Actions
                                 id: "Hand",
                                 relativePosition: new Vector3(.5f, .5f, .5f),
                                 relativeSize: 1,
-                                rotationPoint: new Vector3(.5f, .5f, .5f))
+                                baseRotationPoint: new Vector3(.5f, .5f, .5f))
                             }
                         }
                     );
