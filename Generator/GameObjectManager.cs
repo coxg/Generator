@@ -117,6 +117,7 @@ namespace Generator
             }
             Globals.Party.Members.Add(ObjectFromID["niels"]);
             Globals.Player = ObjectFromID["niels"];
+            GameControl.lightingRenderTargets = new Dictionary<GameObject, RenderTarget2D>();
         }
 
         public static void Initialize()

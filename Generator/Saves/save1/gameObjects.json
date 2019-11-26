@@ -70,7 +70,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.36451003, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -121,7 +121,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.36451003, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -172,7 +172,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.36451003, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -223,7 +223,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.36451003, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -274,7 +274,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.36451003, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -325,7 +325,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.36451003, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -536,23 +536,23 @@
     "RotationPoint": "0, 0, 0",
     "CastsShadow": true,
     "Size": "1, 1, 1",
-    "Direction": 3.27800846,
-    "Position": "49.4799843, 52.9394455, 0",
+    "Direction": 3.14159274,
+    "Position": "50, 50, 0",
     "Area": {
       "Location": {
         "IsEmpty": false,
-        "X": 49.4799843,
-        "Y": 52.9394455
+        "X": 50.0,
+        "Y": 50.0
       },
       "Size": "1, 1",
-      "X": 49.4799843,
-      "Y": 52.9394455,
+      "X": 50.0,
+      "Y": 50.0,
       "Width": 1.0,
       "Height": 1.0,
-      "Left": 49.4799843,
-      "Top": 52.9394455,
-      "Right": 50.4799843,
-      "Bottom": 53.9394455,
+      "Left": 50.0,
+      "Top": 50.0,
+      "Right": 51.0,
+      "Bottom": 51.0,
       "IsEmpty": false
     },
     "EquippedWeapon": {
@@ -630,7 +630,7 @@
       "Name": "[No Accessory]",
       "Effect": null
     },
-    "Center": "49.9799843, 53.4394455, 0.5"
+    "Center": "50.5, 50.5, 0.5"
   },
   "farrah": {
     "Components": {
@@ -703,7 +703,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.129992157, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -754,7 +754,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.129992157, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -805,7 +805,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.129992157, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -856,7 +856,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.129992157, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -907,7 +907,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.129992157, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -958,7 +958,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.129992157, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -1212,23 +1212,23 @@
     "RotationPoint": "0, 0, 0",
     "CastsShadow": true,
     "Size": "1, 1, 1",
-    "Direction": 0.5863795,
-    "Position": "53.27848, 51.2551765, 0",
+    "Direction": 3.14159322,
+    "Position": "50, 55, 0",
     "Area": {
       "Location": {
         "IsEmpty": false,
-        "X": 53.27848,
-        "Y": 51.2551765
+        "X": 50.0,
+        "Y": 55.0
       },
       "Size": "1, 1",
-      "X": 53.27848,
-      "Y": 51.2551765,
+      "X": 50.0,
+      "Y": 55.0,
       "Width": 1.0,
       "Height": 1.0,
-      "Left": 53.27848,
-      "Top": 51.2551765,
-      "Right": 54.27848,
-      "Bottom": 52.2551765,
+      "Left": 50.0,
+      "Top": 55.0,
+      "Right": 51.0,
+      "Bottom": 56.0,
       "IsEmpty": false
     },
     "EquippedWeapon": {
@@ -1306,7 +1306,7 @@
       "Name": "[No Accessory]",
       "Effect": null
     },
-    "Center": "53.77848, 51.7551765, 0.5"
+    "Center": "50.5, 55.5, 0.5"
   },
   "angry terrain": {
     "Components": {
@@ -1852,23 +1852,23 @@
     "RotationPoint": "0, 0, 0",
     "CastsShadow": true,
     "Size": "1, 1, 1",
-    "Direction": 1.80903137,
-    "Position": "54.2924576, 51.67219, 0",
+    "Direction": 3.836331,
+    "Position": "53.1779861, 53.8135834, 0",
     "Area": {
       "Location": {
         "IsEmpty": false,
-        "X": 54.2924576,
-        "Y": 51.67219
+        "X": 53.1779861,
+        "Y": 53.8135834
       },
       "Size": "1, 1",
-      "X": 54.2924576,
-      "Y": 51.67219,
+      "X": 53.1779861,
+      "Y": 53.8135834,
       "Width": 1.0,
       "Height": 1.0,
-      "Left": 54.2924576,
-      "Top": 51.67219,
-      "Right": 55.2924576,
-      "Bottom": 52.67219,
+      "Left": 53.1779861,
+      "Top": 53.8135834,
+      "Right": 54.1779861,
+      "Bottom": 54.8135834,
       "IsEmpty": false
     },
     "EquippedWeapon": {
@@ -1946,7 +1946,7 @@
       "Name": "[No Accessory]",
       "Effect": null
     },
-    "Center": "54.7924576, 52.17219, 0.5"
+    "Center": "53.6779861, 54.3135834, 0.5"
   },
   "building": {
     "Components": {
