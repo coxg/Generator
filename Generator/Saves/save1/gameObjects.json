@@ -390,21 +390,25 @@
       "Regeneration": 0
     },
     "Strength": {
+      "BaseValue": 10,
       "Multiplier": 1,
       "Modifier": 0,
       "CurrentValue": 10
     },
     "Sense": {
+      "BaseValue": 90,
       "Multiplier": 1,
       "Modifier": 0,
       "CurrentValue": 90
     },
     "Speed": {
+      "BaseValue": 100,
       "Multiplier": 1,
       "Modifier": 0,
       "CurrentValue": 100
     },
     "Style": {
+      "BaseValue": 90,
       "Multiplier": 1,
       "Modifier": 0,
       "CurrentValue": 90
@@ -1019,21 +1023,25 @@
       "Regeneration": 0
     },
     "Strength": {
+      "BaseValue": 10,
       "Multiplier": 1,
       "Modifier": 0,
       "CurrentValue": 10
     },
     "Sense": {
+      "BaseValue": 90,
       "Multiplier": 1,
       "Modifier": 0,
       "CurrentValue": 90
     },
     "Speed": {
+      "BaseValue": 20,
       "Multiplier": 1,
       "Modifier": 0,
       "CurrentValue": 20
     },
     "Style": {
+      "BaseValue": 90,
       "Multiplier": 1,
       "Modifier": 0,
       "CurrentValue": 90
@@ -1691,21 +1699,25 @@
       "Regeneration": 0
     },
     "Strength": {
+      "BaseValue": 10,
       "Multiplier": 1,
       "Modifier": 0,
       "CurrentValue": 10
     },
     "Sense": {
+      "BaseValue": 10,
       "Multiplier": 1,
       "Modifier": 0,
       "CurrentValue": 10
     },
     "Speed": {
+      "BaseValue": 10,
       "Multiplier": 1,
       "Modifier": 0,
       "CurrentValue": 10
     },
     "Style": {
+      "BaseValue": 10,
       "Multiplier": 1,
       "Modifier": 0,
       "CurrentValue": 10
@@ -1983,21 +1995,25 @@
       "Regeneration": 0
     },
     "Strength": {
+      "BaseValue": 10,
       "Multiplier": 1,
       "Modifier": 0,
       "CurrentValue": 10
     },
     "Sense": {
+      "BaseValue": 10,
       "Multiplier": 1,
       "Modifier": 0,
       "CurrentValue": 10
     },
     "Speed": {
+      "BaseValue": 10,
       "Multiplier": 1,
       "Modifier": 0,
       "CurrentValue": 10
     },
     "Style": {
+      "BaseValue": 10,
       "Multiplier": 1,
       "Modifier": 0,
       "CurrentValue": 10

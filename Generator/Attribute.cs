@@ -3,7 +3,7 @@
     public class Attribute
         // Strength, Speed, Sense, Style
     {
-        private int BaseValue = 0;
+        public int BaseValue = 0;
         public int Multiplier = 1;
         public int Modifier = 0;
 
