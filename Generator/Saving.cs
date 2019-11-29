@@ -121,6 +121,7 @@ namespace Generator
         {
             AutosaveSlot = (int)MathTools.Mod(AutosaveSlot + 1, numSaves["auto"]);
             Save("auto", AutosaveSlot);
+            Timing.AddEvent(300, Autosave);
         }
 
         public static void PopulateSaveKeywords()

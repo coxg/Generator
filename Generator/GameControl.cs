@@ -91,6 +91,7 @@ namespace Generator
             TileManager.Initialize();
 
             Saving.PopulateSaveKeywords();
+            Timing.AddEvent(300, Saving.Autosave);
 
             base.Initialize();
         }
