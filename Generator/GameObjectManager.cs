@@ -66,7 +66,7 @@ namespace Generator
 
         public static void Save(string saveFile)
         {
-            using (StreamWriter file = File.CreateText(Globals.SaveDirectory + saveFile + "/gameObjects.json"))
+            using (StreamWriter file = File.CreateText(saveFile + "/gameObjects.json"))
             {
                 Globals.Serializer.Serialize(file, ObjectFromID);
             }
@@ -74,7 +74,7 @@ namespace Generator
 
         public static void Load(string saveFile)
         {
-            using (StreamReader file = File.OpenText(Globals.SaveDirectory + saveFile + "/gameObjects.json"))
+            using (StreamReader file = File.OpenText(saveFile + "/gameObjects.json"))
             {
                 // GameObjects add themselves to the manager, so just clear it and let them do their thing
                 Clear();
@@ -218,9 +218,9 @@ namespace Generator
                     }));
             Globals.Party.Members.Add(farrah);
 
-            var terrain1 = new GameObject(
+            var oldMan = new GameObject(
                 new Vector3(55, 56, 0),
-                id: "angry terrain", 
+                id: "old man", 
                 brightness: Vector3.Zero,
                 baseStrength: 10, 
                 baseSpeed: 10, 
@@ -232,7 +232,7 @@ namespace Generator
                     choicesList: new List<Conversation.Choices>()
                     {
                         new Conversation.Choices(
-                            index: 1,
+                            index: 0,
                             nodes: new List<Conversation.Choices.Node>()
                             {
                                 new Conversation.Choices.Node(
@@ -263,9 +263,64 @@ namespace Generator
                                         "Roger."
                                     },
                                     exitsConversation: true),
+                            }),
+
+                        // This is triggered when you press load
+                        new Conversation.Choices(
+                            index: 1,
+                            nodes: new List<Conversation.Choices.Node>
+                            {
+                                new Conversation.Choices.Node("Manual Saves", goToChoicesIndex: 2),
+                                new Conversation.Choices.Node("Autosaves", goToChoicesIndex: 3),
+                                new Conversation.Choices.Node("Quicksaves", goToChoicesIndex: 4),
+                                new Conversation.Choices.Node("niels: Nevermind.", exitsConversation: true)
+                            }),
+                        new Conversation.Choices(
+                            index: 2,
+                            nodes: new List<Conversation.Choices.Node>
+                            {
+                                new Conversation.Choices.Node("{manual_0}", effects: () => { Saving.Load("manual", 0); }, exitsConversation: true),
+                                new Conversation.Choices.Node("{manual_1}", effects: () => { Saving.Load("manual", 1); }, exitsConversation: true),
+                                new Conversation.Choices.Node("{manual_2}", effects: () => { Saving.Load("manual", 2); }, exitsConversation: true),
+                                new Conversation.Choices.Node("{manual_3}", effects: () => { Saving.Load("manual", 3); }, exitsConversation: true),
+                                new Conversation.Choices.Node("{manual_4}", effects: () => { Saving.Load("manual", 4); }, exitsConversation: true),
+                                new Conversation.Choices.Node("niels: Go back", goToChoicesIndex: 1)
+                            }),
+                        new Conversation.Choices(
+                            index: 3,
+                            nodes: new List<Conversation.Choices.Node>
+                            {
+                                new Conversation.Choices.Node("{auto_0}", effects: () => { Saving.Load("auto", 0); }, exitsConversation: true),
+                                new Conversation.Choices.Node("{auto_1}", effects: () => { Saving.Load("auto", 1); }, exitsConversation: true),
+                                new Conversation.Choices.Node("{auto_2}", effects: () => { Saving.Load("auto", 2); }, exitsConversation: true),
+                                new Conversation.Choices.Node("{auto_3}", effects: () => { Saving.Load("auto", 3); }, exitsConversation: true),
+                                new Conversation.Choices.Node("{auto_4}", effects: () => { Saving.Load("auto", 4); }, exitsConversation: true),
+                                new Conversation.Choices.Node("niels: Go back", goToChoicesIndex: 1)
+                            }),
+                        new Conversation.Choices(
+                            index: 4,
+                            nodes: new List<Conversation.Choices.Node>
+                            {
+                                new Conversation.Choices.Node("{quick_0}", effects: () => { Saving.Load("quick", 0); }, exitsConversation: true),
+                                new Conversation.Choices.Node("{quick_1}", effects: () => { Saving.Load("quick", 1); }, exitsConversation: true),
+                                new Conversation.Choices.Node("{quick_2}", effects: () => { Saving.Load("quick", 2); }, exitsConversation: true),
+                                new Conversation.Choices.Node("{quick_3}", effects: () => { Saving.Load("quick", 3); }, exitsConversation: true),
+                                new Conversation.Choices.Node("{quick_4}", effects: () => { Saving.Load("quick", 4); }, exitsConversation: true),
+                                new Conversation.Choices.Node("niels: Go back", goToChoicesIndex: 1)
+                            }),
+                        new Conversation.Choices(
+                            index: 5,
+                            nodes: new List<Conversation.Choices.Node>
+                            {
+                                new Conversation.Choices.Node("{manual_0}", effects: () => { Saving.Save("manual", 0); }, exitsConversation: true),
+                                new Conversation.Choices.Node("{manual_1}", effects: () => { Saving.Save("manual", 1); }, exitsConversation: true),
+                                new Conversation.Choices.Node("{manual_2}", effects: () => { Saving.Save("manual", 2); }, exitsConversation: true),
+                                new Conversation.Choices.Node("{manual_3}", effects: () => { Saving.Save("manual", 3); }, exitsConversation: true),
+                                new Conversation.Choices.Node("{manual_4}", effects: () => { Saving.Save("manual", 4); }, exitsConversation: true),
+                                new Conversation.Choices.Node("niels: Nevermind.", exitsConversation: true)
                             })
                     }));
-            Globals.Party.Members.Add(terrain1);
+            Globals.Party.Members.Add(oldMan);
 
             new GameObject(
                 new Vector3(57, 59, 0), 

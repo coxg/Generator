@@ -19,6 +19,8 @@ namespace Generator
             public bool WasPressed;
             public bool IsBeingPressed;
             public bool IsBeingReleased;
+            public float PressedDuration;
+            public float NotPressedDuration;
 
             public KeyBinding(Buttons button, Keys key)
             {
@@ -28,11 +30,24 @@ namespace Generator
 
             public void Update()
             {
+                // Update the states
                 WasPressed = IsPressed;
                 IsPressed = Capabilities.IsConnected & State.IsButtonDown(Button) 
                     | Keyboard.GetState().IsKeyDown(Key);
                 IsBeingPressed = IsPressed & !WasPressed;
                 IsBeingReleased = WasPressed & !IsPressed;
+
+                // Update the timing
+                if (IsBeingPressed) PressedDuration = 0;
+                if (IsBeingReleased) NotPressedDuration = 0;
+                if (IsPressed)
+                {
+                    PressedDuration += 1f / Globals.RefreshRate;
+                }
+                else
+                {
+                    NotPressedDuration += 1f / Globals.RefreshRate;
+                }
             }
         }
 
@@ -50,8 +65,8 @@ namespace Generator
             { "r",      new KeyBinding(Buttons.RightTrigger,    Keys.D2) },
             { "lb",     new KeyBinding(Buttons.LeftShoulder,    Keys.D3) },
             { "rb",     new KeyBinding(Buttons.RightShoulder,   Keys.D4) },
-            { "start",  new KeyBinding(Buttons.Start,           Keys.F1) },
-            { "select", new KeyBinding(Buttons.Back,            Keys.F2) },
+            { "start",  new KeyBinding(Buttons.Start,           Keys.Z) },
+            { "select", new KeyBinding(Buttons.Back,            Keys.X) },
         };
 
         public static void GetInput(GameObject player)
@@ -192,23 +207,29 @@ namespace Generator
                 if (player.Abilities.Count > 3) player.Abilities[3].IsPressed = KeyBindings["rb"].IsPressed;
 
                 // Save the game
-                if (KeyBindings["start"].IsBeingPressed)
+                if (KeyBindings["start"].IsBeingReleased && KeyBindings["start"].PressedDuration <= .5f)
                 {
-                    Globals.Log("Saving game");
-
-                    // Write the grids to disk
-                    foreach (Acre acre in TileManager.Acres) acre.Save();
-
-                    System.IO.Directory.CreateDirectory(Globals.SaveDirectory + "save1");
-                    GameObjectManager.Save("save1");
+                    Saving.Quicksave();
+                }
+                // TODO: Once menus are a thing we won't need to check if the CurrentConversation is null
+                else if (Globals.CurrentConversation == null && KeyBindings["start"].IsPressed && KeyBindings["start"].PressedDuration >= .5f)
+                {
+                    Globals.CurrentConversation = GameObjectManager.ObjectFromID["old man"].Conversation;
+                    Globals.CurrentConversation.CurrentChoicesIndex = 5;
                 }
 
                 // Load the game
-                if (KeyBindings["select"].IsBeingPressed)
+                if (KeyBindings["select"].IsBeingReleased && KeyBindings["select"].PressedDuration <= .5f)
                 {
-                    Globals.Log("Loading game");
-                    GameObjectManager.Load("save1");
+                    Saving.Quickload();
                 }
+                // TODO: Once menus are a thing we won't need to check if the CurrentConversation is null
+                else if (Globals.CurrentConversation == null && KeyBindings["select"].IsPressed && KeyBindings["select"].PressedDuration >= .5f)
+                {
+                    Globals.CurrentConversation = GameObjectManager.ObjectFromID["old man"].Conversation;
+                    Globals.CurrentConversation.CurrentChoicesIndex = 1;
+                }
+
 
                 // Creative mode controls
                 if (Globals.CreativeMode)

@@ -1,13 +1,8 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Linq;
-
 using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Generator
 {
@@ -94,6 +89,8 @@ namespace Generator
 
             GameObjectManager.Initialize();
             TileManager.Initialize();
+
+            Saving.PopulateSaveKeywords();
 
             base.Initialize();
         }

@@ -117,6 +117,7 @@
     <Compile Include="TriDiagonalMatrix.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="Weapon.cs" />
+    <Compile Include="Saving.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

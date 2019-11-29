@@ -188,7 +188,7 @@ namespace Generator
             public Choices(Node node, int index = 0)
             {
                 Index = index;
-                Nodes = new List<Node>() { node };
+                Nodes = new List<Node> { node };
                 node.SourceChoices = this;
             }
 
@@ -196,7 +196,7 @@ namespace Generator
             public Choices(string message, int index = 0)
             {
                 Index = index;
-                Nodes = new List<Node>() { new Node(message, exitsConversation: true) };
+                Nodes = new List<Node> { new Node(message, exitsConversation: true) };
                 foreach (Node node in Nodes)
                 {
                     node.SourceChoices = this;
@@ -280,13 +280,13 @@ namespace Generator
             }
         }
 
-        public static Dictionary<string, Func<object>> Keywords = new Dictionary<string, Func<object>>()
+        public static Dictionary<string, Func<object>> Keywords = new Dictionary<string, Func<object>>
         // Used for string replacement - for example, "{inCombat}" would be replaced with Globals.Party.InCombat
         {
             { "inCombat", () => Globals.Party.InCombat },
             { "wasInCombat", () => !Globals.Party.InCombat },
             { "creativeMode", () => Globals.CreativeMode },
-            { "wasCreativeMode", () => !Globals.CreativeMode },
+            { "wasCreativeMode", () => !Globals.CreativeMode }
         };
     }
 }

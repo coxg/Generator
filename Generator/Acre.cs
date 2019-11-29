@@ -23,7 +23,7 @@ namespace Generator
             // If the file exists then load it in
             if (File.Exists(FileName))
             {
-                Read();
+                Load();
             }
 
             // If the file doesn't exist then populate with the default values
@@ -43,7 +43,7 @@ namespace Generator
         }
 
         // Reads in the Acre from a file
-        public void Read() // TODO: Populate list of active objects on read
+        public void Load() // TODO: Populate list of active objects on read
         {
             using (var sr = new StreamReader(FileName))
             {

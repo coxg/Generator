@@ -24,15 +24,15 @@ namespace Generator
         }
 
         // The current conversation - there can be only one
-        private static Conversation currentConversation = null;
+        private static Conversation currentConversation;
         public static Conversation CurrentConversation
         {
             get { return currentConversation; }
             set
             {
-                if (currentConversation != null)
+                if (value != null)
                 {
-                    currentConversation.Reset();
+                    value.Reset();
                 }
                 currentConversation = value;
             }
