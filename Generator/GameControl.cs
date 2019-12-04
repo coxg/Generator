@@ -272,9 +272,9 @@ namespace Generator
                 spriteBatch.Begin();
 
                 // Draw the resource bars
-                for (int i = 0; i < Globals.Party.Members.Count; i++)
+                for (int i = 0; i < Globals.Party.Value.Members.Count; i++)
                 {
-                    var gameObject = Globals.Party.Members[i];
+                    var gameObject = Globals.Party.Value.Members[i];
                     Drawing.DrawResource(spriteBatch, gameObject.Health, i);
                     if (gameObject.Stamina.Max > 0)
                         Drawing.DrawResource(spriteBatch, gameObject.Stamina, i);

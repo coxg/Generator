@@ -86,7 +86,7 @@
     <Compile Include="LilyPath\Utility\Pool.cs" />
     <Compile Include="LilyPath\Utility\Pools.cs" />
     <Compile Include="LilyPath\Utility\ZeroList.cs" />
-    <Compile Include="Loaded.cs" />
+    <Compile Include="Cached.cs" />
     <Compile Include="Party.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Requirements.cs" />
@@ -118,6 +118,7 @@
     <Compile Include="Tile.cs" />
     <Compile Include="Weapon.cs" />
     <Compile Include="Saving.cs" />
+    <Compile Include="Saved.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

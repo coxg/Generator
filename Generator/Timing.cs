@@ -44,7 +44,7 @@ namespace Generator
             {
                 gameSpeed = (float)GameSpeedOverride;
             }
-            else if (Globals.Party.InCombat)
+            else if (Globals.Party.Value.InCombat)
             {
                 gameSpeed = 1 - ((1 - PlayerMovementMagnitude) * (float)Math.Sqrt(Globals.Player.Sense.CurrentValue / 100f));
             }
@@ -88,7 +88,7 @@ namespace Generator
             }
             else
             {
-                Events[scheduledTime] = new List<Action>() { action };
+                Events[scheduledTime] = new List<Action> { action };
             }
         }
     }

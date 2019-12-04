@@ -28,12 +28,12 @@ namespace Generator
         {
             if (!Rewarded || Repeatable)
             {
-                Globals.Party.AddExperience(Experience);
-                Globals.Party.AddClassPoints(ClassPoints);
-                Globals.Party.AddJunk(Junk);
+                Globals.Party.Value.AddExperience(Experience);
+                Globals.Party.Value.AddClassPoints(ClassPoints);
+                Globals.Party.Value.AddJunk(Junk);
                 foreach (var item in Items)
                 {
-                    Globals.Party.AddItem(item);
+                    Globals.Party.Value.AddItem(item);
                 }
             }
             else

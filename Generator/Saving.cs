@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 
@@ -6,6 +7,8 @@ namespace Generator
 {
     public static class Saving
     {
+        public static string SaveDirectory = Globals.Directory + "/Saves/";
+
         public static Dictionary<string, int> numSaves = new Dictionary<string, int>
         {
             { "manual", 5 },
@@ -62,7 +65,7 @@ namespace Generator
         {
             var mostRecentSlot = 0;
             var mostRecentTime = System.DateTime.MinValue;
-            foreach (var filepath in Directory.GetFiles(Globals.SaveDirectory))
+            foreach (var filepath in Directory.GetFiles(SaveDirectory))
             {
                 if (filepath.Split('\\').Last().Split('_')[0] == category)
                 {
@@ -79,7 +82,7 @@ namespace Generator
 
         public static void Save(string category, int slot)
         {
-            var saveDir = Globals.SaveDirectory + category + "_" + slot;
+            var saveDir = SaveDirectory + category + "_" + slot;
             Globals.Log("Saving to " + saveDir);
             // To get accurate timing information we delete first
             if (Directory.Exists(saveDir)) Directory.Delete(saveDir, true);
@@ -87,17 +90,19 @@ namespace Generator
 
             GameObjectManager.Save(saveDir);
             foreach (Acre acre in TileManager.Acres) acre.Save();
+            SavedDicts.Save(saveDir);
         }
 
         public static void Load(string category, int slot)
         {
-            var saveDir = Globals.SaveDirectory + category + "_" + slot;
+            var saveDir = SaveDirectory + category + "_" + slot;
             if (Directory.Exists(saveDir))
             {
                 Globals.Log("Loading from " + saveDir);
 
                 GameObjectManager.Load(saveDir);
                 TileManager.PopulateAcres();
+                SavedDicts.Load(saveDir);
             }
             else
             {
@@ -138,9 +143,9 @@ namespace Generator
 
         public static string GetSaveStr(string saveName)
         {
-            if (Directory.Exists(Globals.SaveDirectory + saveName))
+            if (Directory.Exists(SaveDirectory + saveName))
             {
-                return saveName.Split('_').Last() + ": " + Directory.GetLastWriteTime(Globals.SaveDirectory + saveName);
+                return saveName.Split('_').Last() + ": " + Directory.GetLastWriteTime(SaveDirectory + saveName);
             }
             else
             {

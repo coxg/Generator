@@ -56,10 +56,11 @@ namespace Generator
         public GameObject SourceObject;
         public float YOffset;
         public Dictionary<String, Animation> Animations;
-        public Dictionary<String, Loaded<Texture2D>> Sprites = new Dictionary<string, Loaded<Texture2D>>();
+        public Dictionary<String, Cached<Texture2D>> Sprites = new Dictionary<string, Cached<Texture2D>>();
 
         [JsonIgnore]
-        override public float Direction {
+        override public float Direction
+        {
             set { throw new NotSupportedException("Set the SourceObject Direction instead."); }
             get { return SourceObject.Direction; }
         }
@@ -93,18 +94,18 @@ namespace Generator
                 // Load up the sprites for each specified direction
                 if (Directional)
                 {
-                    Sprites["Front"] = new Loaded<Texture2D>(ComponentPath + "Front");
-                    Sprites["Back"] = new Loaded<Texture2D>(ComponentPath + "Back");
-                    Sprites["Left"] = new Loaded<Texture2D>(ComponentPath + "Left");
-                    Sprites["Right"] = new Loaded<Texture2D>(ComponentPath + "Right");
+                    Sprites["Front"] = new Cached<Texture2D>(ComponentPath + "Front");
+                    Sprites["Back"] = new Cached<Texture2D>(ComponentPath + "Back");
+                    Sprites["Left"] = new Cached<Texture2D>(ComponentPath + "Left");
+                    Sprites["Right"] = new Cached<Texture2D>(ComponentPath + "Right");
                 }
                 else if (File.Exists(Globals.Directory + "/Content/" + ComponentPath + ID + ".png"))
                 {
-                    Sprites[""] = new Loaded<Texture2D>(ComponentPath + ID);
+                    Sprites[""] = new Cached<Texture2D>(ComponentPath + ID);
                 }
                 else if (value != null)
                 {
-                    Sprites[""] = new Loaded<Texture2D>(value);
+                    Sprites[""] = new Cached<Texture2D>(value);
                 }
                 _spriteFile = value;
             }
@@ -113,7 +114,8 @@ namespace Generator
         [JsonIgnore]
         override public Texture2D Sprite
         {
-            get {
+            get
+            {
                 if (Directional)
                 {
                     return Sprites[MathTools.StringFromRadians(Direction)].Value;

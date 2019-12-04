@@ -32,9 +32,9 @@ namespace Generator
 
             // What it does
             float cooldown = 0,
-            Loaded<Action<GameObject>> start = null,
-            Loaded<Action<GameObject>> onUpdate = null,
-            Loaded<Action<GameObject>> stop = null)
+            Cached<Action<GameObject>> start = null,
+            Cached<Action<GameObject>> onUpdate = null,
+            Cached<Action<GameObject>> stop = null)
         {
             // Ability name
             Name = name;
@@ -50,7 +50,7 @@ namespace Generator
             IsToggleable = isToggleable;
             IsActive = false;
             RequiresWalking = requiresWalking;
-          
+
             // What's using the ability
             SourceObject = sourceObject;
 
@@ -133,18 +133,18 @@ namespace Generator
 
         // What it does
         public float Cooldown;
-        public Loaded<Action<GameObject>> Start;
-        public Loaded<Action<GameObject>> OnUpdate;
-        public Loaded<Action<GameObject>> Stop;
+        public Cached<Action<GameObject>> Start;
+        public Cached<Action<GameObject>> OnUpdate;
+        public Cached<Action<GameObject>> Stop;
 
         public override string ToString()
-            // Return name, useful for debugging.
+        // Return name, useful for debugging.
         {
             return Name;
         }
 
         public bool CanUse()
-            // Can the SourceObject use the ability?
+        // Can the SourceObject use the ability?
         {
             return OffCooldown
                    && SourceObject.Health.Current >= HealthCost
@@ -154,7 +154,7 @@ namespace Generator
         }
 
         public void Update()
-            // This is what happens on each update.
+        // This is what happens on each update.
         {
             // See if it was active
             var WasActive = IsActive;
@@ -261,15 +261,15 @@ namespace Generator
                                 new Vector3(0, 0, .2f)
                             },
                             duration: 1.5f)),
-                    start: new Loaded<Action<GameObject>>("SprintStart"),
-                    stop: new Loaded<Action<GameObject>>("SprintStop"))
+                    start: new Cached<Action<GameObject>>("SprintStart"),
+                    stop: new Cached<Action<GameObject>>("SprintStop"))
             },
             {
                 "Attack",
                 new Ability(
                     "Attack",
                     staminaCost: 10,
-                    start: new Loaded<Action<GameObject>>("Attack"))
+                    start: new Cached<Action<GameObject>>("Attack"))
             },
             {
                 "Shoot",
@@ -278,13 +278,13 @@ namespace Generator
                     staminaCost: 3,
                     cooldown: .1f,
                     keepCasting: true,
-                    start: new Loaded<Action<GameObject>>("Shoot"))
+                    start: new Cached<Action<GameObject>>("Shoot"))
             },
             {
                 "Place Object",
                 new Ability(
                     "Place Object",
-                    start: new Loaded<Action<GameObject>>("Place Object"))
+                    start: new Cached<Action<GameObject>>("Place Object"))
             },
             {
                 "Always Sprint",
@@ -293,8 +293,8 @@ namespace Generator
                     staminaCost: 1,
                     isToggleable: true,
                     requiresWalking: true,
-                    start: new Loaded<Action<GameObject>>("SprintStart"),
-                    stop: new Loaded<Action<GameObject>>("SprintStop"),
+                    start: new Cached<Action<GameObject>>("SprintStart"),
+                    stop: new Cached<Action<GameObject>>("SprintStop"),
                     animation: new Animation(
                         startFrames: new Frames(
                             baseOffsets: new List<Vector3>

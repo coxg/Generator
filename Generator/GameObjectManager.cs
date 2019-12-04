@@ -115,7 +115,7 @@ namespace Generator
                     }
                 }
             }
-            Globals.Party.Members.Add(ObjectFromID["niels"]);
+            Globals.Party.Value.Members.Add(ObjectFromID["niels"]);
             Globals.Player = ObjectFromID["niels"];
             GameControl.lightingRenderTargets = new Dictionary<GameObject, RenderTarget2D>();
         }
@@ -137,7 +137,7 @@ namespace Generator
                 componentSpriteFileName: "Ninja",
                 weapon: new Weapon(
                     name: "Sword",
-                    sprite: new Loaded<Texture2D>("Sprites/white_dot"),
+                    sprite: new Cached<Texture2D>("Sprites/white_dot"),
                     damage: 10),
                 brightness: Vector3.Zero,
                 abilities: new List<Ability>() {
@@ -145,7 +145,7 @@ namespace Generator
                     Ability.Abilities["Shoot"],
                     Ability.Abilities["Place Object"],
                     Ability.Abilities["Attack"] });
-            Globals.Party.Members.Add(niels);
+            Globals.Party.Value.Members.Add(niels);
 
 
             bool saidName = false;
@@ -158,11 +158,11 @@ namespace Generator
                 baseStyle: 100,
                 id: "farrah",
                 name: "Farrah",
-                ai: new Loaded<System.Action<GameObject>>("WalkNearPlayer"),
+                ai: new Cached<System.Action<GameObject>>("WalkNearPlayer"),
                 componentSpriteFileName: "Girl",
                 weapon: new Weapon(
                     name: "Sword",
-                    sprite: new Loaded<Texture2D>("Sprites/white_dot"),
+                    sprite: new Cached<Texture2D>("Sprites/white_dot"),
                     damage: 10),
                 brightness: Vector3.Zero,
                 conversation: new Conversation(
@@ -216,7 +216,7 @@ namespace Generator
                                     exitsConversation: true),
                             })
                     }));
-            Globals.Party.Members.Add(farrah);
+            Globals.Party.Value.Members.Add(farrah);
 
             var oldMan = new GameObject(
                 new Vector3(55, 56, 0),
@@ -225,9 +225,9 @@ namespace Generator
                 baseStrength: 10, 
                 baseSpeed: 10, 
                 baseSense: 10,
-                ai: new Loaded<System.Action<GameObject>>("WalkNearPlayer"),
+                ai: new Cached<System.Action<GameObject>>("WalkNearPlayer"),
                 componentSpriteFileName: "Old",
-                activationEffect: new Loaded<System.Action<GameObject, GameObject>>("CreateBigBoy"),
+                activationEffect: new Cached<System.Action<GameObject, GameObject>>("CreateBigBoy"),
                 conversation: new Conversation(
                     choicesList: new List<Conversation.Choices>()
                     {
@@ -241,7 +241,7 @@ namespace Generator
                                         "niels: Toggle inCombat.",
                                         "inCombat is now {wasInCombat}."
                                     },
-                                    effects: () => { Globals.Party.InCombat = !Globals.Party.InCombat; }),
+                                    effects: () => { Globals.Party.Value.InCombat = !Globals.Party.Value.InCombat; }),
                                 new Conversation.Choices.Node(
                                     text: new List<string>()
                                     {
@@ -320,7 +320,7 @@ namespace Generator
                                 new Conversation.Choices.Node("niels: Nevermind.", exitsConversation: true)
                             })
                     }));
-            Globals.Party.Members.Add(oldMan);
+            Globals.Party.Value.Members.Add(oldMan);
 
             new GameObject(
                 new Vector3(57, 59, 0), 
@@ -331,7 +331,7 @@ namespace Generator
                 baseSense: 10,
                 castsShadow: false,
                 brightness: new Vector3(2, 2, 2),
-                activationEffect: new Loaded<System.Action<GameObject, GameObject>>("SetZoneBuildings"),
+                activationEffect: new Cached<System.Action<GameObject, GameObject>>("SetZoneBuildings"),
                 components: new Dictionary<string, Component>()
                 {
                     {"body", new Component(

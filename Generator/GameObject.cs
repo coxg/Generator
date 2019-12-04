@@ -56,10 +56,10 @@ namespace Generator
 
             // Interaction
             Conversation conversation = null,
-            Loaded<Action<GameObject>> ai = null,
-            Loaded<Action<GameObject, GameObject>> collisionEffect = null,
+            Cached<Action<GameObject>> ai = null,
+            Cached<Action<GameObject, GameObject>> collisionEffect = null,
             bool temporary = false,
-            Loaded<Action<GameObject, GameObject>> activationEffect = null,
+            Cached<Action<GameObject, GameObject>> activationEffect = null,
 
             // Equipment
             Weapon weapon = null,
@@ -101,10 +101,10 @@ namespace Generator
             Brightness = brightness ?? Vector3.Zero;
 
             // Equipment
-            EquippedWeapon = weapon ?? new Weapon("Fists", new Loaded<Texture2D>("Sprites/white_dot"));
-            EquippedArmor = armor ?? new Armor("[No Armor]", new Loaded<Texture2D>("Sprites/white_dot"));
-            EquippedGenerator = generator ?? new GeneratorObj("[No Generator]", new Loaded<Texture2D>("Sprites/white_dot"));
-            EquippedAccessory = accessory ?? new Accessory("[No Accessory]", new Loaded<Texture2D>("Sprites/white_dot"));
+            EquippedWeapon = weapon ?? new Weapon("Fists", new Cached<Texture2D>("Sprites/white_dot"));
+            EquippedArmor = armor ?? new Armor("[No Armor]", new Cached<Texture2D>("Sprites/white_dot"));
+            EquippedGenerator = generator ?? new GeneratorObj("[No Generator]", new Cached<Texture2D>("Sprites/white_dot"));
+            EquippedAccessory = accessory ?? new Accessory("[No Accessory]", new Cached<Texture2D>("Sprites/white_dot"));
 
             // Abilities
             Abilities = abilities != null ? (List<Ability>) Globals.Copy(abilities) : new List<Ability>();
@@ -233,9 +233,9 @@ namespace Generator
 
         // Interaction
         public Conversation Conversation;
-        public Loaded<Action<GameObject, GameObject>> ActivationEffect;
-        public Loaded<Action<GameObject>> AI;
-        public Loaded<Action<GameObject, GameObject>> CollisionEffect;
+        public Cached<Action<GameObject, GameObject>> ActivationEffect;
+        public Cached<Action<GameObject>> AI;
+        public Cached<Action<GameObject, GameObject>> CollisionEffect;
         public bool Temporary;
         public bool IsVisible()
         {
@@ -247,28 +247,28 @@ namespace Generator
         }
 
         // Equipment
-        private Weapon _equippedWeapon = new Weapon("Fists", new Loaded<Texture2D>("Sprites/white_dot"));
+        private Weapon _equippedWeapon = new Weapon("Fists", new Cached<Texture2D>("Sprites/white_dot"));
         public Weapon EquippedWeapon
         {
             get => _equippedWeapon;
             set { Equip(value); }
         }
 
-        private Armor _equippedArmor = new Armor("[No Armor]", new Loaded<Texture2D>("Sprites/white_dot"));
+        private Armor _equippedArmor = new Armor("[No Armor]", new Cached<Texture2D>("Sprites/white_dot"));
         public Armor EquippedArmor
         {
             get => _equippedArmor;
             set { Equip(value); }
         }
 
-        private GeneratorObj _equippedGenerator = new GeneratorObj("[No Generator]", new Loaded<Texture2D>("Sprites/white_dot"));
+        private GeneratorObj _equippedGenerator = new GeneratorObj("[No Generator]", new Cached<Texture2D>("Sprites/white_dot"));
         public GeneratorObj EquippedGenerator
         {
             get => _equippedGenerator;
             set { Equip(value); }
         }
 
-        private Accessory _equippedAccessory = new Accessory("[No Accessory]", new Loaded<Texture2D>("Sprites/white_dot"));
+        private Accessory _equippedAccessory = new Accessory("[No Accessory]", new Cached<Texture2D>("Sprites/white_dot"));
         public Accessory EquippedAccessory
         {
             get => _equippedAccessory;
@@ -647,7 +647,7 @@ namespace Generator
             Direction = radians;
 
             // Get distance
-            var distance = speed * (float) Math.Sqrt(Speed.CurrentValue) * Timing.GameSpeed / Globals.RefreshRate;
+            var distance = speed * 2 * (float) Math.Sqrt(Speed.CurrentValue) * Timing.GameSpeed / Globals.RefreshRate;
 
             // Convert from radian direction to X/Y offsets
             var offsets = MathTools.OffsetFromRadians(radians);

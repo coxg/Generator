@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Generator
 {
-    public class Loaded <T>
+    public class Cached <T>
         // A strategy for lazy loading based off of a string identifier
     {
         private string name;
@@ -38,7 +38,7 @@ namespace Generator
                 }
                 else
                 {
-                    throw new TypeLoadException(typeof(T).ToString() + " is not a known Loaded type.");
+                    throw new TypeLoadException(typeof(T) + " is not a known Loaded type.");
                 }
                 _value = (T)Convert.ChangeType(baseValue, typeof(T));
                 name = value;
@@ -53,7 +53,7 @@ namespace Generator
             get { return _value; }
         }
 
-        public Loaded(string name)
+        public Cached(string name)
         {
             Name = name;
         }

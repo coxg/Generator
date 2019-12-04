@@ -8,7 +8,7 @@ namespace Generator
         // Constructor
         public GeneratorObj(
             string name,
-            Loaded<Texture2D> sprite, 
+            Cached<Texture2D> sprite, 
             int quantity = 1,
 
             // Stats

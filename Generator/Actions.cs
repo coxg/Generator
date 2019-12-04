@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace Generator
 {
-public static class Actions
+    public static class Actions
     {
         // The GameObject is the one calling it
         // Used for GameObject.AI, which is called on each update, and ability Start/Stop/OnUpdate
@@ -94,8 +94,8 @@ public static class Actions
                         size: new Vector3(.05f, .05f, .05f),
                         direction: self.Direction,
                         baseSpeed: 100,
-                        ai: new Loaded<Action<GameObject>>("WalkInStraightLine"),
-                        collisionEffect: new Loaded<Action<GameObject, GameObject>>("BulletCollision"),
+                        ai: new Cached<Action<GameObject>>("WalkInStraightLine"),
+                        collisionEffect: new Cached<Action<GameObject, GameObject>>("BulletCollision"),
                         brightness: new Vector3(.5f, .1f, .5f),
                         castsShadow: false,
                         temporary: true,
@@ -125,12 +125,12 @@ public static class Actions
 
         // First GameObject is the one using the action, the second GameObject is what they're targeting
         // Used for GameObject.ActivationEffect and GameObject.CollisionEffect
-        public static Dictionary<string, Action<GameObject, GameObject>> TargetedActions 
+        public static Dictionary<string, Action<GameObject, GameObject>> TargetedActions
             = new Dictionary<string, Action<GameObject, GameObject>>
         {
             {
                 "CreateBigBoy",
-                (GameObject self, GameObject other) => 
+                (GameObject self, GameObject other) =>
                 {
                     new GameObject(
                         new Vector3(60, 60, 0),

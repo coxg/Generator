@@ -255,15 +255,15 @@ namespace Generator
                     // Scroll left
                     if (KeyBindings["left"].IsBeingPressed)
                     {
-                        Globals.PlayerPartyNumber = (int)MathTools.Mod(
-                            Globals.PlayerPartyNumber - 1, Globals.Party.Members.Count);
+                        Globals.PlayerPartyNumber.Value = (int)MathTools.Mod(
+                            Globals.PlayerPartyNumber.Value - 1, Globals.Party.Value.Members.Count);
                     }
 
                     // Scroll right
                     if (KeyBindings["right"].IsBeingPressed)
                     {
-                        Globals.PlayerPartyNumber = (int)MathTools.Mod(
-                            Globals.PlayerPartyNumber + 1, Globals.Party.Members.Count);
+                        Globals.PlayerPartyNumber.Value = (int)MathTools.Mod(
+                            Globals.PlayerPartyNumber.Value + 1, Globals.Party.Value.Members.Count);
                     }
                 }
             }

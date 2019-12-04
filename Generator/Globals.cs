@@ -15,12 +15,12 @@ namespace Generator
     public static class Globals
     {
         // The player's party
-        public static Party Party = new Party();
-        public static int PlayerPartyNumber = 0;
+        public static SavedParty Party = new SavedParty("party", new Party());
+        public static SavedInt PlayerPartyNumber = new SavedInt("playerPartyNumber", 0);
         public static GameObject Player
         {
-            get { return Party.Members[PlayerPartyNumber]; }
-            set { PlayerPartyNumber = Party.Members.IndexOf(value); }
+            get { return Party.Value.Members[PlayerPartyNumber.Value]; }
+            set { PlayerPartyNumber.Value = Party.Value.Members.IndexOf(value); }
         }
 
         // The current conversation - there can be only one
@@ -42,9 +42,8 @@ namespace Generator
         public static Vector2 Resolution = new Vector2(1600, 900);
         public static ContentManager Content;
         public static bool Logging = true;
-        public static int RefreshRate = 30; // TODO: Change to 60, modify other calculations to reflects this
+        public static int RefreshRate = 60;
         public static string Directory = "/Generator/Generator/";
-        public static string SaveDirectory = Directory + "/Saves/";
         // TODO: Remove formatting before release - this roughly doubles the size of the save files
         public static JsonSerializer Serializer = new JsonSerializer { Formatting = Formatting.Indented };
 
@@ -64,8 +63,8 @@ namespace Generator
         }
 
         // Configure the world building mode
-        public static bool CreativeMode = false;
-        public static int CreativeObjectIndex = 0;
+        public static bool CreativeMode;
+        public static int CreativeObjectIndex;
 
         // Loading assets
         public static Dictionary<string, Texture2D> Textures = new Dictionary<string, Texture2D>();

@@ -283,8 +283,8 @@ namespace Generator
         public static Dictionary<string, Func<object>> Keywords = new Dictionary<string, Func<object>>
         // Used for string replacement - for example, "{inCombat}" would be replaced with Globals.Party.InCombat
         {
-            { "inCombat", () => Globals.Party.InCombat },
-            { "wasInCombat", () => !Globals.Party.InCombat },
+            { "inCombat", () => Globals.Party.Value.InCombat },
+            { "wasInCombat", () => !Globals.Party.Value.InCombat },
             { "creativeMode", () => Globals.CreativeMode },
             { "wasCreativeMode", () => !Globals.CreativeMode }
         };
