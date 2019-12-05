@@ -590,22 +590,22 @@
     "RotationPoint": "0, 0, 0",
     "CastsShadow": true,
     "Size": "1, 1, 1",
-    "Direction": 1.57079649,
-    "Position": "53.9999847, 50, 0",
+    "Direction": 3.14159274,
+    "Position": "50, 50, 0",
     "Area": {
       "Location": {
         "IsEmpty": false,
-        "X": 53.9999847,
+        "X": 50.0,
         "Y": 50.0
       },
       "Size": "1, 1",
-      "X": 53.9999847,
+      "X": 50.0,
       "Y": 50.0,
       "Width": 1.0,
       "Height": 1.0,
-      "Left": 53.9999847,
+      "Left": 50.0,
       "Top": 50.0,
-      "Right": 54.9999847,
+      "Right": 51.0,
       "Bottom": 51.0,
       "IsEmpty": false
     },
@@ -684,7 +684,7 @@
       "Name": "[No Accessory]",
       "Effect": null
     },
-    "Center": "54.4999847, 50.5, 0.5"
+    "Center": "50.5, 50.5, 0.5"
   },
   "farrah": {
     "Components": {
@@ -793,7 +793,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.09100374, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -847,7 +847,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.09100374, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -901,7 +901,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.09100374, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -955,7 +955,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.09100374, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -1009,7 +1009,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.09100374, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -1063,7 +1063,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.09100374, 0, 0",
+            "TotalRotation": "0, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -1204,7 +1204,6 @@
             {
               "Rewards": {
                 "Experience": 100,
-                "ClassPoints": 0,
                 "Junk": 0,
                 "Items": [],
                 "Rewarded": false,
@@ -1271,7 +1270,6 @@
           {
             "Rewards": {
               "Experience": 100,
-              "ClassPoints": 0,
               "Junk": 0,
               "Items": [],
               "Rewarded": false,
@@ -1320,23 +1318,23 @@
     "RotationPoint": "0, 0, 0",
     "CastsShadow": true,
     "Size": "1, 1, 1",
-    "Direction": 2.41638827,
-    "Position": "50.70304, 53.71982, 0",
+    "Direction": 3.141593,
+    "Position": "50, 55, 0",
     "Area": {
       "Location": {
         "IsEmpty": false,
-        "X": 50.70304,
-        "Y": 53.71982
+        "X": 50.0,
+        "Y": 55.0
       },
       "Size": "1, 1",
-      "X": 50.70304,
-      "Y": 53.71982,
+      "X": 50.0,
+      "Y": 55.0,
       "Width": 1.0,
       "Height": 1.0,
-      "Left": 50.70304,
-      "Top": 53.71982,
-      "Right": 51.70304,
-      "Bottom": 54.71982,
+      "Left": 50.0,
+      "Top": 55.0,
+      "Right": 51.0,
+      "Bottom": 56.0,
       "IsEmpty": false
     },
     "EquippedWeapon": {
@@ -1414,7 +1412,7 @@
       "Name": "[No Accessory]",
       "Effect": null
     },
-    "Center": "51.20304, 54.21982, 0.5"
+    "Center": "50.5, 55.5, 0.5"
   },
   "old man": {
     "Components": {
@@ -2116,7 +2114,7 @@
               "ExitsConversation": true,
               "MessageIndex": 0,
               "Text": [
-                "0: NULL"
+                "0: 12/4/2019 7:55:39 PM"
               ]
             },
             {
@@ -2125,7 +2123,7 @@
               "ExitsConversation": true,
               "MessageIndex": 0,
               "Text": [
-                "1: 12/3/2019 11:37:29 PM"
+                "1: 12/4/2019 9:37:28 PM"
               ]
             },
             {
@@ -2134,7 +2132,7 @@
               "ExitsConversation": true,
               "MessageIndex": 0,
               "Text": [
-                "2: 12/1/2019 11:11:34 PM"
+                "2: 12/4/2019 8:09:03 PM"
               ]
             },
             {
@@ -2143,7 +2141,7 @@
               "ExitsConversation": true,
               "MessageIndex": 0,
               "Text": [
-                "3: 12/1/2019 9:05:04 PM"
+                "3: 12/4/2019 8:09:04 PM"
               ]
             },
             {
@@ -2152,7 +2150,7 @@
               "ExitsConversation": true,
               "MessageIndex": 0,
               "Text": [
-                "4: NULL"
+                "4: 12/4/2019 8:09:04 PM"
               ]
             },
             {

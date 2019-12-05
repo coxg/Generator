@@ -256,14 +256,14 @@ namespace Generator
                     if (KeyBindings["left"].IsBeingPressed)
                     {
                         Globals.PlayerPartyNumber.Value = (int)MathTools.Mod(
-                            Globals.PlayerPartyNumber.Value - 1, Globals.Party.Value.Members.Count);
+                            Globals.PlayerPartyNumber.Value - 1, Globals.Party.Value.MemberIDs.Count);
                     }
 
                     // Scroll right
                     if (KeyBindings["right"].IsBeingPressed)
                     {
                         Globals.PlayerPartyNumber.Value = (int)MathTools.Mod(
-                            Globals.PlayerPartyNumber.Value + 1, Globals.Party.Value.Members.Count);
+                            Globals.PlayerPartyNumber.Value + 1, Globals.Party.Value.MemberIDs.Count);
                     }
                 }
             }

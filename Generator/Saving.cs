@@ -23,7 +23,7 @@ namespace Generator
             {
                 if (manualsaveSlot == null)
                 {
-                    var slot = getSlot("manual");
+                    var slot = GetSlot("manual");
                     manualsaveSlot = slot;
                 }
                 return (int)manualsaveSlot;
@@ -38,7 +38,7 @@ namespace Generator
             {
                 if (quicksaveSlot == null)
                 {
-                    var slot = getSlot("quick");
+                    var slot = GetSlot("quick");
                     quicksaveSlot = slot;
                 }
                 return (int)quicksaveSlot;
@@ -53,7 +53,7 @@ namespace Generator
             {
                 if (autosaveSlot == null)
                 {
-                    var slot = getSlot("auto");
+                    var slot = GetSlot("auto");
                     autosaveSlot = slot;
                 }
                 return (int)autosaveSlot;
@@ -61,7 +61,7 @@ namespace Generator
             set { autosaveSlot = value; }
         }
 
-        public static int getSlot(string category)
+        public static int GetSlot(string category)
         {
             var mostRecentSlot = 0;
             var mostRecentTime = System.DateTime.MinValue;

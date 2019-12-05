@@ -106,9 +106,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "0.515335441, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -133,7 +133,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 4906.343,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -147,7 +147,7 @@
         "ID": "Arm/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "0.515335441, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -164,9 +164,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "-0.515335441, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -191,7 +191,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 4906.343,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -205,7 +205,7 @@
         "ID": "Arm/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "-0.515335441, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -222,9 +222,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "0.515335441, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -249,7 +249,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 4906.343,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -263,7 +263,7 @@
         "ID": "Hand/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "0.515335441, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -280,9 +280,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "-0.515335441, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -307,7 +307,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 4906.343,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -321,7 +321,7 @@
         "ID": "Hand/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "-0.515335441, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -338,9 +338,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "-0.515335441, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -365,7 +365,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 4906.343,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -379,7 +379,7 @@
         "ID": "Leg/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "-0.515335441, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -396,9 +396,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "0.515335441, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -423,7 +423,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 4906.343,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -437,7 +437,7 @@
         "ID": "Leg/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "0.515335441, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -622,23 +622,23 @@
     "RotationPoint": "0, 0, 0",
     "CastsShadow": true,
     "Size": "1, 1, 1",
-    "Direction": 4.712389,
-    "Position": "47.00001, 50, 0",
+    "Direction": 0.483684361,
+    "Position": "61.4587326, 57.63682, 0",
     "Area": {
       "Location": {
         "IsEmpty": false,
-        "X": 47.00001,
-        "Y": 50.0
+        "X": 61.4587326,
+        "Y": 57.63682
       },
       "Size": "1, 1",
-      "X": 47.00001,
-      "Y": 50.0,
+      "X": 61.4587326,
+      "Y": 57.63682,
       "Width": 1.0,
       "Height": 1.0,
-      "Left": 47.00001,
-      "Top": 50.0,
-      "Right": 48.00001,
-      "Bottom": 51.0,
+      "Left": 61.4587326,
+      "Top": 57.63682,
+      "Right": 62.4587326,
+      "Bottom": 58.63682,
       "IsEmpty": false
     },
     "EquippedWeapon": {
@@ -716,7 +716,7 @@
       "Name": "[No Accessory]",
       "Effect": null
     },
-    "Center": "47.50001, 50.5, 0.5"
+    "Center": "61.9587326, 58.13682, 0.5"
   },
   "farrah": {
     "Components": {
@@ -825,9 +825,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.145043477, 0, 0",
+            "TotalRotation": "-0.09886941, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -852,7 +852,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 2124.6123,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -866,7 +866,7 @@
         "ID": "Arm/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "-0.09886941, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -883,9 +883,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.145043477, 0, 0",
+            "TotalRotation": "0.09886941, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -910,7 +910,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 2124.6123,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -924,7 +924,7 @@
         "ID": "Arm/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "0.09886941, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -941,9 +941,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.145043477, 0, 0",
+            "TotalRotation": "-0.09886941, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -968,7 +968,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 2124.6123,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -982,7 +982,7 @@
         "ID": "Hand/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "-0.09886941, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -999,9 +999,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.145043477, 0, 0",
+            "TotalRotation": "0.09886941, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -1026,7 +1026,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 2124.6123,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1040,7 +1040,7 @@
         "ID": "Hand/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "0.09886941, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1057,9 +1057,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.145043477, 0, 0",
+            "TotalRotation": "0.09886941, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -1084,7 +1084,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 2124.6123,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1098,7 +1098,7 @@
         "ID": "Leg/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "0.09886941, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1115,9 +1115,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.145043477, 0, 0",
+            "TotalRotation": "-0.09886941, 0, 0",
             "IsStarting": false,
-            "IsUpdating": false,
+            "IsUpdating": true,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -1142,7 +1142,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 0.0,
+              "CurrentFrame": 2124.6123,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1156,7 +1156,7 @@
         "ID": "Leg/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0, 0, 0",
+        "RotationOffset": "-0.09886941, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1260,7 +1260,6 @@
             {
               "Rewards": {
                 "Experience": 100,
-                "ClassPoints": 0,
                 "Junk": 0,
                 "Items": [],
                 "Rewarded": false,
@@ -1327,7 +1326,6 @@
           {
             "Rewards": {
               "Experience": 100,
-              "ClassPoints": 0,
               "Junk": 0,
               "Items": [],
               "Rewarded": false,
@@ -1376,23 +1374,23 @@
     "RotationPoint": "0, 0, 0",
     "CastsShadow": true,
     "Size": "1, 1, 1",
-    "Direction": 3.926105,
-    "Position": "50.4976425, 53.5038338, 0",
+    "Direction": 1.03364372,
+    "Position": "54.7279, 53.5612144, 0",
     "Area": {
       "Location": {
         "IsEmpty": false,
-        "X": 50.4976425,
-        "Y": 53.5038338
+        "X": 54.7279,
+        "Y": 53.5612144
       },
       "Size": "1, 1",
-      "X": 50.4976425,
-      "Y": 53.5038338,
+      "X": 54.7279,
+      "Y": 53.5612144,
       "Width": 1.0,
       "Height": 1.0,
-      "Left": 50.4976425,
-      "Top": 53.5038338,
-      "Right": 51.4976425,
-      "Bottom": 54.5038338,
+      "Left": 54.7279,
+      "Top": 53.5612144,
+      "Right": 55.7279,
+      "Bottom": 54.5612144,
       "IsEmpty": false
     },
     "EquippedWeapon": {
@@ -1470,7 +1468,7 @@
       "Name": "[No Accessory]",
       "Effect": null
     },
-    "Center": "50.9976425, 54.0038338, 0.5"
+    "Center": "55.2279, 54.0612144, 0.5"
   },
   "old man": {
     "Components": {
@@ -1579,7 +1577,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.634305239, 0, 0",
+            "TotalRotation": "0.676600456, 0, 0",
             "IsStarting": false,
             "IsUpdating": true,
             "IsStopping": false,
@@ -1606,7 +1604,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 11067.9668,
+              "CurrentFrame": 6640.78125,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1620,7 +1618,7 @@
         "ID": "Arm/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "-0.634305239, 0, 0",
+        "RotationOffset": "0.676600456, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1637,7 +1635,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.634305239, 0, 0",
+            "TotalRotation": "-0.676600456, 0, 0",
             "IsStarting": false,
             "IsUpdating": true,
             "IsStopping": false,
@@ -1664,7 +1662,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 11067.9668,
+              "CurrentFrame": 6640.78125,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1678,7 +1676,7 @@
         "ID": "Arm/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0.634305239, 0, 0",
+        "RotationOffset": "-0.676600456, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1695,7 +1693,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.634305239, 0, 0",
+            "TotalRotation": "0.676600456, 0, 0",
             "IsStarting": false,
             "IsUpdating": true,
             "IsStopping": false,
@@ -1722,7 +1720,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 11067.9668,
+              "CurrentFrame": 6640.78125,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1736,7 +1734,7 @@
         "ID": "Hand/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "-0.634305239, 0, 0",
+        "RotationOffset": "0.676600456, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1753,7 +1751,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.634305239, 0, 0",
+            "TotalRotation": "-0.676600456, 0, 0",
             "IsStarting": false,
             "IsUpdating": true,
             "IsStopping": false,
@@ -1780,7 +1778,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 11067.9668,
+              "CurrentFrame": 6640.78125,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1794,7 +1792,7 @@
         "ID": "Hand/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0.634305239, 0, 0",
+        "RotationOffset": "-0.676600456, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1811,7 +1809,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.634305239, 0, 0",
+            "TotalRotation": "-0.676600456, 0, 0",
             "IsStarting": false,
             "IsUpdating": true,
             "IsStopping": false,
@@ -1838,7 +1836,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 11067.9668,
+              "CurrentFrame": 6640.78125,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1852,7 +1850,7 @@
         "ID": "Leg/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0.634305239, 0, 0",
+        "RotationOffset": "-0.676600456, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1869,7 +1867,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.634305239, 0, 0",
+            "TotalRotation": "0.676600456, 0, 0",
             "IsStarting": false,
             "IsUpdating": true,
             "IsStopping": false,
@@ -1896,7 +1894,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 11067.9668,
+              "CurrentFrame": 6640.78125,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1910,7 +1908,7 @@
         "ID": "Leg/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "-0.634305239, 0, 0",
+        "RotationOffset": "0.676600456, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -2196,7 +2194,7 @@
               "ExitsConversation": true,
               "MessageIndex": 0,
               "Text": [
-                "0: NULL"
+                "0: 12/4/2019 7:55:39 PM"
               ]
             },
             {
@@ -2205,7 +2203,7 @@
               "ExitsConversation": true,
               "MessageIndex": 0,
               "Text": [
-                "1: 12/3/2019 11:37:29 PM"
+                "1: 12/4/2019 9:37:28 PM"
               ]
             },
             {
@@ -2214,7 +2212,7 @@
               "ExitsConversation": true,
               "MessageIndex": 0,
               "Text": [
-                "2: 12/1/2019 11:11:34 PM"
+                "2: 12/4/2019 8:09:03 PM"
               ]
             },
             {
@@ -2223,7 +2221,7 @@
               "ExitsConversation": true,
               "MessageIndex": 0,
               "Text": [
-                "3: 12/1/2019 9:05:04 PM"
+                "3: 12/4/2019 8:09:04 PM"
               ]
             },
             {
@@ -2232,7 +2230,7 @@
               "ExitsConversation": true,
               "MessageIndex": 0,
               "Text": [
-                "4: NULL"
+                "4: 12/4/2019 8:09:04 PM"
               ]
             },
             {
@@ -2381,23 +2379,23 @@
     "RotationPoint": "0, 0, 0",
     "CastsShadow": true,
     "Size": "1, 1, 1",
-    "Direction": 4.176616,
-    "Position": "51.5305977, 52.6898, 0",
+    "Direction": 1.02948332,
+    "Position": "55.9220467, 54.2414169, 0",
     "Area": {
       "Location": {
         "IsEmpty": false,
-        "X": 51.5305977,
-        "Y": 52.6898
+        "X": 55.9220467,
+        "Y": 54.2414169
       },
       "Size": "1, 1",
-      "X": 51.5305977,
-      "Y": 52.6898,
+      "X": 55.9220467,
+      "Y": 54.2414169,
       "Width": 1.0,
       "Height": 1.0,
-      "Left": 51.5305977,
-      "Top": 52.6898,
-      "Right": 52.5305977,
-      "Bottom": 53.6898,
+      "Left": 55.9220467,
+      "Top": 54.2414169,
+      "Right": 56.9220467,
+      "Bottom": 55.2414169,
       "IsEmpty": false
     },
     "EquippedWeapon": {
@@ -2475,7 +2473,7 @@
       "Name": "[No Accessory]",
       "Effect": null
     },
-    "Center": "52.0305977, 53.1898, 0.5"
+    "Center": "56.4220467, 54.7414169, 0.5"
   },
   "building": {
     "Components": {

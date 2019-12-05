@@ -19,8 +19,8 @@ namespace Generator
         public static SavedInt PlayerPartyNumber = new SavedInt("playerPartyNumber", 0);
         public static GameObject Player
         {
-            get { return Party.Value.Members[PlayerPartyNumber.Value]; }
-            set { PlayerPartyNumber.Value = Party.Value.Members.IndexOf(value); }
+            get { return GameObjectManager.ObjectFromID[Party.Value.MemberIDs[PlayerPartyNumber.Value]]; }
+            set { PlayerPartyNumber.Value = Party.Value.MemberIDs.IndexOf(value.ID); }
         }
 
         // The current conversation - there can be only one

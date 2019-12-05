@@ -1,24 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 
 namespace Generator
 {
     public class Party
     {
-        public List<GameObject> Members;
+        public List<string> MemberIDs;
         public List<Item> Inventory;
         public bool InCombat = false;
         public int Junk = 0;
 
         // Constructor
-        public Party(List<GameObject> members = null)
+        public Party(List<string> memberNames = null)
         {
-            Members = members ?? new List<GameObject>();
+            MemberIDs = memberNames ?? new List<string>();
+        }
+
+        public IEnumerable<GameObject> GetMembers()
+        {
+            return MemberIDs.Select((member) => GameObjectManager.ObjectFromID[member]);
         }
 
         public void Say(string text)
             // Make the whole party say/emote something
         {
-            foreach (var member in Members)
+            foreach (var member in GetMembers())
             {
                 if (member.Health.Current > 0)
                 {
@@ -31,23 +37,11 @@ namespace Generator
             // Grants experience to all conscious members of the party
         {
             Globals.Log("The party gains " + experience + " experience!");
-            foreach (var member in Members)
+            foreach (var member in GetMembers())
             {
                 if (member.Health.Current > 0)
                 {
                     member.Experience += experience;
-                }
-            }
-        }
-
-        public void AddClassPoints(int classPoints)
-            // Grants CP to all conscious members of the party
-        {
-            foreach (var member in Members)
-            {
-                if (member.Health.Current > 0)
-                {
-                    // TODO: This!
                 }
             }
         }

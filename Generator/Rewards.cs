@@ -9,16 +9,14 @@ namespace Generator
     public class Rewards
     {
         public int Experience;
-        public int ClassPoints;
         public int Junk;
         public List<Item> Items;
         public bool Rewarded = false;
         public bool Repeatable = false;
 
-        public Rewards(int experience = 0, int classPoints = 0, int junk = 0, List<Item> items = null, bool repeatable = false)
+        public Rewards(int experience = 0, int junk = 0, List<Item> items = null, bool repeatable = false)
         {
             Experience = experience;
-            ClassPoints = classPoints;
             Junk = junk;
             Items = items ?? new List<Item>();
             Repeatable = repeatable;
@@ -29,7 +27,6 @@ namespace Generator
             if (!Rewarded || Repeatable)
             {
                 Globals.Party.Value.AddExperience(Experience);
-                Globals.Party.Value.AddClassPoints(ClassPoints);
                 Globals.Party.Value.AddJunk(Junk);
                 foreach (var item in Items)
                 {

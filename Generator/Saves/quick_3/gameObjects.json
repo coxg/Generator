@@ -106,7 +106,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "-0.373588681, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -168,7 +168,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "0.373588681, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -230,7 +230,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "-0.373588681, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -292,7 +292,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "0.373588681, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -354,7 +354,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "0.373588681, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -416,7 +416,7 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0, 0, 0",
+            "TotalRotation": "-0.373588681, 0, 0",
             "IsStarting": false,
             "IsUpdating": false,
             "IsStopping": false,
@@ -654,23 +654,23 @@
     "RotationPoint": "0, 0, 0",
     "CastsShadow": true,
     "Size": "1, 1, 1",
-    "Direction": 1.57079649,
-    "Position": "63.41417, 52.08088, 0",
+    "Direction": 4.712389,
+    "Position": "58.2930756, 51.89146, 0",
     "Area": {
       "Location": {
         "IsEmpty": false,
-        "X": 63.41417,
-        "Y": 52.08088
+        "X": 58.2930756,
+        "Y": 51.89146
       },
       "Size": "1, 1",
-      "X": 63.41417,
-      "Y": 52.08088,
+      "X": 58.2930756,
+      "Y": 51.89146,
       "Width": 1.0,
       "Height": 1.0,
-      "Left": 63.41417,
-      "Top": 52.08088,
-      "Right": 64.41417,
-      "Bottom": 53.08088,
+      "Left": 58.2930756,
+      "Top": 51.89146,
+      "Right": 59.2930756,
+      "Bottom": 52.89146,
       "IsEmpty": false
     },
     "EquippedWeapon": {
@@ -748,7 +748,7 @@
       "Name": "[No Accessory]",
       "Effect": null
     },
-    "Center": "63.91417, 52.58088, 0.5"
+    "Center": "58.7930756, 52.39146, 0.5"
   },
   "farrah": {
     "Components": {
@@ -857,9 +857,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.339100271, 0, 0",
+            "TotalRotation": "-0.08382308, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
+            "IsUpdating": false,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -888,7 +888,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 5479.408,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -902,7 +902,7 @@
         "ID": "Arm/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0.339100271, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -919,9 +919,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.339100271, 0, 0",
+            "TotalRotation": "0.08382308, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
+            "IsUpdating": false,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -950,7 +950,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 5479.408,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -964,7 +964,7 @@
         "ID": "Arm/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "-0.339100271, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.414",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -981,9 +981,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.339100271, 0, 0",
+            "TotalRotation": "-0.08382308, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
+            "IsUpdating": false,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -1012,7 +1012,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 5479.408,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1026,7 +1026,7 @@
         "ID": "Hand/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0.339100271, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1043,9 +1043,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.339100271, 0, 0",
+            "TotalRotation": "0.08382308, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
+            "IsUpdating": false,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -1074,7 +1074,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 5479.408,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1088,7 +1088,7 @@
         "ID": "Hand/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "-0.339100271, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.576000035",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1105,9 +1105,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "-0.339100271, 0, 0",
+            "TotalRotation": "0.08382308, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
+            "IsUpdating": false,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -1136,7 +1136,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 5479.408,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1150,7 +1150,7 @@
         "ID": "Leg/Left",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "-0.339100271, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1167,9 +1167,9 @@
           "Walk": {
             "Name": "Walk",
             "TotalOffset": "0, 0, 0",
-            "TotalRotation": "0.339100271, 0, 0",
+            "TotalRotation": "-0.08382308, 0, 0",
             "IsStarting": false,
-            "IsUpdating": true,
+            "IsUpdating": false,
             "IsStopping": false,
             "StartFrames": null,
             "UpdateFrames": {
@@ -1198,7 +1198,7 @@
                 18000
               ],
               "Duration": 3.0,
-              "CurrentFrame": 5479.408,
+              "CurrentFrame": 0.0,
               "Smoothing": 100
             },
             "StopFrames": null
@@ -1212,7 +1212,7 @@
         "ID": "Leg/Right",
         "Name": null,
         "AnimationOffset": "0, 0, 0",
-        "RotationOffset": "0.339100271, 0, 0",
+        "RotationOffset": "0, 0, 0",
         "RotationPoint": "0.24, 0, 0.324",
         "CastsShadow": true,
         "Center": "0, 0, 0"
@@ -1316,7 +1316,6 @@
             {
               "Rewards": {
                 "Experience": 100,
-                "ClassPoints": 0,
                 "Junk": 0,
                 "Items": [],
                 "Rewarded": false,
@@ -1383,7 +1382,6 @@
           {
             "Rewards": {
               "Experience": 100,
-              "ClassPoints": 0,
               "Junk": 0,
               "Items": [],
               "Rewarded": false,
@@ -1432,23 +1430,23 @@
     "RotationPoint": "0, 0, 0",
     "CastsShadow": true,
     "Size": "1, 1, 1",
-    "Direction": 1.79192448,
-    "Position": "57.5215, 53.4055748, 0",
+    "Direction": 1.77655268,
+    "Position": "56.2581139, 54.4877739, 0",
     "Area": {
       "Location": {
         "IsEmpty": false,
-        "X": 57.5215,
-        "Y": 53.4055748
+        "X": 56.2581139,
+        "Y": 54.4877739
       },
       "Size": "1, 1",
-      "X": 57.5215,
-      "Y": 53.4055748,
+      "X": 56.2581139,
+      "Y": 54.4877739,
       "Width": 1.0,
       "Height": 1.0,
-      "Left": 57.5215,
-      "Top": 53.4055748,
-      "Right": 58.5215,
-      "Bottom": 54.4055748,
+      "Left": 56.2581139,
+      "Top": 54.4877739,
+      "Right": 57.2581139,
+      "Bottom": 55.4877739,
       "IsEmpty": false
     },
     "EquippedWeapon": {
@@ -1526,7 +1524,7 @@
       "Name": "[No Accessory]",
       "Effect": null
     },
-    "Center": "58.0215, 53.9055748, 0.5"
+    "Center": "56.7581139, 54.9877739, 0.5"
   },
   "old man": {
     "Components": {
@@ -2051,7 +2049,7 @@
     "Abilities": [],
     "Conversation": {
       "StartingChoicesIndex": 0,
-      "CurrentChoicesIndex": 1,
+      "CurrentChoicesIndex": 0,
       "ChoicesList": [
         {
           "Index": 0,
@@ -2102,7 +2100,7 @@
         },
         {
           "Index": 1,
-          "CurrentNodeIndex": 3,
+          "CurrentNodeIndex": 0,
           "ChoiceSelected": false,
           "Nodes": [
             {
@@ -2276,7 +2274,7 @@
               "ExitsConversation": true,
               "MessageIndex": 0,
               "Text": [
-                "0: NULL"
+                "0: 12/4/2019 7:55:39 PM"
               ]
             },
             {
@@ -2285,7 +2283,7 @@
               "ExitsConversation": true,
               "MessageIndex": 0,
               "Text": [
-                "1: 12/1/2019 9:04:19 PM"
+                "1: 12/4/2019 9:37:28 PM"
               ]
             },
             {
@@ -2294,7 +2292,7 @@
               "ExitsConversation": true,
               "MessageIndex": 0,
               "Text": [
-                "2: NULL"
+                "2: 12/4/2019 8:09:03 PM"
               ]
             },
             {
@@ -2303,7 +2301,7 @@
               "ExitsConversation": true,
               "MessageIndex": 0,
               "Text": [
-                "3: NULL"
+                "3: 12/4/2019 8:09:04 PM"
               ]
             },
             {
@@ -2312,7 +2310,7 @@
               "ExitsConversation": true,
               "MessageIndex": 0,
               "Text": [
-                "4: NULL"
+                "4: 12/4/2019 8:09:04 PM"
               ]
             },
             {
@@ -2389,35 +2387,38 @@
         }
       ],
       "CurrentChoices": {
-        "Index": 1,
-        "CurrentNodeIndex": 3,
+        "Index": 0,
+        "CurrentNodeIndex": 0,
         "ChoiceSelected": false,
         "Nodes": [
           {
             "Rewards": null,
-            "GoToChoicesIndex": 2,
+            "GoToChoicesIndex": null,
             "ExitsConversation": false,
             "MessageIndex": 0,
             "Text": [
-              "Manual Saves"
+              "niels: Toggle inCombat.",
+              "inCombat is now True."
             ]
           },
           {
             "Rewards": null,
-            "GoToChoicesIndex": 3,
+            "GoToChoicesIndex": null,
             "ExitsConversation": false,
             "MessageIndex": 0,
             "Text": [
-              "Autosaves"
+              "niels: Toggle creativeMode.",
+              "creativeMode is now True."
             ]
           },
           {
             "Rewards": null,
-            "GoToChoicesIndex": 4,
+            "GoToChoicesIndex": null,
             "ExitsConversation": false,
             "MessageIndex": 0,
             "Text": [
-              "Quicksaves"
+              "niels: Load save1.",
+              "Okay."
             ]
           },
           {
@@ -2426,7 +2427,8 @@
             "ExitsConversation": true,
             "MessageIndex": 0,
             "Text": [
-              "niels: Nevermind."
+              "niels: I'm done changing settings.",
+              "Roger."
             ]
           }
         ]
@@ -2434,10 +2436,11 @@
       "CurrentNode": {
         "Rewards": null,
         "GoToChoicesIndex": null,
-        "ExitsConversation": true,
+        "ExitsConversation": false,
         "MessageIndex": 0,
         "Text": [
-          "niels: Nevermind."
+          "niels: Toggle inCombat.",
+          "inCombat is now True."
         ]
       }
     },
@@ -2456,23 +2459,23 @@
     "RotationPoint": "0, 0, 0",
     "CastsShadow": true,
     "Size": "1, 1, 1",
-    "Direction": 1.82470465,
-    "Position": "58.5822678, 53.3348, 0",
+    "Direction": 1.02068853,
+    "Position": "57.26993, 55.0680237, 0",
     "Area": {
       "Location": {
         "IsEmpty": false,
-        "X": 58.5822678,
-        "Y": 53.3348
+        "X": 57.26993,
+        "Y": 55.0680237
       },
       "Size": "1, 1",
-      "X": 58.5822678,
-      "Y": 53.3348,
+      "X": 57.26993,
+      "Y": 55.0680237,
       "Width": 1.0,
       "Height": 1.0,
-      "Left": 58.5822678,
-      "Top": 53.3348,
-      "Right": 59.5822678,
-      "Bottom": 54.3348,
+      "Left": 57.26993,
+      "Top": 55.0680237,
+      "Right": 58.26993,
+      "Bottom": 56.0680237,
       "IsEmpty": false
     },
     "EquippedWeapon": {
@@ -2550,7 +2553,7 @@
       "Name": "[No Accessory]",
       "Effect": null
     },
-    "Center": "59.0822678, 53.8348, 0.5"
+    "Center": "57.76993, 55.5680237, 0.5"
   },
   "building": {
     "Components": {

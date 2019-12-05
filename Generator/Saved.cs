@@ -14,13 +14,13 @@ namespace Generator
         public T Value
         {
             get {
-                T returnValue;
-                if (SavedDict.TryGetValue(Name, out returnValue))
+                if (SavedDict.TryGetValue(Name, out T returnValue))
                 {
                     return returnValue;
                 }
                 else
                 {
+                    SavedDict[Name] = DefaultValue;
                     return DefaultValue;
                 }
             }
@@ -42,20 +42,32 @@ namespace Generator
 
         public static void Load(string saveDir)
         {
-            using (StreamReader file = File.OpenText(saveDir + "/misc.json"))
+            using (StreamReader file = File.OpenText(saveDir + "/ints.json"))
             {
                 Ints = (Dictionary<string, int>)Globals.Serializer.Deserialize(file, typeof(Dictionary<string, int>));
+            }
+            using (StreamReader file = File.OpenText(saveDir + "/strings.json"))
+            {
                 Strings = (Dictionary<string, string>)Globals.Serializer.Deserialize(file, typeof(Dictionary<string, string>));
+            }
+            using (StreamReader file = File.OpenText(saveDir + "/parties.json"))
+            {
                 Parties = (Dictionary<string, Party>)Globals.Serializer.Deserialize(file, typeof(Dictionary<string, Party>));
             }
         }
 
         public static void Save(string saveDir)
         {
-            using (StreamWriter file = File.CreateText(saveDir + "/misc.json"))
+            using (StreamWriter file = File.CreateText(saveDir + "/ints.json"))
             {
                 Globals.Serializer.Serialize(file, Ints);
+            }
+            using (StreamWriter file = File.CreateText(saveDir + "/strings.json"))
+            {
                 Globals.Serializer.Serialize(file, Strings);
+            }
+            using (StreamWriter file = File.CreateText(saveDir + "/parties.json"))
+            {
                 Globals.Serializer.Serialize(file, Parties);
             }
         }

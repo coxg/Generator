@@ -115,8 +115,6 @@ namespace Generator
                     }
                 }
             }
-            Globals.Party.Value.Members.Add(ObjectFromID["niels"]);
-            Globals.Player = ObjectFromID["niels"];
             GameControl.lightingRenderTargets = new Dictionary<GameObject, RenderTarget2D>();
         }
 
@@ -145,7 +143,7 @@ namespace Generator
                     Ability.Abilities["Shoot"],
                     Ability.Abilities["Place Object"],
                     Ability.Abilities["Attack"] });
-            Globals.Party.Value.Members.Add(niels);
+            Globals.Party.Value.MemberIDs.Add("niels");
 
 
             bool saidName = false;
@@ -216,7 +214,7 @@ namespace Generator
                                     exitsConversation: true),
                             })
                     }));
-            Globals.Party.Value.Members.Add(farrah);
+            Globals.Party.Value.MemberIDs.Add("farrah");
 
             var oldMan = new GameObject(
                 new Vector3(55, 56, 0),
@@ -320,7 +318,7 @@ namespace Generator
                                 new Conversation.Choices.Node("niels: Nevermind.", exitsConversation: true)
                             })
                     }));
-            Globals.Party.Value.Members.Add(oldMan);
+            Globals.Party.Value.MemberIDs.Add("old man");
 
             new GameObject(
                 new Vector3(57, 59, 0), 
