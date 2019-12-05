@@ -149,7 +149,6 @@ namespace Generator
 
         // Toggleables
         private bool _isWalking;
-        [JsonIgnore]
         public bool IsWalking
         {
             get => _isWalking;
@@ -380,9 +379,11 @@ namespace Generator
                             updateFrames: new Frames(
                                 baseRotations: new List<Vector3>
                                 {
+                                    Vector3.Zero,
                                     new Vector3(.7f, 0, 0),
                                     Vector3.Zero,
-                                    new Vector3(-.7f, 0, 0)
+                                    new Vector3(-.7f, 0, 0),
+                                    Vector3.Zero
                                 },
                                 duration: 3
                                 )
@@ -391,7 +392,7 @@ namespace Generator
                     })
                 },
                 {"Arm/Right", new Component(
-                    id: "Arm/Righ",
+                    id: "Arm/Right",
                     spriteFile: ComponentSpriteFileName,
                     relativePosition: new Vector3(.92f, .504f, .515f),
                     relativeSize: .08f,
@@ -404,9 +405,11 @@ namespace Generator
                             updateFrames: new Frames(
                                 baseRotations: new List<Vector3>
                                 {
+                                    Vector3.Zero,
                                     new Vector3(-.7f, 0, 0),
                                     Vector3.Zero,
-                                    new Vector3(.7f, 0, 0)
+                                    new Vector3(.7f, 0, 0),
+                                    Vector3.Zero
                                 },
                                 duration: 3
                                 )
@@ -427,9 +430,11 @@ namespace Generator
                             updateFrames: new Frames(
                                 baseRotations: new List<Vector3>
                                 {
+                                    Vector3.Zero,
                                     new Vector3(.7f, 0, 0),
                                     Vector3.Zero,
-                                    new Vector3(-.7f, 0, 0)
+                                    new Vector3(-.7f, 0, 0),
+                                    Vector3.Zero
                                 },
                                 duration: 3
                                 )
@@ -450,9 +455,11 @@ namespace Generator
                             updateFrames: new Frames(
                                 baseRotations: new List<Vector3>
                                 {
+                                    Vector3.Zero,
                                     new Vector3(-.7f, 0, 0),
                                     Vector3.Zero,
-                                    new Vector3(.7f, 0, 0)
+                                    new Vector3(.7f, 0, 0),
+                                    Vector3.Zero
                                 },
                                 duration: 3
                                 )
@@ -473,9 +480,11 @@ namespace Generator
                             updateFrames: new Frames(
                                 baseRotations: new List<Vector3>
                                 {
+                                    Vector3.Zero,
                                     new Vector3(-.7f, 0, 0),
                                     Vector3.Zero,
-                                    new Vector3(.7f, 0, 0)
+                                    new Vector3(.7f, 0, 0),
+                                    Vector3.Zero
                                 },
                                 duration: 3
                                 )
@@ -496,9 +505,11 @@ namespace Generator
                             updateFrames: new Frames(
                                 baseRotations: new List<Vector3>
                                 {
+                                    Vector3.Zero,
                                     new Vector3(.7f, 0, 0),
                                     Vector3.Zero,
-                                    new Vector3(-.7f, 0, 0)
+                                    new Vector3(-.7f, 0, 0),
+                                    Vector3.Zero
                                 },
                                 duration: 3
                                 )
@@ -567,6 +578,8 @@ namespace Generator
 
                 if (Health.Current <= 0)
                 {
+                    // TODO: Make party members go unconscious
+                    Globals.Party.Value.MemberIDs.Remove(ID);
                     Die();
                 }
             }

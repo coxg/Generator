@@ -22,19 +22,13 @@ namespace Generator
             Smoothing = smoothing;  // How many frames to generate per 1 frame under 100% speed
 
             // Normalize positional and rotational offsets to start and end at 0, 0, 0
-            baseOffsets = baseOffsets ?? new List<Vector3>();
-            baseOffsets.Insert(0, Vector3.Zero);
-            baseOffsets.Add(Vector3.Zero);
-            BaseOffsets = baseOffsets;
-            baseRotations = baseRotations ?? new List<Vector3>();
-            baseRotations.Insert(0, Vector3.Zero);
-            baseRotations.Add(Vector3.Zero);
-            BaseRotations = baseRotations;
+            BaseOffsets = baseOffsets ?? new List<Vector3> { Vector3.Zero, Vector3.Zero };
+            BaseRotations = baseRotations ?? new List<Vector3> { Vector3.Zero, Vector3.Zero };
 
             // Derive the termination conditions and smoothed frames
-            Terminators = GetTerminators(baseOffsets, baseRotations);
-            SmoothedOffsets = GetSmoothedFrames(baseOffsets);
-            SmoothedRotations = GetSmoothedFrames(baseRotations);
+            Terminators = GetTerminators(BaseOffsets, BaseRotations);
+            SmoothedOffsets = GetSmoothedFrames(BaseOffsets);
+            SmoothedRotations = GetSmoothedFrames(BaseRotations);
         }
 
         public List<Vector3> BaseOffsets;

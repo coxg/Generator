@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
@@ -68,6 +69,23 @@ namespace Generator
             { "start",  new KeyBinding(Buttons.Start,           Keys.Z) },
             { "select", new KeyBinding(Buttons.Back,            Keys.X) },
         };
+
+        public static void Save(string saveFile)
+        {
+            using (StreamWriter file = File.CreateText(saveFile + "/input.json"))
+            {
+                Globals.Serializer.Serialize(file, KeyBindings);
+            }
+        }
+
+        public static void Load(string saveDir)
+        {
+            using (StreamReader file = File.OpenText(saveDir + "/input.json"))
+            {
+                KeyBindings = (Dictionary<string, KeyBinding>)
+                    Globals.Serializer.Deserialize(file, typeof(Dictionary<string, KeyBinding>));
+            }
+        }
 
         public static void GetInput(GameObject player)
         {

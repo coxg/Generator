@@ -91,6 +91,7 @@ namespace Generator
             GameObjectManager.Save(saveDir);
             foreach (Acre acre in TileManager.Acres) acre.Save();
             SavedDicts.Save(saveDir);
+            Input.Save(saveDir);
         }
 
         public static void Load(string category, int slot)
@@ -103,6 +104,7 @@ namespace Generator
                 GameObjectManager.Load(saveDir);
                 TileManager.PopulateAcres();
                 SavedDicts.Load(saveDir);
+                Input.Load(saveDir);
             }
             else
             {

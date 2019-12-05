@@ -258,7 +258,9 @@ namespace Generator
                         updateFrames: new Frames(
                             baseOffsets: new List<Vector3>
                             {
-                                new Vector3(0, 0, .2f)
+                                Vector3.Zero,
+                                new Vector3(0, 0, .2f),
+                                Vector3.Zero
                             },
                             duration: 1.5f)),
                     start: new Cached<Action<GameObject>>("SprintStart"),
@@ -299,21 +301,27 @@ namespace Generator
                         startFrames: new Frames(
                             baseOffsets: new List<Vector3>
                             {
-                                new Vector3(0, 0, 1)
+                                Vector3.Zero,
+                                new Vector3(0, 0, 1),
+                                Vector3.Zero,
                             },
                             duration: 1),
                         updateFrames: new Frames(
                             baseOffsets: new List<Vector3>
                             {
+                                Vector3.Zero,
                                 new Vector3(-.2f, 0, 0),
                                 Vector3.Zero,
-                                new Vector3(.2f, 0, 0)
+                                new Vector3(.2f, 0, 0),
+                                Vector3.Zero
                             },
                             duration: .5f),
                         stopFrames: new Frames(
                             baseOffsets: new List<Vector3>
                             {
-                                new Vector3(0, 0, 1)
+                                Vector3.Zero,
+                                new Vector3(0, 0, 1),
+                                Vector3.Zero
                             },
                             duration: 1))
                 )
