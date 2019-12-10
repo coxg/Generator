@@ -17,7 +17,7 @@ namespace Generator
             // TODO: Rather than looping through all objects for each tile, 
             // create a mapping layer for brightness which gets computed on each
             // update.
-            foreach (var gameObject in GameObjectManager.ObjectFromID.Values)
+            foreach (var gameObject in Globals.Objects)
             {
                 var objectDistance = Math.Sqrt(
                     Math.Pow(gameObject.Center.X - x, 2) + Math.Pow(gameObject.Center.Y - y, 2));
@@ -602,22 +602,22 @@ namespace Generator
         public static void DrawTile(int x, int y, float opacity = 1)
         {
             // Draw the base tile itself
-            var tileIndex = TileManager.GetIndex(x, y);
             var bottomLeft = new Vector2(x, y);
-            DrawTileLayer(TileManager.IDFromIndex[tileIndex], bottomLeft, opacity: opacity);
+            DrawTileLayer(Globals.Zone.Tiles.Get(x, y).ID, bottomLeft, opacity: opacity);
 
+            /*
             // Figure which tiles surround the current tile
             var surroundingTileMap = new Dictionary<string, Tile>
-                    {
-                        { "Top", TileManager.Get(x, y + 1) },
-                        { "Bottom", TileManager.Get(x, y - 1) },
-                        { "Right", TileManager.Get(x + 1, y) },
-                        { "Left", TileManager.Get(x - 1, y) },
-                        { "Top Left", TileManager.Get(x - 1, y + 1) },
-                        { "Top Right", TileManager.Get(x + 1, y + 1) },
-                        { "Bottom Right", TileManager.Get(x + 1, y - 1) },
-                        { "Bottom Left", TileManager.Get(x - 1, y - 1) },
-                    };
+            {
+                { "Top", Globals.Zone.Tiles.Get(x, y + 1) },
+                { "Bottom", Globals.Zone.Tiles.Get(x, y - 1) },
+                { "Right", Globals.Zone.Tiles.Get(x + 1, y) },
+                { "Left", Globals.Zone.Tiles.Get(x - 1, y) },
+                { "Top Left", Globals.Zone.Tiles.Get(x - 1, y + 1) },
+                { "Top Right", Globals.Zone.Tiles.Get(x + 1, y + 1) },
+                { "Bottom Right", Globals.Zone.Tiles.Get(x + 1, y - 1) },
+                { "Bottom Left", Globals.Zone.Tiles.Get(x - 1, y - 1) },
+            };
 
             // Figure out which unique tiles surround the current tile
             var uniqueSurroundingTileMap = new Dictionary<int, HashSet<string>>();
@@ -636,7 +636,7 @@ namespace Generator
             // Loop through each unique tile from smallest to largest index, applying all layers for each
             foreach (var uniqueSurroundingTile in uniqueSurroundingTileMap.OrderBy(uniqueSurroundingTile => uniqueSurroundingTile.Key))
             {
-                var tileName = TileManager.IDFromIndex[uniqueSurroundingTile.Key].Split(' ')[0];
+                var tileName = Globals.Zone.Tiles.IDFromIndex[uniqueSurroundingTile.Key].Split(' ')[0];
 
                 // If we are being drawn over the tiles on all sides
                 if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Bottom")
@@ -752,6 +752,7 @@ namespace Generator
                     }
                 }
             }
+            */
         }
 
         // Draws a light source
@@ -885,7 +886,7 @@ namespace Generator
             vertices[5].Position = vertices[2].Position;
 
             // Draw it
-            GameControl.effect.Texture = TileManager.ObjectFromID[tileName].Sprite;
+            GameControl.effect.Texture = Globals.Zone.Tiles.Objects[tileName].Sprite.Value;
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -897,10 +898,11 @@ namespace Generator
         // Draws the creative mode UI, including tile previews
         public static void DrawCreativeUI(SpriteBatch spriteBatch)
         {
+            /*
             // Draw the object on the left
             DrawSprite(
                 spriteBatch,
-                TileManager.ObjectFromID[
+                TileManager.Objects[
                     TileManager.IDFromIndex[
                         TileManager.BaseTileIndexes[
                             (int)MathTools.Mod(Globals.CreativeObjectIndex - 1, TileManager.BaseTileIndexes.Count)]]].Sprite,
@@ -910,7 +912,7 @@ namespace Generator
             // Draw the object in the middle
             DrawSprite(
                 spriteBatch,
-                TileManager.ObjectFromID[
+                TileManager.Objects[
                     TileManager.IDFromIndex[
                          TileManager.BaseTileIndexes[
                             Globals.CreativeObjectIndex]]].Sprite,
@@ -920,12 +922,13 @@ namespace Generator
             // Draw the object on the right
             DrawSprite(
                 spriteBatch,
-                TileManager.ObjectFromID[
+                TileManager.Objects[
                     TileManager.IDFromIndex[
                          TileManager.BaseTileIndexes[
                             (int)MathTools.Mod(Globals.CreativeObjectIndex + 1, TileManager.BaseTileIndexes.Count)]]].Sprite,
                 new Vector2(Globals.Resolution.X / 2 + 75, 10),
                 new Vector2(Globals.Resolution.X / 2 + 125, 60));
+                */
         }
     }
 }

@@ -62,7 +62,6 @@
   <ItemGroup>
     <Compile Include="Ability.cs" />
     <Compile Include="Accessory.cs" />
-    <Compile Include="Acre.cs" />
     <Compile Include="Animation.cs" />
     <Compile Include="Actions.cs" />
     <Compile Include="Conversation.cs" />
@@ -119,6 +118,7 @@
     <Compile Include="Weapon.cs" />
     <Compile Include="Saving.cs" />
     <Compile Include="Saved.cs" />
+    <Compile Include="Zone.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

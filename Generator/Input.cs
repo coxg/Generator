@@ -70,17 +70,17 @@ namespace Generator
             { "select", new KeyBinding(Buttons.Back,            Keys.X) },
         };
 
-        public static void Save(string saveFile)
+        public static void Save()
         {
-            using (StreamWriter file = File.CreateText(saveFile + "/input.json"))
+            using (StreamWriter file = File.CreateText(Saving.CurrentSaveDirectory + "/input.json"))
             {
                 Globals.Serializer.Serialize(file, KeyBindings);
             }
         }
 
-        public static void Load(string saveDir)
+        public static void Load()
         {
-            using (StreamReader file = File.OpenText(saveDir + "/input.json"))
+            using (StreamReader file = File.OpenText(Saving.CurrentSaveDirectory + "/input.json"))
             {
                 KeyBindings = (Dictionary<string, KeyBinding>)
                     Globals.Serializer.Deserialize(file, typeof(Dictionary<string, KeyBinding>));
@@ -232,7 +232,7 @@ namespace Generator
                 // TODO: Once menus are a thing we won't need to check if the CurrentConversation is null
                 else if (Globals.CurrentConversation == null && KeyBindings["start"].IsPressed && KeyBindings["start"].PressedDuration >= .5f)
                 {
-                    Globals.CurrentConversation = GameObjectManager.ObjectFromID["old man"].Conversation;
+                    Globals.CurrentConversation = Globals.Zone.GameObjects.Objects["old man"].Conversation;
                     Globals.CurrentConversation.CurrentChoicesIndex = 5;
                 }
 
@@ -244,7 +244,7 @@ namespace Generator
                 // TODO: Once menus are a thing we won't need to check if the CurrentConversation is null
                 else if (Globals.CurrentConversation == null && KeyBindings["select"].IsPressed && KeyBindings["select"].PressedDuration >= .5f)
                 {
-                    Globals.CurrentConversation = GameObjectManager.ObjectFromID["old man"].Conversation;
+                    Globals.CurrentConversation = Globals.Zone.GameObjects.Objects["old man"].Conversation;
                     Globals.CurrentConversation.CurrentChoicesIndex = 1;
                 }
 
@@ -256,14 +256,14 @@ namespace Generator
                     if (KeyBindings["left"].IsBeingPressed)
                     {
                         Globals.CreativeObjectIndex = (int)MathTools.Mod(
-                            Globals.CreativeObjectIndex - 1, TileManager.BaseTileIndexes.Count);
+                            Globals.CreativeObjectIndex - 1, Globals.Zone.Tiles.BaseTileIndexes.Count);
                     }
 
                     // Scroll right
                     if (KeyBindings["right"].IsBeingPressed)
                     {
                         Globals.CreativeObjectIndex = (int)MathTools.Mod(
-                            Globals.CreativeObjectIndex + 1, TileManager.BaseTileIndexes.Count);
+                            Globals.CreativeObjectIndex + 1, Globals.Zone.Tiles.BaseTileIndexes.Count);
                     }
                 }
 

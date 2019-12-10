@@ -282,12 +282,14 @@ namespace Generator
                     keepCasting: true,
                     start: new Cached<Action<GameObject>>("Shoot"))
             },
+            /*
             {
                 "Place Object",
                 new Ability(
                     "Place Object",
                     start: new Cached<Action<GameObject>>("Place Object"))
             },
+            */
             {
                 "Always Sprint",
                 new Ability(

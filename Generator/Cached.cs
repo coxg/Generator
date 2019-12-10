@@ -32,7 +32,7 @@ namespace Generator
                     }
                     else
                     {
-                        baseValue = Globals.Content.Load<Texture2D>(value);
+                        baseValue = Globals.ContentManager.Load<Texture2D>(value);
                         Globals.Textures[value] = (Texture2D)baseValue;
                     }
                 }

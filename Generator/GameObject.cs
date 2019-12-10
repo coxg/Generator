@@ -117,11 +117,15 @@ namespace Generator
             AI = ai; // Run on each Update - argument is this
             CollisionEffect = collisionEffect; // Run when attempting to move into another object - arguments are this, other
             Temporary = temporary; // If true, destroy this object as soon as it's no longer being updated
-            GameObjectManager.AddNewObject(ID, this);
 
             // Grid logic
             Size = size ?? Vector3.One;
             Position = position;
+
+            if (Globals.Zone != null)
+            {
+                Globals.Zone.GameObjects.Objects[ID] = this;
+            }
 
             Globals.Log(ID + " has spawned.");
         }
@@ -140,7 +144,7 @@ namespace Generator
             {
                 if (_Sprite == null && SpriteFile != null)
                 {
-                    _Sprite = Globals.Content.Load<Texture2D>(SpriteFile);
+                    _Sprite = Globals.ContentManager.Load<Texture2D>(SpriteFile);
                 }
                 return _Sprite;
             }
@@ -204,6 +208,7 @@ namespace Generator
                 }
             }
         }
+        [JsonIgnore]
         public RectangleF Area { get; set; }
 
         // Resources
@@ -540,19 +545,11 @@ namespace Generator
             foreach (var ability in Abilities) ability.Update();
         }
 
-        public void Remove()
-        {
-            GameObjectManager.RemoveObject(ID);
-            GameObjectManager.Updating.Remove(ID);
-            GameObjectManager.Visible.Remove(ID);
-        }
-
         // Plays death animation and despawns
-        // TODO: Drop equipment + inventory
-        // TODO: Play death animation
+        // TODO: Don't remove, just set to dead and leave it on the ground
         public void Die()
         {
-            Remove();
+            Globals.Zone.GameObjects.Objects.Remove(ID);
             Globals.Log(this + " has passed away. RIP.");
         }
 
@@ -585,6 +582,8 @@ namespace Generator
             }
         }
 
+        // TODO: Replace all of these with new collision logic
+        
         // Gets the coordinates at the range specified
         public Vector3 GetTargetCoordinates(float range = 1, float? direction = null)
         {
@@ -599,7 +598,7 @@ namespace Generator
         {
             // See if we would overlap with any other objects
             var target = GetTargetCoordinates(range, direction);
-            foreach (var gameObject in GameObjectManager.ObjectFromID.Values)
+            foreach (var gameObject in Globals.Zone.GameObjects.Objects.Values)
             {
                 if (gameObject != this)
                 {
@@ -618,13 +617,16 @@ namespace Generator
         {
             // See if we would overlap with any other objects
             var targetArea = new RectangleF(position.X, position.Y, Size.X, Size.Y);
-            foreach (var gameObject in GameObjectManager.ObjectFromID.Values)
+            if (Globals.Zone != null)
             {
-                if (gameObject != this)
+                foreach (var gameObject in Globals.Zone.GameObjects.Objects.Values)
                 {
-                    if (targetArea.IntersectsWith(gameObject.Area))
+                    if (gameObject != this)
                     {
-                        return gameObject;
+                        if (targetArea.IntersectsWith(gameObject.Area))
+                        {
+                            return gameObject;
+                        }
                     }
                 }
             }

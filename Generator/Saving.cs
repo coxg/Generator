@@ -1,13 +1,14 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.IO;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Generator
 {
     public static class Saving
     {
-        public static string SaveDirectory = Globals.Directory + "/Saves/";
+        public static string BaseSaveDirectory = Globals.Directory + "/Saves/";
+        public static string CurrentSaveDirectory;
 
         public static Dictionary<string, int> numSaves = new Dictionary<string, int>
         {
@@ -65,7 +66,7 @@ namespace Generator
         {
             var mostRecentSlot = 0;
             var mostRecentTime = System.DateTime.MinValue;
-            foreach (var filepath in Directory.GetFiles(SaveDirectory))
+            foreach (var filepath in Directory.GetFiles(BaseSaveDirectory))
             {
                 if (filepath.Split('\\').Last().Split('_')[0] == category)
                 {
@@ -80,31 +81,32 @@ namespace Generator
             return mostRecentSlot;
         }
 
-        public static void Save(string category, int slot)
+        public static void Save(string saveType, int slot)
         {
-            var saveDir = SaveDirectory + category + "_" + slot;
-            Globals.Log("Saving to " + saveDir);
-            // To get accurate timing information we delete first
-            if (Directory.Exists(saveDir)) Directory.Delete(saveDir, true);
-            Directory.CreateDirectory(saveDir);
+            CurrentSaveDirectory = BaseSaveDirectory + saveType + "_" + slot;
+            Globals.Log("Saving to " + CurrentSaveDirectory);
 
-            GameObjectManager.Save(saveDir);
-            foreach (Acre acre in TileManager.Acres) acre.Save();
-            SavedDicts.Save(saveDir);
-            Input.Save(saveDir);
+            // TODO: Find a better way to get accurate timing information
+            if (Directory.Exists(CurrentSaveDirectory)) Directory.Delete(CurrentSaveDirectory, true);
+            Directory.CreateDirectory(CurrentSaveDirectory);
+
+            Globals.Zone.Save();
+            SavedDicts.Save();
+            Input.Save();
         }
 
-        public static void Load(string category, int slot)
+        public static void Load(string saveType, int slot)
         {
-            var saveDir = SaveDirectory + category + "_" + slot;
+            var saveDir = BaseSaveDirectory + saveType + "_" + slot;
             if (Directory.Exists(saveDir))
             {
                 Globals.Log("Loading from " + saveDir);
 
-                GameObjectManager.Load(saveDir);
-                TileManager.PopulateAcres();
-                SavedDicts.Load(saveDir);
-                Input.Load(saveDir);
+                SavedDicts.Load();
+                Globals.Zone.GameObjects.Objects = new Dictionary<string, GameObject>();
+                Globals.Zone = Zone.Load(Globals.ZoneName.Value);
+                Input.Load();
+                GameControl.lightingRenderTargets = new Dictionary<GameObject, RenderTarget2D>();
             }
             else
             {
@@ -145,9 +147,9 @@ namespace Generator
 
         public static string GetSaveStr(string saveName)
         {
-            if (Directory.Exists(SaveDirectory + saveName))
+            if (Directory.Exists(BaseSaveDirectory + saveName))
             {
-                return saveName.Split('_').Last() + ": " + Directory.GetLastWriteTime(SaveDirectory + saveName);
+                return saveName.Split('_').Last() + ": " + Directory.GetLastWriteTime(BaseSaveDirectory + saveName);
             }
             else
             {

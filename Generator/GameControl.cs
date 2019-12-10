@@ -83,13 +83,11 @@ namespace Generator
                 TextureEnabled = true, 
                 VertexColorEnabled = true};
 
-            Globals.Content = Content;
+            Globals.ContentManager = Content;
 
             camera = new Camera();
 
-            GameObjectManager.Initialize();
-            TileManager.Initialize();
-
+            Globals.Zone = Zone.Load(Globals.ZoneName.Value);
             Saving.PopulateSaveKeywords();
             Timing.AddEvent(300, Saving.Autosave);
 
@@ -135,12 +133,8 @@ namespace Generator
             Input.GetInput(Globals.Player);
 
             // Update the GameObjects
-            foreach (var gameObject in GameObjectManager.Updating.Values.ToList())
+            foreach (var gameObject in Globals.Objects.ToList())
                 gameObject.Update();
-            GameObjectManager.Update();
-
-            // Update the tiles
-            TileManager.Update();
 
             // Keep the camera focused on the player
             camera.Update();
@@ -162,7 +156,7 @@ namespace Generator
             GraphicsDevice.Clear(Color.Black);
 
             // Draw the light effects from each object into their own renderTargets
-            foreach (var lightSource in GameObjectManager.Updating.Values.OrderBy(i => -i.Position.Y))
+            foreach (var lightSource in Globals.Objects.OrderBy(i => -i.Position.Y))
             {
                 var brightness = 25 * lightSource.Brightness.Length();
                 if (brightness != 0)
@@ -185,7 +179,7 @@ namespace Generator
                     Drawing.DrawLight(lightSource.Center, brightness, Color.White);
 
                     // Draw the shadows
-                    foreach (var Object in GameObjectManager.Visible.Values.Where(i => i.CastsShadow))
+                    foreach (var Object in Globals.Objects.Where(i => i.CastsShadow))
                     {
                         if (Object != lightSource)
                         {
@@ -220,7 +214,7 @@ namespace Generator
             GraphicsDevice.SetRenderTarget(objectRenderTarget);
             GraphicsDevice.Clear(Color.Transparent);
             spriteBatch.Begin(blendState: BlendState.AlphaBlend);
-            foreach (var gameObject in GameObjectManager.Visible.Values.OrderBy(i => -i.Position.Y))
+            foreach (var gameObject in Globals.Objects.OrderBy(i => -i.Position.Y))
             {
                 // Draw components for the object
                 foreach (var component in gameObject.Components.OrderBy(i => -i.Value.Position.Y))
@@ -238,7 +232,7 @@ namespace Generator
             GraphicsDevice.Clear(Color.Black);
             foreach (var lightingRenderTarget in lightingRenderTargets)
             {
-                if (GameObjectManager.ObjectFromID.ContainsKey(lightingRenderTarget.Key.ID))
+                if (Globals.Zone.GameObjects.Objects.ContainsKey(lightingRenderTarget.Key.ID))
                 {
                     spriteBatch.Draw(lightingRenderTarget.Value, screenSize, new Color(lightingRenderTarget.Key.Brightness));
                 }

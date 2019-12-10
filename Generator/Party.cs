@@ -18,7 +18,7 @@ namespace Generator
 
         public IEnumerable<GameObject> GetMembers()
         {
-            return MemberIDs.Select((member) => GameObjectManager.ObjectFromID[member]);
+            return MemberIDs.Select((member) => Globals.Zone.GameObjects.Objects[member]);
         }
 
         public void Say(string text)

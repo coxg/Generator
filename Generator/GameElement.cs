@@ -38,7 +38,7 @@ namespace Generator
             var viewDistance = Vector3.Distance(Center, position);
 
             // Check each active gameObject
-            foreach (var gameObject in GameObjectManager.ObjectFromID.Values)
+            foreach (var gameObject in Globals.Zone.GameObjects.Objects.Values)
             {
                 // Make sure it's not this object
                 if (gameObject != this)

@@ -7,21 +7,21 @@ namespace Generator
     {
         // Constructor
         public Tile(
-            string name,
-            Texture2D sprite,
+            string id,
+            Cached<Texture2D> sprite,
             int baseTileIndex,
             string baseTileName
         )
         {
-            Name = name;
+            ID = id;
             Sprite = sprite;
             BaseTileIndex = baseTileIndex;
             BaseTileName = baseTileName;
         }
 
         // Attributes
-        public string Name;
-        public Texture2D Sprite;
+        public string ID;
+        public Cached<Texture2D> Sprite;
         public int BaseTileIndex;
         public string BaseTileName;
     }

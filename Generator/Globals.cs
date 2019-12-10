@@ -15,11 +15,11 @@ namespace Generator
     public static class Globals
     {
         // The player's party
-        public static SavedParty Party = new SavedParty("party", new Party());
+        public static SavedParty Party = new SavedParty("party", new Party(new List<string> { "niels", "farrah", "old man"}));
         public static SavedInt PlayerPartyNumber = new SavedInt("playerPartyNumber", 0);
         public static GameObject Player
         {
-            get { return GameObjectManager.ObjectFromID[Party.Value.MemberIDs[PlayerPartyNumber.Value]]; }
+            get { return Zone.GameObjects.Objects[Party.Value.MemberIDs[PlayerPartyNumber.Value]]; }
             set { PlayerPartyNumber.Value = Party.Value.MemberIDs.IndexOf(value.ID); }
         }
 
@@ -40,7 +40,7 @@ namespace Generator
 
         // Regular old variables
         public static Vector2 Resolution = new Vector2(1600, 900);
-        public static ContentManager Content;
+        public static ContentManager ContentManager;
         public static bool Logging = true;
         public static int RefreshRate = 60;
         public static string Directory = "/Generator/Generator/";
@@ -48,18 +48,20 @@ namespace Generator
         public static JsonSerializer Serializer = new JsonSerializer { Formatting = Formatting.Indented };
 
         // World management
-        public static string zone = "Overworld";
-        public static string Zone
+        public static SavedString ZoneName = new SavedString("zoneName", "testingZone");
+        private static Zone zone;
+        public static Zone Zone
         {
             get { return zone; }
             set
             {
-                if (value != zone)
-                {
-                    zone = value;
-                    GameObjectManager.Initialize();
-                }
+                zone = value;
+                ZoneName.Value = value.Name;
             }
+        }
+        public static IEnumerable<GameObject> Objects
+        {
+            get { return Zone.GameObjects.Objects.Values; }
         }
 
         // Configure the world building mode
