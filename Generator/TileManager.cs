@@ -80,7 +80,7 @@ namespace Generator
         public Tile Get(int x, int y)
         {
             string id = null;
-            if (x >= 0 && y >= 0 && x <= IDs.GetUpperBound(0) && x <= IDs.GetUpperBound(1))
+            if (x >= 0 && y >= 0 && x <= IDs.GetUpperBound(0) && y <= IDs.GetUpperBound(1))
             {
                 id = IDs[x, y];
             }

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
 using System;
+using System.IO;
 
 namespace Generator
 {
@@ -47,6 +48,12 @@ namespace Generator
         /// </summary>
         protected override void Initialize()
         {
+            // Delete whatever's lingering in the tmp directory
+            if (Directory.Exists(Saving.TempSaveDirectory))
+            {
+                Directory.Delete(Saving.TempSaveDirectory, true);
+            }
+
             // Create common vertices for reuse
 
             // Set up the GraphicsDevice, which is used for all drawing

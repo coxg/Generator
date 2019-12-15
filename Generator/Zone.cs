@@ -30,14 +30,6 @@ namespace Generator
             {
                 Globals.Serializer.Serialize(file, this);
             }
-            using (StreamWriter file = File.CreateText(Saving.CurrentSaveDirectory + "/Zones/gameObjects.json"))
-            {
-                Globals.Serializer.Serialize(file, GameObjects);
-            }
-            using (StreamWriter file = File.CreateText(Saving.CurrentSaveDirectory + "/Zones/tiles.json"))
-            {
-                Globals.Serializer.Serialize(file, Tiles);
-            }
         }
 
         public static Zone Load(string name)
@@ -45,6 +37,7 @@ namespace Generator
             var fileName = Saving.CurrentSaveDirectory + "/Zones/" + name + ".json";
             if (File.Exists(fileName))
             {
+                Globals.Log("Reading " + name + " from " + fileName);
                 using (StreamReader file = File.OpenText(fileName))
                 {
                     var returnedZone = (Zone)Globals.Serializer.Deserialize(file, typeof(Zone));
@@ -318,6 +311,39 @@ namespace Generator
                     );
 
                     return new Zone("testingZone", 100, 100, gameObjects, tiles);
+
+                case "buildings":
+                    var buildingObjects = new GameObjectManager(new List<GameObject>
+                    {
+                        // building
+                        new GameObject(
+                            new Vector3(65, 65, 0),
+                            new Vector3(6, 9, 9),
+                            id: "building",
+                            baseStrength: 10,
+                            baseSpeed: 10,
+                            baseSense: 10,
+                            castsShadow: false,
+                            brightness: new Vector3(2, 2, 2),
+                            activationEffect: new Cached<Action<GameObject, GameObject>>("SetZoneTestingZone"),
+                            components: new Dictionary<string, Component>()
+                            {
+                                {"body", new Component(
+                                    id: "building",
+                                    relativePosition: new Vector3(.5f, .5f, .5f),
+                                    relativeSize: .2f,
+                                    baseRotationPoint: new Vector3(.5f, .5f, .5f),
+                                    spriteFile: "Sprites/building")
+                                }
+                            })
+                    });
+
+                    var buildingTiles = new TileManager(
+                        new List<string> { "Grass", "Clay" },
+                        new string[100, 100]
+                    );
+
+                    return new Zone("testingZone", 100, 100, buildingObjects, buildingTiles);
 
                 default:
                     throw new KeyNotFoundException(name);

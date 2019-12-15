@@ -168,7 +168,15 @@ namespace Generator
             },
             {
                 "SetZoneBuildings",
-                (GameObject self, GameObject other) => { Globals.Zone = Zone.Load("Buildings"); }
+                (GameObject self, GameObject other) => {
+                    Globals.Zone = Zone.Load("buildings");
+                }
+            },
+            {
+                "SetZoneTestingZone",
+                (GameObject self, GameObject other) => {
+                    Globals.Zone = Zone.Load("testingZone");
+                }
             },
             {
                 "BulletCollision",

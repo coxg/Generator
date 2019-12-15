@@ -55,8 +55,28 @@ namespace Generator
             get { return zone; }
             set
             {
+                // Remove party from zone before serializing
+                var partyMembers = new List<GameObject>();
+                if (zone != null)
+                {
+                    foreach (var memberID in Party.Value.MemberIDs)
+                    {
+                        partyMembers.Add(Zone.GameObjects.Objects[memberID]);
+                        Zone.GameObjects.Objects.Remove(memberID);
+                    }
+                    Saving.SaveToTmp();
+                }
+
+                // Set the new zone
                 zone = value;
                 ZoneName.Value = value.Name;
+                GameControl.lightingRenderTargets = new Dictionary<GameObject, RenderTarget2D>();
+
+                // Add the party to the new zone
+                foreach (var partyMember in partyMembers)
+                {
+                    Zone.GameObjects.Objects[partyMember.ID] = partyMember;
+                }
             }
         }
         public static IEnumerable<GameObject> Objects
@@ -93,6 +113,11 @@ namespace Generator
                     + CallingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First()
                     + ": " + text);
             }
+        }
+
+        public static void Warn(object text = null)
+        {
+            Log("[WARNING] " + text);
         }
 
         public static object Copy(object copyObj)

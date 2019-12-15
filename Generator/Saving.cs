@@ -9,6 +9,7 @@ namespace Generator
     {
         public static string BaseSaveDirectory = Globals.Directory + "/Saves/";
         public static string CurrentSaveDirectory;
+        public static string TempSaveDirectory { get { return BaseSaveDirectory + "tmp/"; } }
 
         public static Dictionary<string, int> numSaves = new Dictionary<string, int>
         {
@@ -81,36 +82,88 @@ namespace Generator
             return mostRecentSlot;
         }
 
+        private static void CopyDirectory(string sourceDirName, string destDirName)
+        {
+            // Delete and recreate the new destination directory if it already exists
+            if (Directory.Exists(destDirName))
+            {
+                try
+                {
+                    Directory.Delete(destDirName, true);
+                }
+                catch (IOException)
+                {
+                    Globals.Warn("Could not delete " + destDirName + "; files may be open.");
+                }
+            }
+            Directory.CreateDirectory(destDirName);
+
+            // If the source directory doesn't exist then warn and move on
+            // This will be the case when creating a new game, for example
+            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+            if (!dir.Exists)
+            {
+                Globals.Warn(sourceDirName + " does not exist.");
+                return;
+            }
+            DirectoryInfo[] dirs = dir.GetDirectories();
+
+            // Get the files in the directory and copy them to the new location.
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string temppath = Path.Combine(destDirName, file.Name);
+                file.CopyTo(temppath, false);
+            }
+
+            // Call recursively on other directories in the directory
+            foreach (DirectoryInfo subdir in dirs)
+            {
+                string temppath = Path.Combine(destDirName, subdir.Name);
+                CopyDirectory(subdir.FullName, temppath);
+            }
+        }
+
         public static void Save(string saveType, int slot)
         {
             CurrentSaveDirectory = BaseSaveDirectory + saveType + "_" + slot;
             Globals.Log("Saving to " + CurrentSaveDirectory);
 
-            // TODO: Find a better way to get accurate timing information
-            if (Directory.Exists(CurrentSaveDirectory)) Directory.Delete(CurrentSaveDirectory, true);
-            Directory.CreateDirectory(CurrentSaveDirectory);
+            // Create save slot out of tmp directory
+            CopyDirectory(TempSaveDirectory, CurrentSaveDirectory);
 
             Globals.Zone.Save();
             SavedDicts.Save();
             Input.Save();
         }
 
+        public static void SaveToTmp()
+        {
+            CurrentSaveDirectory = BaseSaveDirectory + "tmp";
+            Globals.Log("Saving to " + CurrentSaveDirectory);
+
+            Globals.Zone.Save();
+        }
+
         public static void Load(string saveType, int slot)
         {
-            var saveDir = BaseSaveDirectory + saveType + "_" + slot;
-            if (Directory.Exists(saveDir))
+            CurrentSaveDirectory = BaseSaveDirectory + saveType + "_" + slot;
+            if (Directory.Exists(CurrentSaveDirectory))
             {
-                Globals.Log("Loading from " + saveDir);
+                Globals.Log("Loading from " + CurrentSaveDirectory);
 
+                // Load the game from the save file
                 SavedDicts.Load();
+                Input.Load();
                 Globals.Zone.GameObjects.Objects = new Dictionary<string, GameObject>();
                 Globals.Zone = Zone.Load(Globals.ZoneName.Value);
-                Input.Load();
-                GameControl.lightingRenderTargets = new Dictionary<GameObject, RenderTarget2D>();
+
+                // Recreate the tmp directory based on the save we're loading
+                CopyDirectory(CurrentSaveDirectory, TempSaveDirectory);
             }
             else
             {
-                Globals.Log(saveDir + " does not exist.");
+                Globals.Log(CurrentSaveDirectory + " does not exist.");
             }
         }
 

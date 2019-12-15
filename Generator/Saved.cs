@@ -20,10 +20,10 @@ namespace Generator
                 {
                     if (!SavedDict.TryGetValue(Name, out _value))
                     {
-                        _value = DefaultValue;
+                        _value = SavedDict[Name] = DefaultValue;
                     }
-                    SavedDict[Name] = _value;
-                    loaded = true;
+                    // TODO: If this is set then it will never be reloaded, which is bad
+                    // loaded = true;
                 }
                 return _value;
             }
@@ -45,6 +45,7 @@ namespace Generator
         public static Dictionary<string, string> Strings = new Dictionary<string, string>();
         public static Dictionary<string, Party> Parties = new Dictionary<string, Party>();
         public static Dictionary<string, int> Ints = new Dictionary<string, int>();
+        public static List<Saved<object>> Objects = new List<Saved<object>>();
 
         public static void Load()
         {
