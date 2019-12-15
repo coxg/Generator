@@ -45,6 +45,7 @@ namespace Generator
                     // We're ignoring various source objects to avoid circular references, so add it back in when loading
                     foreach (var gameObject in returnedZone.GameObjects.Objects.Values)
                     {
+                        Globals.Log("Loading " + gameObject.ID);
                         if (gameObject.Conversation != null)
                         {
                             gameObject.Conversation.SourceObject = gameObject;
@@ -82,6 +83,7 @@ namespace Generator
             }
             else
             {
+                Globals.Log(name + " not found; initializing.");
                 return Initialize(name);
             }
         }
