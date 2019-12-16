@@ -321,7 +321,7 @@ namespace Generator
                         new GameObject(
                             new Vector3(65, 65, 0),
                             new Vector3(6, 9, 9),
-                            id: "building",
+                            id: "testBuilding",
                             baseStrength: 10,
                             baseSpeed: 10,
                             baseSense: 10,
@@ -331,7 +331,7 @@ namespace Generator
                             components: new Dictionary<string, Component>()
                             {
                                 {"body", new Component(
-                                    id: "building",
+                                    id: "testBuilding",
                                     relativePosition: new Vector3(.5f, .5f, .5f),
                                     relativeSize: .2f,
                                     baseRotationPoint: new Vector3(.5f, .5f, .5f),
@@ -345,7 +345,7 @@ namespace Generator
                         new string[100, 100]
                     );
 
-                    return new Zone("testingZone", 100, 100, buildingObjects, buildingTiles);
+                    return new Zone("buildings", 100, 100, buildingObjects, buildingTiles);
 
                 default:
                     throw new KeyNotFoundException(name);

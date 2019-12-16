@@ -120,12 +120,8 @@ namespace Generator
 
             // Grid logic
             Size = size ?? Vector3.One;
-            Position = position;
-
-            if (Globals.Zone != null)
-            {
-                Globals.Zone.GameObjects.Objects[ID] = this;
-            }
+            base.Position = position;
+            Area = new RectangleF(Position.X, Position.Y, Size.X, Size.Y);
 
             Globals.Log(ID + " has spawned.");
         }

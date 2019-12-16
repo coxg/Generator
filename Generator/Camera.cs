@@ -16,11 +16,12 @@ namespace Generator
         }
 
         // Fields 
-        public Vector3 Position { get; set; }
-        public Vector3 Target { get; set; }
-        public Vector3 Up { get; set; }
-        public RectangleF VisibleArea { get; set; }
-        public RectangleF UpdatingArea { get; set; }
+        public Vector3 Position;
+        public Vector3 Target;
+        public Vector3 Up;
+        public RectangleF VisibleArea;
+        public RectangleF UpdatingArea;
+        public float Height = 25;
 
         public float Rotation
         {
@@ -61,14 +62,14 @@ namespace Generator
             Position = new Vector3(
                 Globals.Player.Center.X,
                 Globals.Player.Center.Y - 1.00001f,
-                Globals.Player.Center.Z + 20);
+                Globals.Player.Center.Z + Height);
             Target = new Vector3(
                 Globals.Player.Center.X,
                 Globals.Player.Center.Y - 1,
                 Globals.Player.Center.Z);
 
-            var screenWidth = Globals.Resolution.X / 50;
-            var screenHeight = Globals.Resolution.X / 50;
+            var screenWidth = Globals.Resolution.X * Height / 1000;
+            var screenHeight = Globals.Resolution.Y * Height / 1000;
             VisibleArea = new RectangleF(
                 Position.X - screenWidth / 2, 
                 Position.Y - screenHeight / 2,

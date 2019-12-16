@@ -66,7 +66,6 @@ namespace Generator
 
                     // Add it to the mapping dictionaries, allowing us to reference it by name/id
                     var tileId = tileName + " " + individualTileFile;
-                    Globals.Log(tileId);
                     Objects[tileId] = new Tile(
                         tileId,
                         new Cached<Texture2D>("Tiles/" + tileName + "/" + directoryName + "/" + individualTileFile),

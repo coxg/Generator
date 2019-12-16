@@ -88,7 +88,7 @@ namespace Generator
                     self.IsShooting = true;
                     var position = self.GetTargetCoordinates(1);
                     position.Z += self.Size.Z / 2;
-                    new GameObject(
+                    var bullet = new GameObject(
                         baseHealth: 1,
                         position: position,
                         size: new Vector3(.05f, .05f, .05f),
@@ -110,6 +110,7 @@ namespace Generator
                             }
                         }
                     );
+                    Globals.Zone.GameObjects.Objects[bullet.ID] = bullet;
                 }
             },
             /*
