@@ -18,7 +18,6 @@ namespace Generator
 
             // Resource costs
             int healthCost = 0,
-            int staminaCost = 0,
             int electricityCost = 0,
 
             // How it works
@@ -41,7 +40,6 @@ namespace Generator
 
             // Resource costs
             HealthCost = healthCost;
-            StaminaCost = staminaCost;
             ElectricityCost = electricityCost;
 
             // How the ability works
@@ -89,7 +87,6 @@ namespace Generator
 
         // Resource costs
         public int HealthCost;
-        public int StaminaCost;
         public int ElectricityCost;
 
         // How it works
@@ -148,7 +145,6 @@ namespace Generator
         {
             return OffCooldown
                    && SourceObject.Health.Current >= HealthCost
-                   && SourceObject.Stamina.Current >= StaminaCost
                    && SourceObject.Electricity.Current >= ElectricityCost
                    && (SourceObject.IsWalking || !RequiresWalking);
         }
@@ -236,7 +232,6 @@ namespace Generator
             if (IsActive)
             {
                 SourceObject.TakeDamage(HealthCost);
-                SourceObject.Stamina.Current -= StaminaCost;
                 SourceObject.Electricity.Current -= ElectricityCost;
             }
 
@@ -251,7 +246,6 @@ namespace Generator
                 "Sprint",
                 new Ability(
                     "Sprint",
-                    staminaCost: 0,
                     isChanneled: true,
                     requiresWalking: true,
                     animation: new Animation(
@@ -259,7 +253,7 @@ namespace Generator
                             baseOffsets: new List<Vector3>
                             {
                                 Vector3.Zero,
-                                new Vector3(0, 0, .2f),
+                                new Vector3(0, 0, .05f),
                                 Vector3.Zero
                             },
                             duration: 1.5f)),
@@ -270,14 +264,13 @@ namespace Generator
                 "Attack",
                 new Ability(
                     "Attack",
-                    staminaCost: 10,
                     start: new Cached<Action<GameObject>>("Attack"))
             },
             {
                 "Shoot",
                 new Ability(
                     "Shoot",
-                    staminaCost: 3,
+                    electricityCost: 3,
                     cooldown: .1f,
                     keepCasting: true,
                     start: new Cached<Action<GameObject>>("Shoot"))
@@ -294,7 +287,7 @@ namespace Generator
                 "Always Sprint",
                 new Ability(
                     "Always Sprint",
-                    staminaCost: 1,
+                    electricityCost: 1,
                     isToggleable: true,
                     requiresWalking: true,
                     start: new Cached<Action<GameObject>>("SprintStart"),

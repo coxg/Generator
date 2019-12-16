@@ -99,7 +99,7 @@ namespace Generator
                         // niels
                         new GameObject(
                             new Vector3(50, 50, 0),
-                            baseStamina: 100,
+                            baseElectricity: 100,
                             baseStrength: 10,
                             baseSpeed: 100,
                             baseSense: 90,
@@ -121,7 +121,7 @@ namespace Generator
                         // farrah
                         new GameObject(
                             new Vector3(50, 55, 0),
-                            baseStamina: 100,
+                            baseElectricity: 100,
                             baseStrength: 10,
                             baseSpeed: 20,
                             baseSense: 90,

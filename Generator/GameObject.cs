@@ -34,7 +34,6 @@ namespace Generator
 
             // Resources
             int baseHealth = 100,
-            int baseStamina = 0,
             int baseElectricity = 0,
 
             // Primary Attributes
@@ -83,8 +82,7 @@ namespace Generator
 
             // Resources
             Health = new Resource("Health", baseHealth);
-            Stamina = new Resource("Stamina", baseStamina, 10);
-            Electricity = new Resource("Electricity", baseElectricity);
+            Electricity = new Resource("Electricity", baseElectricity, regeneration: 10);
 
             // Primary Attributes
             Strength = new Attribute(baseStrength);
@@ -209,7 +207,6 @@ namespace Generator
 
         // Resources
         public Resource Health;
-        public Resource Stamina;
         public Resource Electricity;
 
         // Primary Attributes
@@ -322,7 +319,6 @@ namespace Generator
 
             // Resources
             Health.Max += equipmentToEquip.Health - equippedEquipment.Health;
-            Stamina.Max += equipmentToEquip.Stamina - equippedEquipment.Stamina;
             Electricity.Max += equipmentToEquip.Capacity - equippedEquipment.Capacity;
 
             // Attributes
@@ -531,7 +527,6 @@ namespace Generator
 
             // Update resources
             Health.Update();
-            Stamina.Update();
             Electricity.Update();
 
             // Update animation

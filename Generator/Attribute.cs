@@ -23,10 +23,6 @@
                 {
                     return 1;
                 }
-                else if (currentValue > 100)
-                {
-                    return 100;
-                }
                 else
                 {
                     return currentValue;

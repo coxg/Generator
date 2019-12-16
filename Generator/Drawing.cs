@@ -411,43 +411,44 @@ namespace Generator
             }
         }
 
-        public static void DrawResource(SpriteBatch spriteBatch, Resource resource, int partyNumber)
+        public static void DrawResource(Resource resource, int partyNumber)
             // Draw a single resource bar
         {
             // Figure out the resource specific information
             var margin = 16;
             var barHeight = 20;
             var barColor = new Vector3(0, 0, 0);
-            var height = margin + partyNumber * 3 * (margin + barHeight);            
+            var height = margin + partyNumber * (margin + 2 * barHeight);            
             switch (resource.Name)
             {
                 case "Health":
                     barColor = new Vector3(255, 0, 0);
                     break;
-                case "Stamina":
-                    barColor = new Vector3(0, 255, 0);
-                    height += margin + barHeight;
-                    break;
                 case "Electricity":
                     barColor = new Vector3(0, 0, 255);
-                    height += 2 * (margin + barHeight);
+                    height += barHeight;
                     break;
             }
 
-            // Draw the bar
-            spriteBatch.Draw(
-                Globals.WhiteDot,
+            // Draw the bar itself
+            var radius = 0;
+            var barWidth = 256;
+            DrawRoundedRectangle(
                 new Rectangle(
                     margin,
                     height,
-                    (int) (256 * resource.Current / resource.Max),
+                    (int)(barWidth * resource.Current / resource.Max),
                     barHeight),
-                null,
-                Color.FromNonPremultiplied((int) barColor.X, (int) barColor.Y, (int) barColor.Z, 255),
-                0f,
-                new Vector2(0, 0),
-                SpriteEffects.None,
-                .05f);
+                radius,
+                new Color((int)barColor.X, (int)barColor.Y, (int)barColor.Z, 75));
+            DrawRoundedRectangle(
+                new Rectangle(
+                    margin,
+                    height,
+                    barWidth,
+                    barHeight),
+                radius,
+                borderWidth: 1);
         }
 
         public static VertexPositionColorTexture[] GetComponentVertices(

@@ -270,21 +270,20 @@ namespace Generator
             }
             else
             {
-                spriteBatch.Begin();
-
                 // Draw the resource bars
+                drawBatch.Begin();
                 var partyMembers = Globals.Party.Value.GetMembers().ToList();
                 for (int i = 0; i < partyMembers.Count; i++)
                 {
                     var gameObject = partyMembers[i];
-                    Drawing.DrawResource(spriteBatch, gameObject.Health, i);
-                    if (gameObject.Stamina.Max > 0)
-                        Drawing.DrawResource(spriteBatch, gameObject.Stamina, i);
+                    Drawing.DrawResource(gameObject.Health, i);
                     if (gameObject.Electricity.Max > 0)
-                        Drawing.DrawResource(spriteBatch, gameObject.Electricity, i);
+                        Drawing.DrawResource(gameObject.Electricity, i);
                 }
+                drawBatch.End();
 
                 // Show which tiles are selected
+                spriteBatch.Begin();
                 if (Globals.CreativeMode)
                 {
                     Drawing.DrawCreativeUI(spriteBatch);
