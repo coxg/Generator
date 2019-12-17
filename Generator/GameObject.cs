@@ -186,6 +186,20 @@ namespace Generator
             get => _Position + AnimationOffset;
             set
             {
+                // If it's outside the zone and we're temporary then kill yourself
+                if (value.X < 0 || value.Y < 0 || value.X > Globals.Zone.Width || value.Y > Globals.Zone.Height)
+                {
+                    if (Temporary)
+                    {
+                        Die();
+                    }
+                    else
+                    {
+                        Globals.Warn(Name + " can't move to " + value);
+                    }
+                    return;
+                }
+                
                 // If we can move there then move there
                 var targetAtPosition = GetTargetAtPosition(value);
                 if (targetAtPosition == null)

@@ -12,19 +12,25 @@ namespace Generator
         public GameObjectManager GameObjects;
         public TileManager Tiles;
         public string Name;
+        public int Width;
+        public int Height;
 
         public Zone(string name, int width, int height, GameObjectManager gameObjects, List<string> tileNames)
         {
             Name = name;
             GameObjects = gameObjects;
+            Width = width;
+            Height = height;
             Tiles = new TileManager(tileNames, new Vector2(width, height));
         }
 
         [JsonConstructor]
-        public Zone(string name, GameObjectManager gameObjects, TileManager tiles)
+        public Zone(string name, int width, int height, GameObjectManager gameObjects, TileManager tiles)
         {
             Name = name;
             GameObjects = gameObjects;
+            Width = width;
+            Height = height;
             Tiles = tiles;
         }
 
