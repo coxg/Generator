@@ -9,20 +9,17 @@ namespace Generator
         public Tile(
             string id,
             Cached<Texture2D> sprite,
-            int baseTileIndex,
             string baseTileName
         )
         {
             ID = id;
             Sprite = sprite;
-            BaseTileIndex = baseTileIndex;
             BaseTileName = baseTileName;
         }
 
         // Attributes
         public string ID;
         public Cached<Texture2D> Sprite;
-        public int BaseTileIndex;
         public string BaseTileName;
     }
 }

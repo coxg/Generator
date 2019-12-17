@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 
 namespace Generator
 {
@@ -11,14 +12,18 @@ namespace Generator
         public GameObjectManager GameObjects;
         public TileManager Tiles;
         public string Name;
-        public int Width;
-        public int Height;
 
-        public Zone(string name, int width, int height, GameObjectManager gameObjects, TileManager tiles)
+        public Zone(string name, int width, int height, GameObjectManager gameObjects, List<string> tileNames)
         {
             Name = name;
-            Width = width;
-            Height = height;
+            GameObjects = gameObjects;
+            Tiles = new TileManager(tileNames, new Vector2(width, height));
+        }
+
+        [JsonConstructor]
+        public Zone(string name, GameObjectManager gameObjects, TileManager tiles)
+        {
+            Name = name;
             GameObjects = gameObjects;
             Tiles = tiles;
         }
@@ -115,7 +120,7 @@ namespace Generator
                             abilities: new List<Ability>() {
                                 Ability.Abilities["Sprint"],
                                 Ability.Abilities["Shoot"],
-                                //Ability.Abilities["Place Object"],
+                                Ability.Abilities["Place Object"],
                                 Ability.Abilities["Attack"] }),
 
                         // farrah
@@ -307,12 +312,7 @@ namespace Generator
                             })
                     });
 
-                    var tiles = new TileManager(
-                        new List<string> { "Grass", "Clay" },
-                        new string[100, 100]
-                    );
-
-                    return new Zone("testingZone", 100, 100, gameObjects, tiles);
+                    return new Zone("testingZone", 100, 100, gameObjects, new List<string> { "Grass", "Clay" });
 
                 case "buildings":
                     var buildingObjects = new GameObjectManager(new List<GameObject>
@@ -340,12 +340,7 @@ namespace Generator
                             })
                     });
 
-                    var buildingTiles = new TileManager(
-                        new List<string> { "Grass", "Clay" },
-                        new string[100, 100]
-                    );
-
-                    return new Zone("buildings", 100, 100, buildingObjects, buildingTiles);
+                    return new Zone("buildings", 100, 100, buildingObjects, new List<string> { "Grass", "Clay" });
 
                 default:
                     throw new KeyNotFoundException(name);

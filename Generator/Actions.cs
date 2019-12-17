@@ -113,17 +113,15 @@ namespace Generator
                     Globals.Zone.GameObjects.Objects[bullet.ID] = bullet;
                 }
             },
-            /*
             {
                 "Place Object",
                 (GameObject self) => {
-                    var baseTileName = Globals.Zone.Tiles.IDFromIndex[Globals.Zone.Tiles.BaseTileIndexes[Globals.CreativeObjectIndex]];
-                    var randomBaseTile = Globals.Zone.Tiles.GetRandomBaseIndex(Globals.Zone.Tiles.Objects[baseTileName].BaseTileName);
+                    var baseTileName = Globals.Zone.Tiles.BaseTileNames[Globals.CreativeObjectIndex];
+                    var randomBaseTile = Globals.Zone.Tiles.GetRandomBaseName(baseTileName);
                     var targetCoordinates = self.GetTargetCoordinates(1);
-                    TileManager.Set((int)targetCoordinates.X, (int)targetCoordinates.Y, randomBaseTile);
+                    Globals.Zone.Tiles.IDs[(int)targetCoordinates.X, (int)targetCoordinates.Y] = randomBaseTile;
                 }
             }
-            */
         };
 
         // First GameObject is the one using the action, the second GameObject is what they're targeting

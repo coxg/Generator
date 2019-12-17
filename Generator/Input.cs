@@ -256,14 +256,14 @@ namespace Generator
                     if (KeyBindings["left"].IsBeingPressed)
                     {
                         Globals.CreativeObjectIndex = (int)MathTools.Mod(
-                            Globals.CreativeObjectIndex - 1, Globals.Zone.Tiles.BaseTileIndexes.Count);
+                            Globals.CreativeObjectIndex - 1, Globals.Zone.Tiles.TileInfo.Count);
                     }
 
                     // Scroll right
                     if (KeyBindings["right"].IsBeingPressed)
                     {
                         Globals.CreativeObjectIndex = (int)MathTools.Mod(
-                            Globals.CreativeObjectIndex + 1, Globals.Zone.Tiles.BaseTileIndexes.Count);
+                            Globals.CreativeObjectIndex + 1, Globals.Zone.Tiles.TileInfo.Count);
                     }
                 }
 

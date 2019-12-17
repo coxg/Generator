@@ -85,7 +85,7 @@ namespace Generator
         }
 
         // Configure the world building mode
-        public static bool CreativeMode;
+        public static bool CreativeMode = true;
         public static int CreativeObjectIndex;
 
         // Loading assets
