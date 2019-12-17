@@ -79,6 +79,12 @@ namespace Generator
                 }
             }
         }
+        public static void LoadZone()
+        {
+            Zone.GameObjects.Objects = new Dictionary<string, GameObject>();
+            zone = Zone.Load(ZoneName.Value);
+            GameControl.lightingRenderTargets = new Dictionary<GameObject, RenderTarget2D>();
+        }
         public static IEnumerable<GameObject> Objects
         {
             get { return Zone.GameObjects.Objects.Values; }

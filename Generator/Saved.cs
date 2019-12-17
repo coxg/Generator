@@ -8,30 +8,10 @@ namespace Generator
     {
         public string Name;
         public T DefaultValue;
-        public Dictionary<string, T> SavedDict;
 
-        private bool loaded = false;
         private T _value;
         [JsonIgnore]
-        public T Value
-        {
-            get {
-                if (!loaded)
-                {
-                    if (!SavedDict.TryGetValue(Name, out _value))
-                    {
-                        _value = SavedDict[Name] = DefaultValue;
-                    }
-                    // TODO: If this is set then it will never be reloaded, which is bad
-                    // loaded = true;
-                }
-                return _value;
-            }
-            set {
-                _value = value;
-                SavedDict[Name] = value;
-            }
-        }
+        public T Value;
 
         public Saved(string name, T defaultValue)
         {
@@ -45,7 +25,6 @@ namespace Generator
         public static Dictionary<string, string> Strings = new Dictionary<string, string>();
         public static Dictionary<string, Party> Parties = new Dictionary<string, Party>();
         public static Dictionary<string, int> Ints = new Dictionary<string, int>();
-        public static List<Saved<object>> Objects = new List<Saved<object>>();
 
         public static void Load()
         {
@@ -84,9 +63,20 @@ namespace Generator
     {
         public SavedString(string name, string defaultValue) : base(name, defaultValue)
         {
-            SavedDict = SavedDicts.Strings;
             Name = name;
             DefaultValue = defaultValue;
+        }
+
+        public new string Value
+        {
+            get {
+                if (SavedDicts.Strings.TryGetValue(Name, out string value))
+                {
+                    return value;
+                };
+                return DefaultValue;
+            }
+            set { SavedDicts.Strings[Name] = value; }
         }
     }
 
@@ -94,9 +84,21 @@ namespace Generator
     {
         public SavedParty(string name, Party defaultValue) : base(name, defaultValue)
         {
-            SavedDict = SavedDicts.Parties;
             Name = name;
             DefaultValue = defaultValue;
+        }
+
+        public new Party Value
+        {
+            get
+            {
+                if (SavedDicts.Parties.TryGetValue(Name, out Party value))
+                {
+                    return value;
+                };
+                return DefaultValue;
+            }
+            set { SavedDicts.Parties[Name] = value; }
         }
     }
 
@@ -104,9 +106,21 @@ namespace Generator
     {
         public SavedInt(string name, int defaultValue) : base(name, defaultValue)
         {
-            SavedDict = SavedDicts.Ints;
             Name = name;
             DefaultValue = defaultValue;
+        }
+
+        public new int Value
+        {
+            get
+            {
+                if (SavedDicts.Ints.TryGetValue(Name, out int value))
+                {
+                    return value;
+                };
+                return DefaultValue;
+            }
+            set { SavedDicts.Ints[Name] = value; }
         }
     }
 }

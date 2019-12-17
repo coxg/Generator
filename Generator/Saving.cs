@@ -155,8 +155,7 @@ namespace Generator
                 // Load the game from the save file
                 SavedDicts.Load();
                 Input.Load();
-                Globals.Zone.GameObjects.Objects = new Dictionary<string, GameObject>();
-                Globals.Zone = Zone.Load(Globals.ZoneName.Value);
+                Globals.LoadZone();
 
                 // Recreate the tmp directory based on the save we're loading
                 CopyDirectory(CurrentSaveDirectory, TempSaveDirectory);
