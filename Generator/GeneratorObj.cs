@@ -17,7 +17,6 @@ namespace Generator
 
             // Resources
             int health = 0,
-            int stamina = 0,
             int capacity = 0,
 
             // Primary Attributes
@@ -38,7 +37,6 @@ namespace Generator
 
             // Resources
             Health = health;
-            Stamina = stamina;
             Capacity = capacity;
 
             // Primary Attributes

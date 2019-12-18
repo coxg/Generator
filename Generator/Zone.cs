@@ -14,6 +14,7 @@ namespace Generator
         public string Name;
         public int Width;
         public int Height;
+        public HashSet<string> Enemies = new HashSet<string>();
 
         public Zone(string name, int width, int height, GameObjectManager gameObjects, List<string> tileNames)
         {
@@ -25,13 +26,14 @@ namespace Generator
         }
 
         [JsonConstructor]
-        public Zone(string name, int width, int height, GameObjectManager gameObjects, TileManager tiles)
+        public Zone(string name, int width, int height, GameObjectManager gameObjects, TileManager tiles, HashSet<string> enemies)
         {
             Name = name;
             GameObjects = gameObjects;
             Width = width;
             Height = height;
             Tiles = tiles;
+            Enemies = enemies;
         }
 
         public void Save()
@@ -139,7 +141,6 @@ namespace Generator
                             baseStyle: 100,
                             id: "farrah",
                             name: "Farrah",
-                            ai: new Cached<System.Action<GameObject>>("WalkNearPlayer"),
                             componentSpriteFileName: "Girl",
                             weapon: new Weapon(
                                 name: "Sword",
@@ -206,7 +207,6 @@ namespace Generator
                             baseStrength: 10,
                             baseSpeed: 10,
                             baseSense: 10,
-                            ai: new Cached<Action<GameObject>>("WalkNearPlayer"),
                             componentSpriteFileName: "Old",
                             activationEffect: new Cached<Action<GameObject, GameObject>>("CreateBigBoy"),
                             conversation: new Conversation(
@@ -216,13 +216,6 @@ namespace Generator
                                         index: 0,
                                         nodes: new List<Conversation.Choices.Node>()
                                         {
-                                            new Conversation.Choices.Node(
-                                                text: new List<string>()
-                                                {
-                                                    "niels: Toggle inCombat.",
-                                                    "inCombat is now {wasInCombat}."
-                                                },
-                                                effects: () => { Globals.Party.Value.InCombat = !Globals.Party.Value.InCombat; }),
                                             new Conversation.Choices.Node(
                                                 text: new List<string>()
                                                 {
@@ -303,6 +296,7 @@ namespace Generator
                             baseStrength: 10,
                             baseSpeed: 10,
                             baseSense: 10,
+                            baseDefense: 100,
                             castsShadow: false,
                             brightness: new Vector3(2, 2, 2),
                             activationEffect: new Cached<Action<GameObject, GameObject>>("SetZoneBuildings"),
@@ -331,6 +325,7 @@ namespace Generator
                             baseStrength: 10,
                             baseSpeed: 10,
                             baseSense: 10,
+                            baseDefense: 100,
                             castsShadow: false,
                             brightness: new Vector3(2, 2, 2),
                             activationEffect: new Cached<Action<GameObject, GameObject>>("SetZoneTestingZone"),

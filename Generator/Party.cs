@@ -7,7 +7,7 @@ namespace Generator
     {
         public List<string> MemberIDs;
         public List<Item> Inventory;
-        public bool InCombat = false;
+        public bool InCombat { get { return Globals.Zone.Enemies.Count != 0; } }
         public int Junk = 0;
 
         // Constructor

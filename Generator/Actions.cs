@@ -11,28 +11,65 @@ namespace Generator
         public static Dictionary<string, Action<GameObject>> SelfActions = new Dictionary<string, Action<GameObject>>
         {
             {
+                "DefaultAI",
+                (GameObject self) =>
+                {
+                    // The player is controlled directly
+                    if (Globals.Player.ID == self.ID)
+                    {
+                        return;
+                    }
+
+                    // Party members
+                    else if (Globals.Party.Value.MemberIDs.Contains(self.ID))
+                    {
+                        // During combat they fight your enemies
+                        if (Globals.Party.Value.InCombat)
+                        {
+
+                        }
+
+                        // Out of combat they follow you around
+                        else
+                        {
+                            if (MathTools.Distance(Globals.Player.Position, self.Position) > 5)
+                            {
+                                // TODO: Why isn't this just Angle(self, Player)?
+                                self.Direction = -(float)MathTools.Angle(Globals.Player.Position, self.Position) + MathHelper.PiOver2;
+                                self.MoveInDirection(self.Direction);
+                            }
+                            else
+                            {
+                                // TODO: Why do I need to set this manually?
+                                self.IsWalking = false;
+                            }
+                        }
+                    }
+
+                    // NPCs
+                    else
+                    {
+                        // If they're fighting you
+                        if (Globals.Zone.Enemies.Contains(self.ID))
+                        {
+
+                        }
+
+                        // If they're not fighting you
+                        else
+                        {
+                            return;
+                        }
+                    }
+                }
+            },
+            {
                 "WalkToPlayer",
                 (GameObject self) =>
                 // TODO: Why isn't this just Angle(self, Player)?
                 {
                     self.Direction = -(float)MathTools.Angle(Globals.Player.Position, self.Position) + MathHelper.PiOver2;
                     self.MoveInDirection(self.Direction);
-                }
-            },
-            {
-                "WalkNearPlayer",
-                (GameObject self) =>
-                // TODO: Why isn't this just Angle(self, Player)?
-                {
-                    if (MathTools.Distance(Globals.Player.Position, self.Position) > 5)
-                    {
-                        self.Direction = -(float)MathTools.Angle(Globals.Player.Position, self.Position) + MathHelper.PiOver2;
-                        self.MoveInDirection(self.Direction);
-                    }
-                    else
-                    {
-                        self.IsWalking = false;
-                    }
                 }
             },
             {

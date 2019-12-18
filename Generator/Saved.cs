@@ -9,7 +9,6 @@ namespace Generator
         public string Name;
         public T DefaultValue;
 
-        private T _value;
         [JsonIgnore]
         public T Value;
 

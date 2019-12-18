@@ -41,6 +41,7 @@ namespace Generator
             int baseSpeed = 0,
             int baseSense = 0,
             int baseStyle = 0,
+            int baseDefense = 0,
 
             // ...Other Attributes
             string id = null,
@@ -88,7 +89,8 @@ namespace Generator
             Strength = new Attribute(baseStrength);
             Speed = new Attribute(baseSpeed);
             Sense = new Attribute(baseSense);
-            Style = new Attribute(baseSense);
+            Style = new Attribute(baseStyle);
+            Defense = new Attribute(baseDefense);
 
             // ...Other Attributes
             ID = id ?? Guid.NewGuid().ToString();
@@ -112,7 +114,7 @@ namespace Generator
             Conversation = conversation;
             if (Conversation != null) Conversation.SourceObject = this;
             ActivationEffect = activationEffect;
-            AI = ai; // Run on each Update - argument is this
+            AI = ai ?? new Cached<Action<GameObject>>("DefaultAI"); // Run on each Update - argument is this
             CollisionEffect = collisionEffect; // Run when attempting to move into another object - arguments are this, other
             Temporary = temporary; // If true, destroy this object as soon as it's no longer being updated
 
@@ -195,7 +197,7 @@ namespace Generator
                     }
                     else
                     {
-                        Globals.Warn(Name + " can't move to " + value);
+                        Globals.Warn(Name ?? ID + " can't move to " + value);
                     }
                     return;
                 }
@@ -223,11 +225,14 @@ namespace Generator
         public Resource Health;
         public Resource Electricity;
 
-        // Primary Attributes
+        // Primary attributes
         public Attribute Strength;
         public Attribute Sense;
         public Attribute Speed;
         public Attribute Style;  // Right???
+
+        // Secondary attributes
+        public Attribute Defense; 
 
         // Brightness
         public Vector3 RelativeLightPosition = Vector3.Zero;
@@ -340,6 +345,7 @@ namespace Generator
             Sense.Modifier += equipmentToEquip.Sense - equippedEquipment.Sense;
             Speed.Modifier += equipmentToEquip.Speed - equippedEquipment.Speed;
             Style.Modifier += equipmentToEquip.Style - equippedEquipment.Style;
+            Defense.Modifier += equipmentToEquip.Defense - equippedEquipment.Defense;
 
             equippedEquipment = equipmentToEquip;
         }
@@ -554,7 +560,9 @@ namespace Generator
         // TODO: Don't remove, just set to dead and leave it on the ground
         public void Die()
         {
+            Globals.Party.Value.MemberIDs.Remove(ID);
             Globals.Zone.GameObjects.Objects.Remove(ID);
+            Globals.Zone.Enemies.Remove(ID);
             Globals.Log(this + " has passed away. RIP.");
         }
 
@@ -568,10 +576,18 @@ namespace Generator
         // Take damage
         public void TakeDamage(int damage)
         {
+            damage -= Defense.CurrentValue;
+
             if (damage > 0)
             {
                 Globals.Log(this + " takes " + damage + " damage. "
                         + Health.Current + " -> " + (Health.Current - damage));
+
+                // Add this to the set of enemies
+                if (!Globals.Party.Value.MemberIDs.Contains(ID))
+                {
+                    Globals.Zone.Enemies.Add(ID);
+                }
 
                 IsHurting = true;
                 // TODO: We can't hardcode "Face"
@@ -580,8 +596,6 @@ namespace Generator
 
                 if (Health.Current <= 0)
                 {
-                    // TODO: Make party members go unconscious
-                    Globals.Party.Value.MemberIDs.Remove(ID);
                     Die();
                 }
             }

@@ -14,7 +14,6 @@ namespace Generator
 
         // Resource max values modifiers
         public int Health;
-        public int Stamina;
         public int Capacity;
 
         // Primary attribute modifiers
