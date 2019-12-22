@@ -34,8 +34,7 @@ namespace Generator
                         {
                             if (MathTools.Distance(Globals.Player.Position, self.Position) > 5)
                             {
-                                self.Direction = (float)MathTools.Angle(self.Position, Globals.Player.Position);
-                                self.MoveInDirection(self.Direction);
+                                self.MoveInDirection((float)MathTools.Angle(self.Position, Globals.Player.Position));
                             }
                             else
                             {
@@ -67,16 +66,14 @@ namespace Generator
                 (GameObject self) =>
                 // TODO: Why isn't this just Angle(self, Player)?
                 {
-                    self.Direction = (float)MathTools.Angle(self.Position, Globals.Player.Position);
-                    self.MoveInDirection(self.Direction);
+                    self.MoveInDirection((float)MathTools.Angle(self.Position, Globals.Player.Position));
                 }
             },
             {
                 "WalkAwayFromPlayer",
                 (GameObject self) =>
                 {
-                    self.Direction = (float)MathTools.Angle(self.Position, Globals.Player.Position) + MathHelper.Pi;
-                    self.MoveInDirection(self.Direction);
+                    self.MoveInDirection((float)MathTools.Angle(self.Position, Globals.Player.Position) + MathHelper.Pi);
                 }
             },
             {
