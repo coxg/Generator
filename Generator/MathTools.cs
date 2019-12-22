@@ -54,24 +54,24 @@ namespace Generator
         public static Vector2 OffsetFromRadians(float radians)
         // Converts from radians to an offset
         {
-            return new Vector2((float)Math.Sin(radians), (float)Math.Cos(radians));
+            return new Vector2((float)Math.Cos(radians), (float)Math.Sin(radians));
         }
 
         public static string StringFromRadians(float radians)
         // Converts from radians to a string representing the direction
         {
-            var cardinalDirection = "Back";
-            if (radians > MathHelper.PiOver4 & radians < 3 * MathHelper.PiOver4)
+            var cardinalDirection = "Right";
+            if (radians >= MathHelper.PiOver4 & radians <= 3 * MathHelper.PiOver4)
+            {
+                cardinalDirection = "Back";
+            }
+            else if (radians > 3 * MathHelper.PiOver4 & radians < 5 * MathHelper.PiOver4)
             {
                 cardinalDirection = "Left";
             }
-            else if (radians >= 3 * MathHelper.PiOver4 & radians <= 5 * MathHelper.PiOver4)
+            else if (radians >= 5 * MathHelper.PiOver4 & radians <= 7 * MathHelper.PiOver4)
             {
                 cardinalDirection = "Front";
-            }
-            else if (radians > 5 * MathHelper.PiOver4 & radians < 7 * MathHelper.PiOver4)
-            {
-                cardinalDirection = "Right";
             }
 
             return cardinalDirection;
@@ -125,9 +125,9 @@ namespace Generator
         // Gets the angle in radians between two points
         public static double Angle(Vector3 Point1, Vector3 Point2)
         {
-            var deltaX = Point1.X - Point2.X;
-            var deltaY = Point1.Y - Point2.Y;
-            return Math.Atan2(deltaY, deltaX);
+            var deltaX = Point2.X - Point1.X;
+            var deltaY = Point2.Y - Point1.Y;
+            return Mod((float)Math.Atan2(deltaY, deltaX), MathHelper.TwoPi);
         }
 
         // Gets the location where a line between two points intersects the Z plane

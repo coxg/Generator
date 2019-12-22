@@ -153,7 +153,7 @@ namespace Generator
                 var RotatedPosition = MathTools.PointRotatedAroundPoint(
                     SourceObject.Position + ComponentOffsets, // Center of component
                     SourceObject.Position + ObjectOffsets, // Center of object
-                    new Vector3(0, 0, -SourceObject.Direction));
+                    new Vector3(0, 0, SourceObject.Direction - MathHelper.PiOver2));
 
                 // Subtract the offsets we used before - we draw from the bottom left corner, not the center
                 var OffsetCorrectedPosition = RotatedPosition - ComponentOffsets;

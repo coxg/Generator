@@ -188,7 +188,9 @@ namespace Generator
                 if (moveHorizontalOffset != 0 || moveVerticalOffset != 0)
                 {
                     // Convert from offsets to radians
-                    var radianDirection = (float)Math.Atan2(moveHorizontalOffset, moveVerticalOffset);
+
+                    var radianDirection = (float)MathTools.Angle(
+                        Vector3.Zero, new Vector3((float)moveHorizontalOffset, (float)moveVerticalOffset, 0));
 
                     // Apply offset from map rotation
                     radianDirection -= GameControl.camera.Rotation;
@@ -208,11 +210,12 @@ namespace Generator
                 if (directionHorizontalOffset != 0 || directionVerticalOffset != 0)
                 {
                     // Convert from offsets to radians
-                    var radianDirection = (float)Math.Atan2(directionHorizontalOffset, directionVerticalOffset);
+                    var radianDirection = (float)MathTools.Angle(
+                        Vector3.Zero, new Vector3(directionHorizontalOffset, directionVerticalOffset, 0));
 
                     // Apply offset from map rotation
                     radianDirection -= GameControl.camera.Rotation;
-                    radianDirection = MathTools.Mod(radianDirection, 2f * (float)Math.PI);
+                    radianDirection = MathTools.Mod(radianDirection, MathHelper.TwoPi);
 
                     // Look in that direction
                     player.Direction = radianDirection;

@@ -463,7 +463,7 @@ namespace Generator
             var rotationOffsets = MathTools.PointRotatedAroundPoint(
                 component.RelativeRotation + component.RotationOffset,
                 Vector3.Zero,
-                new Vector3(0, 0, component.Direction));
+                new Vector3(0, 0, component.Direction - MathHelper.PiOver2));
 
             // Bottom left
             vertices[0].Position = MathTools.PointRotatedAroundPoint(
@@ -834,11 +834,11 @@ namespace Generator
                     vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
                     break;
                 case "Component":
-                    vertices[0].TextureCoordinate = new Vector2(1, 1); // Bottom left
-                    vertices[1].TextureCoordinate = new Vector2(1, 0); // Top left
-                    vertices[2].TextureCoordinate = new Vector2(0, 1); // Bottom right
+                    vertices[0].TextureCoordinate = new Vector2(0, 1); // Bottom left
+                    vertices[1].TextureCoordinate = new Vector2(0, 0); // Top left
+                    vertices[2].TextureCoordinate = new Vector2(1, 1); // Bottom right
                     vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
-                    vertices[4].TextureCoordinate = new Vector2(0, 0); // Top right
+                    vertices[4].TextureCoordinate = new Vector2(1, 0); // Top right
                     vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
                     break;
             }

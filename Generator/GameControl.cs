@@ -190,8 +190,9 @@ namespace Generator
                     {
                         if (Object != lightSource)
                         {
-                            var lightAngle = (float)MathTools.Angle(lightSource.Center, Object.Center);
-                            Object.Direction = MathTools.Mod(-Object.Direction - lightAngle + MathHelper.PiOver2, MathHelper.TwoPi);
+                            var lightAngle = (float)MathTools.Angle(Object.Center, lightSource.Center);
+                            var originalDirection = Object.Direction;
+                            Object.Direction = MathTools.Mod(-Object.Direction + lightAngle + MathHelper.PiOver2, MathHelper.TwoPi);
                             foreach (var component in Object.Components.Values.OrderBy(i => -i.Position.Y).Where(i => i.CastsShadow))
                             {
                                 Drawing.DrawComponentShadow(
@@ -200,7 +201,7 @@ namespace Generator
                                     lightAngle,
                                     lightSource);
                             }
-                            Object.Direction = MathTools.Mod(-Object.Direction - lightAngle + MathHelper.PiOver2, MathHelper.TwoPi);
+                            Object.Direction = originalDirection;
                         }
                     }
                 }
