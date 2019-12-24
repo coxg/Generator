@@ -228,13 +228,17 @@ namespace Generator
             switch (ability.Name)
             {
                 case "Attack":
-                    return (code.abilities.Attack)ability;
+                    Globals.CopyTo(ability, out code.abilities.Attack attack);
+                    return attack;
                 case "PlaceObject":
-                    return (code.abilities.PlaceObject)ability;
+                    Globals.CopyTo(ability, out code.abilities.PlaceObject placeObject);
+                    return placeObject;
                 case "Shoot":
-                    return (code.abilities.Shoot)ability;
+                    Globals.CopyTo(ability, out code.abilities.Shoot shoot);
+                    return shoot;
                 case "Sprint":
-                    return (code.abilities.Sprint)ability;
+                    Globals.CopyTo(ability, out code.abilities.Sprint sprint);
+                    return sprint;
                 default:
                     throw new InvalidCastException(ability.Name + " not recognized.");
             }

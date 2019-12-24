@@ -139,5 +139,18 @@ namespace Generator
             }
             return copyObj;
         }
+
+        public static void CopyTo<T>(object copyObj, out T copyToObj)
+        // C# doesn't have a native copy method, so just serialize and deserialize
+        {
+            using (StreamWriter file = File.CreateText(Directory + "tmp.json"))
+            {
+                Serializer.Serialize(file, copyObj);
+            }
+            using (StreamReader file = File.OpenText(Directory + "tmp.json"))
+            {
+                copyToObj = (T)Serializer.Deserialize(file, typeof(T));
+            }
+        }
     }
 }

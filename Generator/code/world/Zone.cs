@@ -83,14 +83,15 @@ namespace Generator
                         var abilities = new List<Ability>();
                         foreach (var ability in gameObject.Abilities)
                         {
-                            ability.SourceObject = gameObject;
-                            var animation = ability.Animation;
+                            var newAbility = Ability.GetTyped(ability);
+                            newAbility.SourceObject = gameObject;
+                            var animation = newAbility.Animation;
                             if (animation != null)
                             {
                                 animation.AnimatedElement = gameObject;
                                 animation.SetSource(gameObject);
                             }
-                            abilities.Add(Ability.GetTyped(ability));
+                            abilities.Add(newAbility);
                         }
                         gameObject.Abilities = abilities;
                     }
