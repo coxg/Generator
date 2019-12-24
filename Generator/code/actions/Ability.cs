@@ -13,9 +13,6 @@ namespace Generator
             // Ability name
             string name,
 
-            // What's using the ability
-            GameObject sourceObject = null,
-
             // Resource costs
             int healthCost = 0,
             int electricityCost = 0,
@@ -25,15 +22,8 @@ namespace Generator
             bool isChanneled = false,
             bool isToggleable = false,
             bool requiresWalking = false,
-
-            // What it looks like
-            Animation animation = null,
-
-            // What it does
             float cooldown = 0,
-            Cached<Action<GameObject>> start = null,
-            Cached<Action<GameObject>> onUpdate = null,
-            Cached<Action<GameObject>> stop = null)
+            Animation animation = null)
         {
             // Ability name
             Name = name;
@@ -49,18 +39,12 @@ namespace Generator
             IsActive = false;
             RequiresWalking = requiresWalking;
 
-            // What's using the ability
-            SourceObject = sourceObject;
-
             // What it looks like
             Animation = animation;
 
             // What it does
             OffCooldown = true;
             Cooldown = cooldown;
-            Start = start;
-            OnUpdate = onUpdate;
-            Stop = stop;
         }
 
         // Ability name
@@ -90,7 +74,7 @@ namespace Generator
         public int ElectricityCost;
 
         // How it works
-        public bool OffCooldown;
+        public bool OffCooldown = true;
         public bool KeepCasting;
         public bool IsChanneled;
         public bool IsToggleable;
@@ -130,9 +114,9 @@ namespace Generator
 
         // What it does
         public float Cooldown;
-        public Cached<Action<GameObject>> Start;
-        public Cached<Action<GameObject>> OnUpdate;
-        public Cached<Action<GameObject>> Stop;
+        public virtual void Start() { }
+        public virtual void OnUpdate() { }
+        public virtual void Stop() { }
 
         public override string ToString()
         // Return name, useful for debugging.
@@ -200,7 +184,7 @@ namespace Generator
             if ((!WasActive || KeepCasting) && IsNowActive)
             {
                 Globals.Log(SourceObject + " uses " + this);
-                Start?.Value(SourceObject);
+                Start();
                 Animation?.Start();
 
                 // Start the cooldown
@@ -215,14 +199,14 @@ namespace Generator
             else if (WasActive && !IsNowActive)
             {
                 Globals.Log(SourceObject + " stops using " + this);
-                Stop?.Value(SourceObject);
+                Stop();
                 Animation?.Stop();
             }
 
             // What happens when we stay on
             else if (WasActive && IsNowActive)
             {
-                OnUpdate?.Value(SourceObject);
+                OnUpdate();
             }
 
             // Update variable
@@ -239,86 +223,21 @@ namespace Generator
             if (Animation != null) Animation.Update();
         }
 
-        public static Dictionary<String, Ability> Abilities = new Dictionary<string, Ability>()
-        // Eventually I'll want to serialize this or move it to its own file or something
+        public static Ability GetTyped(Ability ability)
         {
+            switch (ability.Name)
             {
-                "Sprint",
-                new Ability(
-                    "Sprint",
-                    isChanneled: true,
-                    requiresWalking: true,
-                    animation: new Animation(
-                        updateFrames: new Frames(
-                            baseOffsets: new List<Vector3>
-                            {
-                                Vector3.Zero,
-                                new Vector3(0, 0, .05f),
-                                Vector3.Zero
-                            },
-                            duration: 1.5f)),
-                    start: new Cached<Action<GameObject>>("SprintStart"),
-                    stop: new Cached<Action<GameObject>>("SprintStop"))
-            },
-            {
-                "Attack",
-                new Ability(
-                    "Attack",
-                    start: new Cached<Action<GameObject>>("Attack"))
-            },
-            {
-                "Shoot",
-                new Ability(
-                    "Shoot",
-                    electricityCost: 3,
-                    cooldown: .1f,
-                    keepCasting: true,
-                    start: new Cached<Action<GameObject>>("Shoot"))
-            },
-            {
-                "Place Object",
-                new Ability(
-                    "Place Object",
-                    start: new Cached<Action<GameObject>>("Place Object"))
-            },
-            {
-                "Always Sprint",
-                new Ability(
-                    "Always Sprint",
-                    electricityCost: 1,
-                    isToggleable: true,
-                    requiresWalking: true,
-                    start: new Cached<Action<GameObject>>("SprintStart"),
-                    stop: new Cached<Action<GameObject>>("SprintStop"),
-                    animation: new Animation(
-                        startFrames: new Frames(
-                            baseOffsets: new List<Vector3>
-                            {
-                                Vector3.Zero,
-                                new Vector3(0, 0, 1),
-                                Vector3.Zero,
-                            },
-                            duration: 1),
-                        updateFrames: new Frames(
-                            baseOffsets: new List<Vector3>
-                            {
-                                Vector3.Zero,
-                                new Vector3(-.2f, 0, 0),
-                                Vector3.Zero,
-                                new Vector3(.2f, 0, 0),
-                                Vector3.Zero
-                            },
-                            duration: .5f),
-                        stopFrames: new Frames(
-                            baseOffsets: new List<Vector3>
-                            {
-                                Vector3.Zero,
-                                new Vector3(0, 0, 1),
-                                Vector3.Zero
-                            },
-                            duration: 1))
-                )
+                case "Attack":
+                    return (code.abilities.Attack)ability;
+                case "PlaceObject":
+                    return (code.abilities.PlaceObject)ability;
+                case "Shoot":
+                    return (code.abilities.Shoot)ability;
+                case "Sprint":
+                    return (code.abilities.Sprint)ability;
+                default:
+                    throw new InvalidCastException(ability.Name + " not recognized.");
             }
-        };
+        }
     }
 }

@@ -60,6 +60,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="code\abilities\Attack.cs" />
+    <Compile Include="code\abilities\Sprint.cs" />
+    <Compile Include="code\abilities\PlaceObject.cs" />
+    <Compile Include="code\abilities\Shoot.cs" />
     <Compile Include="code\actions\Ability.cs" />
     <Compile Include="code\items\Accessory.cs" />
     <Compile Include="code\actions\Animation.cs" />
@@ -96,7 +100,7 @@
     <Compile Include="code\math\MathTools.cs" />
     <Compile Include="code\items\Armor.cs" />
     <Compile Include="code\math\ArrayUtil.cs" />
-    <Compile Include="code\actions\Attribute.cs" />
+    <Compile Include="code\objects\Attribute.cs" />
     <Compile Include="code\control\Camera.cs" />
     <Compile Include="code\objects\Component.cs" />
     <Compile Include="code\control\Drawing.cs" />
@@ -192,9 +196,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="code\abilities\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

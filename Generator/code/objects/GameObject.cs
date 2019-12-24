@@ -107,7 +107,7 @@ namespace Generator
             EquippedAccessory = accessory ?? new Accessory("[No Accessory]", new Cached<Texture2D>("Sprites/white_dot"));
 
             // Abilities
-            Abilities = abilities != null ? (List<Ability>) Globals.Copy(abilities) : new List<Ability>();
+            Abilities = abilities ?? new List<Ability>();
             foreach (var ability in Abilities) ability.SourceObject = this;
 
             // Interaction

@@ -80,6 +80,7 @@ namespace Generator
                                 animation.SetSource(gameObject);
                             }
                         }
+                        var abilities = new List<Ability>();
                         foreach (var ability in gameObject.Abilities)
                         {
                             ability.SourceObject = gameObject;
@@ -89,7 +90,9 @@ namespace Generator
                                 animation.AnimatedElement = gameObject;
                                 animation.SetSource(gameObject);
                             }
+                            abilities.Add(Ability.GetTyped(ability));
                         }
+                        gameObject.Abilities = abilities;
                     }
                     return returnedZone;
                 }
@@ -126,10 +129,11 @@ namespace Generator
                                 damage: 10),
                             brightness: Vector3.Zero,
                             abilities: new List<Ability>() {
-                                Ability.Abilities["Sprint"],
-                                Ability.Abilities["Shoot"],
-                                Ability.Abilities["Place Object"],
-                                Ability.Abilities["Attack"] }),
+                                new code.abilities.Sprint(),
+                                new code.abilities.Shoot(),
+                                new code.abilities.PlaceObject(),
+                                new code.abilities.Attack()
+                            }),
 
                         // farrah
                         new GameObject(

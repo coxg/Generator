@@ -7,7 +7,7 @@ namespace Generator
     public static class Actions
     {
         // The GameObject is the one calling it
-        // Used for GameObject.AI, which is called on each update, and ability Start/Stop/OnUpdate
+        // Used for GameObject.AI, which is called on each update
         public static Dictionary<string, Action<GameObject>> SelfActions = new Dictionary<string, Action<GameObject>>
         {
             {
@@ -79,80 +79,6 @@ namespace Generator
             {
                 "WalkInStraightLine",
                 (GameObject self) => { self.MoveInDirection(self.Direction); }
-            },
-            {
-                "SprintStart",
-                (GameObject self) => {
-                    self.Speed.Multiplier *= 3;
-                    self.IsWalking = true;
-                }
-            },
-            {
-                "SprintStop",
-                (GameObject self) => {
-                    self.Speed.Multiplier /= 3;
-                    self.IsWalking = false;
-                }
-            },
-            {
-                "Attack",
-                (GameObject self) => {
-                    self.IsSwinging = true;
-
-                    // Figure out which one you hit
-                    var target = self.GetTargetInRange(self.EquippedWeapon.Range);
-
-                    // Deal damage
-                    if (target != null)
-                    {
-                        Globals.Log(self + " attacks, hitting " + target + ".");
-                        self.DealDamage(target, self.EquippedWeapon.Damage + self.Strength.CurrentValue);
-                    }
-                    else
-                    {
-                        Globals.Log(self + " attacks and misses.");
-                    }
-                }
-            },
-            {
-                "Shoot",
-                (GameObject self) => {
-                    self.IsShooting = true;
-                    var position = self.GetTargetCoordinates(1);
-                    position.Z += self.Size.Z / 2;
-                    var bullet = new GameObject(
-                        baseHealth: 1,
-                        position: position,
-                        size: new Vector3(.05f, .05f, .05f),
-                        direction: self.Direction,
-                        baseSpeed: 100,
-                        ai: new Cached<Action<GameObject>>("WalkInStraightLine"),
-                        collisionEffect: new Cached<Action<GameObject, GameObject>>("BulletCollision"),
-                        brightness: new Vector3(.5f, .1f, .5f),
-                        castsShadow: false,
-                        temporary: true,
-                        components: new Dictionary<string, Component>()
-                        {
-                            {"body", new Component(
-                                id: "Hand",
-                                spriteFile: "Ninja",
-                                relativePosition: new Vector3(.5f, .5f, .5f),
-                                relativeSize: 1,
-                                baseRotationPoint: new Vector3(.5f, .5f, .5f))
-                            }
-                        }
-                    );
-                    Globals.Zone.GameObjects.Objects[bullet.ID] = bullet;
-                }
-            },
-            {
-                "Place Object",
-                (GameObject self) => {
-                    var baseTileName = Globals.Zone.Tiles.BaseTileNames[Globals.CreativeObjectIndex];
-                    var randomBaseTile = Globals.Zone.Tiles.GetRandomBaseName(baseTileName);
-                    var targetCoordinates = self.GetTargetCoordinates(1);
-                    Globals.Zone.Tiles.IDs[(int)targetCoordinates.X, (int)targetCoordinates.Y] = randomBaseTile;
-                }
             }
         };
 
