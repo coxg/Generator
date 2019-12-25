@@ -139,7 +139,7 @@ namespace Generator
                 }
                 else if (align == "center")
                 {
-                    _x = (int)(_x + maxWidth - _dimensions.X) / 2;
+                    _x = (int)(_x - _dimensions.X / 2);
                 }
 
 

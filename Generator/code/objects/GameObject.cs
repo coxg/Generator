@@ -695,9 +695,13 @@ namespace Generator
         }
 
         // Submit message to the screen with icon
+        public string IsSaying;
         public void Say(string message)
         {
-            // TODO: Floating text bubbles
+            IsSaying = message;
+            Timing.AddEvent(
+                .1f * message.Length + 1,
+                () => { if (IsSaying == message) IsSaying = null; });
         }
 
         // Return name, useful for debugging.

@@ -264,9 +264,6 @@ namespace Generator
             // Draw the object layer
             spriteBatch.Begin();
             spriteBatch.Draw(objectRenderTarget, screenSize, Color.White);
-
-            var topLeft = MathTools.PixelsFromPosition(new Vector3(55, 56, 0));
-            var bottomRight = MathTools.PixelsFromPosition(new Vector3(56, 55, 0));
             spriteBatch.End();
 
             // Draw the UI layer
@@ -295,6 +292,27 @@ namespace Generator
                     Drawing.DrawCreativeUI(spriteBatch);
                 }
                 spriteBatch.End();
+
+                // Show all text blurbs
+                foreach (var gameObject in Globals.Objects.OrderBy(i => -i.Position.Y))
+                {
+                    if (gameObject.IsSaying != null)
+                    {
+                        var textBoxCenter = MathTools.PixelsFromPosition(
+                            gameObject.Center + new Vector3(0, 3, 0));
+                        Drawing.DrawTextBox(
+                            spriteBatch,
+                            gameObject.IsSaying,
+                            (int)textBoxCenter.X,
+                            (int)textBoxCenter.Y,
+                            300,
+                            Color.White,
+                            align: "center",
+                            borderThickness: 5,
+                            highlightColor: Color.MediumPurple,
+                            highlightMargin: 16);
+                    }
+                }
             }
 
             // Draw FPS counter

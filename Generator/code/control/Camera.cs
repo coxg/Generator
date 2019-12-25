@@ -60,22 +60,20 @@ namespace Generator
 
         public void Update()
         {
+            var center = Globals.Player.Center;
             Position = new Vector3(
-                Globals.Player.Center.X,
-                Globals.Player.Center.Y - .00001f,
-                Globals.Player.Center.Z + Height);
-            Target = new Vector3(
-                Globals.Player.Center.X,
-                Globals.Player.Center.Y,
-                Globals.Player.Center.Z);
+                center.X,
+                center.Y - .00001f,
+                center.Z + Height);
+            Target = center;
 
             var screenWidth =
                 Globals.Resolution.X
-                * ((Globals.Player.Center.Z + Height) * 1.5f)
+                * ((center.Z + Height) * 1.5f)
                 / Math.Max(Globals.Resolution.X, Globals.Resolution.Y);
             var screenHeight =
                 Globals.Resolution.Y
-                * ((Globals.Player.Center.Z + Height) * 1.5f)
+                * ((center.Z + Height) * 1.5f)
                 / Math.Max(Globals.Resolution.X, Globals.Resolution.Y);
             VisibleArea = new RectangleF(
                 Position.X - screenWidth / 2, 

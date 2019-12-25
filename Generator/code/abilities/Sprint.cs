@@ -15,15 +15,16 @@ namespace Generator.code.abilities
                     baseOffsets: new List<Vector3>
                     {
                         Vector3.Zero,
-                        new Vector3(0, 0, .05f),
+                        new Vector3(0, 0, .1f),
                         Vector3.Zero
                     },
-                    duration: 1.5f))) { }
+                    duration: 3f))) { }
 
         public override void Start()
         {
             SourceObject.Speed.Multiplier *= 3;
             SourceObject.IsWalking = true;
+            SourceObject.Say("I'm sprinting!!!");
         }
 
         public override void Stop()
