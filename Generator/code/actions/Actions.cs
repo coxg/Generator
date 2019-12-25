@@ -62,9 +62,12 @@ namespace Generator
                 }
             },
             {
+                "DoNothing",
+                (GameObject self) => { }
+            },
+            {
                 "WalkToPlayer",
                 (GameObject self) =>
-                // TODO: Why isn't this just Angle(self, Player)?
                 {
                     self.MoveInDirection((float)MathTools.Angle(self.Position, Globals.Player.Position));
                 }

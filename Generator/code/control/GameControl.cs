@@ -212,9 +212,9 @@ namespace Generator
             // Draw the tile layer
             GraphicsDevice.SetRenderTarget(tileRenderTarget);
             GraphicsDevice.Clear(Color.Transparent);
-            for (var x = (int)camera.VisibleArea.Left; x < (int)camera.VisibleArea.Right; x++)
+            for (var x = (int)camera.VisibleArea.Left; x <= (int)camera.VisibleArea.Right; x++)
             {
-                for (var y = (int)camera.VisibleArea.Top; y < (int)camera.VisibleArea.Bottom; y++)
+                for (var y = (int)camera.VisibleArea.Top; y <= (int)camera.VisibleArea.Bottom; y++)
                 {
                     Drawing.DrawTile(x, y);
                 }
@@ -265,22 +265,8 @@ namespace Generator
             spriteBatch.Begin();
             spriteBatch.Draw(objectRenderTarget, screenSize, Color.White);
 
-            var bottomLeft = MathTools.PixelsFromPosition(new Vector3(55, 55, 0));
-            var topRight = MathTools.PixelsFromPosition(new Vector3(56, 56, 0));
-
-            spriteBatch.Draw(
-                Globals.WhiteDot,
-                new Rectangle(
-                    (int)bottomLeft.X,
-                    (int)bottomLeft.Y,
-                    (int)(topRight.X - bottomLeft.X),
-                    (int)(topRight.Y - bottomLeft.Y)),
-                null,
-                Color.Red,
-                0,
-                new Vector2(0, 0),
-                SpriteEffects.None,
-                .04f);
+            var topLeft = MathTools.PixelsFromPosition(new Vector3(55, 56, 0));
+            var bottomRight = MathTools.PixelsFromPosition(new Vector3(56, 55, 0));
             spriteBatch.End();
 
             // Draw the UI layer

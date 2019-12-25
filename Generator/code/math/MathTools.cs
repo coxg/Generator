@@ -161,15 +161,14 @@ namespace Generator
         public static Vector2 PixelsFromPosition(Vector3 position)
         {
             var pixels = Vector2.Zero;
-            pixels.X = 
-                (position.X - GameControl.camera.VisibleArea.Left)
-                / GameControl.camera.VisibleArea.Width
-                * Globals.Resolution.X;
-            pixels.Y = 
+            pixels.X =
+                Globals.Resolution.X
+                * (position.X - GameControl.camera.VisibleArea.Left)
+                / (GameControl.camera.VisibleArea.Right - GameControl.camera.VisibleArea.Left);
+            pixels.Y =
                 Globals.Resolution.Y
-                - ((position.Y - GameControl.camera.VisibleArea.Top)
-                / GameControl.camera.VisibleArea.Height
-                * Globals.Resolution.Y);
+                * (position.Y - GameControl.camera.VisibleArea.Bottom)
+                / (GameControl.camera.VisibleArea.Top - GameControl.camera.VisibleArea.Bottom);
             return pixels;
         }
     }

@@ -206,7 +206,7 @@ namespace Generator
 
                         // old man
                         new GameObject(
-                            new Vector3(55, 56, 0),
+                            new Vector3(55, 55, 0),
                             id: "old man",
                             brightness: Vector3.Zero,
                             baseStrength: 10,
@@ -315,7 +315,7 @@ namespace Generator
                                     spriteFile: "Sprites/building")
                                 }
                             })
-                    });
+                    }); ;
 
                     return new Zone("testingZone", 100, 100, gameObjects, new List<string> { "Grass", "Clay" });
 

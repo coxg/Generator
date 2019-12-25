@@ -61,25 +61,25 @@ namespace Generator
         {
             Position = new Vector3(
                 Globals.Player.Center.X,
-                Globals.Player.Center.Y - 1.00001f,
+                Globals.Player.Center.Y - .00001f,
                 Globals.Player.Center.Z + Height);
             Target = new Vector3(
                 Globals.Player.Center.X,
-                Globals.Player.Center.Y - 1,
+                Globals.Player.Center.Y,
                 Globals.Player.Center.Z);
 
-            var screenWidth = Globals.Resolution.X * Height / 1000;
-            var screenHeight = Globals.Resolution.Y * Height / 1000;
+            var screenWidth = Globals.Resolution.X * (Height * 1.5f) / 1600;
+            var screenHeight = Globals.Resolution.Y * (Height * 1.5f) / 1600;
             VisibleArea = new RectangleF(
                 Position.X - screenWidth / 2, 
                 Position.Y - screenHeight / 2,
-                screenWidth + 1,
-                screenHeight + 1);
+                screenWidth,
+                screenHeight);
             UpdatingArea = new RectangleF(
                 Position.X - 3 * screenWidth / 2,
                 Position.Y - 3 * screenHeight / 2,
-                3 * screenWidth + 1,
-                3 * screenHeight + 1);
+                3 * screenWidth,
+                3 * screenHeight);
         }
     }
 }

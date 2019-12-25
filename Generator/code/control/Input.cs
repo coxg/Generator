@@ -203,9 +203,22 @@ namespace Generator
                     MovingToPosition = false;
                 }
 
-                // If not, use the mouse
+                // If not, use the mouse/keyboard
                 else
                 {
+                    // If we're trying to use the keyboard for movement
+                    var keyboardState = Keyboard.GetState();
+                    if (keyboardState.IsKeyDown(Keys.W) | keyboardState.IsKeyDown(Keys.A)
+                        | keyboardState.IsKeyDown(Keys.S) | keyboardState.IsKeyDown(Keys.D))
+                    {
+                        if (keyboardState.IsKeyDown(Keys.W)) moveVerticalOffset += 1;
+                        if (keyboardState.IsKeyDown(Keys.S)) moveVerticalOffset -= 1;
+                        if (keyboardState.IsKeyDown(Keys.A)) moveHorizontalOffset -= 1;
+                        if (keyboardState.IsKeyDown(Keys.D)) moveHorizontalOffset += 1;
+                        MovingToPosition = false;
+                        speed = 1;
+                    }
+
                     // If the mouse is pressed then start moving to its position
                     var mouseState = Mouse.GetState();
                     var cursorPosition = MathTools.PositionFromPixels(new Vector2(mouseState.X, mouseState.Y));
@@ -216,8 +229,9 @@ namespace Generator
                     }
 
                     // If we're already where we're trying to go then stop moving
-                    if (Math.Abs(MoveToPosition.X - player.Position.X) < .5f
-                        && Math.Abs(MoveToPosition.Y - player.Position.Y) < .5f)
+                    var playerCenter = player.Center;
+                    if (Math.Abs(MoveToPosition.X - playerCenter.X) < .5f
+                        && Math.Abs(MoveToPosition.Y - playerCenter.Y) < .5f)
                     {
                         MovingToPosition = false;
                     }
@@ -225,16 +239,16 @@ namespace Generator
                     // Move in the direction of the last input location
                     if (MovingToPosition)
                     {
-                        moveHorizontalOffset = MoveToPosition.X - player.Position.X;
-                        moveVerticalOffset = MoveToPosition.Y - player.Position.Y;
+                        moveHorizontalOffset = MoveToPosition.X - playerCenter.X;
+                        moveVerticalOffset = MoveToPosition.Y - playerCenter.Y;
                         speed = 1;
                     }
 
                     // If using any abilities then also look in that direction
                     if (anyAbilitiesBeingUsed)
                     {
-                        directionHorizontalOffset = cursorPosition.X - player.Position.X;
-                        directionVerticalOffset = cursorPosition.Y - player.Position.Y;
+                        directionHorizontalOffset = cursorPosition.X - playerCenter.X;
+                        directionVerticalOffset = cursorPosition.Y - playerCenter.Y;
                     }
                 }
 
@@ -334,6 +348,17 @@ namespace Generator
                         Globals.PlayerPartyNumber.Value = (int)MathTools.Mod(
                             Globals.PlayerPartyNumber.Value + 1, Globals.Party.Value.MemberIDs.Count);
                     }
+                }
+
+                // Camera controls
+                if (KeyBindings["down"].IsBeingPressed)
+                {
+                    GameControl.camera.Height += 10;
+                }
+                if (KeyBindings["up"].IsBeingPressed)
+                {
+                    GameControl.camera.Height -= 10;
+                    GameControl.camera.Height = Math.Max(GameControl.camera.Height, 5);
                 }
             }
         }
