@@ -79,17 +79,17 @@ namespace Generator
         public bool IsChanneled;
         public bool IsToggleable;
         private bool IsActive;
-        private bool WasPressed;
-        private bool _isPressed;
+        private bool WasTryingToUse;
+        private bool _isTryingToUse;
         private bool RequiresWalking;
 
-        public bool IsPressed
+        public bool IsTryingToUse
         {
-            get => _isPressed;
+            get => _isTryingToUse;
             set
             {
-                WasPressed = _isPressed;
-                _isPressed = value;
+                WasTryingToUse = _isTryingToUse;
+                _isTryingToUse = value;
             }
         }
 
@@ -117,6 +117,11 @@ namespace Generator
         public virtual void Start() { }
         public virtual void OnUpdate() { }
         public virtual void Stop() { }
+
+        public virtual float GetPriority(List<GameObject> targets, List<GameObject> projectiles)
+        {
+            return 1f;
+        }
 
         public override string ToString()
         // Return name, useful for debugging.
@@ -150,29 +155,29 @@ namespace Generator
                     IsNowActive = true;
 
                 // Activating now
-                else if (!WasActive && !WasPressed && IsPressed && CanUse()) IsNowActive = true;
+                else if (!WasActive && !WasTryingToUse && IsTryingToUse && CanUse()) IsNowActive = true;
 
                 // Turning off now
-                if (WasActive && !WasPressed && IsPressed && CanUse()) IsNowActive = false;
+                if (WasActive && !WasTryingToUse && IsTryingToUse && CanUse()) IsNowActive = false;
             }
 
             // Channeled abilities
             else if (IsChanneled)
             {
                 // It was already active
-                if (WasActive && IsPressed && CanUse())
+                if (WasActive && IsTryingToUse && CanUse())
                     IsNowActive = true;
 
                 // Activating now
-                else if (!WasActive && !WasPressed && IsPressed && CanUse()) IsNowActive = true;
+                else if (!WasActive && !WasTryingToUse && IsTryingToUse && CanUse()) IsNowActive = true;
             }
 
             // Activated abilities
             else
             {
-                if (IsPressed && CanUse())
+                if (IsTryingToUse && CanUse())
                 {
-                    if (!WasActive && !WasPressed)
+                    if (!WasActive && !WasTryingToUse)
                         IsNowActive = true;
 
                     else if (KeepCasting)

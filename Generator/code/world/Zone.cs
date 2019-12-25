@@ -16,6 +16,16 @@ namespace Generator
         public int Height;
         public HashSet<string> Enemies = new HashSet<string>();
 
+        public List<GameObject> EnemyObjects()
+        {
+            var enemyObjects = new List<GameObject>();
+            foreach (string enemy in Enemies)
+            {
+                enemyObjects.Add(GameObjects.Objects[enemy]);
+            }
+            return enemyObjects;
+        }
+
         public Zone(string name, int width, int height, GameObjectManager gameObjects, List<string> tileNames)
         {
             Name = name;

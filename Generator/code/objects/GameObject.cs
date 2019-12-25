@@ -247,6 +247,26 @@ namespace Generator
         // This would make a copy and set the sourceObject
         public List<Ability> Abilities = new List<Ability>();
 
+        public void UseHighestPriorityAbility(List<GameObject> targets, List<GameObject> projectiles)
+        {
+            float highestPriority = 0;
+            Ability highestPriorityAbility = null;
+            foreach (Ability ability in Abilities)
+            {
+                var abilityPriority = ability.GetPriority(targets, projectiles);
+                if (abilityPriority > highestPriority)
+                {
+                    highestPriority = abilityPriority;
+                    highestPriorityAbility = ability;
+                }
+            }
+
+            if (highestPriorityAbility != null)
+            {
+                highestPriorityAbility.IsTryingToUse = true;
+            }
+        }
+
         // Interaction
         public Conversation Conversation;
         public Cached<Action<GameObject, GameObject>> ActivationEffect;

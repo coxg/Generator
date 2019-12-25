@@ -159,22 +159,22 @@ namespace Generator
                 bool anyAbilitiesBeingUsed = false;
                 if (player.Abilities.Count > 0)
                 {
-                    player.Abilities[0].IsPressed = KeyBindings["l"].IsPressed;
+                    player.Abilities[0].IsTryingToUse = KeyBindings["l"].IsPressed;
                     anyAbilitiesBeingUsed = true;
                 }
                 if (player.Abilities.Count > 1)
                 {
-                    player.Abilities[1].IsPressed = KeyBindings["r"].IsPressed;
+                    player.Abilities[1].IsTryingToUse = KeyBindings["r"].IsPressed;
                     anyAbilitiesBeingUsed = true;
                 }
                 if (player.Abilities.Count > 2)
                 {
-                    player.Abilities[2].IsPressed = KeyBindings["lb"].IsPressed;
+                    player.Abilities[2].IsTryingToUse = KeyBindings["lb"].IsPressed;
                     anyAbilitiesBeingUsed = true;
                 }
                 if (player.Abilities.Count > 3)
                 {
-                    player.Abilities[3].IsPressed = KeyBindings["rb"].IsPressed;
+                    player.Abilities[3].IsTryingToUse = KeyBindings["rb"].IsPressed;
                     anyAbilitiesBeingUsed = true;
                 }
 

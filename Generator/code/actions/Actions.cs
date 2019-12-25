@@ -26,7 +26,7 @@ namespace Generator
                         // During combat they fight your enemies
                         if (Globals.Party.Value.InCombat)
                         {
-
+                            self.UseHighestPriorityAbility(Globals.Zone.EnemyObjects(), new List<GameObject>());
                         }
 
                         // Out of combat they follow you around
@@ -50,7 +50,7 @@ namespace Generator
                         // If they're fighting you
                         if (Globals.Zone.Enemies.Contains(self.ID))
                         {
-
+                            self.UseHighestPriorityAbility((List<GameObject>)Globals.Party.Value.GetMembers(), new List<GameObject>());
                         }
 
                         // If they're not fighting you
