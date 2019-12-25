@@ -11,6 +11,8 @@ namespace Generator
         // TODO: Refactor, each button should have this ability
         public static GamePadCapabilities Capabilities;
         public static GamePadState State;
+        public static Vector3 MoveToPosition;
+        public static bool MovingToPosition;
 
         public class KeyBinding
         {
@@ -153,6 +155,29 @@ namespace Generator
                     if (player.GetTargetAtRange() != null) player.GetTargetAtRange().Activate(player);
                 }
 
+                // Abilities
+                bool anyAbilitiesBeingUsed = false;
+                if (player.Abilities.Count > 0)
+                {
+                    player.Abilities[0].IsPressed = KeyBindings["l"].IsPressed;
+                    anyAbilitiesBeingUsed = true;
+                }
+                if (player.Abilities.Count > 1)
+                {
+                    player.Abilities[1].IsPressed = KeyBindings["r"].IsPressed;
+                    anyAbilitiesBeingUsed = true;
+                }
+                if (player.Abilities.Count > 2)
+                {
+                    player.Abilities[2].IsPressed = KeyBindings["lb"].IsPressed;
+                    anyAbilitiesBeingUsed = true;
+                }
+                if (player.Abilities.Count > 3)
+                {
+                    player.Abilities[3].IsPressed = KeyBindings["rb"].IsPressed;
+                    anyAbilitiesBeingUsed = true;
+                }
+
                 // Convert from actual movement input to direction offsets
                 var moveVerticalOffset = 0.0;
                 var moveHorizontalOffset = 0.0;
@@ -165,6 +190,7 @@ namespace Generator
                     State.ThumbSticks.Right.X == 0 & State.ThumbSticks.Right.Y == 0
                     & State.ThumbSticks.Left.X == 0 & State.ThumbSticks.Left.Y == 0))
                 {
+
                     directionHorizontalOffset = State.ThumbSticks.Right.X;
                     directionVerticalOffset = State.ThumbSticks.Right.Y;
                     moveHorizontalOffset = State.ThumbSticks.Left.X;
@@ -172,16 +198,44 @@ namespace Generator
                     speed = (float)Math.Min(1, Math.Sqrt(
                         Math.Pow(State.ThumbSticks.Left.X, 2)
                         + Math.Pow(State.ThumbSticks.Left.Y, 2)));
+
+                    // We're not using the mouse for input so null this out
+                    MovingToPosition = false;
                 }
 
-                // If not, just use the keyboard
+                // If not, use the mouse
                 else
                 {
-                    if (Keyboard.GetState().IsKeyDown(Keys.W)) moveVerticalOffset += 1;
-                    if (Keyboard.GetState().IsKeyDown(Keys.S)) moveVerticalOffset -= 1;
-                    if (Keyboard.GetState().IsKeyDown(Keys.A)) moveHorizontalOffset -= 1;
-                    if (Keyboard.GetState().IsKeyDown(Keys.D)) moveHorizontalOffset += 1;
-                    speed = 1;
+                    // If the mouse is pressed then start moving to its position
+                    var mouseState = Mouse.GetState();
+                    var cursorPosition = MathTools.PositionFromPixels(new Vector2(mouseState.X, mouseState.Y));
+                    if (mouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        MovingToPosition = true;
+                        MoveToPosition = cursorPosition;
+                    }
+
+                    // If we're already where we're trying to go then stop moving
+                    if (Math.Abs(MoveToPosition.X - player.Position.X) < .5f
+                        && Math.Abs(MoveToPosition.Y - player.Position.Y) < .5f)
+                    {
+                        MovingToPosition = false;
+                    }
+
+                    // Move in the direction of the last input location
+                    if (MovingToPosition)
+                    {
+                        moveHorizontalOffset = MoveToPosition.X - player.Position.X;
+                        moveVerticalOffset = MoveToPosition.Y - player.Position.Y;
+                        speed = 1;
+                    }
+
+                    // If using any abilities then also look in that direction
+                    if (anyAbilitiesBeingUsed)
+                    {
+                        directionHorizontalOffset = cursorPosition.X - player.Position.X;
+                        directionVerticalOffset = cursorPosition.Y - player.Position.Y;
+                    }
                 }
 
                 // Move in the direction specified
@@ -220,12 +274,6 @@ namespace Generator
                     // Look in that direction
                     player.Direction = radianDirection;
                 }
-
-                // Abilities
-                if (player.Abilities.Count > 0) player.Abilities[0].IsPressed = KeyBindings["l"].IsPressed;
-                if (player.Abilities.Count > 1) player.Abilities[1].IsPressed = KeyBindings["r"].IsPressed;
-                if (player.Abilities.Count > 2) player.Abilities[2].IsPressed = KeyBindings["lb"].IsPressed;
-                if (player.Abilities.Count > 3) player.Abilities[3].IsPressed = KeyBindings["rb"].IsPressed;
 
                 // Save the game
                 if (KeyBindings["start"].IsBeingReleased && KeyBindings["start"].PressedDuration <= .5f)

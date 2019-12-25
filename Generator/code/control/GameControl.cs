@@ -98,6 +98,8 @@ namespace Generator
             Saving.PopulateSaveKeywords();
             Timing.AddEvent(300, Saving.Autosave);
 
+            IsMouseVisible = true;
+
             base.Initialize();
         }
 
@@ -262,6 +264,23 @@ namespace Generator
             // Draw the object layer
             spriteBatch.Begin();
             spriteBatch.Draw(objectRenderTarget, screenSize, Color.White);
+
+            var bottomLeft = MathTools.PixelsFromPosition(new Vector3(55, 55, 0));
+            var topRight = MathTools.PixelsFromPosition(new Vector3(56, 56, 0));
+
+            spriteBatch.Draw(
+                Globals.WhiteDot,
+                new Rectangle(
+                    (int)bottomLeft.X,
+                    (int)bottomLeft.Y,
+                    (int)(topRight.X - bottomLeft.X),
+                    (int)(topRight.Y - bottomLeft.Y)),
+                null,
+                Color.Red,
+                0,
+                new Vector2(0, 0),
+                SpriteEffects.None,
+                .04f);
             spriteBatch.End();
 
             // Draw the UI layer

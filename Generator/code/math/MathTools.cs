@@ -143,5 +143,34 @@ namespace Generator
         {
             return (Point1 - Point2).Length();
         }
+
+        public static Vector3 PositionFromPixels(Vector2 pixels)
+        {
+            var position = Vector3.Zero;
+            position.X = (
+                pixels.X / Globals.Resolution.X
+                * (GameControl.camera.VisibleArea.Right - GameControl.camera.VisibleArea.Left))
+                + GameControl.camera.VisibleArea.Left;
+            position.Y = (
+                pixels.Y / Globals.Resolution.Y
+                * (GameControl.camera.VisibleArea.Top - GameControl.camera.VisibleArea.Bottom))
+                + GameControl.camera.VisibleArea.Bottom;
+            return position;
+        }
+
+        public static Vector2 PixelsFromPosition(Vector3 position)
+        {
+            var pixels = Vector2.Zero;
+            pixels.X = 
+                (position.X - GameControl.camera.VisibleArea.Left)
+                / GameControl.camera.VisibleArea.Width
+                * Globals.Resolution.X;
+            pixels.Y = 
+                Globals.Resolution.Y
+                - ((position.Y - GameControl.camera.VisibleArea.Top)
+                / GameControl.camera.VisibleArea.Height
+                * Globals.Resolution.Y);
+            return pixels;
+        }
     }
 }
