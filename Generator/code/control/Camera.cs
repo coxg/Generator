@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Drawing;
+using System;
 
 namespace Generator
 {
@@ -68,8 +69,14 @@ namespace Generator
                 Globals.Player.Center.Y,
                 Globals.Player.Center.Z);
 
-            var screenWidth = Globals.Resolution.X * (Height * 1.5f) / 1600;
-            var screenHeight = Globals.Resolution.Y * (Height * 1.5f) / 1600;
+            var screenWidth =
+                Globals.Resolution.X
+                * ((Globals.Player.Center.Z + Height) * 1.5f)
+                / Math.Max(Globals.Resolution.X, Globals.Resolution.Y);
+            var screenHeight =
+                Globals.Resolution.Y
+                * ((Globals.Player.Center.Z + Height) * 1.5f)
+                / Math.Max(Globals.Resolution.X, Globals.Resolution.Y);
             VisibleArea = new RectangleF(
                 Position.X - screenWidth / 2, 
                 Position.Y - screenHeight / 2,
