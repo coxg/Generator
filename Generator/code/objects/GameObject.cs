@@ -60,6 +60,7 @@ namespace Generator
             Cached<Action<GameObject, GameObject>> collisionEffect = null,
             bool temporary = false,
             Cached<Action<GameObject, GameObject>> activationEffect = null,
+            bool collision = true,
 
             // Equipment
             Weapon weapon = null,
@@ -117,6 +118,7 @@ namespace Generator
             AI = ai ?? new Cached<Action<GameObject>>("DefaultAI"); // Run on each Update - argument is this
             CollisionEffect = collisionEffect; // Run when attempting to move into another object - arguments are this, other
             Temporary = temporary; // If true, destroy this object as soon as it's no longer being updated
+            Collision = collision;
 
             // Grid logic
             Size = size ?? Vector3.One;
@@ -180,6 +182,7 @@ namespace Generator
         public bool IsSwinging;
         public bool IsShooting;
         public bool IsHurting;
+        public bool Collision = true;
 
         // Location
         override public float Direction { get; set; }
@@ -206,10 +209,10 @@ namespace Generator
                 var targetAtPosition = GetTargetInArea(new RectangleF(value.X, value.Y, Size.X, Size.Y));
                 if (targetAtPosition == null)
                 {
-                    Globals.Zone?.CollisionMap.Remove(this);
+                    if (Collision) Globals.Zone?.CollisionMap.Remove(this);
                     base.Position = value;
                     Area = new RectangleF(Position.X, Position.Y, Size.X, Size.Y);
-                    Globals.Zone?.CollisionMap.Add(this);
+                    if (Collision) Globals.Zone?.CollisionMap.Add(this);
                 }
 
                 // If not then we collide with the object and it collides with us
@@ -585,7 +588,7 @@ namespace Generator
             Globals.Party.Value.MemberIDs.Remove(ID);
             Globals.Zone.GameObjects.Objects.Remove(ID);
             Globals.Zone.Enemies.Remove(ID);
-            Globals.Zone.CollisionMap.Remove(this);
+            if (Collision) Globals.Zone.CollisionMap.Remove(this);
             Globals.Log(this + " has passed away. RIP.");
         }
 

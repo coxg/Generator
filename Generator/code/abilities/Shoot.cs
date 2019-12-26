@@ -25,6 +25,7 @@ namespace Generator.code.abilities
                 baseSpeed: 100,
                 ai: new Cached<Action<GameObject>>("WalkInStraightLine"),
                 collisionEffect: new Cached<Action<GameObject, GameObject>>("BulletCollision"),
+                collision: false,
                 brightness: new Vector3(.5f, .1f, .5f),
                 castsShadow: false,
                 temporary: true,
