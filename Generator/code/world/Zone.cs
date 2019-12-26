@@ -15,6 +15,8 @@ namespace Generator
         public int Width;
         public int Height;
         public HashSet<string> Enemies = new HashSet<string>();
+        [JsonIgnore]
+        public code.world.CollisionMap CollisionMap;
 
         public List<GameObject> EnemyObjects()
         {
@@ -33,6 +35,7 @@ namespace Generator
             Width = width;
             Height = height;
             Tiles = new TileManager(tileNames, new Vector2(width, height));
+            CollisionMap = new code.world.CollisionMap(width, height, GameObjects.Objects.Values);
         }
 
         [JsonConstructor]
@@ -44,6 +47,7 @@ namespace Generator
             Height = height;
             Tiles = tiles;
             Enemies = enemies;
+            CollisionMap = new code.world.CollisionMap(width, height, GameObjects.Objects.Values);
         }
 
         public void Save()

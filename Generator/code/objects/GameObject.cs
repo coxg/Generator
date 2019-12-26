@@ -203,11 +203,13 @@ namespace Generator
                 }
                 
                 // If we can move there then move there
-                var targetAtPosition = GetTargetAtPosition(value);
+                var targetAtPosition = GetTargetInArea(new RectangleF(value.X, value.Y, Size.X, Size.Y));
                 if (targetAtPosition == null)
                 {
+                    Globals.Zone?.CollisionMap.Remove(this);
                     base.Position = value;
                     Area = new RectangleF(Position.X, Position.Y, Size.X, Size.Y);
+                    Globals.Zone?.CollisionMap.Add(this);
                 }
 
                 // If not then we collide with the object and it collides with us
@@ -583,6 +585,7 @@ namespace Generator
             Globals.Party.Value.MemberIDs.Remove(ID);
             Globals.Zone.GameObjects.Objects.Remove(ID);
             Globals.Zone.Enemies.Remove(ID);
+            Globals.Zone.CollisionMap.Remove(this);
             Globals.Log(this + " has passed away. RIP.");
         }
 
@@ -652,19 +655,24 @@ namespace Generator
         }
 
         // See if we can move to a location
-        public GameObject GetTargetAtPosition(Vector3 position)
+        public GameObject GetTargetInArea(RectangleF targetArea)
         {
             // See if we would overlap with any other objects
-            var targetArea = new RectangleF(position.X, position.Y, Size.X, Size.Y);
             if (Globals.Zone != null)
             {
-                foreach (var gameObject in Globals.Zone.GameObjects.Objects.Values)
+                for (int x = (int)Math.Floor(targetArea.Left); x <= (int)Math.Ceiling(targetArea.Right); x++)
                 {
-                    if (gameObject != this)
+                    for (int y = (int)Math.Floor(targetArea.Bottom); y <= (int)Math.Ceiling(targetArea.Top); y++)
                     {
-                        if (targetArea.IntersectsWith(gameObject.Area))
+                        foreach (var gameObject in Globals.Zone.CollisionMap.Get(x, y))
                         {
-                            return gameObject;
+                            if (gameObject != this)
+                            {
+                                if (targetArea.IntersectsWith(gameObject.Area))
+                                {
+                                    return gameObject;
+                                }
+                            }
                         }
                     }
                 }

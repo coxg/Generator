@@ -123,6 +123,7 @@
     <Compile Include="code\control\Saving.cs" />
     <Compile Include="code\control\Saved.cs" />
     <Compile Include="code\world\Zone.cs" />
+    <Compile Include="code\world\CollisionMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
