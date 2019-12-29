@@ -131,17 +131,17 @@ namespace Generator
                         new GameObject(
                             new Vector3(50, 50, 0),
                             baseElectricity: 100,
-                            baseStrength: 10,
+                            baseStrength: 1,
                             baseSpeed: 100,
                             baseSense: 90,
-                            baseStyle: 100,
+                            baseStyle: 1,
                             id: "niels",
                             name: "Niels",
                             componentSpriteFileName: "Ninja",
                             weapon: new Weapon(
                                 name: "Sword",
                                 sprite: new Cached<Texture2D>("Sprites/white_dot"),
-                                damage: 10),
+                                damage: 2),
                             brightness: Vector3.Zero,
                             abilities: new List<Ability>() {
                                 new code.abilities.Sprint(),
@@ -328,6 +328,28 @@ namespace Generator
                                     baseRotationPoint: new Vector3(.5f, .5f, .5f),
                                     spriteFile: "Sprites/building")
                                 }
+                            }),
+
+                        new GameObject(
+                            new Vector3(50, 62, 0),
+                            baseElectricity: 100,
+                            baseStrength: 10,
+                            baseSpeed: 100,
+                            baseSense: 90,
+                            baseStyle: 100,
+                            id: "bad_guy",
+                            name: "Bad Guy",
+                            componentSpriteFileName: "Ninja",
+                            weapon: new Weapon(
+                                name: "Sword",
+                                sprite: new Cached<Texture2D>("Sprites/white_dot"),
+                                damage: 2),
+                            brightness: Vector3.Zero,
+                            abilities: new List<Ability>() {
+                                new code.abilities.Sprint(),
+                                new code.abilities.Shoot(),
+                                new code.abilities.PlaceObject(),
+                                new code.abilities.Attack()
                             })
                     }); ;
 

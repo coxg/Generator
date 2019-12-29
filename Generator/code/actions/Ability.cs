@@ -118,9 +118,22 @@ namespace Generator
         public virtual void OnUpdate() { }
         public virtual void Stop() { }
 
-        public virtual float GetPriority(List<GameObject> targets, List<GameObject> projectiles)
+        // Effect calculations
+        public virtual int Damage() { return 0; }
+        public virtual int Healing() { return 0; }
+        public virtual List<code.objects.Ailment> Ailments() { return new List<code.objects.Ailment>(); }
+
+        public virtual Dictionary<string, float> GetPriorityValues(
+            IEnumerable<GameObject> allies, IEnumerable<GameObject> enemies, List<GameObject> projectiles)
         {
-            return 1f;
+            return new Dictionary<string, float>
+            {
+                { "Damage",     0f },
+                { "Healing",    0f },
+                { "Ailments",   0f },
+                { "Slows",      0f },
+                { "Distance",   0f }
+            };
         }
 
         public override string ToString()

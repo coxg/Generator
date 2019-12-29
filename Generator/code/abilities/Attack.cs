@@ -29,5 +29,26 @@ namespace Generator.code.abilities
                 Globals.Log(SourceObject + " attacks and misses.");
             }
         }
+
+        public override Dictionary<string, float> GetPriorityValues(
+            IEnumerable<GameObject> allies, IEnumerable<GameObject> enemies, List<GameObject> projectiles)
+        {
+            var damage = 0f;
+            var target = SourceObject.GetTargetInRange(SourceObject.EquippedWeapon.Range);
+            if (target != null)
+            {
+                damage = target.DamageToTake(SourceObject.EquippedWeapon.Damage + SourceObject.Strength.CurrentValue) / target.Health.Max;
+            }
+
+
+            return new Dictionary<string, float>
+            {
+                { "Damage",     damage },
+                { "Healing",    0f },
+                { "Ailments",   0f },
+                { "Slows",      0f },
+                { "Distance",   0f }
+            };
+        }
     }
 }

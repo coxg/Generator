@@ -41,7 +41,7 @@ namespace Generator
         [JsonIgnore]
         public Animation SourceAnimation;
         public float Duration;
-        public float CurrentFrame = 0;
+        public float CurrentFrame;
         public int Smoothing;
 
         public float FramesPerUpdate()

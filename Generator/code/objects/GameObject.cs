@@ -33,7 +33,7 @@ namespace Generator
             bool isHurting = false,
 
             // Resources
-            int baseHealth = 100,
+            int baseHealth = 3,
             int baseElectricity = 0,
 
             // Primary Attributes
@@ -51,8 +51,12 @@ namespace Generator
             float direction = (float)Math.PI,
             Vector3? brightness = null,
 
+            List<code.objects.Ailment> ailments = null,
+
             // Abilities
             List<Ability> abilities = null,
+            Dictionary<string, code.actions.Strategy> strategies = null,
+            string strategyName = null,
 
             // Interaction
             Conversation conversation = null,
@@ -101,6 +105,8 @@ namespace Generator
             Direction = direction;
             Brightness = brightness ?? Vector3.Zero;
 
+            Ailments = ailments ?? new List<code.objects.Ailment>();
+
             // Equipment
             EquippedWeapon = weapon ?? new Weapon("Fists", new Cached<Texture2D>("Sprites/white_dot"));
             EquippedArmor = armor ?? new Armor("[No Armor]", new Cached<Texture2D>("Sprites/white_dot"));
@@ -110,6 +116,8 @@ namespace Generator
             // Abilities
             Abilities = abilities ?? new List<Ability>();
             foreach (var ability in Abilities) ability.SourceObject = this;
+            Strategies = strategies ?? (Dictionary<string, code.actions.Strategy>)Globals.Copy(code.actions.Strategy.Strategies);
+            StrategyName = strategyName ?? "Whatevs";
 
             // Interaction
             Conversation = conversation;
@@ -237,7 +245,9 @@ namespace Generator
         public Attribute Style;  // Right???
 
         // Secondary attributes
-        public Attribute Defense; 
+        public Attribute Defense;
+
+        public List<code.objects.Ailment> Ailments;
 
         // Brightness
         public Vector3 RelativeLightPosition = Vector3.Zero;
@@ -251,26 +261,8 @@ namespace Generator
         // TODO: Function to add new ability, should not be able to add it directly
         // This would make a copy and set the sourceObject
         public List<Ability> Abilities = new List<Ability>();
-
-        public void UseHighestPriorityAbility(List<GameObject> targets, List<GameObject> projectiles)
-        {
-            float highestPriority = 0;
-            Ability highestPriorityAbility = null;
-            foreach (Ability ability in Abilities)
-            {
-                var abilityPriority = ability.GetPriority(targets, projectiles);
-                if (abilityPriority > highestPriority)
-                {
-                    highestPriority = abilityPriority;
-                    highestPriorityAbility = ability;
-                }
-            }
-
-            if (highestPriorityAbility != null)
-            {
-                highestPriorityAbility.IsTryingToUse = true;
-            }
-        }
+        public Dictionary<string, code.actions.Strategy> Strategies;
+        public string StrategyName;
 
         // Interaction
         public Conversation Conversation;
@@ -574,6 +566,9 @@ namespace Generator
             Health.Update();
             Electricity.Update();
 
+            // Update ailments
+            foreach (var ailment in Ailments) { ailment.Update(); }
+
             // Update animation
             foreach (var component in Components) component.Value.Update();
 
@@ -599,10 +594,15 @@ namespace Generator
             target.TakeDamage(damage);
         }
 
+        public int DamageToTake(int damage)
+        {
+            return damage - Defense.CurrentValue;
+        }
+
         // Take damage
         public void TakeDamage(int damage)
         {
-            damage -= Defense.CurrentValue;
+            damage = DamageToTake(damage);
 
             if (damage > 0)
             {

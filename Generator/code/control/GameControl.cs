@@ -115,7 +115,6 @@ namespace Generator
 
             // Load in the fonts
             Globals.Font = Content.Load<SpriteFont>("Fonts/Score");
-
         }
 
         /// <summary>
@@ -324,6 +323,9 @@ namespace Generator
                 Drawing.DrawFPS(spriteBatch);
                 spriteBatch.End();
             }
+
+            // Draw the logs
+            Drawing.DrawLogs(spriteBatch);
 
             base.Draw(gameTime);
         }

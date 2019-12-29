@@ -21,7 +21,7 @@
                 var currentValue = (BaseValue + Modifier) * Multiplier;
                 if (currentValue < 1)
                 {
-                    return 1;
+                    return 0;
                 }
                 else
                 {

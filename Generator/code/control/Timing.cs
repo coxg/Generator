@@ -6,12 +6,12 @@ namespace Generator
     public static class Timing
     {
         public static int MaxClock = 1000000000;
-        public static float GameClock = 0;
+        public static float GameClock;
         public static Dictionary<int, List<Action>> Events = new Dictionary<int, List<Action>>();
 
         // The speed at which the game time moves relative to IRL time
         public static float PlayerMovementMagnitude;  // 1 == running, 0 == still
-        public static float? GameSpeedOverride = null;
+        public static float? GameSpeedOverride;
         private static float gameSpeed = 1;
         public static float GameSpeed
         {
@@ -27,7 +27,6 @@ namespace Generator
         {
             get {
                 DateTime priorTime = FrameTimes[(int)MathTools.Mod(NumDraws + 1, FrameTimes.Length)];
-                if (priorTime == null) return 0;
                 DateTime currentTime = FrameTimes[(int)MathTools.Mod(NumDraws, FrameTimes.Length)];
                 return FrameTimes.Length / (float)(currentTime - priorTime).TotalSeconds;
             }

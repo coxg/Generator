@@ -106,18 +106,27 @@ namespace Generator
         public static Dictionary<string, GeneratorObj> GeneratorDict = new Dictionary<string, GeneratorObj>();
         public static Dictionary<string, Accessory> AccessoryDict = new Dictionary<string, Accessory>();
 
+        public static List<string> Logs = new List<string>();
+
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void Log(object text = null)
-        // Logs to console with debugging information
+        // Logs to console/screen with debugging information
         {
             if (Logging)
             {
                 var CallingFrame = new StackTrace(1, true).GetFrame(0);
-                Console.WriteLine(
-                    CallingFrame.GetFileName().Split('\\').Last() + " line "
+                var logLine = CallingFrame.GetFileName().Split('\\').Last() + " line "
                     + CallingFrame.GetFileLineNumber() + ", in "
                     + CallingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First()
-                    + ": " + text);
+                    + ": " + text;
+                logLine = logLine.Replace("/Users/gavencox/Generator/Generator/code/", "");
+
+                Console.WriteLine(logLine);
+                Logs.Add(logLine);
+                if (Logs.Count > 10)
+                {
+                    Logs.RemoveAt(0);
+                }
             }
         }
 

@@ -26,7 +26,9 @@ namespace Generator
                         // During combat they fight your enemies
                         if (Globals.Party.Value.InCombat)
                         {
-                            self.UseHighestPriorityAbility(Globals.Zone.EnemyObjects(), new List<GameObject>());
+                            // TODO: Add projectiles
+                            self.Strategies[self.StrategyName].UseHighestPriorityAbility(
+                                self, Globals.Party.Value.GetMembers(), Globals.Zone.EnemyObjects(), new List<GameObject>());
                         }
 
                         // Out of combat they follow you around
@@ -50,7 +52,9 @@ namespace Generator
                         // If they're fighting you
                         if (Globals.Zone.Enemies.Contains(self.ID))
                         {
-                            self.UseHighestPriorityAbility((List<GameObject>)Globals.Party.Value.GetMembers(), new List<GameObject>());
+                            // TODO: Add projectiles
+                            self.Strategies[self.StrategyName].UseHighestPriorityAbility(
+                                self, Globals.Zone.EnemyObjects(), Globals.Party.Value.GetMembers(), new List<GameObject>());
                         }
 
                         // If they're not fighting you
@@ -142,7 +146,9 @@ namespace Generator
                 "BulletCollision",
                 (GameObject self, GameObject other) =>
                 {
-                    self.DealDamage(other, (int)Math.Sqrt(self.Speed.CurrentValue));
+                    self.DealDamage(other, 1);
+                    other.Ailments.Add(
+                        new code.objects.Poisoned("Bullet Poison", "bullet_poison", self, other, 3));
                     self.Die();
                 }
             }

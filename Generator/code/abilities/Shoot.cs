@@ -42,5 +42,18 @@ namespace Generator.code.abilities
             );
             Globals.Zone.GameObjects.Objects[bullet.ID] = bullet;
         }
+
+        public override Dictionary<string, float> GetPriorityValues(
+            IEnumerable<GameObject> allies, IEnumerable<GameObject> enemies, List<GameObject> projectiles)
+        {
+            return new Dictionary<string, float>
+            {
+                { "Damage",     0f },
+                { "Healing",    0f },
+                { "Ailments",   0f },
+                { "Slows",      0f },
+                { "Distance",   0f }
+            };
+        }
     }
 }

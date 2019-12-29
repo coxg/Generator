@@ -73,6 +73,30 @@ namespace Generator
             }
         }
 
+        public static void DrawLogs(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Begin();
+            int y = (int)Globals.Resolution.Y - 25;
+            for (int i = Globals.Logs.Count - 1; i >= 0; i--)
+            {
+                var logLine = Globals.Logs[i];
+                var color = Color.White;
+                if (logLine.StartsWith("[WARNING]", StringComparison.Ordinal)) color = Color.Yellow;
+                spriteBatch.DrawString(
+                    Globals.Font,
+                    logLine,
+                    new Vector2(10, y),
+                    color,
+                    0,
+                    Vector2.Zero,
+                    .4f,
+                    SpriteEffects.None,
+                    .05f);
+                y -= 15;
+            }
+            spriteBatch.End();
+        }
+
         public static void DrawRoundedRectangle(
             Rectangle rectangle, int radius, Color? color = null, int borderWidth = 0, Color? borderColor = null)
             // Draw a rounded rectangle
