@@ -48,7 +48,7 @@ namespace Generator.code.abilities
         {
             return new Dictionary<string, float>
             {
-                { "Damage",     0f },
+                { "Damage",     .1f },
                 { "Healing",    0f },
                 { "Ailments",   0f },
                 { "Slows",      0f },

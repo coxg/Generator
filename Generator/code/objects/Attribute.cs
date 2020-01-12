@@ -3,9 +3,9 @@
     public class Attribute
         // Strength, Speed, Sense, Style
     {
-        public int BaseValue = 0;
+        public int BaseValue;
         public int Multiplier = 1;
-        public int Modifier = 0;
+        public int Modifier;
 
         // Constructor
         public Attribute(int baseValue)

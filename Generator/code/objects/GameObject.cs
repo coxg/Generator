@@ -20,6 +20,11 @@ namespace Generator
             Vector3 position,
             Vector3? size = null,
 
+            // Movement logic
+            Vector3? movementPosition = null,
+            float? movementDirection = null,
+            float? movementSpeed = null,
+
             // Animation attributes
             string componentSpriteFileName = "Ninja",
             string spriteFile = null,
@@ -102,8 +107,8 @@ namespace Generator
             Name = name;
             Level = level;
             Experience = experience;
-            Direction = direction;
             Brightness = brightness ?? Vector3.Zero;
+            MovementSpeed = movementSpeed;
 
             Ailments = ailments ?? new List<code.objects.Ailment>();
 
@@ -131,6 +136,9 @@ namespace Generator
             // Grid logic
             Size = size ?? Vector3.One;
             base.Position = position;
+            Direction = direction;
+            MovementTarget = movementPosition;
+            MovementDirection = movementDirection;
             Area = new RectangleF(Position.X, Position.Y, Size.X, Size.Y);
 
             Globals.Log(ID + " has spawned.");
@@ -194,6 +202,9 @@ namespace Generator
 
         // Location
         override public float Direction { get; set; }
+        public Vector3? MovementTarget;
+        public float? MovementDirection;
+        public float? MovementSpeed;  // 1 = running, .5 = walking, etc
         override public Vector3 Position
         {
             get => _Position + AnimationOffset;
@@ -212,14 +223,15 @@ namespace Generator
                     }
                     return;
                 }
-                
+
                 // If we can move there then move there
-                var targetAtPosition = GetTargetInArea(new RectangleF(value.X, value.Y, Size.X, Size.Y));
+                var targetPosition = new RectangleF(value.X, value.Y, Size.X, Size.Y);
+                var targetAtPosition = GetTargetInArea(targetPosition);
                 if (targetAtPosition == null)
                 {
                     if (Collision) Globals.Zone?.CollisionMap.Remove(this);
                     base.Position = value;
-                    Area = new RectangleF(Position.X, Position.Y, Size.X, Size.Y);
+                    Area = targetPosition;
                     if (Collision) Globals.Zone?.CollisionMap.Add(this);
                 }
 
@@ -559,8 +571,38 @@ namespace Generator
         // What to do on each frame
         public void Update()
         {
-            // Perform whatever actions the object wants to perform
+            // Do whatever the object wants to do
             AI?.Value(this);
+            if (MovementTarget != null || MovementDirection != null)
+            {
+                if (MovementTarget != null)
+                {
+                    // TODO: Pathfinding
+                    var distanceToMove = Vector3.Distance(MovementTarget.Value, Position);
+                    MovementSpeed = Math.Min(distanceToMove / 3, 1);
+                    if (distanceToMove < .001f || distanceToMove <= GetMovementDistance())
+                    {
+                        IsWalking = true;
+                        Position = MovementTarget.Value;
+                        MovementTarget = null;
+                        MovementDirection = null;
+                    }
+                    else
+                    {
+                        MoveInDirection((float)MathTools.Angle(Position, MovementTarget.Value));
+                    }
+                }
+                else
+                {
+                    MovementSpeed = MovementSpeed ?? 1;
+                    MoveInDirection(MovementDirection.Value);
+                }
+            }
+            else
+            {
+                MovementSpeed = null;
+                IsWalking = false;
+            }
 
             // Update resources
             Health.Update();
@@ -628,7 +670,7 @@ namespace Generator
         }
 
         // TODO: Replace all of these with new collision logic
-        
+
         // Gets the coordinates at the range specified
         public Vector3 GetTargetCoordinates(float range = 1, float? direction = null)
         {
@@ -665,7 +707,7 @@ namespace Generator
             {
                 for (int x = (int)Math.Floor(targetArea.Left); x <= (int)Math.Ceiling(targetArea.Right); x++)
                 {
-                    for (int y = (int)Math.Floor(targetArea.Bottom); y <= (int)Math.Ceiling(targetArea.Top); y++)
+                    for (int y = (int)Math.Floor(targetArea.Top); y <= (int)Math.Ceiling(targetArea.Bottom); y++)
                     {
                         foreach (var gameObject in Globals.Zone.CollisionMap.Get(x, y))
                         {
@@ -701,20 +743,20 @@ namespace Generator
             return returnObject;
         }
 
+        public float GetMovementDistance()
+        {
+            return (MovementSpeed ?? 0) * 2 * (float)Math.Sqrt(Speed.CurrentValue) * Timing.GameSpeed / Globals.RefreshRate;
+        }
+
         // Attempts to move the object in a direction (radians).
-        public void MoveInDirection(
-                float radians = 0,
-                float speed = 1  // Relative to Speed.CurrentValue; 1 == running, .5 == walking, etc
-            )
+        private void MoveInDirection(float radians = 0)
         {
             // Update sprite visuals
             IsWalking = true;
             Direction = radians;
 
             // Get distance
-            var distance = speed * 2 * (float) Math.Sqrt(Speed.CurrentValue) * Timing.GameSpeed / Globals.RefreshRate;
-
-            // Convert from radian direction to X/Y offsets
+            var distance = GetMovementDistance();
             var offsets = MathTools.OffsetFromRadians(radians);
             var newPosition = new Vector3(
                 _Position.X + distance * offsets.X,

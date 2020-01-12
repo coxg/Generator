@@ -11,8 +11,6 @@ namespace Generator
         // TODO: Refactor, each button should have this ability
         public static GamePadCapabilities Capabilities;
         public static GamePadState State;
-        public static Vector3 MoveToPosition;
-        public static bool MovingToPosition;
 
         public class KeyBinding
         {
@@ -181,7 +179,6 @@ namespace Generator
                 // Convert from actual movement input to direction offsets
                 var moveVerticalOffset = 0.0;
                 var moveHorizontalOffset = 0.0;
-                var speed = 0f;  // Separate from gameSpeed; playerSpeed should be 1 when in combat
 
                 // Use controller to calculate movement/direction if available and being used
                 float directionHorizontalOffset = 0;
@@ -195,12 +192,12 @@ namespace Generator
                     directionVerticalOffset = State.ThumbSticks.Right.Y;
                     moveHorizontalOffset = State.ThumbSticks.Left.X;
                     moveVerticalOffset = State.ThumbSticks.Left.Y;
-                    speed = (float)Math.Min(1, Math.Sqrt(
+                    player.MovementSpeed = (float)Math.Min(1, Math.Sqrt(
                         Math.Pow(State.ThumbSticks.Left.X, 2)
                         + Math.Pow(State.ThumbSticks.Left.Y, 2)));
 
                     // We're not using the mouse for input so null this out
-                    MovingToPosition = false;
+                    player.MovementTarget = null;
                 }
 
                 // If not, use the mouse/keyboard
@@ -215,8 +212,8 @@ namespace Generator
                         if (keyboardState.IsKeyDown(Keys.S)) moveVerticalOffset -= 1;
                         if (keyboardState.IsKeyDown(Keys.A)) moveHorizontalOffset -= 1;
                         if (keyboardState.IsKeyDown(Keys.D)) moveHorizontalOffset += 1;
-                        MovingToPosition = false;
-                        speed = 1;
+                        player.MovementTarget = null;
+                        player.MovementSpeed = 1;
                     }
 
                     // If the mouse is pressed then start moving to its position
@@ -224,29 +221,13 @@ namespace Generator
                     var cursorPosition = MathTools.PositionFromPixels(new Vector2(mouseState.X, mouseState.Y));
                     if (mouseState.LeftButton == ButtonState.Pressed)
                     {
-                        MovingToPosition = true;
-                        MoveToPosition = cursorPosition;
-                    }
-
-                    // If we're already where we're trying to go then stop moving
-                    var playerCenter = player.Center;
-                    if (Math.Abs(MoveToPosition.X - playerCenter.X) < .5f
-                        && Math.Abs(MoveToPosition.Y - playerCenter.Y) < .5f)
-                    {
-                        MovingToPosition = false;
-                    }
-
-                    // Move in the direction of the last input location
-                    if (MovingToPosition)
-                    {
-                        moveHorizontalOffset = MoveToPosition.X - playerCenter.X;
-                        moveVerticalOffset = MoveToPosition.Y - playerCenter.Y;
-                        speed = 1;
+                        player.MovementTarget = cursorPosition - new Vector3(player.Size.X / 2, player.Size.Y / 2, 0);
                     }
 
                     // If using any abilities then also look in that direction
                     if (anyAbilitiesBeingUsed)
                     {
+                        var playerCenter = player.Center;
                         directionHorizontalOffset = cursorPosition.X - playerCenter.X;
                         directionVerticalOffset = cursorPosition.Y - playerCenter.Y;
                     }
@@ -265,13 +246,7 @@ namespace Generator
                     radianDirection = MathTools.Mod(radianDirection, 2f * (float)Math.PI);
 
                     // Move in that direction
-                    player.MoveInDirection(radianDirection, speed);
-                    Timing.PlayerMovementMagnitude = speed;
-                }
-                else
-                {
-                    player.IsWalking = false;
-                    Timing.PlayerMovementMagnitude = 0;
+                    player.MovementDirection = radianDirection;
                 }
 
                 // Convert from direction offsets to radian direction

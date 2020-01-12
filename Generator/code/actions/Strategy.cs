@@ -46,7 +46,7 @@ namespace Generator.code.actions
             return abilityPriority;
         }
 
-        public void UseHighestPriorityAbility(
+        public void FollowStrategy(
             GameObject user, IEnumerable<GameObject> allies, IEnumerable<GameObject> enemies, List<GameObject> projectiles)
         {
             float highestPriority = 0;

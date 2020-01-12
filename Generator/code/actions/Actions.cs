@@ -27,7 +27,7 @@ namespace Generator
                         if (Globals.Party.Value.InCombat)
                         {
                             // TODO: Add projectiles
-                            self.Strategies[self.StrategyName].UseHighestPriorityAbility(
+                            self.Strategies[self.StrategyName].FollowStrategy(
                                 self, Globals.Party.Value.GetMembers(), Globals.Zone.EnemyObjects(), new List<GameObject>());
                         }
 
@@ -36,12 +36,11 @@ namespace Generator
                         {
                             if (MathTools.Distance(Globals.Player.Position, self.Position) > 5)
                             {
-                                self.MoveInDirection((float)MathTools.Angle(self.Position, Globals.Player.Position));
+                                self.MovementTarget = Globals.Player.Position;
                             }
                             else
                             {
-                                // TODO: Why do I need to set this manually?
-                                self.IsWalking = false;
+                                self.MovementTarget = null;
                             }
                         }
                     }
@@ -53,7 +52,7 @@ namespace Generator
                         if (Globals.Zone.Enemies.Contains(self.ID))
                         {
                             // TODO: Add projectiles
-                            self.Strategies[self.StrategyName].UseHighestPriorityAbility(
+                            self.Strategies[self.StrategyName].FollowStrategy(
                                 self, Globals.Zone.EnemyObjects(), Globals.Party.Value.GetMembers(), new List<GameObject>());
                         }
 
@@ -73,19 +72,19 @@ namespace Generator
                 "WalkToPlayer",
                 (GameObject self) =>
                 {
-                    self.MoveInDirection((float)MathTools.Angle(self.Position, Globals.Player.Position));
+                    self.MovementTarget = Globals.Player.Position;
                 }
             },
             {
                 "WalkAwayFromPlayer",
                 (GameObject self) =>
                 {
-                    self.MoveInDirection((float)MathTools.Angle(self.Position, Globals.Player.Position) + MathHelper.Pi);
+                    self.MovementDirection = (float)MathTools.Angle(self.Position, Globals.Player.Position) + MathHelper.Pi;
                 }
             },
             {
                 "WalkInStraightLine",
-                (GameObject self) => { self.MoveInDirection(self.Direction); }
+                (GameObject self) => { self.MovementDirection = self.Direction; }
             }
         };
 
@@ -98,7 +97,7 @@ namespace Generator
                 "CreateBigBoy",
                 (GameObject self, GameObject other) =>
                 {
-                    new GameObject(
+                    var _ = new GameObject(
                         new Vector3(60, 60, 0),
                         new Vector3(5, 1, 5),
                         id: "big terrain",

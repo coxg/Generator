@@ -332,8 +332,9 @@ namespace Generator
 
                         new GameObject(
                             new Vector3(50, 62, 0),
+                            baseHealth: 100,
                             baseElectricity: 100,
-                            baseStrength: 10,
+                            baseStrength: 1,
                             baseSpeed: 100,
                             baseSense: 90,
                             baseStyle: 100,

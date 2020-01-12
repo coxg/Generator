@@ -10,7 +10,6 @@ namespace Generator
         public static Dictionary<int, List<Action>> Events = new Dictionary<int, List<Action>>();
 
         // The speed at which the game time moves relative to IRL time
-        public static float PlayerMovementMagnitude;  // 1 == running, 0 == still
         public static float? GameSpeedOverride;
         private static float gameSpeed = 1;
         public static float GameSpeed
@@ -45,7 +44,7 @@ namespace Generator
             }
             else if (Globals.Party.Value.InCombat)
             {
-                gameSpeed = 1 - ((1 - PlayerMovementMagnitude) * (float)Math.Sqrt(Globals.Player.Sense.CurrentValue / 100f));
+                gameSpeed = 1 - ((1 - Globals.Player.MovementSpeed ?? 1) * (float)Math.Sqrt(Globals.Player.Sense.CurrentValue / 100f));
             }
             else
             {
