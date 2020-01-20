@@ -158,22 +158,34 @@ namespace Generator
                 if (player.Abilities.Count > 0)
                 {
                     player.Abilities[0].IsTryingToUse = KeyBindings["l"].IsPressed;
-                    anyAbilitiesBeingUsed = true;
+                    if (player.Abilities[0].IsTryingToUse)
+                    {
+                        anyAbilitiesBeingUsed = true;
+                    }
                 }
                 if (player.Abilities.Count > 1)
                 {
                     player.Abilities[1].IsTryingToUse = KeyBindings["r"].IsPressed;
-                    anyAbilitiesBeingUsed = true;
+                    if (player.Abilities[1].IsTryingToUse)
+                    {
+                        anyAbilitiesBeingUsed = true;
+                    }
                 }
                 if (player.Abilities.Count > 2)
                 {
                     player.Abilities[2].IsTryingToUse = KeyBindings["lb"].IsPressed;
-                    anyAbilitiesBeingUsed = true;
+                    if (player.Abilities[2].IsTryingToUse)
+                    {
+                        anyAbilitiesBeingUsed = true;
+                    }
                 }
                 if (player.Abilities.Count > 3)
                 {
                     player.Abilities[3].IsTryingToUse = KeyBindings["rb"].IsPressed;
-                    anyAbilitiesBeingUsed = true;
+                    if (player.Abilities[3].IsTryingToUse)
+                    {
+                        anyAbilitiesBeingUsed = true;
+                    }
                 }
 
                 // Convert from actual movement input to direction offsets
@@ -183,6 +195,7 @@ namespace Generator
                 // Use controller to calculate movement/direction if available and being used
                 float directionHorizontalOffset = 0;
                 float directionVerticalOffset = 0;
+                player.MovementDirection = null;
                 if (Capabilities.IsConnected & !(
                     State.ThumbSticks.Right.X == 0 & State.ThumbSticks.Right.Y == 0
                     & State.ThumbSticks.Left.X == 0 & State.ThumbSticks.Left.Y == 0))
@@ -261,7 +274,11 @@ namespace Generator
                     radianDirection = MathTools.Mod(radianDirection, MathHelper.TwoPi);
 
                     // Look in that direction
-                    player.Direction = radianDirection;
+                    player.DirectionOverride = radianDirection;
+                }
+                else
+                {
+                    player.DirectionOverride = null;
                 }
 
                 // Save the game

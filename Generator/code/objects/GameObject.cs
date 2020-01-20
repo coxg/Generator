@@ -24,6 +24,7 @@ namespace Generator
             Vector3? movementPosition = null,
             float? movementDirection = null,
             float? movementSpeed = null,
+            float? directionOverride = null,
 
             // Animation attributes
             string componentSpriteFileName = "Ninja",
@@ -139,6 +140,7 @@ namespace Generator
             Direction = direction;
             MovementTarget = movementPosition;
             MovementDirection = movementDirection;
+            DirectionOverride = directionOverride;
             Area = new RectangleF(Position.X, Position.Y, Size.X, Size.Y);
 
             Globals.Log(ID + " has spawned.");
@@ -204,6 +206,7 @@ namespace Generator
         override public float Direction { get; set; }
         public Vector3? MovementTarget;
         public float? MovementDirection;
+        public float? DirectionOverride;
         public float? MovementSpeed;  // 1 = running, .5 = walking, etc
         override public Vector3 Position
         {
@@ -602,6 +605,10 @@ namespace Generator
             {
                 MovementSpeed = null;
                 IsWalking = false;
+            }
+            if (DirectionOverride != null)
+            {
+                Direction = (float)DirectionOverride;
             }
 
             // Update resources
