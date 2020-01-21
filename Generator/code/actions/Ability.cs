@@ -22,6 +22,7 @@ namespace Generator
             bool isChanneled = false,
             bool isToggleable = false,
             bool requiresWalking = false,
+            Vector3? target = null,
             float cooldown = 0,
             Animation animation = null)
         {
@@ -38,6 +39,7 @@ namespace Generator
             IsToggleable = isToggleable;
             IsActive = false;
             RequiresWalking = requiresWalking;
+            Target = target;
 
             // What it looks like
             Animation = animation;
@@ -78,6 +80,7 @@ namespace Generator
         public bool KeepCasting;
         public bool IsChanneled;
         public bool IsToggleable;
+        public Vector3? Target = null;
         private bool IsActive;
         private bool WasTryingToUse;
         private bool _isTryingToUse;
@@ -90,6 +93,10 @@ namespace Generator
             {
                 WasTryingToUse = _isTryingToUse;
                 _isTryingToUse = value;
+                if (Target != null)
+                {
+                    SourceObject.DirectionOverride = (float)MathTools.Angle(SourceObject.Center, (Vector3)Target);
+                }
             }
         }
 

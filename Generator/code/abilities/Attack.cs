@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
@@ -35,7 +36,7 @@ namespace Generator.code.abilities
         {
             var damage = 0f;
             var target = SourceObject.GetTargetInRange(SourceObject.EquippedWeapon.Range);
-            if (target != null)
+            if (target != null && enemies.Contains(target))
             {
                 damage = target.DamageToTake(SourceObject.EquippedWeapon.Damage + SourceObject.Strength.CurrentValue) / target.Health.Max;
             }

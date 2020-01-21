@@ -46,6 +46,11 @@ namespace Generator.code.abilities
         public override Dictionary<string, float> GetPriorityValues(
             IEnumerable<GameObject> allies, IEnumerable<GameObject> enemies, List<GameObject> projectiles)
         {
+            var targetEnemy = SourceObject.GetNearest(enemies);
+            if (targetEnemy != null)
+            {
+                Target = targetEnemy.Center;
+            }
             return new Dictionary<string, float>
             {
                 { "Damage",     .1f },

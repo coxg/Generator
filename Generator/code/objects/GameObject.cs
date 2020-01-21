@@ -206,7 +206,7 @@ namespace Generator
         override public float Direction { get; set; }
         public Vector3? MovementTarget;
         public float? MovementDirection;
-        public float? DirectionOverride;
+        public float? DirectionOverride;  // This is a hack for ability targeting
         public float? MovementSpeed;  // 1 = running, .5 = walking, etc
         override public Vector3 Position
         {
@@ -609,6 +609,7 @@ namespace Generator
             if (DirectionOverride != null)
             {
                 Direction = (float)DirectionOverride;
+                DirectionOverride = null;  // This is a hack; will need to set this every update
             }
 
             // Update resources
@@ -788,6 +789,25 @@ namespace Generator
         public override string ToString()
         {
             return ID ?? "Unnamed GameObject";
+        }
+
+        public GameObject GetNearest(IEnumerable<GameObject> gameObjects)
+        {
+            // TODO: If this hits performance issues (especially in the case where the list of gameObjects is large) 
+            // then I can try branching outward from the gameObject, and if any are in the immediate area then return 
+            // the nearest out of those.
+            GameObject nearestObject = null;
+            float nearestDistance = 10000;
+            foreach (var gameObject in gameObjects)
+            {
+                var distance = Vector3.Distance(Position, gameObject.Position);
+                if (distance < nearestDistance)
+                {
+                    nearestDistance = distance;
+                    nearestObject = gameObject;
+                }
+            }
+            return nearestObject;
         }
     }
 }

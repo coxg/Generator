@@ -27,7 +27,7 @@ namespace Generator
                         if (Globals.Party.Value.InCombat)
                         {
                             // TODO: Add projectiles
-                            self.Strategies[self.StrategyName].FollowStrategy(
+                            self.Strategies[self.StrategyName].Follow(
                                 self, Globals.Party.Value.GetMembers(), Globals.Zone.EnemyObjects(), new List<GameObject>());
                         }
 
@@ -52,7 +52,7 @@ namespace Generator
                         if (Globals.Zone.Enemies.Contains(self.ID))
                         {
                             // TODO: Add projectiles
-                            self.Strategies[self.StrategyName].FollowStrategy(
+                            self.Strategies[self.StrategyName].Follow(
                                 self, Globals.Zone.EnemyObjects(), Globals.Party.Value.GetMembers(), new List<GameObject>());
                         }
 
