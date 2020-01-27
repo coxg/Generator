@@ -335,7 +335,7 @@ namespace Generator
                             baseHealth: 100,
                             baseElectricity: 100,
                             baseStrength: 1,
-                            baseSpeed: 100,
+                            baseSpeed: 10,
                             baseSense: 90,
                             baseStyle: 100,
                             id: "bad_guy",

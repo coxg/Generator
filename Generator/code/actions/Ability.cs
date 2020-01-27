@@ -95,7 +95,12 @@ namespace Generator
                 _isTryingToUse = value;
                 if (Target != null)
                 {
-                    SourceObject.DirectionOverride = (float)MathTools.Angle(SourceObject.Center, (Vector3)Target);
+                    if (SourceObject != Globals.Player)
+                    {
+                        SourceObject.DirectionOverride = (float)MathTools.Angle(SourceObject.Center, (Vector3)Target);
+                        SourceObject.MovementTarget = (Vector3)Target;
+                    }
+                    
                 }
             }
         }
