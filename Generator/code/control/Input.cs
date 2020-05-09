@@ -87,7 +87,7 @@ namespace Generator
             }
         }
 
-        public static void GetInput(GameObject player)
+        public static void ProcessInput(GameObject player)
         {
             State = GamePad.GetState(PlayerIndex.One);
             Capabilities = GamePad.GetCapabilities(PlayerIndex.One);
@@ -99,49 +99,7 @@ namespace Generator
             // Determine what mode we're in
             if (Globals.CurrentConversation != null)
             {
-                // Advance the conversation based on what's currently selected
-                if (KeyBindings["a"].IsBeingPressed)
-                {
-                    Globals.CurrentConversation.Advance();
-                }
-
-                // Change selection if we're choosing between options
-                if (KeyBindings["down"].IsBeingPressed)
-                {
-                    Globals.CurrentConversation.CurrentChoices.CurrentNodeIndex = (int)MathTools.Mod(
-                        Globals.CurrentConversation.CurrentChoices.CurrentNodeIndex + 1, 
-                        Globals.CurrentConversation.CurrentChoices.Nodes.Count);
-                }
-                if (KeyBindings["up"].IsBeingPressed)
-                {
-                    Globals.CurrentConversation.CurrentChoices.CurrentNodeIndex = (int)MathTools.Mod(
-                        Globals.CurrentConversation.CurrentChoices.CurrentNodeIndex - 1,
-                        Globals.CurrentConversation.CurrentChoices.Nodes.Count);
-                }
-
-                // Select the option to back us out of the conversation
-                if (KeyBindings["b"].IsBeingPressed)
-                {
-                    // Prioritize leaving the conversation over returning to the main options, so do it after
-                    for (int i = 0; i < Globals.CurrentConversation.CurrentChoices.Nodes.Count; i++)
-                    {
-                        var node = Globals.CurrentConversation.CurrentChoices.Nodes[i];
-                        if (node.GoToChoicesIndex == Globals.CurrentConversation.StartingChoicesIndex)
-                        {
-                            Globals.CurrentConversation.CurrentChoices.CurrentNodeIndex = i;
-                            break;
-                        }
-                    }
-                    for (int i = 0; i < Globals.CurrentConversation.CurrentChoices.Nodes.Count; i++)
-                    {
-                        var node = Globals.CurrentConversation.CurrentChoices.Nodes[i];
-                        if (node.ExitsConversation)
-                        {
-                            Globals.CurrentConversation.CurrentChoices.CurrentNodeIndex = i;
-                            break;
-                        }
-                    }
-                }
+                ProcessConversationInput();
             }
 
             // We're walking around, clicking stuff, etc
@@ -153,133 +111,9 @@ namespace Generator
                     if (player.GetTargetAtRange() != null) player.GetTargetAtRange().Activate(player);
                 }
 
-                // Abilities
-                bool anyAbilitiesBeingUsed = false;
-                if (player.Abilities.Count > 0)
-                {
-                    player.Abilities[0].IsTryingToUse = KeyBindings["l"].IsPressed;
-                    if (player.Abilities[0].IsTryingToUse)
-                    {
-                        anyAbilitiesBeingUsed = true;
-                    }
-                }
-                if (player.Abilities.Count > 1)
-                {
-                    player.Abilities[1].IsTryingToUse = KeyBindings["r"].IsPressed;
-                    if (player.Abilities[1].IsTryingToUse)
-                    {
-                        anyAbilitiesBeingUsed = true;
-                    }
-                }
-                if (player.Abilities.Count > 2)
-                {
-                    player.Abilities[2].IsTryingToUse = KeyBindings["lb"].IsPressed;
-                    if (player.Abilities[2].IsTryingToUse)
-                    {
-                        anyAbilitiesBeingUsed = true;
-                    }
-                }
-                if (player.Abilities.Count > 3)
-                {
-                    player.Abilities[3].IsTryingToUse = KeyBindings["rb"].IsPressed;
-                    if (player.Abilities[3].IsTryingToUse)
-                    {
-                        anyAbilitiesBeingUsed = true;
-                    }
-                }
+                bool anyAbilitiesBeingUsed = ProcessAbilityInput(player);
 
-                // Convert from actual movement input to direction offsets
-                var moveVerticalOffset = 0.0;
-                var moveHorizontalOffset = 0.0;
-
-                // Use controller to calculate movement/direction if available and being used
-                float directionHorizontalOffset = 0;
-                float directionVerticalOffset = 0;
-                player.MovementDirection = null;
-                if (Capabilities.IsConnected & !(
-                    State.ThumbSticks.Right.X == 0 & State.ThumbSticks.Right.Y == 0
-                    & State.ThumbSticks.Left.X == 0 & State.ThumbSticks.Left.Y == 0))
-                {
-
-                    directionHorizontalOffset = State.ThumbSticks.Right.X;
-                    directionVerticalOffset = State.ThumbSticks.Right.Y;
-                    moveHorizontalOffset = State.ThumbSticks.Left.X;
-                    moveVerticalOffset = State.ThumbSticks.Left.Y;
-                    player.MovementSpeed = (float)Math.Min(1, Math.Sqrt(
-                        Math.Pow(State.ThumbSticks.Left.X, 2)
-                        + Math.Pow(State.ThumbSticks.Left.Y, 2)));
-
-                    // We're not using the mouse for input so null this out
-                    player.MovementTarget = null;
-                }
-
-                // If not, use the mouse/keyboard
-                else
-                {
-                    // If we're trying to use the keyboard for movement
-                    var keyboardState = Keyboard.GetState();
-                    if (keyboardState.IsKeyDown(Keys.W) | keyboardState.IsKeyDown(Keys.A)
-                        | keyboardState.IsKeyDown(Keys.S) | keyboardState.IsKeyDown(Keys.D))
-                    {
-                        if (keyboardState.IsKeyDown(Keys.W)) moveVerticalOffset += 1;
-                        if (keyboardState.IsKeyDown(Keys.S)) moveVerticalOffset -= 1;
-                        if (keyboardState.IsKeyDown(Keys.A)) moveHorizontalOffset -= 1;
-                        if (keyboardState.IsKeyDown(Keys.D)) moveHorizontalOffset += 1;
-                        player.MovementTarget = null;
-                        player.MovementSpeed = 1;
-                    }
-
-                    // If the mouse is pressed then start moving to its position
-                    var mouseState = Mouse.GetState();
-                    var cursorPosition = MathTools.PositionFromPixels(new Vector2(mouseState.X, mouseState.Y));
-                    if (mouseState.LeftButton == ButtonState.Pressed)
-                    {
-                        player.MovementTarget = cursorPosition - new Vector3(player.Size.X / 2, player.Size.Y / 2, 0);
-                    }
-
-                    // If using any abilities then also look in that direction
-                    if (anyAbilitiesBeingUsed)
-                    {
-                        var playerCenter = player.Center;
-                        directionHorizontalOffset = cursorPosition.X - playerCenter.X;
-                        directionVerticalOffset = cursorPosition.Y - playerCenter.Y;
-                    }
-                }
-
-                // Move in the direction specified
-                if (moveHorizontalOffset != 0 || moveVerticalOffset != 0)
-                {
-                    // Convert from offsets to radians
-
-                    var radianDirection = (float)MathTools.Angle(
-                        Vector3.Zero, new Vector3((float)moveHorizontalOffset, (float)moveVerticalOffset, 0));
-
-                    // Apply offset from map rotation
-                    radianDirection -= GameControl.camera.Rotation;
-                    radianDirection = MathTools.Mod(radianDirection, 2f * (float)Math.PI);
-
-                    // Move in that direction
-                    player.MovementDirection = radianDirection;
-                }
-
-                // Convert from direction offsets to radian direction
-                if (directionHorizontalOffset != 0 || directionVerticalOffset != 0)
-                {
-                    // Convert from offsets to radians
-                    var radianDirection = (float)MathTools.Angle(
-                        Vector3.Zero, new Vector3(directionHorizontalOffset, directionVerticalOffset, 0));
-
-                    // Apply offset from map rotation
-                    radianDirection -= GameControl.camera.Rotation;
-                    radianDirection = MathTools.Mod(radianDirection, MathHelper.TwoPi);
-
-                    // Look in that direction
-                    player.DirectionOverride = radianDirection;
-                }
-                else
-                {
-                    player.DirectionOverride = null;
-                }
+                ProcessMovementInput(player, anyAbilitiesBeingUsed);
 
                 // Save the game
                 if (KeyBindings["start"].IsBeingReleased && KeyBindings["start"].PressedDuration <= .5f)
@@ -304,7 +138,6 @@ namespace Generator
                     Globals.CurrentConversation = Globals.Zone.GameObjects.Objects["old man"].Conversation;
                     Globals.CurrentConversation.CurrentChoicesIndex = 1;
                 }
-
 
                 // Creative mode controls
                 if (Globals.CreativeMode)
@@ -352,6 +185,189 @@ namespace Generator
                     GameControl.camera.Height -= 10;
                     GameControl.camera.Height = Math.Max(GameControl.camera.Height, 5);
                 }
+            }
+        }
+
+        private static void ProcessConversationInput()
+        {
+            // Advance the conversation based on what's currently selected
+            if (KeyBindings["a"].IsBeingPressed)
+            {
+                Globals.CurrentConversation.Advance();
+            }
+
+            // Change selection if we're choosing between options
+            if (KeyBindings["down"].IsBeingPressed)
+            {
+                Globals.CurrentConversation.CurrentChoices.CurrentNodeIndex = (int)MathTools.Mod(
+                    Globals.CurrentConversation.CurrentChoices.CurrentNodeIndex + 1,
+                    Globals.CurrentConversation.CurrentChoices.Nodes.Count);
+            }
+            if (KeyBindings["up"].IsBeingPressed)
+            {
+                Globals.CurrentConversation.CurrentChoices.CurrentNodeIndex = (int)MathTools.Mod(
+                    Globals.CurrentConversation.CurrentChoices.CurrentNodeIndex - 1,
+                    Globals.CurrentConversation.CurrentChoices.Nodes.Count);
+            }
+
+            // Select the option to back us out of the conversation
+            if (KeyBindings["b"].IsBeingPressed)
+            {
+                // Prioritize leaving the conversation over returning to the main options, so do it after
+                for (int i = 0; i < Globals.CurrentConversation.CurrentChoices.Nodes.Count; i++)
+                {
+                    var node = Globals.CurrentConversation.CurrentChoices.Nodes[i];
+                    if (node.GoToChoicesIndex == Globals.CurrentConversation.StartingChoicesIndex)
+                    {
+                        Globals.CurrentConversation.CurrentChoices.CurrentNodeIndex = i;
+                        break;
+                    }
+                }
+                for (int i = 0; i < Globals.CurrentConversation.CurrentChoices.Nodes.Count; i++)
+                {
+                    var node = Globals.CurrentConversation.CurrentChoices.Nodes[i];
+                    if (node.ExitsConversation)
+                    {
+                        Globals.CurrentConversation.CurrentChoices.CurrentNodeIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private static bool ProcessAbilityInput(GameObject player)
+        {
+            // Abilities
+            bool anyAbilitiesBeingUsed = false;
+            if (player.Abilities.Count > 0)
+            {
+                player.Abilities[0].IsTryingToUse = KeyBindings["l"].IsPressed;
+                if (player.Abilities[0].IsTryingToUse)
+                {
+                    anyAbilitiesBeingUsed = true;
+                }
+            }
+            if (player.Abilities.Count > 1)
+            {
+                player.Abilities[1].IsTryingToUse = KeyBindings["r"].IsPressed;
+                if (player.Abilities[1].IsTryingToUse)
+                {
+                    anyAbilitiesBeingUsed = true;
+                }
+            }
+            if (player.Abilities.Count > 2)
+            {
+                player.Abilities[2].IsTryingToUse = KeyBindings["lb"].IsPressed;
+                if (player.Abilities[2].IsTryingToUse)
+                {
+                    anyAbilitiesBeingUsed = true;
+                }
+            }
+            if (player.Abilities.Count > 3)
+            {
+                player.Abilities[3].IsTryingToUse = KeyBindings["rb"].IsPressed;
+                if (player.Abilities[3].IsTryingToUse)
+                {
+                    anyAbilitiesBeingUsed = true;
+                }
+            }
+
+            return anyAbilitiesBeingUsed;
+        }
+
+        private static void ProcessMovementInput(GameObject player, bool anyAbilitiesBeingUsed)
+        {
+            // Convert from actual movement input to direction offsets
+            var moveVerticalOffset = 0.0;
+            var moveHorizontalOffset = 0.0;
+
+            // Use controller to calculate movement/direction if available and being used
+            float directionHorizontalOffset = 0;
+            float directionVerticalOffset = 0;
+            player.MovementDirection = null;
+            if (Capabilities.IsConnected & !(
+                State.ThumbSticks.Right.X == 0 & State.ThumbSticks.Right.Y == 0
+                & State.ThumbSticks.Left.X == 0 & State.ThumbSticks.Left.Y == 0))
+            {
+
+                directionHorizontalOffset = State.ThumbSticks.Right.X;
+                directionVerticalOffset = State.ThumbSticks.Right.Y;
+                moveHorizontalOffset = State.ThumbSticks.Left.X;
+                moveVerticalOffset = State.ThumbSticks.Left.Y;
+                player.MovementSpeed = (float)Math.Min(1, Math.Sqrt(
+                    Math.Pow(State.ThumbSticks.Left.X, 2)
+                    + Math.Pow(State.ThumbSticks.Left.Y, 2)));
+
+                // We're not using the mouse for input so null this out
+                player.MovementTarget = null;
+            }
+
+            // If not, use the mouse/keyboard
+            else
+            {
+                // If we're trying to use the keyboard for movement
+                var keyboardState = Keyboard.GetState();
+                if (keyboardState.IsKeyDown(Keys.W) | keyboardState.IsKeyDown(Keys.A)
+                    | keyboardState.IsKeyDown(Keys.S) | keyboardState.IsKeyDown(Keys.D))
+                {
+                    if (keyboardState.IsKeyDown(Keys.W)) moveVerticalOffset += 1;
+                    if (keyboardState.IsKeyDown(Keys.S)) moveVerticalOffset -= 1;
+                    if (keyboardState.IsKeyDown(Keys.A)) moveHorizontalOffset -= 1;
+                    if (keyboardState.IsKeyDown(Keys.D)) moveHorizontalOffset += 1;
+                    player.MovementTarget = null;
+                    player.MovementSpeed = 1;
+                }
+
+                // If the mouse is pressed then start moving to its position
+                var mouseState = Mouse.GetState();
+                var cursorPosition = MathTools.PositionFromPixels(new Vector2(mouseState.X, mouseState.Y));
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    player.MovementTarget = cursorPosition - new Vector3(player.Size.X / 2, player.Size.Y / 2, 0);
+                }
+
+                // If using any abilities then also look in that direction
+                if (anyAbilitiesBeingUsed)
+                {
+                    var playerCenter = player.Center;
+                    directionHorizontalOffset = cursorPosition.X - playerCenter.X;
+                    directionVerticalOffset = cursorPosition.Y - playerCenter.Y;
+                }
+            }
+
+            // Move in the direction specified
+            if (moveHorizontalOffset != 0 || moveVerticalOffset != 0)
+            {
+                // Convert from offsets to radians
+
+                var radianDirection = (float)MathTools.Angle(
+                    Vector3.Zero, new Vector3((float)moveHorizontalOffset, (float)moveVerticalOffset, 0));
+
+                // Apply offset from map rotation
+                radianDirection -= GameControl.camera.Rotation;
+                radianDirection = MathTools.Mod(radianDirection, 2f * (float)Math.PI);
+
+                // Move in that direction
+                player.MovementDirection = radianDirection;
+            }
+
+            // Convert from direction offsets to radian direction
+            if (directionHorizontalOffset != 0 || directionVerticalOffset != 0)
+            {
+                // Convert from offsets to radians
+                var radianDirection = (float)MathTools.Angle(
+                    Vector3.Zero, new Vector3(directionHorizontalOffset, directionVerticalOffset, 0));
+
+                // Apply offset from map rotation
+                radianDirection -= GameControl.camera.Rotation;
+                radianDirection = MathTools.Mod(radianDirection, MathHelper.TwoPi);
+
+                // Look in that direction
+                player.DirectionOverride = radianDirection;
+            }
+            else
+            {
+                player.DirectionOverride = null;
             }
         }
     }

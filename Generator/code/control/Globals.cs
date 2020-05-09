@@ -43,7 +43,7 @@ namespace Generator
         public static ContentManager ContentManager;
         public static bool Logging = true;
         public static int RefreshRate = 60;
-        public static string Directory = "/Generator/Generator/";
+        public static string ProjectDirectory = "/Generator/Generator/";
         // TODO: Remove formatting before release - this roughly doubles the size of the save files
         public static JsonSerializer Serializer = new JsonSerializer { Formatting = Formatting.Indented };
 
@@ -138,11 +138,11 @@ namespace Generator
         public static object Copy(object copyObj)
             // C# doesn't have a native copy method, so just serialize and deserialize
         {
-            using (StreamWriter file = File.CreateText(Directory + "tmp.json"))
+            using (StreamWriter file = File.CreateText(ProjectDirectory + "tmp.json"))
             {
                 Serializer.Serialize(file, copyObj);
             }
-            using (StreamReader file = File.OpenText(Directory + "tmp.json"))
+            using (StreamReader file = File.OpenText(ProjectDirectory + "tmp.json"))
             {
                 copyObj = Serializer.Deserialize(file, copyObj.GetType());
             }
@@ -152,11 +152,11 @@ namespace Generator
         public static void CopyTo<T>(object copyObj, out T copyToObj)
         // C# doesn't have a native copy method, so just serialize and deserialize
         {
-            using (StreamWriter file = File.CreateText(Directory + "tmp.json"))
+            using (StreamWriter file = File.CreateText(ProjectDirectory + "tmp.json"))
             {
                 Serializer.Serialize(file, copyObj);
             }
-            using (StreamReader file = File.OpenText(Directory + "tmp.json"))
+            using (StreamReader file = File.OpenText(ProjectDirectory + "tmp.json"))
             {
                 copyToObj = (T)Serializer.Deserialize(file, typeof(T));
             }

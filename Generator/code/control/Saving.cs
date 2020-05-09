@@ -7,7 +7,7 @@ namespace Generator
 {
     public static class Saving
     {
-        public static string BaseSaveDirectory = Globals.Directory + "/Saves/";
+        public static string BaseSaveDirectory = Globals.ProjectDirectory + "/Saves/";
         public static string CurrentSaveDirectory;
         public static string TempSaveDirectory { get { return BaseSaveDirectory + "tmp/"; } }
 

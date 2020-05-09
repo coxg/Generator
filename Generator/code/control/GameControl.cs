@@ -33,8 +33,8 @@ namespace Generator
             // Setup stuff
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferHeight = (int) Globals.Resolution.Y,
-                PreferredBackBufferWidth = (int) Globals.Resolution.X,
+                PreferredBackBufferHeight = (int)Globals.Resolution.Y,
+                PreferredBackBufferWidth = (int)Globals.Resolution.X,
                 IsFullScreen = false
             };
             Content.RootDirectory = "Content";
@@ -86,14 +86,17 @@ namespace Generator
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             drawBatch = new LilyPath.DrawBatch(GraphicsDevice);
-            effect = new BasicEffect(GraphicsDevice) { 
-                TextureEnabled = true, 
-                VertexColorEnabled = true};
+            effect = new BasicEffect(GraphicsDevice)
+            {
+                TextureEnabled = true,
+                VertexColorEnabled = true
+            };
 
             Globals.ContentManager = Content;
 
             camera = new Camera();
 
+            // TODO: This will be replaced once we have an intro screen
             Globals.Zone = Zone.Load(Globals.ZoneName.Value);
             Saving.PopulateSaveKeywords();
             Timing.AddEvent(300, Saving.Autosave);
@@ -138,7 +141,7 @@ namespace Generator
             Timing.Update();
 
             // Get input for character
-            Input.GetInput(Globals.Player);
+            Input.ProcessInput(Globals.Player);
 
             // Update the GameObjects
             foreach (var gameObject in Globals.Objects.ToList())

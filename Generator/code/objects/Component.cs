@@ -76,17 +76,17 @@ namespace Generator
             {
                 // Determine the base path for the component based on the input and what files exists
                 var ComponentPath = "Components/" + ID + "/";
-                if (value != null && Directory.Exists(Globals.Directory + "/Content/" + ComponentPath + value))
+                if (value != null && Directory.Exists(Globals.ProjectDirectory + "/Content/" + ComponentPath + value))
                 {
                     ComponentPath += value + "/";
                 }
-                else if (Directory.Exists(Globals.Directory + "/Content/" + ComponentPath + "Default"))
+                else if (Directory.Exists(Globals.ProjectDirectory + "/Content/" + ComponentPath + "Default"))
                 {
                     ComponentPath += "Default/";
                 }
 
                 // Components can have different sprites for each side they're on
-                if (Side != null && Directory.Exists(Globals.Directory + "/Content/" + ComponentPath + Side))
+                if (Side != null && Directory.Exists(Globals.ProjectDirectory + "/Content/" + ComponentPath + Side))
                 {
                     ComponentPath += Side + "/";
                 }
@@ -99,7 +99,7 @@ namespace Generator
                     Sprites["Left"] = new Cached<Texture2D>(ComponentPath + "Left");
                     Sprites["Right"] = new Cached<Texture2D>(ComponentPath + "Right");
                 }
-                else if (File.Exists(Globals.Directory + "/Content/" + ComponentPath + ID + ".png"))
+                else if (File.Exists(Globals.ProjectDirectory + "/Content/" + ComponentPath + ID + ".png"))
                 {
                     Sprites[""] = new Cached<Texture2D>(ComponentPath + ID);
                 }

@@ -57,7 +57,7 @@ namespace Generator
         // Adds all tiles from a directory to all necessary manager attributes
         public void AddAllTilesInDirectory(string tileName, string directoryName)
         {
-            var fullDirectoryName = Globals.Directory + "/Content/Tiles/" + tileName + "/" + directoryName;
+            var fullDirectoryName = Globals.ProjectDirectory + "/Content/Tiles/" + tileName + "/" + directoryName;
 
             if (Directory.Exists(fullDirectoryName))
             {
