@@ -68,6 +68,7 @@
     <Compile Include="code\items\Accessory.cs" />
     <Compile Include="code\actions\Animation.cs" />
     <Compile Include="code\actions\Actions.cs" />
+    <Compile Include="code\items\GeneratorObj.cs" />
     <Compile Include="code\objects\Conversation.cs" />
     <Compile Include="LilyPath\Brush.cs" />
     <Compile Include="LilyPath\Brushes\CheckerBrush.cs" />
@@ -107,7 +108,6 @@
     <Compile Include="code\items\Equipment.cs" />
     <Compile Include="code\control\GameControl.cs" />
     <Compile Include="code\objects\GameObject.cs" />
-    <Compile Include="code\objects\GeneratorObj.cs" />
     <Compile Include="code\control\Globals.cs" />
     <Compile Include="code\control\Input.cs" />
     <Compile Include="code\control\Program.cs" />
@@ -119,7 +119,6 @@
     <Compile Include="code\managers\TileManager.cs" />
     <Compile Include="code\math\TriDiagonalMatrix.cs" />
     <Compile Include="code\world\Tile.cs" />
-    <Compile Include="code\items\Weapon.cs" />
     <Compile Include="code\control\Saving.cs" />
     <Compile Include="code\control\Saved.cs" />
     <Compile Include="code\world\Zone.cs" />

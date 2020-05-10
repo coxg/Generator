@@ -43,8 +43,10 @@ namespace Generator
         public static ContentManager ContentManager;
         public static bool Logging = true;
         public static int RefreshRate = 60;
-        public static string ProjectDirectory = "/Generator/Generator/";
+        // TODO: This will definitely break when I move to production
+        public static string ProjectDirectory = Path.GetFullPath(@"../../../../");
         // TODO: Remove formatting before release - this roughly doubles the size of the save files
+        // OR have some kind of dev/release flag, which would control thing (among other things)
         public static JsonSerializer Serializer = new JsonSerializer { Formatting = Formatting.Indented };
 
         // World management
@@ -101,7 +103,6 @@ namespace Generator
         public static SpriteFont Font;
 
         // Data storage
-        public static Dictionary<string, Weapon> WeaponsDict = new Dictionary<string, Weapon>();
         public static Dictionary<string, Armor> ArmorDict = new Dictionary<string, Armor>();
         public static Dictionary<string, GeneratorObj> GeneratorDict = new Dictionary<string, GeneratorObj>();
         public static Dictionary<string, Accessory> AccessoryDict = new Dictionary<string, Accessory>();

@@ -17,13 +17,13 @@ namespace Generator.code.abilities
             SourceObject.IsSwinging = true;
 
             // Figure out which one you hit
-            var target = SourceObject.GetTargetInRange(SourceObject.EquippedWeapon.Range);
+            var target = SourceObject.GetTargetInRange(1);
 
             // Deal damage
             if (target != null)
             {
                 Globals.Log(SourceObject + " attacks, hitting " + target + ".");
-                SourceObject.DealDamage(target, SourceObject.EquippedWeapon.Damage + SourceObject.Strength.CurrentValue);
+                SourceObject.DealDamage(target, SourceObject.Strength.CurrentValue);
             }
             else
             {
@@ -35,10 +35,10 @@ namespace Generator.code.abilities
             IEnumerable<GameObject> allies, IEnumerable<GameObject> enemies, List<GameObject> projectiles)
         {
             var damage = 0f;
-            var target = SourceObject.GetTargetInRange(SourceObject.EquippedWeapon.Range);
+            var target = SourceObject.GetTargetInRange(1);
             if (target != null && enemies.Contains(target))
             {
-                damage = target.DamageToTake(SourceObject.EquippedWeapon.Damage + SourceObject.Strength.CurrentValue) / target.Health.Max;
+                damage = target.DamageToTake(SourceObject.Strength.CurrentValue) / target.Health.Max;
             }
 
 

@@ -37,7 +37,7 @@ namespace Generator
                 PreferredBackBufferWidth = (int)Globals.Resolution.X,
                 IsFullScreen = false
             };
-            Content.RootDirectory = "Content";
+            Content.RootDirectory = Globals.ProjectDirectory + "/Content";
         }
 
         /// <summary>

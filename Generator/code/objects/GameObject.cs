@@ -73,7 +73,6 @@ namespace Generator
             bool collision = true,
 
             // Equipment
-            Weapon weapon = null,
             Armor armor = null,
             GeneratorObj generator = null,
             Accessory accessory = null
@@ -114,7 +113,6 @@ namespace Generator
             Ailments = ailments ?? new List<code.objects.Ailment>();
 
             // Equipment
-            EquippedWeapon = weapon ?? new Weapon("Fists", new Cached<Texture2D>("Sprites/white_dot"));
             EquippedArmor = armor ?? new Armor("[No Armor]", new Cached<Texture2D>("Sprites/white_dot"));
             EquippedGenerator = generator ?? new GeneratorObj("[No Generator]", new Cached<Texture2D>("Sprites/white_dot"));
             EquippedAccessory = accessory ?? new Accessory("[No Accessory]", new Cached<Texture2D>("Sprites/white_dot"));
@@ -294,14 +292,6 @@ namespace Generator
             return GameControl.camera.UpdatingArea.IntersectsWith(Area);
         }
 
-        // Equipment
-        private Weapon _equippedWeapon = new Weapon("Fists", new Cached<Texture2D>("Sprites/white_dot"));
-        public Weapon EquippedWeapon
-        {
-            get => _equippedWeapon;
-            set { Equip(value); }
-        }
-
         private Armor _equippedArmor = new Armor("[No Armor]", new Cached<Texture2D>("Sprites/white_dot"));
         public Armor EquippedArmor
         {
@@ -352,9 +342,6 @@ namespace Generator
             Equipment equippedEquipment = null;
             switch (equipmentToEquip.Slot)
             {
-                case "Weapon":
-                    equippedEquipment = _equippedWeapon;
-                    break;
                 case "Armor":
                     equippedEquipment = _equippedArmor;
                     break;

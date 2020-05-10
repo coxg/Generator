@@ -138,10 +138,6 @@ namespace Generator
                             id: "niels",
                             name: "Niels",
                             componentSpriteFileName: "Ninja",
-                            weapon: new Weapon(
-                                name: "Sword",
-                                sprite: new Cached<Texture2D>("Sprites/white_dot"),
-                                damage: 2),
                             brightness: Vector3.Zero,
                             abilities: new List<Ability>() {
                                 new code.abilities.Sprint(),
@@ -161,10 +157,6 @@ namespace Generator
                             id: "farrah",
                             name: "Farrah",
                             componentSpriteFileName: "Girl",
-                            weapon: new Weapon(
-                                name: "Sword",
-                                sprite: new Cached<Texture2D>("Sprites/white_dot"),
-                                damage: 10),
                             brightness: Vector3.Zero,
                             conversation: new Conversation(
                                 choicesList: new List<Conversation.Choices>()
@@ -341,10 +333,6 @@ namespace Generator
                             id: "bad_guy",
                             name: "Bad Guy",
                             componentSpriteFileName: "Ninja",
-                            weapon: new Weapon(
-                                name: "Sword",
-                                sprite: new Cached<Texture2D>("Sprites/white_dot"),
-                                damage: 2),
                             brightness: Vector3.Zero,
                             abilities: new List<Ability>() {
                                 new code.abilities.Sprint(),
