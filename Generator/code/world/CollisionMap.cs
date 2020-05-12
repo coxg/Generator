@@ -48,7 +48,7 @@ namespace Generator.code.world
             {
                 for (int y = (int)gameObject.Area.Top; y <= (int)gameObject.Area.Bottom; y++)
                 {
-                    if (InBounds(x, y))
+                    if (InBounds(x, y) && Values[x, y] != null && Values[x, y].Contains(gameObject))
                     {
                         Values[x, y].Remove(gameObject);
                     }

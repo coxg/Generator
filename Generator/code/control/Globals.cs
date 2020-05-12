@@ -120,7 +120,7 @@ namespace Generator
                     + CallingFrame.GetFileLineNumber() + ", in "
                     + CallingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First()
                     + ": " + text;
-                logLine = logLine.Replace("/Users/gavencox/Generator/Generator/code/", "");
+                logLine = logLine.Replace(ProjectDirectory + "code/", "");
 
                 Console.WriteLine(logLine);
                 Logs.Add(logLine);
