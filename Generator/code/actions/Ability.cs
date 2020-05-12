@@ -253,6 +253,7 @@ namespace Generator
             if (Animation != null) Animation.Update();
         }
 
+        // TODO: Something better than this!
         public static Ability GetTyped(Ability ability)
         {
             switch (ability.Name)
@@ -269,6 +270,9 @@ namespace Generator
                 case "Sprint":
                     Globals.CopyTo(ability, out code.abilities.Sprint sprint);
                     return sprint;
+                case "Jump":
+                    Globals.CopyTo(ability, out code.abilities.Jump jump);
+                    return jump;
                 default:
                     throw new InvalidCastException(ability.Name + " not recognized.");
             }

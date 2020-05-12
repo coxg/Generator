@@ -142,7 +142,7 @@ namespace Generator
                             abilities: new List<Ability>() {
                                 new code.abilities.Sprint(),
                                 new code.abilities.Shoot(),
-                                new code.abilities.PlaceObject(),
+                                new code.abilities.Jump(),
                                 new code.abilities.Attack()
                             }),
 
