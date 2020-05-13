@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Tiled;
+using MonoGame.Extended.Tiled.Renderers;
 using System.Linq;
 using System;
 using System.IO;
@@ -27,6 +29,8 @@ namespace Generator
         public static Rectangle screenSize = new Rectangle(0, 0, (int)Globals.Resolution.X, (int)Globals.Resolution.Y);
         public static SpriteBatch spriteBatch;
         public static LilyPath.DrawBatch drawBatch;
+        public static TiledMap map;
+        public static TiledMapRenderer mapRenderer;
 
         public GameControl()
         {
@@ -37,7 +41,6 @@ namespace Generator
                 PreferredBackBufferWidth = (int)Globals.Resolution.X,
                 IsFullScreen = false
             };
-            Content.RootDirectory = Globals.ProjectDirectory + "/Content";
         }
 
         /// <summary>
@@ -112,12 +115,18 @@ namespace Generator
         /// </summary>
         protected override void LoadContent()
         {
+            Content.RootDirectory = Globals.ProjectDirectory + "Content";
+            
             // Load in the textures
             Globals.WhiteDot = Content.Load<Texture2D>("Sprites/white_dot");
             Globals.LightTexture = Content.Load<Texture2D>("Sprites/light");
 
             // Load in the fonts
             Globals.Font = Content.Load<SpriteFont>("Fonts/Score");
+            
+            map = Content.Load<TiledMap>("Tiles/testMap.json");
+            // Create the map renderer
+            mapRenderer = new TiledMapRenderer(GraphicsDevice, map);
         }
 
         /// <summary>
@@ -146,6 +155,8 @@ namespace Generator
             // Update the GameObjects
             foreach (var gameObject in Globals.Objects.ToList())
                 gameObject.Update();
+            
+            mapRenderer.Update(gameTime);
 
             // Keep the camera focused on the player
             camera.Update();
@@ -214,13 +225,21 @@ namespace Generator
             // Draw the tile layer
             GraphicsDevice.SetRenderTarget(tileRenderTarget);
             GraphicsDevice.Clear(Color.Transparent);
-            for (var x = (int)camera.VisibleArea.Left; x <= (int)camera.VisibleArea.Right; x++)
+            /*for (var x = (int)camera.VisibleArea.Left; x <= (int)camera.VisibleArea.Right; x++)
             {
                 for (var y = (int)camera.VisibleArea.Top; y <= (int)camera.VisibleArea.Bottom; y++)
                 {
                     Drawing.DrawTile(x, y);
                 }
-            }
+            }*/
+            spriteBatch.Begin(transformMatrix: camera.View, samplerState: SamplerState.PointClamp);
+
+            // map Should be the `TiledMap`
+            // Once again, the transform matrix is only needed if you have a Camera2D
+            mapRenderer.Draw(camera.View);
+
+            // End the sprite batch
+            spriteBatch.End();
 
             // Draw the GameObjects
             GraphicsDevice.SetRenderTarget(objectRenderTarget);
