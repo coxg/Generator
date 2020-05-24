@@ -12,16 +12,13 @@ namespace Generator
         public Camera()
         // Constructor
         {
-            Up = Vector3.UnitZ;
             Rotation = 0f;
         }
 
         // Fields 
         public Vector3 Position;
         public Vector3 Target;
-        public Vector3 Up;
         public RectangleF VisibleArea;
-        public RectangleF UpdatingArea;
         public float Height = 25;
 
         public float Rotation
@@ -32,7 +29,7 @@ namespace Generator
             {
                 Position = Vector3.Transform(
                                Position - Target,
-                               Matrix.CreateFromAxisAngle(new Vector3(0, 0, 1), value)
+                               Matrix.CreateFromAxisAngle(Vector3.Backward, value)
                            ) + Target;
                 rotation = value;
             }
@@ -40,9 +37,9 @@ namespace Generator
 
         public Matrix View
             // Get the look at vector
-            => Matrix.CreateLookAt(Position, Target, Up);
+            => Matrix.CreateLookAt(Position, Target, Vector3.Backward);
 
-        public Matrix Projection
+        public static Matrix Projection
             // Field of view stuff
         {
             get
@@ -80,11 +77,6 @@ namespace Generator
                 Position.Y - screenHeight / 2,
                 screenWidth,
                 screenHeight);
-            UpdatingArea = new RectangleF(
-                Position.X - 3 * screenWidth / 2,
-                Position.Y - 3 * screenHeight / 2,
-                3 * screenWidth,
-                3 * screenHeight);
         }
     }
 }

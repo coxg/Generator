@@ -283,14 +283,6 @@ namespace Generator
         public Cached<Action<GameObject>> AI;
         public Cached<Action<GameObject, GameObject>> CollisionEffect;
         public bool Temporary;
-        public bool IsVisible()
-        {
-            return GameControl.camera.VisibleArea.IntersectsWith(Area);
-        }
-        public bool IsUpdating()
-        {
-            return GameControl.camera.UpdatingArea.IntersectsWith(Area);
-        }
 
         private Armor _equippedArmor = new Armor("[No Armor]", new Cached<Texture2D>("Sprites/white_dot"));
         public Armor EquippedArmor
