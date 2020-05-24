@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended.Tiled;
-using MonoGame.Extended.Tiled.Renderers;
 using System.Linq;
 using System;
 using System.IO;
-using MonoGame.Extended;
 
 namespace Generator
 {
@@ -27,11 +24,10 @@ namespace Generator
         public static Dictionary<GameObject, RenderTarget2D> lightingRenderTargets = new Dictionary<GameObject, RenderTarget2D>();
         public static BlendState lightingBlendState;
         public static BlendState lightingLayerBlendState;
+        // TODO: Add setters to Resolution to change this during runtime
         public static Rectangle screenSize = new Rectangle(0, 0, (int)Globals.Resolution.X, (int)Globals.Resolution.Y);
         public static SpriteBatch spriteBatch;
         public static LilyPath.DrawBatch drawBatch;
-        public static TiledMap map;
-        public static TiledMapRenderer mapRenderer;
 
         public GameControl()
         {
@@ -125,10 +121,6 @@ namespace Generator
 
             // Load in the fonts
             Globals.Font = Content.Load<SpriteFont>("Fonts/Score");
-            
-            map = Content.Load<TiledMap>("Tiles/testMap");
-            
-            mapRenderer = new TiledMapRenderer(GraphicsDevice, map);
         }
 
         /// <summary>
@@ -157,8 +149,6 @@ namespace Generator
             // Update the GameObjects
             foreach (var gameObject in Globals.Objects.ToList())
                 gameObject.Update();
-            
-            mapRenderer.Update(gameTime);
 
             // Keep the camera focused on the player
             camera.Update();
@@ -234,10 +224,6 @@ namespace Generator
                     Drawing.DrawTile(x, y);
                 }
             }
-
-            // map Should be the `TiledMap`
-            // Once again, the transform matrix is only needed if you have a Camera2D
-            mapRenderer.Draw(camera.View);
 
             // End the sprite batch
             spriteBatch.End();

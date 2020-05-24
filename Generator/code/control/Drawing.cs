@@ -915,7 +915,7 @@ namespace Generator
             {
                 pass.Apply();
                 GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
-                    PrimitiveType.TriangleList, vertices, 0, 2);
+                    PrimitiveType.TriangleList, vertices, 0, vertices.Length / 3);
             }
         }
 
