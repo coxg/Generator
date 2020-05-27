@@ -71,6 +71,9 @@
     <Compile Include="code\actions\Actions.cs" />
     <Compile Include="code\items\GeneratorObj.cs" />
     <Compile Include="code\objects\Conversation.cs" />
+    <Compile Include="code\world\GameObjectManager.cs" />
+    <Compile Include="code\world\TileManager.cs" />
+    <Compile Include="code\world\TileSheet.cs" />
     <Compile Include="LilyPath\Brush.cs" />
     <Compile Include="LilyPath\Brushes\CheckerBrush.cs" />
     <Compile Include="LilyPath\DrawBatch.cs" />
@@ -97,8 +100,6 @@
     <Compile Include="code\quests\Requirements.cs" />
     <Compile Include="code\quests\Quest.cs" />
     <Compile Include="code\objects\GameElement.cs" />
-    <Compile Include="code\managers\GameObjectManager.cs" />
-    <Compile Include="code\managers\Manager.cs" />
     <Compile Include="code\math\MathTools.cs" />
     <Compile Include="code\items\Armor.cs" />
     <Compile Include="code\math\ArrayUtil.cs" />
@@ -117,7 +118,6 @@
     <Compile Include="code\quests\Rewards.cs" />
     <Compile Include="code\math\Spline.cs" />
     <Compile Include="code\control\Timing.cs" />
-    <Compile Include="code\managers\TileManager.cs" />
     <Compile Include="code\math\TriDiagonalMatrix.cs" />
     <Compile Include="code\world\Tile.cs" />
     <Compile Include="code\control\Saving.cs" />

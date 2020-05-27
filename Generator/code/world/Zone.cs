@@ -28,13 +28,13 @@ namespace Generator
             return enemyObjects;
         }
 
-        public Zone(string name, int width, int height, GameObjectManager gameObjects, List<string> tileNames)
+        public Zone(string name, int width, int height, GameObjectManager gameObjects, TileManager tiles)
         {
             Name = name;
             GameObjects = gameObjects;
             Width = width;
             Height = height;
-            Tiles = new TileManager(tileNames, new Vector2(width, height));
+            Tiles = tiles;
             CollisionMap = new code.world.CollisionMap(width, height, GameObjects.Objects.Values);
         }
 
@@ -342,7 +342,8 @@ namespace Generator
                             })
                     }); ;
 
-                    return new Zone("testingZone", 100, 100, gameObjects, new List<string> { "Grass", "Clay" });
+                    return new Zone("testingZone", 150, 150, gameObjects, 
+                        new TileManager(150, 150, Globals.DefaultTileSheet));
 
                 case "buildings":
                     var buildingObjects = new GameObjectManager(new List<GameObject>
@@ -371,7 +372,8 @@ namespace Generator
                             })
                     });
 
-                    return new Zone("buildings", 100, 100, buildingObjects, new List<string> { "Grass", "Clay" });
+                    return new Zone("buildings", 100, 100, buildingObjects, 
+                        new TileManager(100, 100, Globals.DefaultTileSheet));
 
                 default:
                     throw new KeyNotFoundException(name);

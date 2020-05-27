@@ -622,160 +622,19 @@ namespace Generator
                     PrimitiveType.TriangleList, vertices, 0, 2);
             }
         }
-
-        // Draws all necessary layers for each tile
-        public static void DrawTile(int x, int y, float opacity = 1)
+        
+        // Draw all tiles for a Zone
+        public static void DrawTiles()
         {
-            // Draw the base tile itself
-            var bottomLeft = new Vector2(x, y);
-            var tile = Globals.Zone.Tiles.Get(x, y);
-            DrawTileLayer(tile.ID, bottomLeft, opacity: opacity);
-
-            // Figure which tiles surround the current tile
-            var surroundingTileMap = new Dictionary<string, Tile>
+            // TODO: Use buffers instead??? How does this work!
+            Globals.Zone.Tiles.PopulateVertices();
+            GameControl.effect.Texture = Globals.Zone.Tiles.TileSheet.Sprite;
+            foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
-                { "Top", Globals.Zone.Tiles.Get(x, y + 1) },
-                { "Bottom", Globals.Zone.Tiles.Get(x, y - 1) },
-                { "Right", Globals.Zone.Tiles.Get(x + 1, y) },
-                { "Left", Globals.Zone.Tiles.Get(x - 1, y) },
-                { "Top Left", Globals.Zone.Tiles.Get(x - 1, y + 1) },
-                { "Top Right", Globals.Zone.Tiles.Get(x + 1, y + 1) },
-                { "Bottom Right", Globals.Zone.Tiles.Get(x + 1, y - 1) },
-                { "Bottom Left", Globals.Zone.Tiles.Get(x - 1, y - 1) },
-            };
-
-            // Figure out which unique tiles surround the current tile
-            var uniqueSurroundingTileMap = new Dictionary<string, HashSet<string>>();
-            foreach (var surroundingTile in surroundingTileMap)
-            {
-                if (Globals.Zone.Tiles.BaseTileIndices[surroundingTile.Value.BaseTileName] > Globals.Zone.Tiles.BaseTileIndices[tile.BaseTileName])
-                {
-                    if (!uniqueSurroundingTileMap.ContainsKey(surroundingTile.Value.BaseTileName))
-                    {
-                        uniqueSurroundingTileMap.Add(surroundingTile.Value.BaseTileName, new HashSet<string>());
-                    }
-                    uniqueSurroundingTileMap[surroundingTile.Value.BaseTileName].Add(surroundingTile.Key);
-                }
-            }
-
-            // Loop through each unique tile from smallest to largest index, applying all layers for each
-            foreach (var uniqueSurroundingTile in uniqueSurroundingTileMap.OrderBy(uniqueSurroundingTile => uniqueSurroundingTile.Key))
-            {
-                var tileName = uniqueSurroundingTile.Key;
-
-                // If we are being drawn over the tiles on all sides
-                if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Bottom")
-                    && uniqueSurroundingTile.Value.Contains("Left") && uniqueSurroundingTile.Value.Contains("Right"))
-                    DrawTileLayer(tileName + " O", bottomLeft, opacity: opacity);
-
-                else
-                {
-                    // If we are being drawn over by the bottom three sides
-                    if (uniqueSurroundingTile.Value.Contains("Bottom") && uniqueSurroundingTile.Value.Contains("Left")
-                        && uniqueSurroundingTile.Value.Contains("Right"))
-                        DrawTileLayer(tileName + " U", bottomLeft, "Bottom", opacity: opacity);
-
-                    // If we are being drawn over by the left three sides
-                    else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Bottom")
-                        && uniqueSurroundingTile.Value.Contains("Left"))
-                        DrawTileLayer(tileName + " U", bottomLeft, "Left", opacity: opacity);
-
-                    // If we are being drawn over by the top three sides
-                    else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Left")
-                        && uniqueSurroundingTile.Value.Contains("Right"))
-                        DrawTileLayer(tileName + " U", bottomLeft, "Top", opacity: opacity);
-
-                    // If we are being drawn over by the bottom right sides
-                    else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Bottom")
-                        && uniqueSurroundingTile.Value.Contains("Right"))
-                        DrawTileLayer(tileName + " U", bottomLeft, "Right", opacity: opacity);
-
-                    else
-                    {
-                        // If we are being drawn over the bottom and the left
-                        if (uniqueSurroundingTile.Value.Contains("Bottom") && uniqueSurroundingTile.Value.Contains("Left"))
-                        {
-                            DrawTileLayer(tileName + " L", bottomLeft, "Bottom", opacity: opacity);
-
-                            // If we are being drawn over the tile on the top right
-                            if (uniqueSurroundingTile.Value.Contains("Top Right") && !uniqueSurroundingTile.Value.Contains("Top")
-                                && !uniqueSurroundingTile.Value.Contains("Right"))
-                                DrawTileLayer(tileName + " corner", bottomLeft, "Top", opacity: opacity);
-                        }
-
-                        // If we are being drawn over the top and the left
-                        else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Left"))
-                        {
-                            DrawTileLayer(tileName + " L", bottomLeft, "Left", opacity: opacity);
-
-                            // If we are being drawn over the tile on the bottom right
-                            if (uniqueSurroundingTile.Value.Contains("Bottom Right") && !uniqueSurroundingTile.Value.Contains("Bottom")
-                                && !uniqueSurroundingTile.Value.Contains("Right"))
-                                DrawTileLayer(tileName + " corner", bottomLeft, "Right", opacity: opacity);
-                        }
-
-                        // If we are being drawn over the top and the right
-                        else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Right"))
-                        {
-                            DrawTileLayer(tileName + " L", bottomLeft, "Top", opacity: opacity);
-
-                            // If we are being drawn over the tile on the bottom left
-                            if (uniqueSurroundingTile.Value.Contains("Bottom Left") && !uniqueSurroundingTile.Value.Contains("Bottom")
-                                && !uniqueSurroundingTile.Value.Contains("Left"))
-                                DrawTileLayer(tileName + " corner", bottomLeft, "Bottom", opacity: opacity);
-                        }
-
-                        // If we are being drawn over the bottom and the right
-                        else if (uniqueSurroundingTile.Value.Contains("Bottom") && uniqueSurroundingTile.Value.Contains("Right"))
-                        {
-                            DrawTileLayer(tileName + " L", bottomLeft, "Right", opacity: opacity);
-
-                            // If we are being drawn over the tile on the top left
-                            if (uniqueSurroundingTile.Value.Contains("Top Left") && !uniqueSurroundingTile.Value.Contains("Top")
-                                && !uniqueSurroundingTile.Value.Contains("Left"))
-                                DrawTileLayer(tileName + " corner", bottomLeft, "Left", opacity: opacity);
-                        }
-
-                        else
-                        {
-                            // If we are being drawn over the tile on the right
-                            if (uniqueSurroundingTile.Value.Contains("Right"))
-                                DrawTileLayer(tileName + " side", bottomLeft, "Right", opacity: opacity);
-
-                            // If we are being drawn over the tile on the left
-                            if (uniqueSurroundingTile.Value.Contains("Left"))
-                                DrawTileLayer(tileName + " side", bottomLeft, "Left", opacity: opacity);
-
-                            // If we are being drawn over the tile on the bottom
-                            if (uniqueSurroundingTile.Value.Contains("Bottom"))
-                                DrawTileLayer(tileName + " side", bottomLeft, "Bottom", opacity: opacity);
-
-                            // If we are being drawn over the tile on the top
-                            if (uniqueSurroundingTile.Value.Contains("Top"))
-                                DrawTileLayer(tileName + " side", bottomLeft, "Top", opacity: opacity);
-
-                            // If we are being drawn over the tile on the top right
-                            if (uniqueSurroundingTile.Value.Contains("Top Right") && !uniqueSurroundingTile.Value.Contains("Top")
-                                && !uniqueSurroundingTile.Value.Contains("Right"))
-                                DrawTileLayer(tileName + " corner", bottomLeft, "Top", opacity: opacity);
-
-                            // If we are being drawn over the tile on the top left
-                            if (uniqueSurroundingTile.Value.Contains("Top Left") && !uniqueSurroundingTile.Value.Contains("Top")
-                                && !uniqueSurroundingTile.Value.Contains("Left"))
-                                DrawTileLayer(tileName + " corner", bottomLeft, "Left", opacity: opacity);
-
-                            // If we are being drawn over the tile on the bottom right
-                            if (uniqueSurroundingTile.Value.Contains("Bottom Right") && !uniqueSurroundingTile.Value.Contains("Bottom")
-                                && !uniqueSurroundingTile.Value.Contains("Right"))
-                                DrawTileLayer(tileName + " corner", bottomLeft, "Right", opacity: opacity);
-
-                            // If we are being drawn over the tile on the bottom left
-                            if (uniqueSurroundingTile.Value.Contains("Bottom Left") && !uniqueSurroundingTile.Value.Contains("Bottom")
-                                && !uniqueSurroundingTile.Value.Contains("Left"))
-                                DrawTileLayer(tileName + " corner", bottomLeft, "Bottom", opacity: opacity);
-                        }
-                    }
-                }
+                pass.Apply();
+                GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
+                    PrimitiveType.TriangleList, Globals.Zone.Tiles.Vertices, 0, 
+                    Globals.Zone.Tiles.Vertices.Length / 3);
             }
         }
 
@@ -823,49 +682,12 @@ namespace Generator
         {
             var vertices = new VertexPositionColorTexture[6];
 
-            switch (side)
-            {
-                case "Bottom":
-                    vertices[0].TextureCoordinate = new Vector2(0, 1); // Bottom left
-                    vertices[1].TextureCoordinate = new Vector2(0, 0); // Top left
-                    vertices[2].TextureCoordinate = new Vector2(1, 1); // Bottom right
-                    vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
-                    vertices[4].TextureCoordinate = new Vector2(1, 0); // Top right
-                    vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
-                    break;
-                case "Top":
-                    vertices[0].TextureCoordinate = new Vector2(1, 0); // Bottom left
-                    vertices[1].TextureCoordinate = new Vector2(1, 1); // Top left
-                    vertices[2].TextureCoordinate = new Vector2(0, 0); // Bottom right
-                    vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
-                    vertices[4].TextureCoordinate = new Vector2(0, 1); // Top right
-                    vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
-                    break;
-                case "Left":
-                    vertices[0].TextureCoordinate = new Vector2(1, 1); // Bottom left
-                    vertices[1].TextureCoordinate = new Vector2(0, 1); // Top left
-                    vertices[2].TextureCoordinate = new Vector2(1, 0); // Bottom right
-                    vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
-                    vertices[4].TextureCoordinate = new Vector2(0, 0); // Top right
-                    vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
-                    break;
-                case "Right":
-                    vertices[0].TextureCoordinate = new Vector2(0, 0); // Bottom left
-                    vertices[1].TextureCoordinate = new Vector2(1, 0); // Top left
-                    vertices[2].TextureCoordinate = new Vector2(0, 1); // Bottom right
-                    vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
-                    vertices[4].TextureCoordinate = new Vector2(1, 1); // Top right
-                    vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
-                    break;
-                case "Component":
-                    vertices[0].TextureCoordinate = new Vector2(0, 1); // Bottom left
-                    vertices[1].TextureCoordinate = new Vector2(0, 0); // Top left
-                    vertices[2].TextureCoordinate = new Vector2(1, 1); // Bottom right
-                    vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
-                    vertices[4].TextureCoordinate = new Vector2(1, 0); // Top right
-                    vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
-                    break;
-            }
+            vertices[0].TextureCoordinate = new Vector2(0, 1); // Bottom left
+            vertices[1].TextureCoordinate = new Vector2(0, 0); // Top left
+            vertices[2].TextureCoordinate = new Vector2(1, 1); // Bottom right
+            vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
+            vertices[4].TextureCoordinate = new Vector2(1, 0); // Top right
+            vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
 
             // Set the colors to white - the shadows will lay over this
             for (var i = 0; i < 6; i++)
@@ -885,73 +707,29 @@ namespace Generator
             { "Component", GetVertices("Component", Color.White) },
         };
 
-        // Draws a single layer of a tile
-        public static void DrawTileLayer(
-                string tileName,
-                Vector2 bottomLeft,
-                string bottomSide = "Bottom",
-                float opacity = 1)
-        {
-            // Generate the vertices
-            var vertices = commonVertices[bottomSide];
-
-            // Bottom left
-            vertices[0].Position = new Vector3(bottomLeft.X, bottomLeft.Y, 0);
-
-            // Top left
-            vertices[1].Position = new Vector3(bottomLeft.X, bottomLeft.Y + 1, 0);
-
-            // Bottom right
-            vertices[2].Position = new Vector3(bottomLeft.X + 1, bottomLeft.Y, 0);
-            vertices[3].Position = vertices[1].Position;
-
-            // Top right
-            vertices[4].Position = new Vector3(bottomLeft.X + 1, bottomLeft.Y + 1, 0);
-            vertices[5].Position = vertices[2].Position;
-
-            // Draw it
-            GameControl.effect.Texture = Globals.Zone.Tiles.Objects[tileName].Sprite.Value;
-            foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
-                    PrimitiveType.TriangleList, vertices, 0, vertices.Length / 3);
-            }
-        }
-
         // Draws the creative mode UI, including tile previews
         public static void DrawCreativeUI(SpriteBatch spriteBatch)
         {
-            // Draw the object on the left
+            /*// Draw the object on the left
             DrawSprite(
                 spriteBatch,
-                Globals.Zone.Tiles.Objects[
-                    Globals.Zone.Tiles.TileInfo[
-                        Globals.Zone.Tiles.BaseTileNames[
-                            (int)MathTools.Mod(Globals.CreativeObjectIndex - 1, Globals.Zone.Tiles.BaseTileIndices.Count)
-                        ]]["Base"][0]].Sprite.Value,
+                TODO,
                 new Vector2(Globals.Resolution.X / 2 - 125, 10),
                 new Vector2(Globals.Resolution.X / 2 - 75, 60));
 
             // Draw the object in the middle
             DrawSprite(
                 spriteBatch,
-                Globals.Zone.Tiles.Objects[
-                    Globals.Zone.Tiles.TileInfo[
-                        Globals.Zone.Tiles.BaseTileNames[Globals.CreativeObjectIndex]]["Base"][0]].Sprite.Value,
+                TODO,
                 new Vector2(Globals.Resolution.X / 2 - 50, 10),
                 new Vector2(Globals.Resolution.X / 2 + 50, 100));
 
             // Draw the object on the right
             DrawSprite(
                 spriteBatch,
-                Globals.Zone.Tiles.Objects[
-                    Globals.Zone.Tiles.TileInfo[
-                        Globals.Zone.Tiles.BaseTileNames[
-                            (int)MathTools.Mod(Globals.CreativeObjectIndex + 1, Globals.Zone.Tiles.BaseTileIndices.Count)
-                        ]]["Base"][0]].Sprite.Value,
+                TODO,
                 new Vector2(Globals.Resolution.X / 2 + 75, 10),
-                new Vector2(Globals.Resolution.X / 2 + 125, 60));
+                new Vector2(Globals.Resolution.X / 2 + 125, 60));*/
         }
     }
 }

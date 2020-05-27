@@ -101,6 +101,7 @@ namespace Generator
         public static Texture2D LightTexture;
         public static Texture2D WhiteDot;
         public static SpriteFont Font;
+        public static TileSheet DefaultTileSheet;
 
         // Data storage
         public static Dictionary<string, Armor> ArmorDict = new Dictionary<string, Armor>();

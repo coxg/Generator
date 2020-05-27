@@ -7,19 +7,22 @@ namespace Generator
     {
         // Constructor
         public Tile(
-            string id,
-            Cached<Texture2D> sprite,
-            string baseTileName
+            string name,
+            int numBaseTiles,
+            bool hasCorners,
+            float layer
         )
         {
-            ID = id;
-            Sprite = sprite;
-            BaseTileName = baseTileName;
+            Name = name;
+            NumBaseTiles = numBaseTiles;
+            HasCorners = hasCorners;
+            Layer = layer;
         }
 
         // Attributes
-        public string ID;
-        public Cached<Texture2D> Sprite;
-        public string BaseTileName;
+        public string Name;
+        public int NumBaseTiles;
+        public bool HasCorners;
+        public float Layer;  // Order to draw them - higher is drawn on top of lower
     }
 }

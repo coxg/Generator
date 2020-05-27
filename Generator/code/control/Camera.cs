@@ -46,7 +46,7 @@ namespace Generator
             {
                 var fieldOfView = MathHelper.PiOver4;
                 float nearClipPlane = 1;
-                float farClipPlane = 200;
+                float farClipPlane = float.MaxValue;
                 var aspectRatio = GameControl.graphics.GraphicsDevice.Viewport.Width
                                   / (float) GameControl.graphics.GraphicsDevice.Viewport.Height;
 

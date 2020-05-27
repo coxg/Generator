@@ -146,14 +146,14 @@ namespace Generator
                     if (KeyBindings["left"].IsBeingPressed)
                     {
                         Globals.CreativeObjectIndex = (int)MathTools.Mod(
-                            Globals.CreativeObjectIndex - 1, Globals.Zone.Tiles.TileInfo.Count);
+                            Globals.CreativeObjectIndex - 1, Globals.Zone.Tiles.TileSheet.Tiles.Count);
                     }
 
                     // Scroll right
                     if (KeyBindings["right"].IsBeingPressed)
                     {
                         Globals.CreativeObjectIndex = (int)MathTools.Mod(
-                            Globals.CreativeObjectIndex + 1, Globals.Zone.Tiles.TileInfo.Count);
+                            Globals.CreativeObjectIndex + 1, Globals.Zone.Tiles.TileSheet.Tiles.Count);
                     }
                 }
 
@@ -179,11 +179,13 @@ namespace Generator
                 if (KeyBindings["down"].IsBeingPressed)
                 {
                     GameControl.camera.Height += 10;
+                    Globals.Log(GameControl.camera.Height);
                 }
                 if (KeyBindings["up"].IsBeingPressed)
                 {
                     GameControl.camera.Height -= 10;
                     GameControl.camera.Height = Math.Max(GameControl.camera.Height, 5);
+                    Globals.Log(GameControl.camera.Height);
                 }
             }
         }

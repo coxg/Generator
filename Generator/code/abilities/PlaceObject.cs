@@ -13,10 +13,10 @@ namespace Generator.code.abilities
 
         public override void Start()
         {
-            var baseTileName = Globals.Zone.Tiles.BaseTileNames[Globals.CreativeObjectIndex];
+            /*var baseTileName = Globals.Zone.Tiles.BaseTileNames[Globals.CreativeObjectIndex];
             var randomBaseTile = Globals.Zone.Tiles.GetRandomBaseName(baseTileName);
             var targetCoordinates = SourceObject.GetTargetCoordinates(1);
-            Globals.Zone.Tiles.IDs[(int)targetCoordinates.X, (int)targetCoordinates.Y] = randomBaseTile;
+            Globals.Zone.Tiles.IDs[(int)targetCoordinates.X, (int)targetCoordinates.Y] = randomBaseTile;*/
         }
     }
 }

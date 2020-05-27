@@ -98,6 +98,14 @@ namespace Generator
             Globals.ContentManager = Content;
 
             // TODO: This will be replaced once we have an intro screen
+            Globals.DefaultTileSheet = new TileSheet(
+                "default",
+                "Tiles/tiles",
+                new List<Tile>
+                {
+                    new Tile("clay", 0, true, 1),
+                    new Tile("grass", 1, false, 0)
+                });
             Globals.Zone = Zone.Load(Globals.ZoneName.Value);
             Saving.PopulateSaveKeywords();
             Timing.AddEvent(300, Saving.Autosave);
@@ -216,16 +224,8 @@ namespace Generator
             // Draw the tile layer
             GraphicsDevice.SetRenderTarget(tileRenderTarget);
             GraphicsDevice.Clear(Color.Transparent);
-            spriteBatch.Begin(transformMatrix: camera.View, samplerState: SamplerState.PointClamp);
-            for (var x = (int)camera.VisibleArea.Left; x <= (int)camera.VisibleArea.Right; x++)
-            {
-                for (var y = (int)camera.VisibleArea.Top; y <= (int)camera.VisibleArea.Bottom; y++)
-                {
-                    Drawing.DrawTile(x, y);
-                }
-            }
-
-            // End the sprite batch
+            spriteBatch.Begin();
+            Drawing.DrawTiles();
             spriteBatch.End();
 
             // Draw the GameObjects
