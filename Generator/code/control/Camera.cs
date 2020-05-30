@@ -60,7 +60,7 @@ namespace Generator
             var center = Globals.Player.Center;
             Position = new Vector3(
                 center.X,
-                center.Y - .00001f,
+                center.Y - .00001f,  // Can't be 0 or there are graphical issues
                 center.Z + Height);
             Target = center;
 

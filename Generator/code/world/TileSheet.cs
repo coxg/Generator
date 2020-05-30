@@ -48,10 +48,13 @@ namespace Generator
             var row = id / Width;
             var col = (int)MathTools.Mod(id, Width);
             
-            var xMin = (float)col / Width;
-            var xMax = (float)(col + 1) / Width;
-            var yMin = (float)row / Height;
-            var yMax = (float)(row + 1) / Height;
+            // TODO: Without this you see graphical bugs, but there's no reason to think this works for all sheet sizes
+            var roundingOffset = .001f;
+            
+            var xMin = (float)col / Width + roundingOffset;
+            var xMax = (float)(col + 1) / Width - roundingOffset;
+            var yMin = (float)row / Height + roundingOffset;
+            var yMax = (float)(row + 1) / Height - roundingOffset;
             
             var bottomLeft = new Vector2(xMin, yMax);
             var topLeft = new Vector2(xMin, yMin);

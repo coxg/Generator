@@ -382,8 +382,7 @@ namespace Generator
                     relativePosition: new Vector3(.5f, .57f, 1),
                     relativeSize: .14f,
                     baseRotationPoint: new Vector3(.08f, 0, .066f),
-                    yOffset: -.05f,
-                    castsShadow: false)
+                    yOffset: -.05f)
                 },
                 {"Body", new Component(
                     id: "Body",

@@ -104,8 +104,8 @@ namespace Generator
                 "Tiles/tiles",
                 new List<Tile>
                 {
-                    new Tile("clay", 0, true, 1),
-                    new Tile("grass", 1, false, 0)
+                    new Tile("clay", 7, true, 1),
+                    new Tile("grass", 5, false, 0)
                 });
             Globals.Zone = Zone.Load(Globals.ZoneName.Value);
             Saving.PopulateSaveKeywords();
