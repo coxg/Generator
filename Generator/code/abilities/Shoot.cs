@@ -8,7 +8,7 @@ namespace Generator.code.abilities
     {
         public Shoot() : base(
             "Shoot",
-            electricityCost: 3,
+            electricityCost: 0,
             cooldown: .1f,
             keepCasting: true) { }
 

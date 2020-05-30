@@ -48,6 +48,7 @@ namespace Generator
         // TODO: Remove formatting before release - this roughly doubles the size of the save files
         // OR have some kind of dev/release flag, which would control thing (among other things)
         public static JsonSerializer Serializer = new JsonSerializer { Formatting = Formatting.Indented };
+        public static bool LightingEnabled = true;
 
         // World management
         public static SavedString ZoneName = new SavedString("zoneName", "testingZone");
@@ -102,6 +103,7 @@ namespace Generator
         public static Texture2D WhiteDot;
         public static SpriteFont Font;
         public static TileSheet DefaultTileSheet;
+        public static GraphicsDevice GraphicsDevice;
 
         // Data storage
         public static Dictionary<string, Armor> ArmorDict = new Dictionary<string, Armor>();

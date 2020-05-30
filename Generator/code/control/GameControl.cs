@@ -58,6 +58,7 @@ namespace Generator
             // Create common vertices for reuse
 
             // Set up the GraphicsDevice, which is used for all drawing
+            Globals.GraphicsDevice = GraphicsDevice;
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             tileRenderTarget = new RenderTarget2D(
@@ -172,55 +173,6 @@ namespace Generator
         {
             effect.View = camera.View;
 
-            // Pre-compute the lighting layer
-            GraphicsDevice.SetRenderTarget(shadowRenderTarget);
-            GraphicsDevice.Clear(Color.Black);
-
-            // Draw the light effects from each object into their own renderTargets
-            foreach (var lightSource in Globals.Objects.OrderBy(i => -i.Position.Y))
-            {
-                var brightness = 25 * lightSource.Brightness.Length();
-                if (brightness != 0)
-                {
-                    // Give it a unique renderTarget
-                    if (!lightingRenderTargets.ContainsKey(lightSource))
-                    {
-                        lightingRenderTargets[lightSource] = new RenderTarget2D(
-                            GraphicsDevice,
-                            GraphicsDevice.PresentationParameters.BackBufferWidth,
-                            GraphicsDevice.PresentationParameters.BackBufferHeight,
-                            false,
-                            GraphicsDevice.PresentationParameters.BackBufferFormat,
-                            DepthFormat.Depth24);
-                    }
-                    GraphicsDevice.SetRenderTarget(lightingRenderTargets[lightSource]);
-                    GraphicsDevice.Clear(Color.Transparent);
-
-                    // Draw the light
-                    Drawing.DrawLight(lightSource.Center, brightness, Color.White);
-
-                    // Draw the shadows
-                    foreach (var Object in Globals.Objects.Where(i => i.CastsShadow))
-                    {
-                        if (Object != lightSource)
-                        {
-                            var lightAngle = (float)MathTools.Angle(Object.Center, lightSource.Center);
-                            var originalDirection = Object.Direction;
-                            Object.Direction = MathTools.Mod(-Object.Direction + lightAngle + MathHelper.PiOver2, MathHelper.TwoPi);
-                            foreach (var component in Object.Components.Values.OrderBy(i => -i.Position.Y).Where(i => i.CastsShadow))
-                            {
-                                Drawing.DrawComponentShadow(
-                                    component,
-                                    Object.Size * component.Size,
-                                    lightAngle,
-                                    lightSource);
-                            }
-                            Object.Direction = originalDirection;
-                        }
-                    }
-                }
-            }
-
             // Draw the tile layer
             GraphicsDevice.SetRenderTarget(tileRenderTarget);
             GraphicsDevice.Clear(Color.Transparent);
@@ -245,17 +197,19 @@ namespace Generator
             spriteBatch.End();
 
             // Pre-compute the lighting layer
-            GraphicsDevice.SetRenderTarget(shadowRenderTarget);
-            spriteBatch.Begin(blendState: lightingBlendState);
-            GraphicsDevice.Clear(Color.Black);
-            foreach (var lightingRenderTarget in lightingRenderTargets)
+            if (Globals.LightingEnabled)
             {
-                if (Globals.Zone.GameObjects.Objects.ContainsKey(lightingRenderTarget.Key.ID))
-                {
-                    spriteBatch.Draw(lightingRenderTarget.Value, screenSize, new Color(lightingRenderTarget.Key.Brightness));
-                }
+                GraphicsDevice.SetRenderTarget(shadowRenderTarget);
+                GraphicsDevice.Clear(Color.Black);
+                Drawing.ComputeLighting();
+
+                // Draw the lighting layer to the shadow layer
+                GraphicsDevice.SetRenderTarget(shadowRenderTarget);
+                spriteBatch.Begin(blendState: lightingBlendState);
+                GraphicsDevice.Clear(Color.Black);
+                Drawing.DrawLighting();
+                spriteBatch.End();
             }
-            spriteBatch.End();
 
             // Draw the tile layer
             GraphicsDevice.SetRenderTarget(null);
@@ -264,10 +218,13 @@ namespace Generator
             spriteBatch.Draw(tileRenderTarget, screenSize, Color.White);
             spriteBatch.End();
 
-            // Draw the lighting layer
-            spriteBatch.Begin(blendState: lightingLayerBlendState);
-            spriteBatch.Draw(shadowRenderTarget, screenSize, Color.White);
-            spriteBatch.End();
+            // Draw the shadows
+            if (Globals.LightingEnabled)
+            {
+                spriteBatch.Begin(blendState: lightingLayerBlendState);
+                spriteBatch.Draw(shadowRenderTarget, screenSize, Color.White);
+                spriteBatch.End();
+            }
 
             // Draw the object layer
             spriteBatch.Begin();

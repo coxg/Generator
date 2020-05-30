@@ -596,10 +596,15 @@ namespace Generator
                 Vector3.Zero);
 
             // Generate shadow gradients by calculating brightness at each vertex
-            var leftBrightness = new Color(GetBrightness(
-                component.SourceObject.Center.X - .5f, component.SourceObject.Position.Y - .5f));
-            var rightBrightness = new Color(GetBrightness(
-                component.SourceObject.Center.X + .5f, component.SourceObject.Position.Y - .5f));
+            Color leftBrightness = Color.White;
+            Color rightBrightness = Color.White;
+            if (Globals.LightingEnabled && component.CastsShadow)
+            {
+                leftBrightness = new Color(GetBrightness(
+                    component.SourceObject.Center.X - .5f, component.SourceObject.Position.Y - .5f));
+                rightBrightness = new Color(GetBrightness(
+                    component.SourceObject.Center.X + .5f, component.SourceObject.Position.Y - .5f));
+            }
             vertices[0].Color = leftBrightness;
             vertices[1].Color = leftBrightness;
             vertices[2].Color = rightBrightness;
@@ -627,7 +632,6 @@ namespace Generator
         public static void DrawTiles()
         {
             // TODO: Use buffers instead??? How does this work!
-            Globals.Zone.Tiles.PopulateVertices();
             GameControl.effect.Texture = Globals.Zone.Tiles.TileSheet.Sprite;
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
@@ -639,7 +643,7 @@ namespace Generator
         }
 
         // Draws a light source
-        public static void DrawLight(
+        public static void DrawLightSource(
                 Vector3 position,
                 float size,
                 Color color)
@@ -675,6 +679,66 @@ namespace Generator
                 pass.Apply();
                 GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
                     PrimitiveType.TriangleList, vertices, 0, 2);
+            }
+        }
+
+        public static void ComputeLighting()
+        {
+                        // Draw the light effects from each object into their own renderTargets
+            foreach (var lightSource in Globals.Objects.OrderBy(i => -i.Position.Y))
+            {
+                var brightness = 25 * lightSource.Brightness.Length();
+                if (brightness != 0)
+                {
+                    // Give it a unique renderTarget
+                    if (!GameControl.lightingRenderTargets.ContainsKey(lightSource))
+                    {
+                        GameControl.lightingRenderTargets[lightSource] = new RenderTarget2D(
+                            Globals.GraphicsDevice,
+                            Globals.GraphicsDevice.PresentationParameters.BackBufferWidth,
+                            Globals.GraphicsDevice.PresentationParameters.BackBufferHeight,
+                            false,
+                            Globals.GraphicsDevice.PresentationParameters.BackBufferFormat,
+                            DepthFormat.Depth24);
+                    }
+                    Globals.GraphicsDevice.SetRenderTarget(GameControl.lightingRenderTargets[lightSource]);
+                    Globals.GraphicsDevice.Clear(Color.Transparent);
+
+                    // Draw the light
+                    DrawLightSource(lightSource.Center, brightness, Color.White);
+
+                    // Draw the shadows
+                    foreach (var Object in Globals.Objects.Where(i => i.CastsShadow))
+                    {
+                        if (Object != lightSource)
+                        {
+                            var lightAngle = (float)MathTools.Angle(Object.Center, lightSource.Center);
+                            var originalDirection = Object.Direction;
+                            Object.Direction = MathTools.Mod(-Object.Direction + lightAngle + MathHelper.PiOver2, MathHelper.TwoPi);
+                            foreach (var component in Object.Components.Values.OrderBy(i => -i.Position.Y).Where(i => i.CastsShadow))
+                            {
+                                DrawComponentShadow(
+                                    component,
+                                    Object.Size * component.Size,
+                                    lightAngle,
+                                    lightSource);
+                            }
+                            Object.Direction = originalDirection;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void DrawLighting()
+        {
+            foreach (var lightingRenderTarget in GameControl.lightingRenderTargets)
+            {
+                if (Globals.Zone.GameObjects.Objects.ContainsKey(lightingRenderTarget.Key.ID))
+                {
+                    GameControl.spriteBatch.Draw(
+                        lightingRenderTarget.Value, GameControl.screenSize, new Color(lightingRenderTarget.Key.Brightness));
+                }
             }
         }
 
