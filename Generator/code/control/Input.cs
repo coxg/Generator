@@ -10,7 +10,9 @@ namespace Generator
     {
         // TODO: Refactor, each button should have this ability
         public static GamePadCapabilities Capabilities;
-        public static GamePadState State;
+        public static GamePadState ControllerState;
+        public static MouseState MouseState;
+        public static Vector3 CursorPosition;
 
         public class KeyBinding
         {
@@ -33,7 +35,7 @@ namespace Generator
             {
                 // Update the states
                 WasPressed = IsPressed;
-                IsPressed = Capabilities.IsConnected & State.IsButtonDown(Button) 
+                IsPressed = Capabilities.IsConnected & ControllerState.IsButtonDown(Button) 
                     | Keyboard.GetState().IsKeyDown(Key);
                 IsBeingPressed = IsPressed & !WasPressed;
                 IsBeingReleased = WasPressed & !IsPressed;
@@ -89,7 +91,9 @@ namespace Generator
 
         public static void ProcessInput(GameObject player)
         {
-            State = GamePad.GetState(PlayerIndex.One);
+            ControllerState = GamePad.GetState(PlayerIndex.One);
+            MouseState = Mouse.GetState();
+            CursorPosition = MathTools.PositionFromPixels(new Vector2(MouseState.X, MouseState.Y));
             Capabilities = GamePad.GetCapabilities(PlayerIndex.One);
             foreach (KeyBinding keyBinding in KeyBindings.Values)
             {
@@ -146,14 +150,14 @@ namespace Generator
                     if (KeyBindings["left"].IsBeingPressed)
                     {
                         Globals.CreativeObjectIndex = (int)MathTools.Mod(
-                            Globals.CreativeObjectIndex - 1, Globals.Zone.Tiles.TileSheet.Tiles.Count);
+                            Globals.CreativeObjectIndex - 1, Globals.Zone.TileManager.TileSheet.Tiles.Count);
                     }
 
                     // Scroll right
                     if (KeyBindings["right"].IsBeingPressed)
                     {
                         Globals.CreativeObjectIndex = (int)MathTools.Mod(
-                            Globals.CreativeObjectIndex + 1, Globals.Zone.Tiles.TileSheet.Tiles.Count);
+                            Globals.CreativeObjectIndex + 1, Globals.Zone.TileManager.TileSheet.Tiles.Count);
                     }
                 }
 
@@ -288,17 +292,17 @@ namespace Generator
             float directionVerticalOffset = 0;
             player.MovementDirection = null;
             if (Capabilities.IsConnected & !(
-                State.ThumbSticks.Right.X == 0 & State.ThumbSticks.Right.Y == 0
-                & State.ThumbSticks.Left.X == 0 & State.ThumbSticks.Left.Y == 0))
+                ControllerState.ThumbSticks.Right.X == 0 & ControllerState.ThumbSticks.Right.Y == 0
+                & ControllerState.ThumbSticks.Left.X == 0 & ControllerState.ThumbSticks.Left.Y == 0))
             {
 
-                directionHorizontalOffset = State.ThumbSticks.Right.X;
-                directionVerticalOffset = State.ThumbSticks.Right.Y;
-                moveHorizontalOffset = State.ThumbSticks.Left.X;
-                moveVerticalOffset = State.ThumbSticks.Left.Y;
+                directionHorizontalOffset = ControllerState.ThumbSticks.Right.X;
+                directionVerticalOffset = ControllerState.ThumbSticks.Right.Y;
+                moveHorizontalOffset = ControllerState.ThumbSticks.Left.X;
+                moveVerticalOffset = ControllerState.ThumbSticks.Left.Y;
                 player.MovementSpeed = (float)Math.Min(1, Math.Sqrt(
-                    Math.Pow(State.ThumbSticks.Left.X, 2)
-                    + Math.Pow(State.ThumbSticks.Left.Y, 2)));
+                    Math.Pow(ControllerState.ThumbSticks.Left.X, 2)
+                    + Math.Pow(ControllerState.ThumbSticks.Left.Y, 2)));
 
                 // We're not using the mouse for input so null this out
                 player.MovementTarget = null;
@@ -321,19 +325,17 @@ namespace Generator
                 }
 
                 // If the mouse is pressed then start moving to its position
-                var mouseState = Mouse.GetState();
-                var cursorPosition = MathTools.PositionFromPixels(new Vector2(mouseState.X, mouseState.Y));
-                if (mouseState.LeftButton == ButtonState.Pressed)
+                if (MouseState.LeftButton == ButtonState.Pressed)
                 {
-                    player.MovementTarget = cursorPosition - new Vector3(player.Size.X / 2, player.Size.Y / 2, 0);
+                    player.MovementTarget = CursorPosition - new Vector3(player.Size.X / 2, player.Size.Y / 2, 0);
                 }
 
                 // If using any abilities then also look in that direction
                 if (anyAbilitiesBeingUsed)
                 {
                     var playerCenter = player.Center;
-                    directionHorizontalOffset = cursorPosition.X - playerCenter.X;
-                    directionVerticalOffset = cursorPosition.Y - playerCenter.Y;
+                    directionHorizontalOffset = CursorPosition.X - playerCenter.X;
+                    directionVerticalOffset = CursorPosition.Y - playerCenter.Y;
                 }
             }
 

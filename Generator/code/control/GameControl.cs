@@ -100,7 +100,6 @@ namespace Generator
 
             // TODO: This will be replaced once we have an intro screen
             Globals.DefaultTileSheet = new TileSheet(
-                "default",
                 "Tiles/tiles",
                 new List<Tile>
                 {

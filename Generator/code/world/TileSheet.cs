@@ -7,22 +7,19 @@ namespace Generator
     public class TileSheet
     {
         public TileSheet(
-            string name,
             string spriteName,
             List<Tile> tiles,
             int tileSize=256
         )
         {
-            Name = name;
             SpriteName = spriteName;
-            Sprite = Globals.ContentManager.Load<Texture2D>(spriteName);
+            Sprite = Globals.ContentManager.Load<Texture2D>(SpriteName);
             TileSize = tileSize;
             Tiles = tiles;
             Height = Sprite.Height / TileSize;
             Width = Sprite.Width / TileSize;
         }
         
-        public string Name;
         public string SpriteName;
         public int TileSize;
         public int Height;  // In tiles
@@ -32,9 +29,9 @@ namespace Generator
         [Newtonsoft.Json.JsonIgnore]
         public Texture2D Sprite;
 
-        public int GetRandomBaseTileId()
+        public int GetRandomBaseTileId(int row=0)
         {
-            return MathTools.RandInt(Tiles[0].NumBaseTiles);
+            return row * Width + MathTools.RandInt(Tiles[row].NumBaseTiles);
         }
 
         public Tile TileFromId(int id)
@@ -42,7 +39,18 @@ namespace Generator
             return Tiles[id / Width];
         }
 
-        public Vector2[] TextureCoordinatesFromId(int id, string orientation="Bottom")
+        public Rectangle TextureCoordinatesFromId(int id)
+        {
+            var row = id / Width;
+            var col = (int)MathTools.Mod(id, Width);
+            return new Rectangle(
+                row * TileSize,
+                col * TileSize,
+                TileSize,
+                TileSize);
+        }
+
+        public Vector2[] TextureVerticesFromId(int id, string orientation="Bottom")
         {
             // Get the coordinates of the texture on the sheet
             var row = id / Width;

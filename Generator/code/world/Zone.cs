@@ -10,7 +10,7 @@ namespace Generator
     public class Zone
     {
         public GameObjectManager GameObjects;
-        public TileManager Tiles;
+        public TileManager TileManager;
         public string Name;
         public int Width;
         public int Height;
@@ -28,24 +28,24 @@ namespace Generator
             return enemyObjects;
         }
 
-        public Zone(string name, int width, int height, GameObjectManager gameObjects, TileManager tiles)
+        public Zone(string name, int width, int height, GameObjectManager gameObjects, TileManager tileManager)
         {
             Name = name;
             GameObjects = gameObjects;
             Width = width;
             Height = height;
-            Tiles = tiles;
+            TileManager = tileManager;
             CollisionMap = new code.world.CollisionMap(width, height, GameObjects.Objects.Values);
         }
 
         [JsonConstructor]
-        public Zone(string name, int width, int height, GameObjectManager gameObjects, TileManager tiles, HashSet<string> enemies)
+        public Zone(string name, int width, int height, GameObjectManager gameObjects, TileManager tileManager, HashSet<string> enemies)
         {
             Name = name;
             GameObjects = gameObjects;
             Width = width;
             Height = height;
-            Tiles = tiles;
+            TileManager = tileManager;
             Enemies = enemies;
             CollisionMap = new code.world.CollisionMap(width, height, GameObjects.Objects.Values);
         }
@@ -139,11 +139,11 @@ namespace Generator
                             name: "Niels",
                             componentSpriteFileName: "Ninja",
                             brightness: Vector3.Zero,
-                            abilities: new List<Ability>() {
+                            abilities: new List<Ability> {
                                 new code.abilities.Sprint(),
                                 new code.abilities.Shoot(),
                                 new code.abilities.Jump(),
-                                new code.abilities.Attack()
+                                new code.abilities.PlaceObject()
                             }),
 
                         // farrah

@@ -8,15 +8,22 @@ namespace Generator.code.abilities
     {
         public PlaceObject() : base(
             "PlaceObject",
-            cooldown: .1f,
+            cooldown: 0,
             keepCasting: true) { }
 
         public override void Start()
         {
-            /*var baseTileName = Globals.Zone.Tiles.BaseTileNames[Globals.CreativeObjectIndex];
-            var randomBaseTile = Globals.Zone.Tiles.GetRandomBaseName(baseTileName);
-            var targetCoordinates = SourceObject.GetTargetCoordinates(1);
-            Globals.Zone.Tiles.IDs[(int)targetCoordinates.X, (int)targetCoordinates.Y] = randomBaseTile;*/
+            var randomBaseTile = Globals.Zone.TileManager.TileSheet.GetRandomBaseTileId(Globals.CreativeObjectIndex);
+            Vector3 targetPosition;
+            if (SourceObject == Globals.Player && !Input.ControllerState.IsConnected)
+            {
+                targetPosition = Input.CursorPosition;
+            }
+            else
+            {
+                targetPosition = SourceObject.GetTargetCoordinates();
+            }
+            Globals.Zone.TileManager.Set((int)targetPosition.X, (int)targetPosition.Y, randomBaseTile);
         }
     }
 }

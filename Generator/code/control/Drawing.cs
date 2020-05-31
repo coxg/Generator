@@ -40,7 +40,8 @@ namespace Generator
             return brightness;
         }
 
-        public static void DrawSprite(SpriteBatch spriteBatch, Texture2D texture, Vector2 bottomLeft, Vector2 topRight)
+        public static void DrawSprite(SpriteBatch spriteBatch, Texture2D texture, Vector2 bottomLeft, Vector2 topRight, 
+                Rectangle? textureCoordinates=null)
         // Draw a single sprite
         {
             spriteBatch.Draw(
@@ -50,7 +51,7 @@ namespace Generator
                     (int)(Globals.Resolution.Y - topRight.Y - bottomLeft.Y),
                     (int)(topRight.X - bottomLeft.X),
                     (int)(topRight.Y - bottomLeft.Y)),
-                null,
+                textureCoordinates,
                 Color.White,
                 0,
                 new Vector2(0, 0),
@@ -632,13 +633,13 @@ namespace Generator
         public static void DrawTiles()
         {
             // TODO: Use buffers instead??? How does this work!
-            GameControl.effect.Texture = Globals.Zone.Tiles.TileSheet.Sprite;
+            GameControl.effect.Texture = Globals.Zone.TileManager.TileSheet.Sprite;
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
-                    PrimitiveType.TriangleList, Globals.Zone.Tiles.Vertices, 0, 
-                    Globals.Zone.Tiles.Vertices.Length / 3);
+                    PrimitiveType.TriangleList, Globals.Zone.TileManager.Vertices, 0, 
+                    Globals.Zone.TileManager.Vertices.Length / 3);
             }
         }
 
@@ -774,26 +775,32 @@ namespace Generator
         // Draws the creative mode UI, including tile previews
         public static void DrawCreativeUI(SpriteBatch spriteBatch)
         {
-            /*// Draw the object on the left
+            // Draw the object on the left
+            var tileSheet = Globals.Zone.TileManager.TileSheet;
             DrawSprite(
                 spriteBatch,
-                TODO,
+                tileSheet.Sprite,
                 new Vector2(Globals.Resolution.X / 2 - 125, 10),
-                new Vector2(Globals.Resolution.X / 2 - 75, 60));
+                new Vector2(Globals.Resolution.X / 2 - 75, 60),
+                tileSheet.TextureCoordinatesFromId(
+                    (int)MathTools.Mod(Globals.CreativeObjectIndex - 1, tileSheet.Tiles.Count)));
 
             // Draw the object in the middle
             DrawSprite(
                 spriteBatch,
-                TODO,
+                tileSheet.Sprite,
                 new Vector2(Globals.Resolution.X / 2 - 50, 10),
-                new Vector2(Globals.Resolution.X / 2 + 50, 100));
+                new Vector2(Globals.Resolution.X / 2 + 50, 100),
+                tileSheet.TextureCoordinatesFromId(Globals.CreativeObjectIndex));
 
             // Draw the object on the right
             DrawSprite(
                 spriteBatch,
-                TODO,
+                tileSheet.Sprite,
                 new Vector2(Globals.Resolution.X / 2 + 75, 10),
-                new Vector2(Globals.Resolution.X / 2 + 125, 60));*/
+                new Vector2(Globals.Resolution.X / 2 + 125, 60),
+                tileSheet.TextureCoordinatesFromId(
+                    (int)MathTools.Mod(Globals.CreativeObjectIndex - 1, tileSheet.Tiles.Count)));
         }
     }
 }
