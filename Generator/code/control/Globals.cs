@@ -135,8 +135,24 @@ namespace Generator
         }
 
         public static void Warn(object text = null)
+        // Intentionally copy/pasted because it's not worth abstracting the CallingFrame stuff
         {
-            Log("[WARNING] " + text);
+            if (Logging)
+            {
+                var CallingFrame = new StackTrace(1, true).GetFrame(0);
+                var logLine = CallingFrame.GetFileName().Split('\\').Last() + " line "
+                    + CallingFrame.GetFileLineNumber() + ", in "
+                    + CallingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First()
+                    + ": [WARNING]" + text;
+                logLine = logLine.Replace(ProjectDirectory + "code/", "");
+
+                Console.WriteLine(logLine);
+                Logs.Add(logLine);
+                if (Logs.Count > 10)
+                {
+                    Logs.RemoveAt(0);
+                }
+            }
         }
 
         public static object Copy(object copyObj)

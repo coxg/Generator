@@ -342,8 +342,8 @@ namespace Generator
                             })
                     }); ;
 
-                    return new Zone("testingZone", 150, 150, gameObjects, 
-                        new TileManager(150, 150, Globals.DefaultTileSheet));
+                    return new Zone("testingZone", 500, 500, gameObjects, 
+                        new TileManager(500, 500, Globals.DefaultTileSheet));
 
                 case "buildings":
                     var buildingObjects = new GameObjectManager(new List<GameObject>

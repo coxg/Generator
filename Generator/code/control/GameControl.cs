@@ -28,6 +28,8 @@ namespace Generator
         public static Rectangle screenSize = new Rectangle(0, 0, (int)Globals.Resolution.X, (int)Globals.Resolution.Y);
         public static SpriteBatch spriteBatch;
         public static LilyPath.DrawBatch drawBatch;
+        public static VertexBuffer VertexBuffer;
+        public static IndexBuffer IndexBuffer;
 
         public GameControl()
         {
@@ -36,7 +38,8 @@ namespace Generator
             {
                 PreferredBackBufferHeight = (int)Globals.Resolution.Y,
                 PreferredBackBufferWidth = (int)Globals.Resolution.X,
-                IsFullScreen = false
+                IsFullScreen = false,
+                GraphicsProfile = GraphicsProfile.HiDef
             };
             Content.RootDirectory = Globals.ProjectDirectory + "/Content";
         }

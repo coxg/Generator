@@ -70,48 +70,38 @@ namespace Generator
             var topRight = new Vector2(xMax, yMin);
             
             // Rotate the coordinates as necessary
-            var textureCoordinates = new Vector2[6];
+            var textureCoordinates = new Vector2[4];
             switch (orientation)
             {
                 case "Bottom":
                     textureCoordinates[0] = bottomLeft; // Bottom left
                     textureCoordinates[1] = topLeft; // Top left
                     textureCoordinates[2] = bottomRight; // Bottom right
-                    textureCoordinates[3] = textureCoordinates[1];
-                    textureCoordinates[4] = topRight; // Top right
-                    textureCoordinates[5] = textureCoordinates[2];
+                    textureCoordinates[3] = topRight; // Top right
                     break;
                 case "Top":
                     textureCoordinates[0] = topRight; // Bottom left
                     textureCoordinates[1] = bottomRight; // Top left
                     textureCoordinates[2] = topLeft; // Bottom right
-                    textureCoordinates[3] = textureCoordinates[1];
-                    textureCoordinates[4] = bottomLeft; // Top right
-                    textureCoordinates[5] = textureCoordinates[2];
+                    textureCoordinates[3] = bottomLeft; // Top right
                     break;
                 case "Left":
                     textureCoordinates[0] = bottomRight; // Bottom left
                     textureCoordinates[1] = bottomLeft; // Top left
                     textureCoordinates[2] = topRight; // Bottom right
-                    textureCoordinates[3] = textureCoordinates[1];
-                    textureCoordinates[4] = topLeft; // Top right
-                    textureCoordinates[5] = textureCoordinates[2];
+                    textureCoordinates[3] = topLeft; // Top right
                     break;
                 case "Right":
                     textureCoordinates[0] = topLeft; // Bottom left
                     textureCoordinates[1] = topRight; // Top left
                     textureCoordinates[2] = bottomLeft; // Bottom right
-                    textureCoordinates[3] = textureCoordinates[1];
-                    textureCoordinates[4] = bottomRight; // Top right
-                    textureCoordinates[5] = textureCoordinates[2];
+                    textureCoordinates[3] = bottomRight; // Top right
                     break;
                 case "Component":
                     textureCoordinates[0] = bottomLeft; // Bottom left
                     textureCoordinates[1] = topLeft; // Top left
                     textureCoordinates[2] = bottomRight; // Bottom right
-                    textureCoordinates[3] = textureCoordinates[1];
-                    textureCoordinates[4] = topRight; // Top right
-                    textureCoordinates[5] = textureCoordinates[2];
+                    textureCoordinates[3] = topRight; // Top right
                     break;
             }
             return textureCoordinates;

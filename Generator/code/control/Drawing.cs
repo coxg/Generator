@@ -637,9 +637,9 @@ namespace Generator
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
-                    PrimitiveType.TriangleList, Globals.Zone.TileManager.Vertices, 0, 
-                    Globals.Zone.TileManager.Vertices.Length / 3);
+                GameControl.graphics.GraphicsDevice.DrawIndexedPrimitives(
+                    PrimitiveType.TriangleList, 0, 0, Globals.Zone.TileManager.Vertices.Length, 
+                    0, Globals.Zone.TileManager.Indices.Length);
             }
         }
 
