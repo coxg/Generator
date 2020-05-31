@@ -340,7 +340,7 @@ namespace Generator
                                 new code.abilities.PlaceObject(),
                                 new code.abilities.Attack()
                             })
-                    }); ;
+                    });
 
                     return new Zone("testingZone", 500, 500, gameObjects, 
                         new TileManager(500, 500, Globals.DefaultTileSheet));

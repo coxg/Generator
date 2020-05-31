@@ -18,6 +18,7 @@ namespace Generator
         // For drawing... stuff
         public static Camera camera;
         public static BasicEffect effect;
+        public static BasicEffect tileEffect;
         public static RenderTarget2D tileRenderTarget;
         public static RenderTarget2D shadowRenderTarget;
         public static RenderTarget2D objectRenderTarget;
@@ -98,6 +99,11 @@ namespace Generator
                 VertexColorEnabled = true,
                 Projection = Camera.Projection
             };
+            tileEffect = new BasicEffect(GraphicsDevice)
+            {
+                TextureEnabled = true,
+                Projection = Camera.Projection
+            };
 
             Globals.ContentManager = Content;
 
@@ -174,6 +180,7 @@ namespace Generator
         protected override void Draw(GameTime gameTime)
         {
             effect.View = camera.View;
+            tileEffect.View = camera.View;
 
             // Draw the tile layer
             GraphicsDevice.SetRenderTarget(tileRenderTarget);
@@ -289,6 +296,7 @@ namespace Generator
                 Timing.FrameTimes[(int)MathTools.Mod(Timing.NumDraws, Timing.FrameTimes.Length)] = DateTime.Now;
                 spriteBatch.Begin();
                 Drawing.DrawFPS(spriteBatch);
+                Drawing.DrawPlayerCoordinates(spriteBatch);
                 spriteBatch.End();
             }
 

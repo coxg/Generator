@@ -73,6 +73,18 @@ namespace Generator
                     Color.Yellow);
             }
         }
+        
+        public static void DrawPlayerCoordinates(SpriteBatch spriteBatch)
+            // Display player coordinates at top right
+        {
+            spriteBatch.DrawString(
+                Globals.Font,
+                String.Format("({0:F1}, {1:F1})", Globals.Player.Center.X, Globals.Player.Center.Y),
+                new Vector2(
+                    Globals.Resolution.X - 400,
+                    30),
+                Color.Yellow);
+        }
 
         public static void DrawLogs(SpriteBatch spriteBatch)
         {
@@ -632,14 +644,12 @@ namespace Generator
         // Draw all tiles for a Zone
         public static void DrawTiles()
         {
-            // TODO: Use buffers instead??? How does this work!
-            GameControl.effect.Texture = Globals.Zone.TileManager.TileSheet.Sprite;
-            foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
+            GameControl.tileEffect.Texture = Globals.Zone.TileManager.TileSheet.Sprite;  // No performance impact
+            foreach (var pass in GameControl.tileEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 GameControl.graphics.GraphicsDevice.DrawIndexedPrimitives(
-                    PrimitiveType.TriangleList, 0, 0, Globals.Zone.TileManager.Vertices.Length, 
-                    0, Globals.Zone.TileManager.Indices.Length);
+                    PrimitiveType.TriangleList, 0, 0, Globals.Zone.TileManager.Indices.Length / 3);
             }
         }
 

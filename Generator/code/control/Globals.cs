@@ -48,7 +48,7 @@ namespace Generator
         // TODO: Remove formatting before release - this roughly doubles the size of the save files
         // OR have some kind of dev/release flag, which would control thing (among other things)
         public static JsonSerializer Serializer = new JsonSerializer { Formatting = Formatting.Indented };
-        public static bool LightingEnabled = true;
+        public static bool LightingEnabled = false;
 
         // World management
         public static SavedString ZoneName = new SavedString("zoneName", "testingZone");

@@ -182,12 +182,12 @@ namespace Generator
                 // Camera controls
                 if (KeyBindings["down"].IsBeingPressed)
                 {
-                    GameControl.camera.Height += 10;
+                    GameControl.camera.Height *= 2;
                     Globals.Log(GameControl.camera.Height);
                 }
                 if (KeyBindings["up"].IsBeingPressed)
                 {
-                    GameControl.camera.Height -= 10;
+                    GameControl.camera.Height /= 2;
                     GameControl.camera.Height = Math.Max(GameControl.camera.Height, 5);
                     Globals.Log(GameControl.camera.Height);
                 }

@@ -37,7 +37,7 @@ namespace Generator
         }
 
         [JsonIgnore]
-        public VertexPositionColorTexture[] Vertices;
+        public VertexPositionTexture[] Vertices;
         
         [JsonIgnore]
         public int[] Indices;
@@ -59,22 +59,18 @@ namespace Generator
                     
             // Bottom left
             Vertices[vi].Position = new Vector3(x, y, 0);
-            Vertices[vi].Color = Color.White;
             Vertices[vi++].TextureCoordinate = textureCoordinates[0];
 
             // Top left
             Vertices[vi].Position = new Vector3(x, y + 1, 0);
-            Vertices[vi].Color = Color.White;
             Vertices[vi++].TextureCoordinate = textureCoordinates[1];
 
             // Bottom right
             Vertices[vi].Position = new Vector3(x + 1, y, 0);
-            Vertices[vi].Color = Color.White;
             Vertices[vi++].TextureCoordinate = textureCoordinates[2];
 
             // Top right
             Vertices[vi].Position = new Vector3(x + 1, y + 1, 0);
-            Vertices[vi].Color = Color.White;
             Vertices[vi].TextureCoordinate = textureCoordinates[3];
 
             // If we also need to update the layers around it then do that
@@ -246,10 +242,8 @@ namespace Generator
 
         public void PopulateAllVertices()
         {
-            Vertices = new VertexPositionColorTexture[4 * IdMap.Length];
+            Vertices = new VertexPositionTexture[4 * IdMap.Length];
             Indices = new int[6 * IdMap.Length];
-            GameControl.IndexBuffer = new IndexBuffer(
-                GameControl.graphics.GraphicsDevice, typeof(int), Indices.Length, BufferUsage.WriteOnly);
             for (var x = 0; x < Width; x++)
             {
                 for (var y = 0; y < Height; y++)
@@ -263,8 +257,10 @@ namespace Generator
 
         private void PopulateBuffers()
         {
+            GameControl.IndexBuffer = new IndexBuffer(
+                GameControl.graphics.GraphicsDevice, typeof(int), Indices.Length, BufferUsage.WriteOnly);
             GameControl.VertexBuffer = new VertexBuffer(GameControl.graphics.GraphicsDevice, 
-                typeof(VertexPositionColorTexture), Vertices.Length, BufferUsage.WriteOnly);
+                typeof(VertexPositionTexture), Vertices.Length, BufferUsage.WriteOnly);
             GameControl.graphics.GraphicsDevice.SetVertexBuffer(GameControl.VertexBuffer);
             GameControl.graphics.GraphicsDevice.Indices = GameControl.IndexBuffer;
         }
@@ -272,7 +268,7 @@ namespace Generator
         private void SetBuffers()
         {
             GameControl.IndexBuffer.SetData(Indices);
-            GameControl.VertexBuffer.SetData<VertexPositionColorTexture>(Vertices);
+            GameControl.VertexBuffer.SetData(Vertices);
         }
         
         public TileManager(int width, int height, TileSheet tileSheet)
