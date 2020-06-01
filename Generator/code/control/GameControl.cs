@@ -112,8 +112,9 @@ namespace Generator
                 "Tiles/tiles",
                 new List<Tile>
                 {
-                    new Tile("clay", 7, true, 1),
-                    new Tile("grass", 5, false, 0)
+                    // Can avoid passing this in if I stop using a bunch of empty space in my
+                    new Tile("clay", 7,  1, 0, 11),
+                    new Tile("grass", 5,  0, 16)
                 });
             Globals.Zone = Zone.Load(Globals.ZoneName.Value);
             Saving.PopulateSaveKeywords();

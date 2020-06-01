@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using System;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Generator
 {
@@ -9,20 +10,73 @@ namespace Generator
         public Tile(
             string name,
             int numBaseTiles,
-            bool hasCorners,
-            float layer
+            float layer,
+            int firstBaseId,
+            int? firstEdgeId=null
         )
         {
             Name = name;
             NumBaseTiles = numBaseTiles;
-            HasCorners = hasCorners;
             Layer = layer;
+            FirstBaseId = firstBaseId;
+            FirstEdgeId = firstEdgeId;
         }
 
         // Attributes
         public string Name;
         public int NumBaseTiles;
-        public bool HasCorners;
         public float Layer;  // Order to draw them - higher is drawn on top of lower
+        public int FirstBaseId;
+        public int? FirstEdgeId;  // If null then it has no corners
+
+        public int GetRandomBaseId()
+        {
+            return FirstBaseId + MathTools.RandInt(NumBaseTiles);
+        }
+
+        public int GetCornerEdgeId()
+        {
+            if (FirstEdgeId == null)
+            {
+                throw new ArgumentException(Name + " does not have edges defined!");
+            }
+            return (int)FirstEdgeId;
+        }
+        
+        public int GetLEdgeId()
+        {
+            if (FirstEdgeId == null)
+            {
+                throw new ArgumentException(Name + " does not have edges defined!");
+            }
+            return (int)FirstEdgeId + 1;
+        }
+        
+        public int GetOEdgeId()
+        {
+            if (FirstEdgeId == null)
+            {
+                throw new ArgumentException(Name + " does not have edges defined!");
+            }
+            return (int)FirstEdgeId + 2;
+        }
+        
+        public int GetSideEdgeId()
+        {
+            if (FirstEdgeId == null)
+            {
+                throw new ArgumentException(Name + " does not have edges defined!");
+            }
+            return (int)FirstEdgeId + 3;
+        }
+        
+        public int GetUEdgeId()
+        {
+            if (FirstEdgeId == null)
+            {
+                throw new ArgumentException(Name + " does not have edges defined!");
+            }
+            return (int)FirstEdgeId + 4;
+        }
     }
 }

@@ -15,9 +15,9 @@ namespace Generator
             SpriteName = spriteName;
             Sprite = Globals.ContentManager.Load<Texture2D>(SpriteName);
             TileSize = tileSize;
-            Tiles = tiles;
             Height = Sprite.Height / TileSize;
             Width = Sprite.Width / TileSize;
+            Tiles = tiles;
         }
         
         public string SpriteName;
@@ -28,11 +28,6 @@ namespace Generator
         
         [Newtonsoft.Json.JsonIgnore]
         public Texture2D Sprite;
-
-        public int GetRandomBaseTileId(int row=0)
-        {
-            return row * Width + MathTools.RandInt(Tiles[row].NumBaseTiles);
-        }
 
         public Tile TileFromId(int id)
         {

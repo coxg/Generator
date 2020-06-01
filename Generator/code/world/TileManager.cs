@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,7 +17,7 @@ namespace Generator
 
         public Tile Get(int x, int y)
         {
-            if (x < 0 || y < 0)
+            if (x < 0 || y < 0 || x >= Width || y >= Height)
             {
                 return null;
             }
@@ -24,16 +25,13 @@ namespace Generator
             return TileSheet.TileFromId(id);
         }
 
-        public void Set(int x, int y, int tileId, bool setBuffers=true)
+        public void Set(int x, int y, int tileId)
         // setBuffers is expensive - if an ability needs to call Set a bunch of times then only the last call should
         // do the setBuffers call
         {
             IdMap[x, y] = tileId;
-            UpdateVertices(x, y, updateSurroundingTiles: true);
-            if (setBuffers)
-            {
-                SetBuffers();
-            }
+            UpdateVertices(x, y);
+            SetBuffers();
         }
 
         [JsonIgnore]
@@ -42,12 +40,38 @@ namespace Generator
         [JsonIgnore]
         public int[] Indices;
 
-        private void UpdateVertices(int x, int y, string orientation = "Bottom", int? startIndex = null,
-            int? tileId = null, bool updateSurroundingTiles = false)
+        public void PopulateAllVertices()
+        {
+            var numBaseVertices = 4 * IdMap.Length;
+            var numBaseIndices = 6 * IdMap.Length;
+            Vertices = new VertexPositionTexture[numBaseVertices];
+            Indices = new int[numBaseIndices];
+            var edgeVertices = new List<VertexPositionTexture>();
+            var edgeIndices = new List<int>();
+            
+            for (var x = 0; x < Width; x++)
+            {
+                for (var y = 0; y < Height; y++)
+                {
+                    UpdateVertices(x, y);
+                    AppendAllEdgeVertices(x, y, edgeIndices, edgeVertices);
+                }
+            }
+            
+            Array.Resize(ref Vertices, numBaseVertices + edgeVertices.Count);
+            edgeVertices.CopyTo(Vertices, numBaseVertices);
+            Array.Resize(ref Indices, numBaseIndices + edgeIndices.Count);
+            edgeIndices.CopyTo(Indices, numBaseIndices);
+            
+            PopulateBuffers();
+            SetBuffers();
+        }
+
+        private void UpdateVertices(int x, int y, string orientation = "Bottom", int? tileId = null)
         {
             var textureCoordinates = TileSheet.TextureVerticesFromId(tileId ?? IdMap[x, y], orientation);
-            var vi = (startIndex ?? 4 * (x * Width + y));  // vertex index
-            var ii = (startIndex ?? 6 * (x * Width + y));  // index index
+            var vi = 4 * (x * Width + y);  // vertex index
+            var ii = 6 * (x * Width + y);  // index index
             
             // Just do this first because it's less confusing
             Indices[ii++] = vi;
@@ -72,23 +96,29 @@ namespace Generator
             // Top right
             Vertices[vi].Position = new Vector3(x + 1, y + 1, 0);
             Vertices[vi].TextureCoordinate = textureCoordinates[3];
+        }
 
-            // If we also need to update the layers around it then do that
-            if (updateSurroundingTiles)
-            {
-                UpdateVertices(x, y - 1);
-                UpdateVertices(x, y + 1);
-                UpdateVertices(x - 1, y);
-                UpdateVertices(x + 1, y);
-                UpdateVertices(x - 1, y - 1);
-                UpdateVertices(x - 1, y + 1);
-                UpdateVertices(x + 1, y - 1);
-                UpdateVertices(x + 1, y + 1);
-            }
+        private void AppendEdgeVertices(int tileId, int x, int y, List<int> indices, 
+            List<VertexPositionTexture> vertices, string orientation)
+        {
+            var textureCoordinates = TileSheet.TextureVerticesFromId(tileId, orientation);
+            
+            // Just do this first because it's less confusing
+            indices.Add(Vertices.Length + vertices.Count);
+            indices.Add(Vertices.Length + vertices.Count + 1);
+            indices.Add(Vertices.Length + vertices.Count + 2);
+            indices.Add(Vertices.Length + vertices.Count + 1);
+            indices.Add(Vertices.Length + vertices.Count + 3);
+            indices.Add(Vertices.Length + vertices.Count + 2);
+                    
+            // Bottom left
+            vertices.Add(new VertexPositionTexture(new Vector3(x, y, 0), textureCoordinates[0]));
+            vertices.Add(new VertexPositionTexture(new Vector3(x, y + 1, 0), textureCoordinates[1]));
+            vertices.Add(new VertexPositionTexture(new Vector3(x + 1, y, 0), textureCoordinates[2]));
+            vertices.Add(new VertexPositionTexture(new Vector3(x + 1, y + 1, 0), textureCoordinates[3]));
         }
         
-        // TODO
-        /*public void DrawTile(int x, int y)
+        private void AppendAllEdgeVertices(int x, int y, List<int> indices, List<VertexPositionTexture> vertices)
         {
             var tile = Get(x, y);
 
@@ -106,153 +136,139 @@ namespace Generator
             };
 
             // Figure out which unique tiles surround the current tile
-            var uniqueSurroundingTileMap = new Dictionary<string, HashSet<string>>();
+            var uniqueSurroundingTileMap = new Dictionary<Tile, HashSet<string>>();
             foreach (var surroundingTile in surroundingTileMap)
             {
-                if (BaseTileIndices[surroundingTile.Value.BaseTileName] > BaseTileIndices[tile.BaseTileName])
+                if (surroundingTile.Value != null)
                 {
-                    if (!uniqueSurroundingTileMap.ContainsKey(surroundingTile.Value.BaseTileName))
+                    if (surroundingTile.Value.Layer > tile.Layer)
                     {
-                        uniqueSurroundingTileMap.Add(surroundingTile.Value.BaseTileName, new HashSet<string>());
+                        if (!uniqueSurroundingTileMap.ContainsKey(surroundingTile.Value))
+                        {
+                            uniqueSurroundingTileMap.Add(surroundingTile.Value, new HashSet<string>());
+                        }
+                        uniqueSurroundingTileMap[surroundingTile.Value].Add(surroundingTile.Key);
                     }
-                    uniqueSurroundingTileMap[surroundingTile.Value.BaseTileName].Add(surroundingTile.Key);
                 }
             }
 
             // Loop through each unique tile from smallest to largest index, applying all layers for each
-            foreach (var uniqueSurroundingTile in uniqueSurroundingTileMap.OrderBy(uniqueSurroundingTile => uniqueSurroundingTile.Key))
+            foreach (var surroundingTile in uniqueSurroundingTileMap.OrderBy(uniqueSurroundingTile => uniqueSurroundingTile.Key))
             {
-                var tileName = uniqueSurroundingTile.Key;
-
                 // If we are being drawn over the tiles on all sides
-                if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Bottom")
-                    && uniqueSurroundingTile.Value.Contains("Left") && uniqueSurroundingTile.Value.Contains("Right"))
-                    DrawTileLayer(tileName + " O", bottomLeft);
+                if (surroundingTile.Value.Contains("Top") && surroundingTile.Value.Contains("Bottom")
+                    && surroundingTile.Value.Contains("Left") && surroundingTile.Value.Contains("Right"))
+                    AppendEdgeVertices(surroundingTile.Key.GetOEdgeId(), x, y, indices, vertices, "Bottom");
 
                 else
                 {
                     // If we are being drawn over by the bottom three sides
-                    if (uniqueSurroundingTile.Value.Contains("Bottom") && uniqueSurroundingTile.Value.Contains("Left")
-                        && uniqueSurroundingTile.Value.Contains("Right"))
-                        DrawTileLayer(tileName + " U", bottomLeft, "Bottom");
+                    if (surroundingTile.Value.Contains("Bottom") && surroundingTile.Value.Contains("Left")
+                        && surroundingTile.Value.Contains("Right"))
+                        AppendEdgeVertices(surroundingTile.Key.GetUEdgeId(), x, y, indices, vertices, "Bottom");
 
                     // If we are being drawn over by the left three sides
-                    else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Bottom")
-                        && uniqueSurroundingTile.Value.Contains("Left"))
-                        DrawTileLayer(tileName + " U", bottomLeft, "Left");
+                    else if (surroundingTile.Value.Contains("Top") && surroundingTile.Value.Contains("Bottom")
+                        && surroundingTile.Value.Contains("Left"))
+                        AppendEdgeVertices(surroundingTile.Key.GetUEdgeId(), x, y, indices, vertices, "Left");
 
                     // If we are being drawn over by the top three sides
-                    else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Left")
-                        && uniqueSurroundingTile.Value.Contains("Right"))
-                        DrawTileLayer(tileName + " U", bottomLeft, "Top");
+                    else if (surroundingTile.Value.Contains("Top") && surroundingTile.Value.Contains("Left")
+                        && surroundingTile.Value.Contains("Right"))
+                        AppendEdgeVertices(surroundingTile.Key.GetUEdgeId(), x, y, indices, vertices, "Top");
 
                     // If we are being drawn over by the bottom right sides
-                    else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Bottom")
-                        && uniqueSurroundingTile.Value.Contains("Right"))
-                        DrawTileLayer(tileName + " U", bottomLeft, "Right");
+                    else if (surroundingTile.Value.Contains("Top") && surroundingTile.Value.Contains("Bottom")
+                        && surroundingTile.Value.Contains("Right"))
+                        AppendEdgeVertices(surroundingTile.Key.GetUEdgeId(), x, y, indices, vertices, "Right");
 
                     else
                     {
                         // If we are being drawn over the bottom and the left
-                        if (uniqueSurroundingTile.Value.Contains("Bottom") && uniqueSurroundingTile.Value.Contains("Left"))
+                        if (surroundingTile.Value.Contains("Bottom") && surroundingTile.Value.Contains("Left"))
                         {
-                            DrawTileLayer(tileName + " L", bottomLeft, "Bottom");
+                            AppendEdgeVertices(surroundingTile.Key.GetLEdgeId(), x, y, indices, vertices, "Bottom");
 
                             // If we are being drawn over the tile on the top right
-                            if (uniqueSurroundingTile.Value.Contains("Top Right") && !uniqueSurroundingTile.Value.Contains("Top")
-                                && !uniqueSurroundingTile.Value.Contains("Right"))
-                                DrawTileLayer(tileName + " corner", bottomLeft, "Top");
+                            if (surroundingTile.Value.Contains("Top Right") && !surroundingTile.Value.Contains("Top")
+                                && !surroundingTile.Value.Contains("Right"))
+                                AppendEdgeVertices(surroundingTile.Key.GetCornerEdgeId(), x, y, indices, vertices, "Top");
                         }
 
                         // If we are being drawn over the top and the left
-                        else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Left"))
+                        else if (surroundingTile.Value.Contains("Top") && surroundingTile.Value.Contains("Left"))
                         {
-                            DrawTileLayer(tileName + " L", bottomLeft, "Left");
+                            AppendEdgeVertices(surroundingTile.Key.GetLEdgeId(), x, y, indices, vertices, "Left");
 
                             // If we are being drawn over the tile on the bottom right
-                            if (uniqueSurroundingTile.Value.Contains("Bottom Right") && !uniqueSurroundingTile.Value.Contains("Bottom")
-                                && !uniqueSurroundingTile.Value.Contains("Right"))
-                                DrawTileLayer(tileName + " corner", bottomLeft, "Right");
+                            if (surroundingTile.Value.Contains("Bottom Right") && !surroundingTile.Value.Contains("Bottom")
+                                && !surroundingTile.Value.Contains("Right"))
+                                AppendEdgeVertices(surroundingTile.Key.GetCornerEdgeId(), x, y, indices, vertices, "Right");
                         }
 
                         // If we are being drawn over the top and the right
-                        else if (uniqueSurroundingTile.Value.Contains("Top") && uniqueSurroundingTile.Value.Contains("Right"))
+                        else if (surroundingTile.Value.Contains("Top") && surroundingTile.Value.Contains("Right"))
                         {
-                            DrawTileLayer(tileName + " L", bottomLeft, "Top");
+                            AppendEdgeVertices(surroundingTile.Key.GetLEdgeId(), x, y, indices, vertices, "Top");
 
                             // If we are being drawn over the tile on the bottom left
-                            if (uniqueSurroundingTile.Value.Contains("Bottom Left") && !uniqueSurroundingTile.Value.Contains("Bottom")
-                                && !uniqueSurroundingTile.Value.Contains("Left"))
-                                DrawTileLayer(tileName + " corner", bottomLeft, "Bottom");
+                            if (surroundingTile.Value.Contains("Bottom Left") && !surroundingTile.Value.Contains("Bottom")
+                                && !surroundingTile.Value.Contains("Left"))
+                                AppendEdgeVertices(surroundingTile.Key.GetCornerEdgeId(), x, y, indices, vertices, "Bottom");
                         }
 
                         // If we are being drawn over the bottom and the right
-                        else if (uniqueSurroundingTile.Value.Contains("Bottom") && uniqueSurroundingTile.Value.Contains("Right"))
+                        else if (surroundingTile.Value.Contains("Bottom") && surroundingTile.Value.Contains("Right"))
                         {
-                            DrawTileLayer(tileName + " L", bottomLeft, "Right");
+                            AppendEdgeVertices(surroundingTile.Key.GetLEdgeId(), x, y, indices, vertices, "Right");
 
                             // If we are being drawn over the tile on the top left
-                            if (uniqueSurroundingTile.Value.Contains("Top Left") && !uniqueSurroundingTile.Value.Contains("Top")
-                                && !uniqueSurroundingTile.Value.Contains("Left"))
-                                DrawTileLayer(tileName + " corner", bottomLeft, "Left");
+                            if (surroundingTile.Value.Contains("Top Left") && !surroundingTile.Value.Contains("Top")
+                                && !surroundingTile.Value.Contains("Left"))
+                                AppendEdgeVertices(surroundingTile.Key.GetCornerEdgeId(), x, y, indices, vertices, "Left");
                         }
 
                         else
                         {
                             // If we are being drawn over the tile on the right
-                            if (uniqueSurroundingTile.Value.Contains("Right"))
-                                DrawTileLayer(tileName + " side", bottomLeft, "Right");
+                            if (surroundingTile.Value.Contains("Right"))
+                                AppendEdgeVertices(surroundingTile.Key.GetSideEdgeId(), x, y, indices, vertices, "Right");
 
                             // If we are being drawn over the tile on the left
-                            if (uniqueSurroundingTile.Value.Contains("Left"))
-                                DrawTileLayer(tileName + " side", bottomLeft, "Left");
+                            if (surroundingTile.Value.Contains("Left"))
+                                AppendEdgeVertices(surroundingTile.Key.GetSideEdgeId(), x, y, indices, vertices, "Left");
 
                             // If we are being drawn over the tile on the bottom
-                            if (uniqueSurroundingTile.Value.Contains("Bottom"))
-                                DrawTileLayer(tileName + " side", bottomLeft, "Bottom");
+                            if (surroundingTile.Value.Contains("Bottom"))
+                                AppendEdgeVertices(surroundingTile.Key.GetSideEdgeId(), x, y, indices, vertices, "Bottom");
 
                             // If we are being drawn over the tile on the top
-                            if (uniqueSurroundingTile.Value.Contains("Top"))
-                                DrawTileLayer(tileName + " side", bottomLeft, "Top");
+                            if (surroundingTile.Value.Contains("Top"))
+                                AppendEdgeVertices(surroundingTile.Key.GetSideEdgeId(), x, y, indices, vertices, "Top");
 
                             // If we are being drawn over the tile on the top right
-                            if (uniqueSurroundingTile.Value.Contains("Top Right") && !uniqueSurroundingTile.Value.Contains("Top")
-                                && !uniqueSurroundingTile.Value.Contains("Right"))
-                                DrawTileLayer(tileName + " corner", bottomLeft, "Top");
+                            if (surroundingTile.Value.Contains("Top Right") && !surroundingTile.Value.Contains("Top")
+                                && !surroundingTile.Value.Contains("Right"))
+                                AppendEdgeVertices(surroundingTile.Key.GetCornerEdgeId(), x, y, indices, vertices, "Top");
 
                             // If we are being drawn over the tile on the top left
-                            if (uniqueSurroundingTile.Value.Contains("Top Left") && !uniqueSurroundingTile.Value.Contains("Top")
-                                && !uniqueSurroundingTile.Value.Contains("Left"))
-                                DrawTileLayer(tileName + " corner", bottomLeft, "Left");
+                            if (surroundingTile.Value.Contains("Top Left") && !surroundingTile.Value.Contains("Top")
+                                && !surroundingTile.Value.Contains("Left"))
+                                AppendEdgeVertices(surroundingTile.Key.GetCornerEdgeId(), x, y, indices, vertices, "Left");
 
                             // If we are being drawn over the tile on the bottom right
-                            if (uniqueSurroundingTile.Value.Contains("Bottom Right") && !uniqueSurroundingTile.Value.Contains("Bottom")
-                                && !uniqueSurroundingTile.Value.Contains("Right"))
-                                DrawTileLayer(tileName + " corner", bottomLeft, "Right");
+                            if (surroundingTile.Value.Contains("Bottom Right") && !surroundingTile.Value.Contains("Bottom")
+                                && !surroundingTile.Value.Contains("Right"))
+                                AppendEdgeVertices(surroundingTile.Key.GetCornerEdgeId(), x, y, indices, vertices, "Right");
 
                             // If we are being drawn over the tile on the bottom left
-                            if (uniqueSurroundingTile.Value.Contains("Bottom Left") && !uniqueSurroundingTile.Value.Contains("Bottom")
-                                && !uniqueSurroundingTile.Value.Contains("Left"))
-                                DrawTileLayer(tileName + " corner", bottomLeft, "Bottom");
+                            if (surroundingTile.Value.Contains("Bottom Left") && !surroundingTile.Value.Contains("Bottom")
+                                && !surroundingTile.Value.Contains("Left"))
+                                AppendEdgeVertices(surroundingTile.Key.GetCornerEdgeId(), x, y, indices, vertices, "Bottom");
                         }
                     }
                 }
             }
-        }*/
-
-        public void PopulateAllVertices()
-        {
-            Vertices = new VertexPositionTexture[4 * IdMap.Length];
-            Indices = new int[6 * IdMap.Length];
-            for (var x = 0; x < Width; x++)
-            {
-                for (var y = 0; y < Height; y++)
-                {
-                    UpdateVertices(x, y);
-                }
-            }
-            PopulateBuffers();
-            SetBuffers();
         }
 
         private void PopulateBuffers()
@@ -283,7 +299,7 @@ namespace Generator
             {
                 for (var y = 0; y < Height; y++)
                 {
-                    IdMap[x, y] = TileSheet.GetRandomBaseTileId();
+                    IdMap[x, y] = TileSheet.Tiles[0].GetRandomBaseId();
                 }
             }
 
