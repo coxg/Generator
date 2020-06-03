@@ -73,7 +73,6 @@ namespace Generator
                 // Set the new zone
                 zone = value;
                 ZoneName.Value = value.Name;
-                GameControl.lightingRenderTargets = new Dictionary<GameObject, RenderTarget2D>();
 
                 // Add the party to the new zone
                 foreach (var partyMember in partyMembers)
@@ -86,7 +85,6 @@ namespace Generator
         {
             Zone.GameObjects.Objects = new Dictionary<string, GameObject>();
             zone = Zone.Load(ZoneName.Value);
-            GameControl.lightingRenderTargets = new Dictionary<GameObject, RenderTarget2D>();
         }
         public static IEnumerable<GameObject> Objects
         {

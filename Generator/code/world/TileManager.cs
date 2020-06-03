@@ -30,8 +30,6 @@ namespace Generator
         // do the setBuffers call
         {
             IdMap[x, y] = tileId;
-            UpdateVertices(x, y);
-            SetBuffers();
         }
 
         [JsonIgnore]

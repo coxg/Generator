@@ -30,7 +30,6 @@ namespace Generator
             string componentSpriteFileName = "Ninja",
             string spriteFile = null,
             Dictionary<string, Component> components = null,
-            bool castsShadow = true,
 
             // Actions
             bool isWalking = false,
@@ -83,7 +82,6 @@ namespace Generator
             Components = components ?? GenerateDefaultComponentDict();
             LinkComponents();
             SpriteFile = spriteFile;
-            CastsShadow = castsShadow;
 
             // Actions
             IsWalking = isWalking;

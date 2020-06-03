@@ -13,7 +13,6 @@ namespace Generator
         public Vector3 AnimationOffset;
         public Vector3 RotationOffset;
         public Vector3 RotationPoint;
-        public bool CastsShadow;
         public Vector3 Size;
         public abstract Texture2D Sprite { get; set; }
         public abstract float Direction { get; set; }

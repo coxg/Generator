@@ -22,7 +22,7 @@ namespace Generator
         public static RenderTarget2D tileRenderTarget;
         public static RenderTarget2D shadowRenderTarget;
         public static RenderTarget2D objectRenderTarget;
-        public static Dictionary<GameObject, RenderTarget2D> lightingRenderTargets = new Dictionary<GameObject, RenderTarget2D>();
+        public static RenderTarget2D lightingRenderTarget;
         public static BlendState lightingBlendState;
         public static BlendState lightingLayerBlendState;
         // TODO: Add setters to Resolution to change this during runtime
@@ -80,6 +80,13 @@ namespace Generator
                 GraphicsDevice.PresentationParameters.BackBufferFormat,
                 DepthFormat.Depth24);
             objectRenderTarget = new RenderTarget2D(
+                GraphicsDevice,
+                GraphicsDevice.PresentationParameters.BackBufferWidth,
+                GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+            lightingRenderTarget = new RenderTarget2D(
                 GraphicsDevice,
                 GraphicsDevice.PresentationParameters.BackBufferWidth,
                 GraphicsDevice.PresentationParameters.BackBufferHeight,
@@ -186,35 +193,25 @@ namespace Generator
             // Draw the tile layer
             GraphicsDevice.SetRenderTarget(tileRenderTarget);
             GraphicsDevice.Clear(Color.Transparent);
-            spriteBatch.Begin();
             Drawing.DrawTiles();
-            spriteBatch.End();
 
             // Draw the GameObjects
             GraphicsDevice.SetRenderTarget(objectRenderTarget);
             GraphicsDevice.Clear(Color.Transparent);
             spriteBatch.Begin(blendState: BlendState.AlphaBlend);
-            foreach (var gameObject in Globals.Objects.OrderBy(i => -i.Position.Y))
-            {
-                // Draw components for the object
-                foreach (var component in gameObject.Components.OrderBy(i => -i.Value.Position.Y))
-                {
-                    Drawing.DrawComponent(
-                        component.Value,
-                        gameObject.Size * component.Value.Size);
-                }
-            }
+            Drawing.DrawGameObjects();
             spriteBatch.End();
 
             // Pre-compute the lighting layer
             if (Globals.LightingEnabled)
             {
-                GraphicsDevice.SetRenderTarget(shadowRenderTarget);
-                GraphicsDevice.Clear(Color.Black);
+                GraphicsDevice.SetRenderTarget(lightingRenderTarget);
+                GraphicsDevice.Clear(Color.Transparent);
                 Drawing.ComputeLighting();
 
                 // Draw the lighting layer to the shadow layer
                 GraphicsDevice.SetRenderTarget(shadowRenderTarget);
+                GraphicsDevice.Clear(Color.Black);
                 spriteBatch.Begin(blendState: lightingBlendState);
                 GraphicsDevice.Clear(Color.Black);
                 Drawing.DrawLighting();
@@ -228,6 +225,11 @@ namespace Generator
             spriteBatch.Draw(tileRenderTarget, screenSize, Color.White);
             spriteBatch.End();
 
+            // Draw the object layer
+            spriteBatch.Begin();
+            spriteBatch.Draw(objectRenderTarget, screenSize, Color.White);
+            spriteBatch.End();
+
             // Draw the shadows
             if (Globals.LightingEnabled)
             {
@@ -235,11 +237,6 @@ namespace Generator
                 spriteBatch.Draw(shadowRenderTarget, screenSize, Color.White);
                 spriteBatch.End();
             }
-
-            // Draw the object layer
-            spriteBatch.Begin();
-            spriteBatch.Draw(objectRenderTarget, screenSize, Color.White);
-            spriteBatch.End();
 
             // Draw the UI layer
             if (Globals.CurrentConversation != null)

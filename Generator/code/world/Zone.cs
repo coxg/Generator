@@ -308,7 +308,6 @@ namespace Generator
                             baseSpeed: 10,
                             baseSense: 10,
                             baseDefense: 100,
-                            castsShadow: false,
                             brightness: new Vector3(2, 2, 2),
                             activationEffect: new Cached<Action<GameObject, GameObject>>("SetZoneBuildings"),
                             components: new Dictionary<string, Component>()
@@ -357,7 +356,6 @@ namespace Generator
                             baseSpeed: 10,
                             baseSense: 10,
                             baseDefense: 100,
-                            castsShadow: false,
                             brightness: new Vector3(2, 2, 2),
                             activationEffect: new Cached<Action<GameObject, GameObject>>("SetZoneTestingZone"),
                             components: new Dictionary<string, Component>()

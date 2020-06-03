@@ -9,7 +9,7 @@ namespace Generator.code.abilities
         public Shoot() : base(
             "Shoot",
             electricityCost: 0,
-            cooldown: .1f,
+            cooldown: .01f,
             keepCasting: true) { }
 
         public override void Start()
@@ -27,7 +27,6 @@ namespace Generator.code.abilities
                 collisionEffect: new Cached<Action<GameObject, GameObject>>("BulletCollision"),
                 collision: false,
                 brightness: new Vector3(.5f, .1f, .5f),
-                castsShadow: false,
                 temporary: true,
                 components: new Dictionary<string, Component>()
                 {

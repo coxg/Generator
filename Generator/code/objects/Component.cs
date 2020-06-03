@@ -17,7 +17,6 @@ namespace Generator
             Vector3? relativeRotation = null,
             string spriteFile = null,
             bool directional = false,
-            bool castsShadow = true,
             GameObject sourceObject = null,
             float yOffset = 0,
             Dictionary<String, Animation> animations = null
@@ -42,7 +41,6 @@ namespace Generator
             YOffset = yOffset;
             Animations = animations ?? new Dictionary<String, Animation>();
             if (spriteFile != null) SpriteFile = spriteFile;
-            CastsShadow = castsShadow;
 
         }
 

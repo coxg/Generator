@@ -8,38 +8,6 @@ namespace Generator
 {
     public static class Drawing
     {
-
-        public static Vector3 GetBrightness(float x, float y)
-        {
-
-            var brightness = new Vector3(.02f, .02f, .02f);
-
-            // TODO: Rather than looping through all objects for each tile, 
-            // create a mapping layer for brightness which gets computed on each
-            // update.
-            foreach (var gameObject in Globals.Objects)
-            {
-                var objectDistance = Math.Sqrt(
-                    Math.Pow(gameObject.Center.X - x, 2) + Math.Pow(gameObject.Center.Y - y, 2));
-
-                // Make sure we're not being blocked by a gameObject
-                if (objectDistance < gameObject.Brightness.Length() * 2 * MathHelper.Pi
-                    && gameObject.CanSee(new Vector3(x, y, 0)))
-                {
-                    var flutteryBrightness = .01f * (float)Math.Cos(Timing.GameClock / 10) * gameObject.Brightness;
-                    brightness += flutteryBrightness + gameObject.Brightness * (float)
-                        Math.Pow(Math.Cos(.25 / gameObject.Brightness.Length() * objectDistance), 2);
-                }
-            }
-
-            // Smooth lighting, multiple lighting effects can stack together
-            brightness = new Vector3(
-                (float)Math.Sqrt(brightness.X),
-                (float)Math.Sqrt(brightness.Y),
-                (float)Math.Sqrt(brightness.Z));
-            return brightness;
-        }
-
         public static void DrawSprite(SpriteBatch spriteBatch, Texture2D texture, Vector2 bottomLeft, Vector2 topRight, 
                 Rectangle? textureCoordinates=null)
         // Draw a single sprite
@@ -559,12 +527,24 @@ namespace Generator
 
             return vertices;
         }
+        
+        public static void DrawShadows()
+        // Unused but leaving in for future reference
+        {
+            foreach (var gameObject in Globals.Objects.OrderBy(i => -i.Position.Y))
+            {
+                // Draw components for the object
+                foreach (var component in gameObject.Components.OrderBy(i => -i.Value.Position.Y))
+                {
+                    DrawComponentShadow(component.Value, gameObject.Size * component.Value.Size, MathHelper.PiOver4);
+                }
+            }
+        }
 
         public static void DrawComponentShadow(
                 Component component,
                 Vector3 size,
-                float direction,
-                GameObject lightSource)
+                float direction)
         // This should be used to draw shadows for character components.
         // TODO: Use the lightSource's position to calculate shadow size/fade/blur/whatever
         {
@@ -596,6 +576,18 @@ namespace Generator
             }
         }
 
+        public static void DrawGameObjects()
+        {
+            foreach (var gameObject in Globals.Objects.OrderBy(i => -i.Position.Y))
+            {
+                // Draw components for the object
+                foreach (var component in gameObject.Components.OrderBy(i => -i.Value.Position.Y))
+                {
+                    DrawComponent(component.Value, gameObject.Size * component.Value.Size);
+                }
+            }
+        }
+
         public static void DrawComponent(
                 Component component,
                 Vector3 size)
@@ -611,13 +603,6 @@ namespace Generator
             // Generate shadow gradients by calculating brightness at each vertex
             Color leftBrightness = Color.White;
             Color rightBrightness = Color.White;
-            if (Globals.LightingEnabled && component.CastsShadow)
-            {
-                leftBrightness = new Color(GetBrightness(
-                    component.SourceObject.Center.X - .5f, component.SourceObject.Position.Y - .5f));
-                rightBrightness = new Color(GetBrightness(
-                    component.SourceObject.Center.X + .5f, component.SourceObject.Position.Y - .5f));
-            }
             vertices[0].Color = leftBrightness;
             vertices[1].Color = leftBrightness;
             vertices[2].Color = rightBrightness;
@@ -701,56 +686,16 @@ namespace Generator
                 var brightness = 25 * lightSource.Brightness.Length();
                 if (brightness != 0)
                 {
-                    // Give it a unique renderTarget
-                    if (!GameControl.lightingRenderTargets.ContainsKey(lightSource))
-                    {
-                        GameControl.lightingRenderTargets[lightSource] = new RenderTarget2D(
-                            Globals.GraphicsDevice,
-                            Globals.GraphicsDevice.PresentationParameters.BackBufferWidth,
-                            Globals.GraphicsDevice.PresentationParameters.BackBufferHeight,
-                            false,
-                            Globals.GraphicsDevice.PresentationParameters.BackBufferFormat,
-                            DepthFormat.Depth24);
-                    }
-                    Globals.GraphicsDevice.SetRenderTarget(GameControl.lightingRenderTargets[lightSource]);
-                    Globals.GraphicsDevice.Clear(Color.Transparent);
-
                     // Draw the light
-                    DrawLightSource(lightSource.Center, brightness, Color.White);
-
-                    // Draw the shadows
-                    foreach (var Object in Globals.Objects.Where(i => i.CastsShadow))
-                    {
-                        if (Object != lightSource)
-                        {
-                            var lightAngle = (float)MathTools.Angle(Object.Center, lightSource.Center);
-                            var originalDirection = Object.Direction;
-                            Object.Direction = MathTools.Mod(-Object.Direction + lightAngle + MathHelper.PiOver2, MathHelper.TwoPi);
-                            foreach (var component in Object.Components.Values.OrderBy(i => -i.Position.Y).Where(i => i.CastsShadow))
-                            {
-                                DrawComponentShadow(
-                                    component,
-                                    Object.Size * component.Size,
-                                    lightAngle,
-                                    lightSource);
-                            }
-                            Object.Direction = originalDirection;
-                        }
-                    }
+                    DrawLightSource(lightSource.Center, brightness, new Color(lightSource.Brightness));
                 }
             }
         }
 
         public static void DrawLighting()
         {
-            foreach (var lightingRenderTarget in GameControl.lightingRenderTargets)
-            {
-                if (Globals.Zone.GameObjects.Objects.ContainsKey(lightingRenderTarget.Key.ID))
-                {
-                    GameControl.spriteBatch.Draw(
-                        lightingRenderTarget.Value, GameControl.screenSize, new Color(lightingRenderTarget.Key.Brightness));
-                }
-            }
+            GameControl.spriteBatch.Draw(
+                GameControl.lightingRenderTarget, GameControl.screenSize, Color.White);
         }
 
         public static VertexPositionColorTexture[] GetVertices(string side, Color color)
