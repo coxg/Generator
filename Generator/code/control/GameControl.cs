@@ -23,7 +23,6 @@ namespace Generator
         public static RenderTarget2D shadowRenderTarget;
         public static RenderTarget2D objectRenderTarget;
         public static RenderTarget2D lightingRenderTarget;
-        public static BlendState lightingBlendState;
         public static BlendState lightingLayerBlendState;
         // TODO: Add setters to Resolution to change this during runtime
         public static Rectangle screenSize = new Rectangle(0, 0, (int)Globals.Resolution.X, (int)Globals.Resolution.Y);
@@ -93,7 +92,6 @@ namespace Generator
                 false,
                 GraphicsDevice.PresentationParameters.BackBufferFormat,
                 DepthFormat.Depth24);
-            lightingBlendState = new BlendState { ColorDestinationBlend = Blend.InverseDestinationColor };
             lightingLayerBlendState = new BlendState { ColorSourceBlend = Blend.DestinationColor };
 
             // Create a new SpriteBatch, which can be used to draw textures.
@@ -198,7 +196,7 @@ namespace Generator
             // Draw the GameObjects
             GraphicsDevice.SetRenderTarget(objectRenderTarget);
             GraphicsDevice.Clear(Color.Transparent);
-            spriteBatch.Begin(blendState: BlendState.AlphaBlend);
+            spriteBatch.Begin();
             Drawing.DrawGameObjects();
             spriteBatch.End();
 
@@ -212,7 +210,7 @@ namespace Generator
                 // Draw the lighting layer to the shadow layer
                 GraphicsDevice.SetRenderTarget(shadowRenderTarget);
                 GraphicsDevice.Clear(Color.Black);
-                spriteBatch.Begin(blendState: lightingBlendState);
+                spriteBatch.Begin();
                 GraphicsDevice.Clear(Color.Black);
                 Drawing.DrawLighting();
                 spriteBatch.End();
