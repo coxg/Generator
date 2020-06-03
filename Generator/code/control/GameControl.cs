@@ -19,11 +19,8 @@ namespace Generator
         public static Camera camera;
         public static BasicEffect effect;
         public static BasicEffect tileEffect;
-        public static RenderTarget2D tileRenderTarget;
-        public static RenderTarget2D shadowRenderTarget;
-        public static RenderTarget2D objectRenderTarget;
         public static RenderTarget2D lightingRenderTarget;
-        public static BlendState lightingLayerBlendState;
+        public static BlendState lightingBlendState;
         // TODO: Add setters to Resolution to change this during runtime
         public static Rectangle screenSize = new Rectangle(0, 0, (int)Globals.Resolution.X, (int)Globals.Resolution.Y);
         public static SpriteBatch spriteBatch;
@@ -64,27 +61,6 @@ namespace Generator
             Globals.GraphicsDevice = GraphicsDevice;
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            tileRenderTarget = new RenderTarget2D(
-                GraphicsDevice,
-                GraphicsDevice.PresentationParameters.BackBufferWidth,
-                GraphicsDevice.PresentationParameters.BackBufferHeight,
-                false,
-                GraphicsDevice.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
-            shadowRenderTarget = new RenderTarget2D(
-                GraphicsDevice,
-                GraphicsDevice.PresentationParameters.BackBufferWidth,
-                GraphicsDevice.PresentationParameters.BackBufferHeight,
-                false,
-                GraphicsDevice.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
-            objectRenderTarget = new RenderTarget2D(
-                GraphicsDevice,
-                GraphicsDevice.PresentationParameters.BackBufferWidth,
-                GraphicsDevice.PresentationParameters.BackBufferHeight,
-                false,
-                GraphicsDevice.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
             lightingRenderTarget = new RenderTarget2D(
                 GraphicsDevice,
                 GraphicsDevice.PresentationParameters.BackBufferWidth,
@@ -92,7 +68,7 @@ namespace Generator
                 false,
                 GraphicsDevice.PresentationParameters.BackBufferFormat,
                 DepthFormat.Depth24);
-            lightingLayerBlendState = new BlendState { ColorSourceBlend = Blend.DestinationColor };
+            lightingBlendState = new BlendState { ColorSourceBlend = Blend.DestinationColor };
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -188,51 +164,24 @@ namespace Generator
             effect.View = camera.View;
             tileEffect.View = camera.View;
 
-            // Draw the tile layer
-            GraphicsDevice.SetRenderTarget(tileRenderTarget);
-            GraphicsDevice.Clear(Color.Transparent);
-            Drawing.DrawTiles();
-
-            // Draw the GameObjects
-            GraphicsDevice.SetRenderTarget(objectRenderTarget);
-            GraphicsDevice.Clear(Color.Transparent);
-            spriteBatch.Begin();
-            Drawing.DrawGameObjects();
-            spriteBatch.End();
-
             // Pre-compute the lighting layer
             if (Globals.LightingEnabled)
             {
                 GraphicsDevice.SetRenderTarget(lightingRenderTarget);
-                GraphicsDevice.Clear(Color.Transparent);
-                Drawing.ComputeLighting();
-
-                // Draw the lighting layer to the shadow layer
-                GraphicsDevice.SetRenderTarget(shadowRenderTarget);
-                GraphicsDevice.Clear(Color.Black);
-                spriteBatch.Begin();
                 GraphicsDevice.Clear(Color.Black);
                 Drawing.DrawLighting();
-                spriteBatch.End();
             }
 
-            // Draw the tile layer
+            // Draw all game elements
             GraphicsDevice.SetRenderTarget(null);
-            GraphicsDevice.Clear(Color.AliceBlue);
-            spriteBatch.Begin();
-            spriteBatch.Draw(tileRenderTarget, screenSize, Color.White);
-            spriteBatch.End();
+            Drawing.DrawTiles();
+            Drawing.DrawGameObjects();
 
-            // Draw the object layer
-            spriteBatch.Begin();
-            spriteBatch.Draw(objectRenderTarget, screenSize, Color.White);
-            spriteBatch.End();
-
-            // Draw the shadows
+            // Draw the lighting on top of the other layers
             if (Globals.LightingEnabled)
             {
-                spriteBatch.Begin(blendState: lightingLayerBlendState);
-                spriteBatch.Draw(shadowRenderTarget, screenSize, Color.White);
+                spriteBatch.Begin(blendState: lightingBlendState);
+                spriteBatch.Draw(lightingRenderTarget, screenSize, Color.White);
                 spriteBatch.End();
             }
 

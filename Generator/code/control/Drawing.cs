@@ -678,7 +678,7 @@ namespace Generator
             }
         }
 
-        public static void ComputeLighting()
+        public static void DrawLighting()
         {
                         // Draw the light effects from each object into their own renderTargets
             foreach (var lightSource in Globals.Objects.OrderBy(i => -i.Position.Y))
@@ -690,12 +690,6 @@ namespace Generator
                     DrawLightSource(lightSource.Center, brightness, new Color(lightSource.Brightness));
                 }
             }
-        }
-
-        public static void DrawLighting()
-        {
-            GameControl.spriteBatch.Draw(
-                GameControl.lightingRenderTarget, GameControl.screenSize, Color.White);
         }
 
         public static VertexPositionColorTexture[] GetVertices(string side, Color color)
