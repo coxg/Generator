@@ -461,78 +461,84 @@ namespace Generator
             Vector3 size, 
             Vector3 normalizationDirection, 
             Vector3 normalizationOffset,
-            VertexPositionColorTexture[] vertices,
-            int componentIndex)
+            List<VertexPositionColorTexture> vertices)
         {
-            var vertexIndex = componentIndex * 6;
-            vertices[vertexIndex].TextureCoordinate = new Vector2(0, 1); // Bottom left
-            vertices[vertexIndex + 1].TextureCoordinate = new Vector2(0, 0); // Top left
-            vertices[vertexIndex + 2].TextureCoordinate = new Vector2(1, 1); // Bottom right
-            vertices[vertexIndex + 3].TextureCoordinate = vertices[vertexIndex + 1].TextureCoordinate;
-            vertices[vertexIndex + 4].TextureCoordinate = new Vector2(1, 0); // Top right
-            vertices[vertexIndex + 5].TextureCoordinate = vertices[vertexIndex + 2].TextureCoordinate;
+            var bottomLeft = new VertexPositionColorTexture();
+            var topLeft = new VertexPositionColorTexture();
+            var bottomRight = new VertexPositionColorTexture();
+            var topRight = new VertexPositionColorTexture();
             
-            var bottomLeft = component.Position;
-            var rotationPoint = bottomLeft + component.RotationPoint * component.SourceObject.Size;
+            bottomLeft.TextureCoordinate = new Vector2(0, 1);
+            topLeft.TextureCoordinate = new Vector2(0, 0);
+            bottomRight.TextureCoordinate = new Vector2(1, 1);
+            topRight.TextureCoordinate = new Vector2(1, 0);
+            
+            var componentPosition = component.Position;
+            var rotationPoint = componentPosition + component.RotationPoint * component.SourceObject.Size;
             var rotationOffsets = MathTools.PointRotatedAroundPoint(
                 component.RelativeRotation + component.RotationOffset,
                 Vector3.Zero,
                 new Vector3(0, 0, component.Direction - MathHelper.PiOver2));
 
             // Bottom left
-            vertices[vertexIndex + 0].Position = MathTools.PointRotatedAroundPoint(
-                bottomLeft,
+            bottomLeft.Position = MathTools.PointRotatedAroundPoint(
+                componentPosition,
                 rotationPoint,
                 rotationOffsets);
-            vertices[vertexIndex + 0].Position = MathTools.PointRotatedAroundPoint(
-                vertices[vertexIndex + 0].Position,
+            bottomLeft.Position = MathTools.PointRotatedAroundPoint(
+                bottomLeft.Position,
                 component.SourceObject.Center,
                 normalizationDirection);
-            vertices[vertexIndex + 0].Position += normalizationOffset;
+            bottomLeft.Position += normalizationOffset;
 
             // Top left
-            vertices[vertexIndex + 1].Position = MathTools.PointRotatedAroundPoint(
+            topLeft.Position = MathTools.PointRotatedAroundPoint(
                 new Vector3(
-                    bottomLeft.X,
-                    bottomLeft.Y,
-                    bottomLeft.Z + size.Z),
+                    componentPosition.X,
+                    componentPosition.Y,
+                    componentPosition.Z + size.Z),
                 rotationPoint,
                 rotationOffsets);
-            vertices[vertexIndex + 1].Position = MathTools.PointRotatedAroundPoint(
-                vertices[vertexIndex + 1].Position,
+            topLeft.Position = MathTools.PointRotatedAroundPoint(
+                topLeft.Position,
                 component.SourceObject.Center,
                 normalizationDirection);
-            vertices[vertexIndex + 1].Position += normalizationOffset;
+            topLeft.Position += normalizationOffset;
 
             // Bottom right
-            vertices[vertexIndex + 2].Position = MathTools.PointRotatedAroundPoint(
+            bottomRight.Position = MathTools.PointRotatedAroundPoint(
                 new Vector3(
-                    bottomLeft.X + size.X,
-                    bottomLeft.Y,
-                    bottomLeft.Z),
+                    componentPosition.X + size.X,
+                    componentPosition.Y,
+                    componentPosition.Z),
                 rotationPoint,
                 rotationOffsets);
-            vertices[vertexIndex + 2].Position = MathTools.PointRotatedAroundPoint(
-                vertices[vertexIndex + 2].Position,
+            bottomRight.Position = MathTools.PointRotatedAroundPoint(
+                bottomRight.Position,
                 component.SourceObject.Center,
                 normalizationDirection);
-            vertices[vertexIndex + 2].Position += normalizationOffset;
-            vertices[vertexIndex + 3].Position = vertices[vertexIndex + 1].Position;
+            bottomRight.Position += normalizationOffset;
 
             // Top right
-            vertices[vertexIndex + 4].Position = MathTools.PointRotatedAroundPoint(
+            topRight.Position = MathTools.PointRotatedAroundPoint(
                 new Vector3(
-                    bottomLeft.X + size.X,
-                    bottomLeft.Y,
-                    bottomLeft.Z + size.Z),
+                    componentPosition.X + size.X,
+                    componentPosition.Y,
+                    componentPosition.Z + size.Z),
                 rotationPoint,
                 rotationOffsets);
-            vertices[vertexIndex + 4].Position = MathTools.PointRotatedAroundPoint(
-                vertices[vertexIndex + 4].Position,
+            topRight.Position = MathTools.PointRotatedAroundPoint(
+                topRight.Position,
                 component.SourceObject.Center,
                 normalizationDirection);
-            vertices[vertexIndex + 4].Position += normalizationOffset;
-            vertices[vertexIndex + 5].Position = vertices[vertexIndex + 2].Position;
+            topRight.Position += normalizationOffset;
+
+            vertices.Add(bottomLeft);
+            vertices.Add(topLeft);
+            vertices.Add(bottomRight);
+            vertices.Add(topLeft);
+            vertices.Add(topRight);
+            vertices.Add(bottomRight);
         }
         
         public static void DrawShadows()
@@ -585,11 +591,12 @@ namespace Generator
 
         public static void DrawGameObjects()
         {
-            var vertices = GameObjectManager.Vertices;
-            var componentIndex = 0;
+            var vertices = new List<VertexPositionColorTexture>();
             
             // Accumulate the vertices
-            foreach (var gameObject in Globals.Objects.OrderBy(i => -i.Position.Y))
+            foreach (var gameObject in Globals.Objects
+                .Where(x => x.Area.IntersectsWith(GameControl.camera.VisibleArea))
+                .OrderBy(i => -i.Position.Y))
             {
                 foreach (var component in gameObject.Components.OrderBy(i => -i.Value.Position.Y))
                 {
@@ -598,17 +605,16 @@ namespace Generator
                         gameObject.Size * component.Value.Size, 
                         new Vector3(-MathHelper.PiOver2, 0, 0), 
                         Vector3.Zero,
-                        vertices,
-                        componentIndex);
-                    componentIndex += 1;
+                        vertices);
                 }
             }
             
             // Null out position
-            for (var vertexIndex = 0; vertexIndex < vertices.Length; vertexIndex++)
+            var vertexArray = vertices.ToArray();
+            for (var vertexIndex = 0; vertexIndex < vertexArray.Length; vertexIndex++)
             {
-                vertices[vertexIndex].Position.Z = 0;
-                vertices[vertexIndex].Color = Color.White;
+                vertexArray[vertexIndex].Position.Z = 0;
+                vertexArray[vertexIndex].Color = Color.White;
             }
             
             // Draw them
@@ -617,7 +623,7 @@ namespace Generator
             {
                 pass.Apply();
                 GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
-                    PrimitiveType.TriangleList, vertices, 0, vertices.Length / 3);
+                    PrimitiveType.TriangleList, vertexArray, 0, vertexArray.Length / 3);
             }
         }
 

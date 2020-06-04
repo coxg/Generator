@@ -9,7 +9,7 @@ namespace Generator
     {
         public Dictionary<string, GameObject> Objects = new Dictionary<string, GameObject>();
         public static int ComponentCount;
-        public static VertexPositionColorTexture[] Vertices = new VertexPositionColorTexture[60000];
+        public static List<VertexPositionColorTexture> Vertices = new List<VertexPositionColorTexture>();
         
         public GameObjectManager(List<GameObject> objects)
         {
