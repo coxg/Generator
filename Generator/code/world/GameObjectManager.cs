@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 
@@ -9,19 +8,28 @@ namespace Generator
     public class GameObjectManager
     {
         public Dictionary<string, GameObject> Objects = new Dictionary<string, GameObject>();
+        public static int ComponentCount;
+        public static VertexPositionColorTexture[] Vertices = new VertexPositionColorTexture[60000];
         
         public GameObjectManager(List<GameObject> objects)
         {
+            ComponentCount = 0;
             foreach (var gameObject in objects)
             {
                 Objects[gameObject.ID] = gameObject;
+                ComponentCount += gameObject.Components.Count;
             }
         }
 
         [JsonConstructor]
-        public GameObjectManager(Dictionary<string, GameObject> objects)
+        public GameObjectManager(Dictionary<string, GameObject> objects, int componentCount)
         {
             Objects = objects;
+            ComponentCount = 0;
+            foreach (var gameObject in objects)
+            {
+                ComponentCount += gameObject.Value.Components.Count;
+            }
         }
 
         public void Save()

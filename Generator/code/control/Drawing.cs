@@ -456,13 +456,22 @@ namespace Generator
                 borderWidth: 1);
         }
 
-        public static VertexPositionColorTexture[] GetComponentVertices(
+        public static void AddComponentToVertices(
             Component component, 
             Vector3 size, 
             Vector3 normalizationDirection, 
-            Vector3 normalizationOffset)
+            Vector3 normalizationOffset,
+            VertexPositionColorTexture[] vertices,
+            int componentIndex)
         {
-            var vertices = commonVertices["Component"];
+            var vertexIndex = componentIndex * 6;
+            vertices[vertexIndex].TextureCoordinate = new Vector2(0, 1); // Bottom left
+            vertices[vertexIndex + 1].TextureCoordinate = new Vector2(0, 0); // Top left
+            vertices[vertexIndex + 2].TextureCoordinate = new Vector2(1, 1); // Bottom right
+            vertices[vertexIndex + 3].TextureCoordinate = vertices[vertexIndex + 1].TextureCoordinate;
+            vertices[vertexIndex + 4].TextureCoordinate = new Vector2(1, 0); // Top right
+            vertices[vertexIndex + 5].TextureCoordinate = vertices[vertexIndex + 2].TextureCoordinate;
+            
             var bottomLeft = component.Position;
             var rotationPoint = bottomLeft + component.RotationPoint * component.SourceObject.Size;
             var rotationOffsets = MathTools.PointRotatedAroundPoint(
@@ -471,61 +480,59 @@ namespace Generator
                 new Vector3(0, 0, component.Direction - MathHelper.PiOver2));
 
             // Bottom left
-            vertices[0].Position = MathTools.PointRotatedAroundPoint(
+            vertices[vertexIndex + 0].Position = MathTools.PointRotatedAroundPoint(
                 bottomLeft,
                 rotationPoint,
                 rotationOffsets);
-            vertices[0].Position = MathTools.PointRotatedAroundPoint(
-                vertices[0].Position,
+            vertices[vertexIndex + 0].Position = MathTools.PointRotatedAroundPoint(
+                vertices[vertexIndex + 0].Position,
                 component.SourceObject.Center,
                 normalizationDirection);
-            vertices[0].Position += normalizationOffset;
+            vertices[vertexIndex + 0].Position += normalizationOffset;
 
             // Top left
-            vertices[1].Position = MathTools.PointRotatedAroundPoint(
+            vertices[vertexIndex + 1].Position = MathTools.PointRotatedAroundPoint(
                 new Vector3(
                     bottomLeft.X,
                     bottomLeft.Y,
                     bottomLeft.Z + size.Z),
                 rotationPoint,
                 rotationOffsets);
-            vertices[1].Position = MathTools.PointRotatedAroundPoint(
-                vertices[1].Position,
+            vertices[vertexIndex + 1].Position = MathTools.PointRotatedAroundPoint(
+                vertices[vertexIndex + 1].Position,
                 component.SourceObject.Center,
                 normalizationDirection);
-            vertices[1].Position += normalizationOffset;
+            vertices[vertexIndex + 1].Position += normalizationOffset;
 
             // Bottom right
-            vertices[2].Position = MathTools.PointRotatedAroundPoint(
+            vertices[vertexIndex + 2].Position = MathTools.PointRotatedAroundPoint(
                 new Vector3(
                     bottomLeft.X + size.X,
                     bottomLeft.Y,
                     bottomLeft.Z),
                 rotationPoint,
                 rotationOffsets);
-            vertices[2].Position = MathTools.PointRotatedAroundPoint(
-                vertices[2].Position,
+            vertices[vertexIndex + 2].Position = MathTools.PointRotatedAroundPoint(
+                vertices[vertexIndex + 2].Position,
                 component.SourceObject.Center,
                 normalizationDirection);
-            vertices[2].Position += normalizationOffset;
-            vertices[3].Position = vertices[1].Position;
+            vertices[vertexIndex + 2].Position += normalizationOffset;
+            vertices[vertexIndex + 3].Position = vertices[vertexIndex + 1].Position;
 
             // Top right
-            vertices[4].Position = MathTools.PointRotatedAroundPoint(
+            vertices[vertexIndex + 4].Position = MathTools.PointRotatedAroundPoint(
                 new Vector3(
                     bottomLeft.X + size.X,
                     bottomLeft.Y,
                     bottomLeft.Z + size.Z),
                 rotationPoint,
                 rotationOffsets);
-            vertices[4].Position = MathTools.PointRotatedAroundPoint(
-                vertices[4].Position,
+            vertices[vertexIndex + 4].Position = MathTools.PointRotatedAroundPoint(
+                vertices[vertexIndex + 4].Position,
                 component.SourceObject.Center,
                 normalizationDirection);
-            vertices[4].Position += normalizationOffset;
-            vertices[5].Position = vertices[2].Position;
-
-            return vertices;
+            vertices[vertexIndex + 4].Position += normalizationOffset;
+            vertices[vertexIndex + 5].Position = vertices[vertexIndex + 2].Position;
         }
         
         public static void DrawShadows()
@@ -557,7 +564,7 @@ namespace Generator
                 -component.SourceObject.Size.X / 2,
                 -component.SourceObject.Size.Z / 2,
                 0);
-            var vertices = GetComponentVertices(component, size, normalizationDirection, normalizationOffset);
+            /*var vertices = GetComponentVertices(component, size, normalizationDirection, normalizationOffset);
 
             // Null out color and position
             for (var vertexIndex = 0; vertexIndex < 6; vertexIndex++)
@@ -573,59 +580,47 @@ namespace Generator
                 pass.Apply();
                 GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
                     PrimitiveType.TriangleList, vertices, 0, 2);
-            }
+            }*/
         }
 
         public static void DrawGameObjects()
         {
+            var vertices = GameObjectManager.Vertices;
+            var componentIndex = 0;
+            
+            // Accumulate the vertices
             foreach (var gameObject in Globals.Objects.OrderBy(i => -i.Position.Y))
             {
-                // Draw components for the object
                 foreach (var component in gameObject.Components.OrderBy(i => -i.Value.Position.Y))
                 {
-                    DrawComponent(component.Value, gameObject.Size * component.Value.Size);
+                    AddComponentToVertices(
+                        component.Value, 
+                        gameObject.Size * component.Value.Size, 
+                        new Vector3(-MathHelper.PiOver2, 0, 0), 
+                        Vector3.Zero,
+                        vertices,
+                        componentIndex);
+                    componentIndex += 1;
                 }
             }
-        }
-
-        public static void DrawComponent(
-                Component component,
-                Vector3 size)
-            // This should be used to draw characters.
-            // These should be able to move, rotate, etc.
-        {
-            var vertices = GetComponentVertices(
-                component, 
-                size, 
-                new Vector3(-MathHelper.PiOver2, 0, 0), 
-                Vector3.Zero);
-
-            // Generate shadow gradients by calculating brightness at each vertex
-            Color leftBrightness = Color.White;
-            Color rightBrightness = Color.White;
-            vertices[0].Color = leftBrightness;
-            vertices[1].Color = leftBrightness;
-            vertices[2].Color = rightBrightness;
-            vertices[3].Color = leftBrightness;
-            vertices[4].Color = rightBrightness;
-            vertices[5].Color = rightBrightness;
-
+            
             // Null out position
-            for (var vertexIndex = 0; vertexIndex < 6; vertexIndex++)
+            for (var vertexIndex = 0; vertexIndex < vertices.Length; vertexIndex++)
             {
                 vertices[vertexIndex].Position.Z = 0;
+                vertices[vertexIndex].Color = Color.White;
             }
-
-            // Draw it
-            GameControl.effect.Texture = component.Sprite;
+            
+            // Draw them
+            GameControl.effect.Texture = Globals.Player.Components["Hand/Left"].Sprite;
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
-                    PrimitiveType.TriangleList, vertices, 0, 2);
+                    PrimitiveType.TriangleList, vertices, 0, vertices.Length / 3);
             }
         }
-        
+
         // Draw all tiles for a Zone
         public static void DrawTiles()
         {
@@ -645,7 +640,14 @@ namespace Generator
                 Color color)
         {
             // Generate the vertices
-            var vertices = commonVertices["Bottom"];
+            var vertices = new VertexPositionColorTexture[6];
+
+            vertices[0].TextureCoordinate = new Vector2(0, 1); // Bottom left
+            vertices[1].TextureCoordinate = new Vector2(0, 0); // Top left
+            vertices[2].TextureCoordinate = new Vector2(1, 1); // Bottom right
+            vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
+            vertices[4].TextureCoordinate = new Vector2(1, 0); // Top right
+            vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
 
             // Bottom left
             var bottomLeft = position - Vector3.One * size / 2;
@@ -691,35 +693,6 @@ namespace Generator
                 }
             }
         }
-
-        public static VertexPositionColorTexture[] GetVertices(string side, Color color)
-        {
-            var vertices = new VertexPositionColorTexture[6];
-
-            vertices[0].TextureCoordinate = new Vector2(0, 1); // Bottom left
-            vertices[1].TextureCoordinate = new Vector2(0, 0); // Top left
-            vertices[2].TextureCoordinate = new Vector2(1, 1); // Bottom right
-            vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
-            vertices[4].TextureCoordinate = new Vector2(1, 0); // Top right
-            vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
-
-            // Set the colors to white - the shadows will lay over this
-            for (var i = 0; i < 6; i++)
-            {
-                vertices[i].Color = color;
-            }
-
-            return vertices;
-        }
-
-        public static Dictionary<string, VertexPositionColorTexture[]> commonVertices = new Dictionary<string, VertexPositionColorTexture[]>()
-        {
-            { "Bottom", GetVertices("Bottom", Color.White) },
-            { "Top", GetVertices("Top", Color.White) },
-            { "Left", GetVertices("Left", Color.White) },
-            { "Right", GetVertices("Right", Color.White) },
-            { "Component", GetVertices("Component", Color.White) },
-        };
 
         // Draws the creative mode UI, including tile previews
         public static void DrawCreativeUI(SpriteBatch spriteBatch)
