@@ -210,7 +210,7 @@ namespace Generator
             set
             {
                 // If it's outside the zone and we're temporary then kill yourself
-                if (value.X < 0 || value.Y < 0 || value.X > Globals.Zone.Width || value.Y > Globals.Zone.Height)
+                if (value.X < 0 || value.Y < 0 || value.X > Globals.Zone.Width || value.Y > Globals.Zone.Height || value.Z < 0)
                 {
                     if (Temporary)
                     {

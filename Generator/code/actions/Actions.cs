@@ -12,7 +12,7 @@ namespace Generator
         {
             {
                 "DefaultAI",
-                (GameObject self) =>
+                self =>
                 {
                     // The player is controlled directly
                     if (Globals.Player.ID == self.ID)
@@ -66,25 +66,33 @@ namespace Generator
             },
             {
                 "DoNothing",
-                (GameObject self) => { }
+                self => { }
             },
             {
                 "WalkToPlayer",
-                (GameObject self) =>
+                self =>
                 {
                     self.MovementTarget = Globals.Player.Position;
                 }
             },
             {
                 "WalkAwayFromPlayer",
-                (GameObject self) =>
+                self =>
                 {
                     self.MovementDirection = (float)MathTools.Angle(self.Position, Globals.Player.Position) + MathHelper.Pi;
                 }
             },
             {
                 "WalkInStraightLine",
-                (GameObject self) => { self.MovementDirection = self.Direction; }
+                self => { self.MovementDirection = self.Direction; }
+            },
+            {
+                "BulletAI",
+                self =>
+                {
+                    self.MovementDirection = self.Direction;
+                    self.Position = new Vector3(self.Position.X, self.Position.Y, self.Position.Z - .01f);
+                }
             }
         };
 

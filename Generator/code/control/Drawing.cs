@@ -642,7 +642,7 @@ namespace Generator
         }
 
         // Draws a light source
-        public static void AddLightSourceToVertices(
+        private static void AddLightSourceToVertices(
                 Vector3 position,
                 float size,
                 Color color,
