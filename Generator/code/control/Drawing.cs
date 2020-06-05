@@ -544,7 +544,9 @@ namespace Generator
         public static void DrawShadows()
         // Unused but leaving in for future reference
         {
-            foreach (var gameObject in Globals.Objects.OrderBy(i => -i.Position.Y))
+            foreach (var gameObject in Globals.Objects
+                .Where(x => x.Area.IntersectsWith(GameControl.camera.VisibleArea))
+                .OrderBy(i => -i.Position.Y))
             {
                 // Draw components for the object
                 foreach (var component in gameObject.Components.OrderBy(i => -i.Value.Position.Y))
@@ -640,63 +642,61 @@ namespace Generator
         }
 
         // Draws a light source
-        public static void DrawLightSource(
+        public static void AddLightSourceToVertices(
                 Vector3 position,
                 float size,
-                Color color)
+                Color color,
+                List<VertexPositionColorTexture> vertices)
         {
-            // Generate the vertices
-            var vertices = new VertexPositionColorTexture[6];
-
-            vertices[0].TextureCoordinate = new Vector2(0, 1); // Bottom left
-            vertices[1].TextureCoordinate = new Vector2(0, 0); // Top left
-            vertices[2].TextureCoordinate = new Vector2(1, 1); // Bottom right
-            vertices[3].TextureCoordinate = vertices[1].TextureCoordinate;
-            vertices[4].TextureCoordinate = new Vector2(1, 0); // Top right
-            vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
-
-            // Bottom left
-            var bottomLeft = position - Vector3.One * size / 2;
-            vertices[0].Position = new Vector3(bottomLeft.X, bottomLeft.Y, 0);
-
-            // Top left
-            vertices[1].Position = new Vector3(bottomLeft.X, bottomLeft.Y + size, 0);
-
-            // Bottom right
-            vertices[2].Position = new Vector3(bottomLeft.X + size, bottomLeft.Y, 0);
-            vertices[3].Position = vertices[1].Position;
-
-            // Top right
-            vertices[4].Position = new Vector3(bottomLeft.X + size, bottomLeft.Y + size, 0);
-            vertices[5].Position = vertices[2].Position;
-
-            // Set the colors to white - the shadows will lay over this
-            for (var i = 0; i < 6; i++)
-            {
-                vertices[i].Color = color;
-            }
-
-            // Draw it
-            GameControl.effect.Texture = Globals.LightTexture;
-            foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
-                    PrimitiveType.TriangleList, vertices, 0, 2);
-            }
+            var lightPosition = position - Vector3.One * size / 2;
+            var bottomLeft = new VertexPositionColorTexture(
+                new Vector3(lightPosition.X, lightPosition.Y, 0),
+                color,
+                new Vector2(0, 1));
+            var topLeft = new VertexPositionColorTexture(
+                new Vector3(lightPosition.X, lightPosition.Y + size, 0),
+                color,
+                new Vector2(0, 0));
+            var bottomRight = new VertexPositionColorTexture(
+                new Vector3(lightPosition.X + size, lightPosition.Y, 0),
+                color,
+                new Vector2(1, 1));
+            var topRight = new VertexPositionColorTexture(
+                new Vector3(lightPosition.X + size, lightPosition.Y + size, 0),
+                color,
+                new Vector2(1, 0));
+            
+            vertices.Add(bottomLeft);
+            vertices.Add(topLeft);
+            vertices.Add(bottomRight);
+            vertices.Add(topLeft);
+            vertices.Add(topRight);
+            vertices.Add(bottomRight);
         }
 
         public static void DrawLighting()
         {
-                        // Draw the light effects from each object into their own renderTargets
-            foreach (var lightSource in Globals.Objects.OrderBy(i => -i.Position.Y))
+            // Generate the vertices
+            // TODO: Make light sources objects, make their area equal to lighting area, do a .Where on VisibleArea
+            var vertices = new List<VertexPositionColorTexture>();
+            foreach (var lightSource in Globals.Objects)
             {
                 var brightness = 25 * lightSource.Brightness.Length();
                 if (brightness != 0)
                 {
                     // Draw the light
-                    DrawLightSource(lightSource.Center, brightness, new Color(lightSource.Brightness));
+                    AddLightSourceToVertices(lightSource.Center, brightness, new Color(lightSource.Brightness), vertices);
                 }
+            }
+            
+            // Draw it
+            var vertexArray = vertices.ToArray();
+            GameControl.effect.Texture = Globals.LightTexture;
+            foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
+                    PrimitiveType.TriangleList, vertexArray, 0, vertexArray.Length / 3);
             }
         }
 

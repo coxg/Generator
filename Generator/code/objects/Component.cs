@@ -41,7 +41,6 @@ namespace Generator
             YOffset = yOffset;
             Animations = animations ?? new Dictionary<String, Animation>();
             if (spriteFile != null) SpriteFile = spriteFile;
-            GameObjectManager.ComponentCount += 1;
         }
 
         public int CurrentFrame;

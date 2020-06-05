@@ -610,7 +610,6 @@ namespace Generator
             Globals.Zone.GameObjects.Objects.Remove(ID);
             Globals.Zone.Enemies.Remove(ID);
             if (Collision) Globals.Zone.CollisionMap.Remove(this);
-            GameObjectManager.ComponentCount--;
             Globals.Log(this + " has passed away. RIP.");
         }
 
