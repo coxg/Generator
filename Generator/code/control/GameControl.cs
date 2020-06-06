@@ -94,8 +94,13 @@ namespace Generator
                 new List<Tile>
                 {
                     // Can avoid passing this in if I stop using a bunch of empty space in my
-                    new Tile("clay", 7,  1, 0, 11),
-                    new Tile("grass", 5,  0, 16)
+                    new Tile("clay", 7,  0, 0, 11),
+                    new Tile("grass", 5,  1, 16, 27),
+                    new Tile("sand", 3,  2, 32, 43),
+                    new Tile("ice", 11,  4, 48, 59),
+                    new Tile("lava", 8,  3, 64, 75),
+                    new Tile("wall", 10,  100, 80),
+                    new Tile("snow", 3,  5, 96, 107),
                 });
             Saving.LoadAreaFromDisk(Globals.ZoneName.Value);
             Saving.PopulateSaveKeywords();

@@ -150,7 +150,9 @@ namespace Generator
             }
 
             // Loop through each unique tile from smallest to largest index, applying all layers for each
-            foreach (var surroundingTile in uniqueSurroundingTileMap.OrderBy(uniqueSurroundingTile => uniqueSurroundingTile.Key))
+            foreach (var surroundingTile in uniqueSurroundingTileMap
+                .Where(uniqueSurroundingTile => uniqueSurroundingTile.Key.FirstEdgeId != null)
+                .OrderBy(uniqueSurroundingTile => uniqueSurroundingTile.Key.Layer))
             {
                 // If we are being drawn over the tiles on all sides
                 if (surroundingTile.Value.Contains("Top") && surroundingTile.Value.Contains("Bottom")

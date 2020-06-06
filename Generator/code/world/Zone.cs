@@ -245,8 +245,7 @@ namespace Generator
                                     id: "building",
                                     relativePosition: new Vector3(.5f, .5f, .5f),
                                     relativeSize: .2f,
-                                    baseRotationPoint: new Vector3(.5f, .5f, .5f),
-                                    spriteFile: "Sprites/building")
+                                    baseRotationPoint: new Vector3(.5f, .5f, .5f))
                                 }
                             }),
 
