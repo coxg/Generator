@@ -269,7 +269,7 @@ namespace Generator
                                 new code.abilities.Attack()
                             })
                     });
-                    Globals.TileManager = new TileManager(Globals.DefaultTileSheet);
+                    Globals.TileManager = new TileManager(Globals.DefaultTileSheet, 1);
                     break;
 
                 case "buildings":

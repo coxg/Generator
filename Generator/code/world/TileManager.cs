@@ -12,6 +12,7 @@ namespace Generator
     {
         public int[,] IdMap;
         public TileSheet TileSheet;
+        public int BaseTileId;
 
         public Tile Get(int x, int y)
         {
@@ -283,9 +284,10 @@ namespace Generator
             GameControl.VertexBuffer.SetData(Vertices);
         }
         
-        public TileManager(TileSheet tileSheet)
+        public TileManager(TileSheet tileSheet, int baseTileId=0)
         {
             TileSheet = tileSheet;
+            BaseTileId = baseTileId;
             
             // Populate with random instances of the base tile
             IdMap = new int[Globals.Zone.Width, Globals.Zone.Height];
@@ -293,7 +295,7 @@ namespace Generator
             {
                 for (var y = 0; y < Globals.Zone.Height; y++)
                 {
-                    IdMap[x, y] = TileSheet.Tiles[0].GetRandomBaseId();
+                    IdMap[x, y] = TileSheet.Tiles[BaseTileId].GetRandomBaseId();
                 }
             }
 
@@ -301,9 +303,10 @@ namespace Generator
         }
 
         [JsonConstructor]
-        public TileManager(int[,] idMap, TileSheet tileSheet)
+        public TileManager(int[,] idMap, TileSheet tileSheet, int baseTileId)
         {
             TileSheet = tileSheet;
+            BaseTileId = baseTileId;
             IdMap = idMap;
             
             PopulateAllVertices();
