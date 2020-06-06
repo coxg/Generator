@@ -19,7 +19,7 @@ namespace Generator
         public static SavedInt PlayerPartyNumber = new SavedInt("playerPartyNumber", 0);
         public static GameObject Player
         {
-            get { return GameObjectManager.Objects[Party.Value.MemberIDs[PlayerPartyNumber.Value]]; }
+            get { return GameObjectManager.ObjectList[Party.Value.MemberIDs[PlayerPartyNumber.Value]]; }
             set { PlayerPartyNumber.Value = Party.Value.MemberIDs.IndexOf(value.ID); }
         }
 

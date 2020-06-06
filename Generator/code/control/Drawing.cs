@@ -544,7 +544,7 @@ namespace Generator
         public static void DrawShadows()
         // Unused but leaving in for future reference
         {
-            foreach (var gameObject in Globals.GameObjectManager.Objects.Values
+            foreach (var gameObject in Globals.GameObjectManager.ObjectList.Values
                 .Where(x => x.Area.IntersectsWith(GameControl.camera.VisibleArea))
                 .OrderBy(i => -i.Position.Y))
             {
@@ -596,7 +596,7 @@ namespace Generator
             var vertices = new List<VertexPositionColorTexture>();
             
             // Accumulate the vertices
-            foreach (var gameObject in Globals.GameObjectManager.Objects.Values
+            foreach (var gameObject in Globals.GameObjectManager.ObjectList.Values
                 .Where(x => x.Area.IntersectsWith(GameControl.camera.VisibleArea))
                 .OrderBy(i => -i.Position.Y))
             {
@@ -679,7 +679,7 @@ namespace Generator
             // Generate the vertices
             // TODO: Make light sources objects, make their area equal to lighting area, do a .Where on VisibleArea
             var vertices = new List<VertexPositionColorTexture>();
-            foreach (var lightSource in Globals.GameObjectManager.Objects.Values)
+            foreach (var lightSource in Globals.GameObjectManager.ObjectList.Values)
             {
                 var brightness = 25 * lightSource.Brightness.Length();
                 if (brightness != 0)

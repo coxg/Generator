@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Generator.code.world
 {
-    public class CollisionMap
+    public class ObjectMap
     {
-        public CollisionMap(int width, int height, IEnumerable<GameObject> objects)
+        public ObjectMap(int width, int height, IEnumerable<GameObject> objects)
         {
             Values = new HashSet<GameObject>[width, height];
             foreach (GameObject gameObject in objects)

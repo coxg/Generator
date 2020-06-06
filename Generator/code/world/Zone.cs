@@ -26,7 +26,7 @@ namespace Generator
             var partyMembers = new List<GameObject>();
             foreach (var memberId in (List<String>) Globals.Copy(Globals.Party.Value.MemberIDs))
             {
-                var partyMemeber = Globals.GameObjectManager.Objects[memberId];
+                var partyMemeber = Globals.GameObjectManager.ObjectList[memberId];
                 partyMembers.Add(partyMemeber);
                 Globals.GameObjectManager.Remove(partyMemeber);
             }
@@ -42,7 +42,7 @@ namespace Generator
             // Add the party to the new zone
             foreach (var partyMember in partyMembers)
             {
-                Globals.GameObjectManager.Objects[partyMember.ID] = partyMember;
+                Globals.GameObjectManager.ObjectList[partyMember.ID] = partyMember;
             }
         }
 

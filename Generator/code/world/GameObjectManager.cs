@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
+using Generator.code.world;
 
 namespace Generator
 {
     public class GameObjectManager
     {
-        public Dictionary<string, GameObject> Objects = new Dictionary<string, GameObject>();
+        public Dictionary<string, GameObject> ObjectList = new Dictionary<string, GameObject>();
         [JsonIgnore]
-        public code.world.CollisionMap CollisionMap;
+        public ObjectMap ObjectMap;
         public HashSet<string> Enemies = new HashSet<string>();
 
         public List<GameObject> EnemyObjects()
@@ -16,7 +18,7 @@ namespace Generator
             var enemyObjects = new List<GameObject>();
             foreach (string enemy in Enemies)
             {
-                enemyObjects.Add(Objects[enemy]);
+                enemyObjects.Add(ObjectList[enemy]);
             }
             return enemyObjects;
         }
@@ -25,24 +27,24 @@ namespace Generator
         {
             foreach (var gameObject in objects)
             {
-                Objects[gameObject.ID] = gameObject;
+                ObjectList[gameObject.ID] = gameObject;
             }
-            CollisionMap = new code.world.CollisionMap(Globals.Zone.Width, Globals.Zone.Height, Objects.Values);
+            ObjectMap = new ObjectMap(Globals.Zone.Width, Globals.Zone.Height, ObjectList.Values);
         }
 
         [JsonConstructor]
-        public GameObjectManager(Dictionary<string, GameObject> objects, HashSet<string> enemies)
+        public GameObjectManager(Dictionary<string, GameObject> objectList, HashSet<string> enemies)
         {
-            Objects = objects;
-            CollisionMap = new code.world.CollisionMap(Globals.Zone.Width, Globals.Zone.Height, Objects.Values);
+            ObjectList = objectList;
+            ObjectMap = new ObjectMap(Globals.Zone.Width, Globals.Zone.Height, ObjectList.Values);
             Enemies = enemies;
         }
         
         public void Remove(GameObject gameObject)
         {
-            Objects.Remove(gameObject.ID);
+            ObjectList.Remove(gameObject.ID);
             Enemies.Remove(gameObject.ID);
-            if (gameObject.Collision) CollisionMap.Remove(gameObject);
+            ObjectMap.Remove(gameObject);
         }
 
         public void Kill(GameObject gameObject)
@@ -60,7 +62,7 @@ namespace Generator
                 Globals.GameObjectManager = (GameObjectManager)Globals.Serializer.Deserialize(file, typeof(GameObjectManager));
 
                 // We're ignoring various source objects to avoid circular references, so add it back in when loading
-                foreach (var gameObject in Globals.GameObjectManager.Objects.Values)
+                foreach (var gameObject in Globals.GameObjectManager.ObjectList.Values)
                 {
                     if (gameObject.Conversation != null)
                     {

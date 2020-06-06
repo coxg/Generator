@@ -9,7 +9,7 @@ namespace Generator.code.abilities
         public Shoot() : base(
             "Shoot",
             electricityCost: 0,
-            cooldown: .01f,
+            cooldown: .02f,  // TODO: Can't fire faster than this
             keepCasting: true) { }
 
         public override void Start()
@@ -25,21 +25,20 @@ namespace Generator.code.abilities
                 baseSpeed: 1000,
                 ai: new Cached<Action<GameObject>>("BulletAI"),
                 collisionEffect: new Cached<Action<GameObject, GameObject>>("BulletCollision"),
-                collision: false,
                 brightness: new Vector3(.5f, .1f, .5f),
                 temporary: true,
                 components: new Dictionary<string, Component>()
                 {
-                            {"body", new Component(
-                                id: "Hand",
-                                spriteFile: "Ninja",
-                                relativePosition: new Vector3(.5f, .5f, .5f),
-                                relativeSize: 1,
-                                baseRotationPoint: new Vector3(.5f, .5f, .5f))
-                            }
+                    {"body", new Component(
+                        id: "Hand",
+                        spriteFile: "Ninja",
+                        relativePosition: new Vector3(.5f, .5f, .5f),
+                        relativeSize: 1,
+                        baseRotationPoint: new Vector3(.5f, .5f, .5f))
+                    }
                 }
             );
-            Globals.GameObjectManager.Objects[bullet.ID] = bullet;
+            Globals.GameObjectManager.ObjectList[bullet.ID] = bullet;
         }
 
         public override Dictionary<string, float> GetPriorityValues(

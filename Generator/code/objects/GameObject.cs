@@ -69,7 +69,6 @@ namespace Generator
             Cached<Action<GameObject, GameObject>> collisionEffect = null,
             bool temporary = false,
             Cached<Action<GameObject, GameObject>> activationEffect = null,
-            bool collision = true,
 
             // Equipment
             Armor armor = null,
@@ -96,7 +95,7 @@ namespace Generator
             // Primary Attributes
             Strength = new Attribute(baseStrength);
             Speed = new Attribute(baseSpeed);
-            Sense = new Attribute(baseSense);
+            Smarts = new Attribute(baseSense);
             Style = new Attribute(baseStyle);
             Defense = new Attribute(baseDefense);
 
@@ -128,7 +127,6 @@ namespace Generator
             AI = ai ?? new Cached<Action<GameObject>>("DefaultAI"); // Run on each Update - argument is this
             CollisionEffect = collisionEffect; // Run when attempting to move into another object - arguments are this, other
             Temporary = temporary; // If true, destroy this object as soon as it's no longer being updated
-            Collision = collision;
 
             // Grid logic
             Size = size ?? Vector3.One;
@@ -196,7 +194,6 @@ namespace Generator
         public bool IsSwinging;
         public bool IsShooting;
         public bool IsHurting;
-        public bool Collision = true;
 
         // Location
         override public float Direction { get; set; }
@@ -228,13 +225,14 @@ namespace Generator
                 var targetAtPosition = GetTargetInArea(targetPosition);
                 if (targetAtPosition == null)
                 {
-                    if (Collision) Globals.GameObjectManager?.CollisionMap.Remove(this);
+                    Globals.GameObjectManager?.ObjectMap.Remove(this);
                     base.Position = value;
                     Area = targetPosition;
-                    if (Collision) Globals.GameObjectManager?.CollisionMap.Add(this);
+                    Globals.GameObjectManager?.ObjectMap.Add(this);
                 }
 
                 // If not then we collide with the object and it collides with us
+                // TODO: In the current implementation this will trigger twice per update if both are moving
                 else
                 {
                     CollisionEffect?.Value(this, targetAtPosition);
@@ -251,7 +249,7 @@ namespace Generator
 
         // Primary attributes
         public Attribute Strength;
-        public Attribute Sense;
+        public Attribute Smarts;
         public Attribute Speed;
         public Attribute Style;  // Right???
 
@@ -329,20 +327,23 @@ namespace Generator
         // Equip some equipment!
         public void Equip(Equipment equipmentToEquip)
         {
-            Equipment equippedEquipment = null;
+            Equipment equippedEquipment;
             switch (equipmentToEquip.Slot)
             {
                 case "Armor":
                     equippedEquipment = _equippedArmor;
+                    _equippedArmor = (Armor)equipmentToEquip;
                     break;
                 case "Generator":
                     equippedEquipment = _equippedGenerator;
+                    _equippedGenerator = (GeneratorObj)equipmentToEquip;
                     break;
                 case "Accessory":
                     equippedEquipment = _equippedAccessory;
+                    _equippedAccessory = (Accessory)equipmentToEquip;
                     break;
                 default:
-                    break;
+                    throw new ArgumentException("Unknown equipment slot: " + equipmentToEquip.Slot);
             }
 
             // Resources
@@ -351,12 +352,10 @@ namespace Generator
 
             // Attributes
             Strength.Modifier += equipmentToEquip.Strength - equippedEquipment.Strength;
-            Sense.Modifier += equipmentToEquip.Sense - equippedEquipment.Sense;
+            Smarts.Modifier += equipmentToEquip.Sense - equippedEquipment.Sense;
             Speed.Modifier += equipmentToEquip.Speed - equippedEquipment.Speed;
             Style.Modifier += equipmentToEquip.Style - equippedEquipment.Style;
             Defense.Modifier += equipmentToEquip.Defense - equippedEquipment.Defense;
-
-            equippedEquipment = equipmentToEquip;
         }
 
         // Create the default ComponentDictionary
@@ -658,7 +657,7 @@ namespace Generator
         {
             // See if we would overlap with any other objects
             var target = GetTargetCoordinates(range, direction);
-            foreach (var gameObject in Globals.GameObjectManager.Objects.Values)
+            foreach (var gameObject in Globals.GameObjectManager.ObjectList.Values)
             {
                 if (gameObject != this)
                 {
@@ -682,7 +681,7 @@ namespace Generator
                 {
                     for (int y = (int)Math.Floor(targetArea.Top); y <= (int)Math.Ceiling(targetArea.Bottom); y++)
                     {
-                        foreach (var gameObject in Globals.GameObjectManager.CollisionMap.Get(x, y))
+                        foreach (var gameObject in Globals.GameObjectManager.ObjectMap.Get(x, y))
                         {
                             if (gameObject != this)
                             {

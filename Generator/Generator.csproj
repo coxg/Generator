@@ -123,7 +123,7 @@
     <Compile Include="code\control\Saving.cs" />
     <Compile Include="code\control\Saved.cs" />
     <Compile Include="code\world\Zone.cs" />
-    <Compile Include="code\world\CollisionMap.cs" />
+    <Compile Include="code\world\ObjectMap.cs" />
     <Compile Include="code\actions\Strategy.cs" />
     <Compile Include="code\objects\Ailment.cs" />
   </ItemGroup>

@@ -243,9 +243,9 @@ namespace Generator
                     var fullMessage = Text[MessageIndex];
                     var messageParts = fullMessage.Split(new string[] { ": " }, 2, StringSplitOptions.None);
                     var talkingObjectName = messageParts[0];
-                    if (Globals.GameObjectManager.Objects.ContainsKey(talkingObjectName))
+                    if (Globals.GameObjectManager.ObjectList.ContainsKey(talkingObjectName))
                     {
-                        return Globals.GameObjectManager.Objects[talkingObjectName];
+                        return Globals.GameObjectManager.ObjectList[talkingObjectName];
                     }
                     else
                     {
