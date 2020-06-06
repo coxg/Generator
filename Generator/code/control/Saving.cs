@@ -132,17 +132,56 @@ namespace Generator
             // Create save slot out of tmp directory
             CopyDirectory(TempSaveDirectory, CurrentSaveDirectory);
 
-            Globals.Zone.Save();
+            SaveAreaToDisk();
             SavedDicts.Save();
             Input.Save();
         }
 
-        public static void SaveToTmp()
+        public static void SaveAreaToDisk()
         {
-            CurrentSaveDirectory = BaseSaveDirectory + "tmp";
-            Globals.Log("Saving to " + CurrentSaveDirectory);
-
-            Globals.Zone.Save();
+            var saveDir = Saving.CurrentSaveDirectory + "/Zones/" + Globals.Zone.Name + "/";
+            Directory.CreateDirectory(saveDir);
+            using (StreamWriter file = File.CreateText(saveDir + "zone.json"))
+            {
+                Globals.Serializer.Serialize(file, Globals.Zone);
+            }
+            
+            using (StreamWriter file = File.CreateText(saveDir + "objects.json"))
+            {
+                Globals.Serializer.Serialize(file, Globals.GameObjectManager);
+            }
+            
+            using (StreamWriter file = File.CreateText(saveDir + "tiles.json"))
+            {
+                Globals.Serializer.Serialize(file, Globals.TileManager);
+            }
+        }
+        
+        public static void LoadAreaFromDisk(string name)
+        {
+            var saveDir = CurrentSaveDirectory + "/Zones/" + name + "/";
+            if (Directory.Exists(saveDir))
+            {
+                Globals.Log("Loading " + name);
+                using (StreamReader file = File.OpenText(saveDir + "zone.json"))
+                {
+                    Globals.Zone = (Zone)Globals.Serializer.Deserialize(file, typeof(Zone));
+                }
+                
+                Globals.Log("Loading GameObjects");
+                GameObjectManager.Load(saveDir + "objects.json");
+                
+                Globals.Log("Loading Tiles");
+                using (StreamReader file = File.OpenText(saveDir + "tiles.json"))
+                {
+                    Globals.TileManager = (TileManager)Globals.Serializer.Deserialize(file, typeof(TileManager));
+                }
+            }
+            else
+            {
+                Globals.Log(name + " not found; initializing.");
+                Zone.Initialize(name);
+            }
         }
 
         public static void Load(string saveType, int slot)
@@ -155,7 +194,7 @@ namespace Generator
                 // Load the game from the save file
                 SavedDicts.Load();
                 Input.Load();
-                Globals.LoadZone();
+                LoadAreaFromDisk(Globals.ZoneName.Value);
 
                 // Recreate the tmp directory based on the save we're loading
                 CopyDirectory(CurrentSaveDirectory, TempSaveDirectory);

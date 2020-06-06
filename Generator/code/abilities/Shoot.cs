@@ -39,7 +39,7 @@ namespace Generator.code.abilities
                             }
                 }
             );
-            Globals.Zone.GameObjects.Objects[bullet.ID] = bullet;
+            Globals.GameObjectManager.Objects[bullet.ID] = bullet;
         }
 
         public override Dictionary<string, float> GetPriorityValues(

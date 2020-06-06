@@ -21,14 +21,14 @@ namespace Generator
                     }
 
                     // Party members
-                    else if (Globals.Party.Value.MemberIDs.Contains(self.ID))
+                    if (Globals.Party.Value.MemberIDs.Contains(self.ID))
                     {
                         // During combat they fight your enemies
                         if (Globals.Party.Value.InCombat)
                         {
                             // TODO: Add projectiles
                             self.Strategies[self.StrategyName].Follow(
-                                self, Globals.Party.Value.GetMembers(), Globals.Zone.EnemyObjects(), new List<GameObject>());
+                                self, Globals.Party.Value.GetMembers(), Globals.GameObjectManager.EnemyObjects(), new List<GameObject>());
                         }
 
                         // Out of combat they follow you around
@@ -49,17 +49,11 @@ namespace Generator
                     else
                     {
                         // If they're fighting you
-                        if (Globals.Zone.Enemies.Contains(self.ID))
+                        if (Globals.GameObjectManager.Enemies.Contains(self.ID))
                         {
                             // TODO: Add projectiles
                             self.Strategies[self.StrategyName].Follow(
-                                self, Globals.Zone.EnemyObjects(), Globals.Party.Value.GetMembers(), new List<GameObject>());
-                        }
-
-                        // If they're not fighting you
-                        else
-                        {
-                            return;
+                                self, Globals.GameObjectManager.EnemyObjects(), Globals.Party.Value.GetMembers(), new List<GameObject>());
                         }
                     }
                 }
@@ -103,7 +97,7 @@ namespace Generator
         {
             {
                 "CreateBigBoy",
-                (GameObject self, GameObject other) =>
+                (self, other) =>
                 {
                     var _ = new GameObject(
                         new Vector3(60, 60, 0),
@@ -139,24 +133,20 @@ namespace Generator
             },
             {
                 "SetZoneBuildings",
-                (GameObject self, GameObject other) => {
-                    Globals.Zone = Zone.Load("buildings");
-                }
+                (self, other) => { Zone.Enter("buildings"); }
             },
             {
                 "SetZoneTestingZone",
-                (GameObject self, GameObject other) => {
-                    Globals.Zone = Zone.Load("testingZone");
-                }
+                (self, other) => { Zone.Enter("testingZone"); }
             },
             {
                 "BulletCollision",
-                (GameObject self, GameObject other) =>
+                (self, other) =>
                 {
                     self.DealDamage(other, 1);
                     other.Ailments.Add(
                         new code.objects.Poisoned("Bullet Poison", "bullet_poison", self, other, 3));
-                    self.Die();
+                    Globals.GameObjectManager.Kill(self);
                 }
             }
         };

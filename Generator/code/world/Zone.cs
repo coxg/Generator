@@ -2,130 +2,59 @@
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 
 namespace Generator
 {
     public class Zone
     {
-        public GameObjectManager GameObjects;
-        public TileManager TileManager;
         public string Name;
         public int Width;
         public int Height;
-        public HashSet<string> Enemies = new HashSet<string>();
-        [JsonIgnore]
-        public code.world.CollisionMap CollisionMap;
 
-        public List<GameObject> EnemyObjects()
-        {
-            var enemyObjects = new List<GameObject>();
-            foreach (string enemy in Enemies)
-            {
-                enemyObjects.Add(GameObjects.Objects[enemy]);
-            }
-            return enemyObjects;
-        }
-
-        public Zone(string name, int width, int height, GameObjectManager gameObjects, TileManager tileManager)
+        public Zone(string name, int width, int height)
         {
             Name = name;
-            GameObjects = gameObjects;
             Width = width;
             Height = height;
-            TileManager = tileManager;
-            CollisionMap = new code.world.CollisionMap(width, height, GameObjects.Objects.Values);
         }
 
-        [JsonConstructor]
-        public Zone(string name, int width, int height, GameObjectManager gameObjects, TileManager tileManager, HashSet<string> enemies)
+        public static void Enter(string name)
+        // Move to a new zone, taking the party objects with you
         {
-            Name = name;
-            GameObjects = gameObjects;
-            Width = width;
-            Height = height;
-            TileManager = tileManager;
-            Enemies = enemies;
-            CollisionMap = new code.world.CollisionMap(width, height, GameObjects.Objects.Values);
-        }
-
-        public void Save()
-        {
-            Directory.CreateDirectory(Saving.CurrentSaveDirectory + "/Zones/");
-            using (StreamWriter file = File.CreateText(Saving.CurrentSaveDirectory + "/Zones/" + Name + ".json"))
+            // Remove party from zone before serializing
+            var partyMembers = new List<GameObject>();
+            foreach (var memberId in (List<String>) Globals.Copy(Globals.Party.Value.MemberIDs))
             {
-                Globals.Serializer.Serialize(file, this);
+                var partyMemeber = Globals.GameObjectManager.Objects[memberId];
+                partyMembers.Add(partyMemeber);
+                Globals.GameObjectManager.Remove(partyMemeber);
+            }
+            
+            // Serialize
+            Saving.CurrentSaveDirectory = Saving.BaseSaveDirectory + "tmp";
+            Globals.Log("Saving to " + Saving.CurrentSaveDirectory);
+            Saving.SaveAreaToDisk();
+
+            // Set the new zone
+            Saving.LoadAreaFromDisk(name);
+
+            // Add the party to the new zone
+            foreach (var partyMember in partyMembers)
+            {
+                Globals.GameObjectManager.Objects[partyMember.ID] = partyMember;
             }
         }
 
-        public static Zone Load(string name)
-        {
-            var fileName = Saving.CurrentSaveDirectory + "/Zones/" + name + ".json";
-            if (File.Exists(fileName))
-            {
-                Globals.Log("Reading " + name + " from " + fileName);
-                using (StreamReader file = File.OpenText(fileName))
-                {
-                    var returnedZone = (Zone)Globals.Serializer.Deserialize(file, typeof(Zone));
-
-                    // We're ignoring various source objects to avoid circular references, so add it back in when loading
-                    foreach (var gameObject in returnedZone.GameObjects.Objects.Values)
-                    {
-                        Globals.Log("Loading " + gameObject.ID);
-                        if (gameObject.Conversation != null)
-                        {
-                            gameObject.Conversation.SourceObject = gameObject;
-                            foreach (var choices in gameObject.Conversation.ChoicesList)
-                            {
-                                choices.SourceConversation = gameObject.Conversation;
-                                foreach (var node in choices.Nodes)
-                                {
-                                    node.SourceChoices = choices;
-                                }
-                            }
-                        }
-                        foreach (var component in gameObject.Components.Values)
-                        {
-                            component.SourceObject = gameObject;
-                            foreach (var animation in component.Animations.Values)
-                            {
-                                animation.AnimatedElement = component;
-                                animation.SetSource(gameObject);
-                            }
-                        }
-                        var abilities = new List<Ability>();
-                        foreach (var ability in gameObject.Abilities)
-                        {
-                            var newAbility = Ability.GetTyped(ability);
-                            newAbility.SourceObject = gameObject;
-                            var animation = newAbility.Animation;
-                            if (animation != null)
-                            {
-                                animation.AnimatedElement = gameObject;
-                                animation.SetSource(gameObject);
-                            }
-                            abilities.Add(newAbility);
-                        }
-                        gameObject.Abilities = abilities;
-                    }
-                    return returnedZone;
-                }
-            }
-            else
-            {
-                Globals.Log(name + " not found; initializing.");
-                return Initialize(name);
-            }
-        }
-
-        public static Zone Initialize(string name)
+        public static void Initialize(string name)
+        // TODO: Something better than this!
         {
             switch (name)
             {
                 case "testingZone":
+                    Globals.Zone = new Zone("testingZone", 500, 500);
                     bool saidName = false;
-                    var gameObjects = new GameObjectManager(new List<GameObject>
+                    Globals.GameObjectManager = new GameObjectManager(new List<GameObject>
                     {
                         // niels
                         new GameObject(
@@ -203,7 +132,7 @@ namespace Generator
                                                 },
                                                 rewards: new Rewards(experience: 1),
                                                 effects: () => { saidName = false; },
-                                                conditional: () => { return saidName == true; }),
+                                                conditional: () => { return saidName; }),
                                             new Conversation.Choices.Node(
                                                 text: "niels: Let me OUT of here!!",
                                                 exitsConversation: true),
@@ -340,12 +269,12 @@ namespace Generator
                                 new code.abilities.Attack()
                             })
                     });
-
-                    return new Zone("testingZone", 500, 500, gameObjects, 
-                        new TileManager(500, 500, Globals.DefaultTileSheet));
+                    Globals.TileManager = new TileManager(Globals.DefaultTileSheet);
+                    break;
 
                 case "buildings":
-                    var buildingObjects = new GameObjectManager(new List<GameObject>
+                    Globals.Zone = new Zone("buildings", 100, 100);
+                    Globals.GameObjectManager = new GameObjectManager(new List<GameObject>
                     {
                         // building
                         new GameObject(
@@ -369,9 +298,8 @@ namespace Generator
                                 }
                             })
                     });
-
-                    return new Zone("buildings", 100, 100, buildingObjects, 
-                        new TileManager(100, 100, Globals.DefaultTileSheet));
+                    Globals.TileManager = new TileManager(Globals.DefaultTileSheet);
+                    break;
 
                 default:
                     throw new KeyNotFoundException(name);

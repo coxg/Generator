@@ -214,7 +214,7 @@ namespace Generator
                 {
                     if (Temporary)
                     {
-                        Die();
+                        Globals.GameObjectManager.Kill(this);
                     }
                     else
                     {
@@ -228,10 +228,10 @@ namespace Generator
                 var targetAtPosition = GetTargetInArea(targetPosition);
                 if (targetAtPosition == null)
                 {
-                    if (Collision) Globals.Zone?.CollisionMap.Remove(this);
+                    if (Collision) Globals.GameObjectManager?.CollisionMap.Remove(this);
                     base.Position = value;
                     Area = targetPosition;
-                    if (Collision) Globals.Zone?.CollisionMap.Add(this);
+                    if (Collision) Globals.GameObjectManager?.CollisionMap.Add(this);
                 }
 
                 // If not then we collide with the object and it collides with us
@@ -602,17 +602,6 @@ namespace Generator
             foreach (var ability in Abilities) ability.Update();
         }
 
-        // Plays death animation and despawns
-        // TODO: Don't remove, just set to dead and leave it on the ground
-        public void Die()
-        {
-            Globals.Party.Value.MemberIDs.Remove(ID);
-            Globals.Zone.GameObjects.Objects.Remove(ID);
-            Globals.Zone.Enemies.Remove(ID);
-            if (Collision) Globals.Zone.CollisionMap.Remove(this);
-            Globals.Log(this + " has passed away. RIP.");
-        }
-
         // Deal damage to a target
         public void DealDamage(GameObject target, int damage)
         {
@@ -638,7 +627,7 @@ namespace Generator
                 // Add this to the set of enemies
                 if (!Globals.Party.Value.MemberIDs.Contains(ID))
                 {
-                    Globals.Zone.Enemies.Add(ID);
+                    Globals.GameObjectManager.Enemies.Add(ID);
                 }
 
                 IsHurting = true;
@@ -648,7 +637,7 @@ namespace Generator
 
                 if (Health.Current <= 0)
                 {
-                    Die();
+                    Globals.GameObjectManager.Kill(this);
                 }
             }
         }
@@ -669,7 +658,7 @@ namespace Generator
         {
             // See if we would overlap with any other objects
             var target = GetTargetCoordinates(range, direction);
-            foreach (var gameObject in Globals.Zone.GameObjects.Objects.Values)
+            foreach (var gameObject in Globals.GameObjectManager.Objects.Values)
             {
                 if (gameObject != this)
                 {
@@ -693,7 +682,7 @@ namespace Generator
                 {
                     for (int y = (int)Math.Floor(targetArea.Top); y <= (int)Math.Ceiling(targetArea.Bottom); y++)
                     {
-                        foreach (var gameObject in Globals.Zone.CollisionMap.Get(x, y))
+                        foreach (var gameObject in Globals.GameObjectManager.CollisionMap.Get(x, y))
                         {
                             if (gameObject != this)
                             {

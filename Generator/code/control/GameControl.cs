@@ -97,7 +97,7 @@ namespace Generator
                     new Tile("clay", 7,  1, 0, 11),
                     new Tile("grass", 5,  0, 16)
                 });
-            Globals.Zone = Zone.Load(Globals.ZoneName.Value);
+            Saving.LoadAreaFromDisk(Globals.ZoneName.Value);
             Saving.PopulateSaveKeywords();
             Timing.AddEvent(300, Saving.Autosave);
 
@@ -146,7 +146,7 @@ namespace Generator
             Input.ProcessInput(Globals.Player);
 
             // Update the GameObjects
-            foreach (var gameObject in Globals.Objects.ToList())
+            foreach (var gameObject in Globals.GameObjectManager.Objects.Values.ToList())
                 gameObject.Update();
 
             // Keep the camera focused on the player
@@ -213,7 +213,7 @@ namespace Generator
                 spriteBatch.End();
 
                 // Show all text blurbs
-                foreach (var gameObject in Globals.Objects.OrderBy(i => -i.Position.Y))
+                foreach (var gameObject in Globals.GameObjectManager.Objects.Values.OrderBy(i => -i.Position.Y))
                 {
                     if (gameObject.IsSaying != null)
                     {

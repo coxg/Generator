@@ -544,7 +544,7 @@ namespace Generator
         public static void DrawShadows()
         // Unused but leaving in for future reference
         {
-            foreach (var gameObject in Globals.Objects
+            foreach (var gameObject in Globals.GameObjectManager.Objects.Values
                 .Where(x => x.Area.IntersectsWith(GameControl.camera.VisibleArea))
                 .OrderBy(i => -i.Position.Y))
             {
@@ -596,7 +596,7 @@ namespace Generator
             var vertices = new List<VertexPositionColorTexture>();
             
             // Accumulate the vertices
-            foreach (var gameObject in Globals.Objects
+            foreach (var gameObject in Globals.GameObjectManager.Objects.Values
                 .Where(x => x.Area.IntersectsWith(GameControl.camera.VisibleArea))
                 .OrderBy(i => -i.Position.Y))
             {
@@ -632,12 +632,12 @@ namespace Generator
         // Draw all tiles for a Zone
         public static void DrawTiles()
         {
-            GameControl.tileEffect.Texture = Globals.Zone.TileManager.TileSheet.Sprite;  // No performance impact
+            GameControl.tileEffect.Texture = Globals.TileManager.TileSheet.Sprite;  // No performance impact
             foreach (var pass in GameControl.tileEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 GameControl.graphics.GraphicsDevice.DrawIndexedPrimitives(
-                    PrimitiveType.TriangleList, 0, 0, Globals.Zone.TileManager.Indices.Length / 3);
+                    PrimitiveType.TriangleList, 0, 0, Globals.TileManager.Indices.Length / 3);
             }
         }
 
@@ -679,7 +679,7 @@ namespace Generator
             // Generate the vertices
             // TODO: Make light sources objects, make their area equal to lighting area, do a .Where on VisibleArea
             var vertices = new List<VertexPositionColorTexture>();
-            foreach (var lightSource in Globals.Objects)
+            foreach (var lightSource in Globals.GameObjectManager.Objects.Values)
             {
                 var brightness = 25 * lightSource.Brightness.Length();
                 if (brightness != 0)
@@ -704,7 +704,7 @@ namespace Generator
         public static void DrawCreativeUI(SpriteBatch spriteBatch)
         {
             // Draw the object on the left
-            var tileSheet = Globals.Zone.TileManager.TileSheet;
+            var tileSheet = Globals.TileManager.TileSheet;
             DrawSprite(
                 spriteBatch,
                 tileSheet.Sprite,

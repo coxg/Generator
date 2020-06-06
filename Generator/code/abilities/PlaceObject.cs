@@ -13,7 +13,7 @@ namespace Generator.code.abilities
 
         public override void Start()
         {
-            var randomBaseTile = Globals.Zone.TileManager.TileSheet.Tiles[Globals.CreativeObjectIndex].GetRandomBaseId();
+            var randomBaseTile = Globals.TileManager.TileSheet.Tiles[Globals.CreativeObjectIndex].GetRandomBaseId();
             Vector3 targetPosition;
             if (SourceObject == Globals.Player && !Input.ControllerState.IsConnected)
             {
@@ -23,12 +23,12 @@ namespace Generator.code.abilities
             {
                 targetPosition = SourceObject.GetTargetCoordinates();
             }
-            Globals.Zone.TileManager.Set((int)targetPosition.X, (int)targetPosition.Y, randomBaseTile);
+            Globals.TileManager.Set((int)targetPosition.X, (int)targetPosition.Y, randomBaseTile);
         }
 
         public override void Stop()
         {
-            Globals.Zone.TileManager.PopulateAllVertices();
+            Globals.TileManager.PopulateAllVertices();
         }
     }
 }

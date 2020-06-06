@@ -19,7 +19,7 @@ namespace Generator
         public static SavedInt PlayerPartyNumber = new SavedInt("playerPartyNumber", 0);
         public static GameObject Player
         {
-            get { return Zone.GameObjects.Objects[Party.Value.MemberIDs[PlayerPartyNumber.Value]]; }
+            get { return GameObjectManager.Objects[Party.Value.MemberIDs[PlayerPartyNumber.Value]]; }
             set { PlayerPartyNumber.Value = Party.Value.MemberIDs.IndexOf(value.ID); }
         }
 
@@ -52,43 +52,18 @@ namespace Generator
 
         // World management
         public static SavedString ZoneName = new SavedString("zoneName", "testingZone");
+        public static GameObjectManager GameObjectManager;
+        public static TileManager TileManager;
         private static Zone zone;
         public static Zone Zone
         {
             get { return zone; }
             set
             {
-                // Remove party from zone before serializing
-                var partyMembers = new List<GameObject>();
-                if (zone != null)
-                {
-                    foreach (var memberID in Party.Value.MemberIDs)
-                    {
-                        partyMembers.Add(Zone.GameObjects.Objects[memberID]);
-                        Zone.GameObjects.Objects.Remove(memberID);
-                    }
-                    Saving.SaveToTmp();
-                }
-
                 // Set the new zone
                 zone = value;
                 ZoneName.Value = value.Name;
-
-                // Add the party to the new zone
-                foreach (var partyMember in partyMembers)
-                {
-                    Zone.GameObjects.Objects[partyMember.ID] = partyMember;
-                }
             }
-        }
-        public static void LoadZone()
-        {
-            Zone.GameObjects.Objects = new Dictionary<string, GameObject>();
-            zone = Zone.Load(ZoneName.Value);
-        }
-        public static IEnumerable<GameObject> Objects
-        {
-            get { return Zone.GameObjects.Objects.Values; }
         }
 
         // Configure the world building mode

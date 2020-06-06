@@ -14,7 +14,7 @@ namespace Generator
         [STAThread]
         private static void Main()
         {
-            var KeepLogAfterExit = false;
+            var KeepLogAfterExit = false;  // TODO: Replace with writing logs to disk
             if (KeepLogAfterExit && Globals.Logging)
                 try
                 {

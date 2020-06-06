@@ -127,7 +127,7 @@ namespace Generator
                 // TODO: Once menus are a thing we won't need to check if the CurrentConversation is null
                 else if (Globals.CurrentConversation == null && KeyBindings["start"].IsPressed && KeyBindings["start"].PressedDuration >= .5f)
                 {
-                    Globals.CurrentConversation = Globals.Zone.GameObjects.Objects["old man"].Conversation;
+                    Globals.CurrentConversation = Globals.GameObjectManager.Objects["old man"].Conversation;
                     Globals.CurrentConversation.CurrentChoicesIndex = 5;
                 }
 
@@ -139,7 +139,7 @@ namespace Generator
                 // TODO: Once menus are a thing we won't need to check if the CurrentConversation is null
                 else if (Globals.CurrentConversation == null && KeyBindings["select"].IsPressed && KeyBindings["select"].PressedDuration >= .5f)
                 {
-                    Globals.CurrentConversation = Globals.Zone.GameObjects.Objects["old man"].Conversation;
+                    Globals.CurrentConversation = Globals.GameObjectManager.Objects["old man"].Conversation;
                     Globals.CurrentConversation.CurrentChoicesIndex = 1;
                 }
 
@@ -150,14 +150,14 @@ namespace Generator
                     if (KeyBindings["left"].IsBeingPressed)
                     {
                         Globals.CreativeObjectIndex = (int)MathTools.Mod(
-                            Globals.CreativeObjectIndex - 1, Globals.Zone.TileManager.TileSheet.Tiles.Count);
+                            Globals.CreativeObjectIndex - 1, Globals.TileManager.TileSheet.Tiles.Count);
                     }
 
                     // Scroll right
                     if (KeyBindings["right"].IsBeingPressed)
                     {
                         Globals.CreativeObjectIndex = (int)MathTools.Mod(
-                            Globals.CreativeObjectIndex + 1, Globals.Zone.TileManager.TileSheet.Tiles.Count);
+                            Globals.CreativeObjectIndex + 1, Globals.TileManager.TileSheet.Tiles.Count);
                     }
                 }
 

@@ -10,14 +10,12 @@ namespace Generator
     public class TileManager
     // Middle man between Zone and TileSheet
     {
-        public int Width;
-        public int Height;
         public int[,] IdMap;
         public TileSheet TileSheet;
 
         public Tile Get(int x, int y)
         {
-            if (x < 0 || y < 0 || x >= Width || y >= Height)
+            if (x < 0 || y < 0 || x >= Globals.Zone.Width || y >= Globals.Zone.Height)
             {
                 return null;
             }
@@ -47,9 +45,9 @@ namespace Generator
             var edgeVertices = new List<VertexPositionTexture>();
             var edgeIndices = new List<int>();
             
-            for (var x = 0; x < Width; x++)
+            for (var x = 0; x < Globals.Zone.Width; x++)
             {
-                for (var y = 0; y < Height; y++)
+                for (var y = 0; y < Globals.Zone.Height; y++)
                 {
                     UpdateVertices(x, y);
                     AppendAllEdgeVertices(x, y, edgeIndices, edgeVertices);
@@ -68,8 +66,8 @@ namespace Generator
         private void UpdateVertices(int x, int y, string orientation = "Bottom", int? tileId = null)
         {
             var textureCoordinates = TileSheet.TextureVerticesFromId(tileId ?? IdMap[x, y], orientation);
-            var vi = 4 * (x * Width + y);  // vertex index
-            var ii = 6 * (x * Width + y);  // index index
+            var vi = 4 * (x * Globals.Zone.Width + y);  // vertex index
+            var ii = 6 * (x * Globals.Zone.Width + y);  // index index
             
             // Just do this first because it's less confusing
             Indices[ii++] = vi;
@@ -285,17 +283,15 @@ namespace Generator
             GameControl.VertexBuffer.SetData(Vertices);
         }
         
-        public TileManager(int width, int height, TileSheet tileSheet)
+        public TileManager(TileSheet tileSheet)
         {
             TileSheet = tileSheet;
-            Width = width;
-            Height = height;
             
             // Populate with random instances of the base tile
-            IdMap = new int[Width, Height];
-            for (var x = 0; x < Width; x++)
+            IdMap = new int[Globals.Zone.Width, Globals.Zone.Height];
+            for (var x = 0; x < Globals.Zone.Width; x++)
             {
-                for (var y = 0; y < Height; y++)
+                for (var y = 0; y < Globals.Zone.Height; y++)
                 {
                     IdMap[x, y] = TileSheet.Tiles[0].GetRandomBaseId();
                 }
@@ -305,11 +301,9 @@ namespace Generator
         }
 
         [JsonConstructor]
-        public TileManager(int width, int height, int[,] idMap, TileSheet tileSheet)
+        public TileManager(int[,] idMap, TileSheet tileSheet)
         {
             TileSheet = tileSheet;
-            Width = width;
-            Height = height;
             IdMap = idMap;
             
             PopulateAllVertices();
