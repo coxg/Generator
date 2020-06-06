@@ -7,7 +7,7 @@ namespace Generator
     {
         public List<string> MemberIDs;
         public List<Item> Inventory;
-        public bool InCombat { get { return Globals.GameObjectManager.Enemies.Count != 0; } }
+        public bool InCombat { get { return Globals.GameObjectManager.EnemyIds.Count != 0; } }
         public int Junk = 0;
 
         // Constructor
@@ -18,7 +18,7 @@ namespace Generator
 
         public IEnumerable<GameObject> GetMembers()
         {
-            return MemberIDs.Select((member) => Globals.GameObjectManager.ObjectList[member]);
+            return MemberIDs.Select((member) => Globals.GameObjectManager.Get(member));
         }
 
         public void Say(string text)

@@ -28,7 +28,7 @@ namespace Generator
                         {
                             // TODO: Add projectiles
                             self.Strategies[self.StrategyName].Follow(
-                                self, Globals.Party.Value.GetMembers(), Globals.GameObjectManager.EnemyObjects(), new List<GameObject>());
+                                self, Globals.Party.Value.GetMembers(), Globals.GameObjectManager.GetEnemyObjects(), new List<GameObject>());
                         }
 
                         // Out of combat they follow you around
@@ -49,11 +49,11 @@ namespace Generator
                     else
                     {
                         // If they're fighting you
-                        if (Globals.GameObjectManager.Enemies.Contains(self.ID))
+                        if (Globals.GameObjectManager.EnemyIds.Contains(self.ID))
                         {
                             // TODO: Add projectiles
                             self.Strategies[self.StrategyName].Follow(
-                                self, Globals.GameObjectManager.EnemyObjects(), Globals.Party.Value.GetMembers(), new List<GameObject>());
+                                self, Globals.GameObjectManager.GetEnemyObjects(), Globals.Party.Value.GetMembers(), new List<GameObject>());
                         }
                     }
                 }
@@ -85,7 +85,6 @@ namespace Generator
                 self =>
                 {
                     self.MovementDirection = self.Direction;
-                    self.Position = new Vector3(self.Position.X, self.Position.Y, self.Position.Z - .01f);
                 }
             }
         };

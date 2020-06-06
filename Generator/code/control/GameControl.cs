@@ -146,8 +146,7 @@ namespace Generator
             Input.ProcessInput(Globals.Player);
 
             // Update the GameObjects
-            foreach (var gameObject in Globals.GameObjectManager.ObjectList.Values.ToList())
-                gameObject.Update();
+            Globals.GameObjectManager.Update();
 
             // Keep the camera focused on the player
             camera.Update();
@@ -213,7 +212,7 @@ namespace Generator
                 spriteBatch.End();
 
                 // Show all text blurbs
-                foreach (var gameObject in Globals.GameObjectManager.ObjectList.Values.OrderBy(i => -i.Position.Y))
+                foreach (var gameObject in Globals.GameObjectManager.GetVisible().OrderBy(i => -i.Position.Y))
                 {
                     if (gameObject.IsSaying != null)
                     {

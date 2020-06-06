@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Drawing;
 using System.Linq;
 using Newtonsoft.Json;
 using Generator.code.world;
@@ -8,17 +9,50 @@ namespace Generator
 {
     public class GameObjectManager
     {
-        public Dictionary<string, GameObject> ObjectList = new Dictionary<string, GameObject>();
+        private Dictionary<string, GameObject> ObjectDict = new Dictionary<string, GameObject>();
         [JsonIgnore]
-        public ObjectMap ObjectMap;
-        public HashSet<string> Enemies = new HashSet<string>();
+        private ObjectMap ObjectMap;
+        public HashSet<string> EnemyIds = new HashSet<string>();
 
-        public List<GameObject> EnemyObjects()
+        public GameObject Get(string objectId)
+        {
+            GameObject gameObject;
+            ObjectDict.TryGetValue(objectId, out gameObject);
+            return gameObject;
+        }
+
+        public void Set(GameObject gameObject)
+        {
+            ObjectDict[gameObject.ID] = gameObject;
+        }
+
+        public IEnumerable<GameObject> Get(float x, float y)
+        {
+            return ObjectMap.Get(x, y);
+        }
+        
+        public HashSet<GameObject> Get(RectangleF area)
+        {
+            // Looping over all tiles in a large area is expensive, so in this case just loop over all objects and see
+            // if they're in the area
+            if (area.Width * area.Height > ObjectDict.Count)
+            {
+                return ObjectDict.Values.Where(x => x.Area.IntersectsWith(area)).ToHashSet();
+            }
+            return ObjectMap.Get(area);
+        }
+        
+        public HashSet<GameObject> GetVisible()
+        {
+            return Get(GameControl.camera.VisibleArea);
+        }
+
+        public List<GameObject> GetEnemyObjects()
         {
             var enemyObjects = new List<GameObject>();
-            foreach (string enemy in Enemies)
+            foreach (string enemy in EnemyIds)
             {
-                enemyObjects.Add(ObjectList[enemy]);
+                enemyObjects.Add(ObjectDict[enemy]);
             }
             return enemyObjects;
         }
@@ -27,24 +61,35 @@ namespace Generator
         {
             foreach (var gameObject in objects)
             {
-                ObjectList[gameObject.ID] = gameObject;
+                ObjectDict[gameObject.ID] = gameObject;
             }
-            ObjectMap = new ObjectMap(Globals.Zone.Width, Globals.Zone.Height, ObjectList.Values);
+            ObjectMap = new ObjectMap(Globals.Zone.Width, Globals.Zone.Height, ObjectDict.Values);
         }
 
         [JsonConstructor]
-        public GameObjectManager(Dictionary<string, GameObject> objectList, HashSet<string> enemies)
+        public GameObjectManager(Dictionary<string, GameObject> objectDict, HashSet<string> enemyIds)
         {
-            ObjectList = objectList;
-            ObjectMap = new ObjectMap(Globals.Zone.Width, Globals.Zone.Height, ObjectList.Values);
-            Enemies = enemies;
+            ObjectDict = objectDict;
+            ObjectMap = new ObjectMap(Globals.Zone.Width, Globals.Zone.Height, ObjectDict.Values);
+            EnemyIds = enemyIds;
         }
         
         public void Remove(GameObject gameObject)
         {
-            ObjectList.Remove(gameObject.ID);
-            Enemies.Remove(gameObject.ID);
+            ObjectDict.Remove(gameObject.ID);
+            EnemyIds.Remove(gameObject.ID);
             ObjectMap.Remove(gameObject);
+        }
+        
+        // TODO: Remove these, make GameObjects request to move
+        public void RemoveFromMap(GameObject gameObject)
+        {
+            ObjectMap.Remove(gameObject);
+        }
+        
+        public void AddToMap(GameObject gameObject)
+        {
+            ObjectMap.Add(gameObject);
         }
 
         public void Kill(GameObject gameObject)
@@ -62,7 +107,7 @@ namespace Generator
                 Globals.GameObjectManager = (GameObjectManager)Globals.Serializer.Deserialize(file, typeof(GameObjectManager));
 
                 // We're ignoring various source objects to avoid circular references, so add it back in when loading
-                foreach (var gameObject in Globals.GameObjectManager.ObjectList.Values)
+                foreach (var gameObject in Globals.GameObjectManager.ObjectDict.Values)
                 {
                     if (gameObject.Conversation != null)
                     {
@@ -101,6 +146,12 @@ namespace Generator
                     gameObject.Abilities = abilities;
                 }
             }
-        } 
+        }
+
+        public void Update()
+        {
+            foreach (var gameObject in ObjectDict.Values.ToList())
+                gameObject.Update();
+        }
     }
 }

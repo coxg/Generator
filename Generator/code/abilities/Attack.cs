@@ -17,7 +17,7 @@ namespace Generator.code.abilities
             SourceObject.IsSwinging = true;
 
             // Figure out which one you hit
-            var target = SourceObject.GetTargetInRange(1);
+            var target = SourceObject.GetClosest(SourceObject.GetTargetsInRange());
 
             // Deal damage
             if (target != null)
@@ -35,7 +35,7 @@ namespace Generator.code.abilities
             IEnumerable<GameObject> allies, IEnumerable<GameObject> enemies, List<GameObject> projectiles)
         {
             var damage = 0f;
-            var target = SourceObject.GetTargetInRange(1);
+            var target = SourceObject.GetClosest(SourceObject.GetTargetsInRange());
             if (target != null && enemies.Contains(target))
             {
                 damage = target.DamageToTake(SourceObject.Strength.CurrentValue) / target.Health.Max;

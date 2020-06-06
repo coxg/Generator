@@ -15,7 +15,7 @@ namespace Generator.code.abilities
         public override void Start()
         {
             SourceObject.IsShooting = true;
-            var position = SourceObject.GetTargetCoordinates(1);
+            var position = SourceObject.GetTargetCoordinates(3); // TODO: Can't shoot closer than this
             position.Z += SourceObject.Size.Z / 2;
             var bullet = new GameObject(
                 baseHealth: 1,
@@ -38,13 +38,13 @@ namespace Generator.code.abilities
                     }
                 }
             );
-            Globals.GameObjectManager.ObjectList[bullet.ID] = bullet;
+            Globals.GameObjectManager.Set(bullet);
         }
 
         public override Dictionary<string, float> GetPriorityValues(
             IEnumerable<GameObject> allies, IEnumerable<GameObject> enemies, List<GameObject> projectiles)
         {
-            var targetEnemy = SourceObject.GetNearest(enemies);
+            var targetEnemy = SourceObject.GetClosest(enemies);
             if (targetEnemy != null)
             {
                 Target = targetEnemy.Center;

@@ -544,9 +544,7 @@ namespace Generator
         public static void DrawShadows()
         // Unused but leaving in for future reference
         {
-            foreach (var gameObject in Globals.GameObjectManager.ObjectList.Values
-                .Where(x => x.Area.IntersectsWith(GameControl.camera.VisibleArea))
-                .OrderBy(i => -i.Position.Y))
+            foreach (var gameObject in Globals.GameObjectManager.GetVisible().OrderBy(i => -i.Position.Y))
             {
                 // Draw components for the object
                 foreach (var component in gameObject.Components.OrderBy(i => -i.Value.Position.Y))
@@ -596,9 +594,7 @@ namespace Generator
             var vertices = new List<VertexPositionColorTexture>();
             
             // Accumulate the vertices
-            foreach (var gameObject in Globals.GameObjectManager.ObjectList.Values
-                .Where(x => x.Area.IntersectsWith(GameControl.camera.VisibleArea))
-                .OrderBy(i => -i.Position.Y))
+            foreach (var gameObject in Globals.GameObjectManager.GetVisible().OrderBy(i => -i.Position.Y))
             {
                 foreach (var component in gameObject.Components.OrderBy(i => -i.Value.Position.Y))
                 {
@@ -679,7 +675,7 @@ namespace Generator
             // Generate the vertices
             // TODO: Make light sources objects, make their area equal to lighting area, do a .Where on VisibleArea
             var vertices = new List<VertexPositionColorTexture>();
-            foreach (var lightSource in Globals.GameObjectManager.ObjectList.Values)
+            foreach (var lightSource in Globals.GameObjectManager.GetVisible())
             {
                 var brightness = 25 * lightSource.Brightness.Length();
                 if (brightness != 0)
@@ -691,6 +687,10 @@ namespace Generator
             
             // Draw it
             var vertexArray = vertices.ToArray();
+            if (vertexArray.Length == 0)
+            {
+                return;
+            }
             GameControl.effect.Texture = Globals.LightTexture;
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {

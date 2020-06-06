@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 
 namespace Generator.code.world
 {
@@ -16,7 +18,7 @@ namespace Generator.code.world
 
         public HashSet<GameObject>[,] Values;
 
-        public bool InBounds(int x, int y)
+        public bool InBounds(float x, float y)
         {
             return x >= 0 && x < Values.GetLength(0) && y >= 0 && y < Values.GetLength(1);
         }
@@ -56,16 +58,27 @@ namespace Generator.code.world
             }
         }
 
-        public HashSet<GameObject> Get(int x, int y)
+        public IEnumerable<GameObject> Get(float x, float y)
         {
             if (InBounds(x, y))
             {
-                return Values[x, y] ?? new HashSet<GameObject>();
+                var values = Values[(int)x, (int)y] ?? new HashSet<GameObject>();
+                return values.Where(value => value.Area.Contains(x, y));
             }
-            else
+            return new HashSet<GameObject>();
+        }
+        
+        public HashSet<GameObject> Get(RectangleF area)
+        {
+            var results = new HashSet<GameObject>();
+            for (int x = (int)area.Left; x <= (int)area.Right; x++)
             {
-                return new HashSet<GameObject>();
+                for (int y = (int)area.Top; y <= (int)area.Bottom; y++)
+                {
+                    results.UnionWith(Get(x, y));
+                }
             }
+            return results;
         }
     }
 }

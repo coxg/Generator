@@ -112,7 +112,8 @@ namespace Generator
                 // The "Activate" button
                 if (KeyBindings["a"].IsBeingPressed)
                 {
-                    if (player.GetTargetAtRange() != null) player.GetTargetAtRange().Activate(player);
+                    var target = player.GetClosest(player.GetTargets());
+                    target?.Activate(player);
                 }
 
                 bool anyAbilitiesBeingUsed = ProcessAbilityInput(player);
@@ -127,7 +128,7 @@ namespace Generator
                 // TODO: Once menus are a thing we won't need to check if the CurrentConversation is null
                 else if (Globals.CurrentConversation == null && KeyBindings["start"].IsPressed && KeyBindings["start"].PressedDuration >= .5f)
                 {
-                    Globals.CurrentConversation = Globals.GameObjectManager.ObjectList["old man"].Conversation;
+                    Globals.CurrentConversation = Globals.GameObjectManager.Get("old man").Conversation;
                     Globals.CurrentConversation.CurrentChoicesIndex = 5;
                 }
 
@@ -139,7 +140,7 @@ namespace Generator
                 // TODO: Once menus are a thing we won't need to check if the CurrentConversation is null
                 else if (Globals.CurrentConversation == null && KeyBindings["select"].IsPressed && KeyBindings["select"].PressedDuration >= .5f)
                 {
-                    Globals.CurrentConversation = Globals.GameObjectManager.ObjectList["old man"].Conversation;
+                    Globals.CurrentConversation = Globals.GameObjectManager.Get("old man").Conversation;
                     Globals.CurrentConversation.CurrentChoicesIndex = 1;
                 }
 

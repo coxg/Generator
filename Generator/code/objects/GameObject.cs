@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
@@ -222,13 +223,13 @@ namespace Generator
 
                 // If we can move there then move there
                 var targetPosition = new RectangleF(value.X, value.Y, Size.X, Size.Y);
-                var targetAtPosition = GetTargetInArea(targetPosition);
+                var targetAtPosition = GetClosest(GetTargets(targetPosition));
                 if (targetAtPosition == null)
                 {
-                    Globals.GameObjectManager?.ObjectMap.Remove(this);
+                    Globals.GameObjectManager?.RemoveFromMap(this);
                     base.Position = value;
                     Area = targetPosition;
-                    Globals.GameObjectManager?.ObjectMap.Add(this);
+                    Globals.GameObjectManager?.AddToMap(this);
                 }
 
                 // If not then we collide with the object and it collides with us
@@ -626,7 +627,7 @@ namespace Generator
                 // Add this to the set of enemies
                 if (!Globals.Party.Value.MemberIDs.Contains(ID))
                 {
-                    Globals.GameObjectManager.Enemies.Add(ID);
+                    Globals.GameObjectManager.EnemyIds.Add(ID);
                 }
 
                 IsHurting = true;
@@ -641,8 +642,6 @@ namespace Generator
             }
         }
 
-        // TODO: Replace all of these with new collision logic
-
         // Gets the coordinates at the range specified
         public Vector3 GetTargetCoordinates(float range = 1, float? direction = null)
         {
@@ -653,66 +652,31 @@ namespace Generator
         }
 
         // Gets whichever object is exactly [distance] away in the current direction
-        public GameObject GetTargetAtRange(float range = 1, float? direction = null)
+        public HashSet<GameObject> GetTargets(float range = 1, float? direction = null)
         {
             // See if we would overlap with any other objects
-            var target = GetTargetCoordinates(range, direction);
-            foreach (var gameObject in Globals.GameObjectManager.ObjectList.Values)
-            {
-                if (gameObject != this)
-                {
-                    if (gameObject.Area.Contains(target.X, target.Y))
-                    {
-                        return gameObject;
-                    }
-                }
-            }
-
-            return null;
+            var targetPosition = GetTargetCoordinates(range, direction);
+            var targetObjects = Globals.GameObjectManager.Get(targetPosition.X, targetPosition.Y);
+            return targetObjects.Where(x => x != this).ToHashSet();
         }
 
         // See if we can move to a location
-        public GameObject GetTargetInArea(RectangleF targetArea)
+        public HashSet<GameObject> GetTargets(RectangleF targetArea)
         {
-            // See if we would overlap with any other objects
-            if (Globals.Zone != null)
-            {
-                for (int x = (int)Math.Floor(targetArea.Left); x <= (int)Math.Ceiling(targetArea.Right); x++)
-                {
-                    for (int y = (int)Math.Floor(targetArea.Top); y <= (int)Math.Ceiling(targetArea.Bottom); y++)
-                    {
-                        foreach (var gameObject in Globals.GameObjectManager.ObjectMap.Get(x, y))
-                        {
-                            if (gameObject != this)
-                            {
-                                if (targetArea.IntersectsWith(gameObject.Area))
-                                {
-                                    return gameObject;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // If not then we're clear to move
-            return null;
+            var targetObjects = Globals.GameObjectManager.Get(targetArea);
+            targetObjects.Remove(this);
+            return targetObjects;
         }
 
         // Gets whichever object is [distance] away or closer in the current direction
-        public GameObject GetTargetInRange(int range = 1)
+        public HashSet<GameObject> GetTargetsInRange(int range = 1)
         {
-            GameObject returnObject = null;
-            var targetRange = 1;
-
-            // Loop from 1 to [range], seeing if anything is in the way
-            while (returnObject == null && targetRange <= range)
+            HashSet<GameObject> returnObjects = new HashSet<GameObject>();
+            for (var i = 1; i <= range; i++)
             {
-                returnObject = GetTargetAtRange(targetRange);
-                targetRange++;
+                returnObjects.UnionWith(GetTargets(i));
             }
-
-            return returnObject;
+            return returnObjects;
         }
 
         public float GetMovementDistance()
@@ -755,16 +719,17 @@ namespace Generator
             return ID ?? "Unnamed GameObject";
         }
 
-        public GameObject GetNearest(IEnumerable<GameObject> gameObjects)
+        public GameObject GetClosest(IEnumerable<GameObject> gameObjects)
         {
             // TODO: If this hits performance issues (especially in the case where the list of gameObjects is large) 
             // then I can try branching outward from the gameObject, and if any are in the immediate area then return 
             // the nearest out of those.
             GameObject nearestObject = null;
             float nearestDistance = 10000;
+            var center = Center;
             foreach (var gameObject in gameObjects)
             {
-                var distance = Vector3.Distance(Position, gameObject.Position);
+                var distance = Vector3.Distance(center, gameObject.Center);
                 if (distance < nearestDistance)
                 {
                     nearestDistance = distance;
