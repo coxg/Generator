@@ -55,8 +55,6 @@ namespace Generator
                 Directory.Delete(Saving.TempSaveDirectory, true);
             }
 
-            // Create common vertices for reuse
-
             // Set up the GraphicsDevice, which is used for all drawing
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
@@ -106,17 +104,17 @@ namespace Generator
                 new List<Sprite>
                 {
                     // TODO: Make classes for the different types of sprites
-                    new Sprite("PinkArm", false, 2, 2, 0, 0),
-                    new Sprite("NinjaArm", false, 2, 2, 2, 0),
-                    new Sprite("PurpleArm", false, 2, 2, 4, 0),
+                    new Sprite("PinkArm", false, 1, 2, 0, 0),
+                    new Sprite("NinjaArm", false, 1, 2, 1, 0),
+                    new Sprite("PurpleArm", false, 1, 2, 2, 0),
                     new Sprite("PinkBody", true, 2, 2, 0, 2),
                     new Sprite("NinjaBody", true, 2, 2, 2, 2),
                     new Sprite("PurpleBody", true, 2, 2, 4, 2),
-                    new Sprite("Hand", false, 2, 2, 0, 10),
-                    new Sprite("MetalBall", false, 2, 2, 2, 10),
-                    new Sprite("PinkLeg", false, 2, 2, 0, 12),
-                    new Sprite("NinjaLeg", false, 2, 2, 2, 12),
-                    new Sprite("PurpleLeg", false, 2, 2, 4, 12),
+                    new Sprite("Hand", false, 1, 1, 0, 10),
+                    new Sprite("MetalBall", false, 1, 1, 1, 10),
+                    new Sprite("PinkLeg", false, 1, 1, 0, 11),
+                    new Sprite("NinjaLeg", false, 1, 1, 1, 11),
+                    new Sprite("PurpleLeg", false, 1, 1, 2, 11),
                     new Sprite("NormalEyes", true, 4, 4, 0, 14, directions: new List<string>{"Front", "Left", "Right"}),
                     new Sprite("HurtEyes", true, 4, 4, 4, 14, directions: new List<string>{"Front", "Left", "Right"}),
                     new Sprite("Goggles", true, 4, 4, 8, 14, directions: new List<string>{"Front", "Left", "Right"}),
@@ -203,6 +201,7 @@ namespace Generator
 
             // Draw all game elements
             GraphicsDevice.SetRenderTarget(null);
+            GraphicsDevice.Clear(Color.Black);
             Drawing.DrawTiles();
             Drawing.DrawGameObjects();
 
@@ -215,6 +214,7 @@ namespace Generator
             }
 
             // Draw the UI layer
+            spriteBatch.Begin();
             if (Globals.CurrentConversation != null)
             {
                 Drawing.DrawConversation(spriteBatch);
@@ -234,12 +234,10 @@ namespace Generator
                 drawBatch.End();
 
                 // Show which tiles are selected
-                spriteBatch.Begin();
                 if (Globals.CreativeMode)
                 {
                     Drawing.DrawCreativeUI(spriteBatch);
                 }
-                spriteBatch.End();
 
                 // Show all text blurbs
                 foreach (var gameObject in Globals.GameObjectManager.GetVisible().OrderBy(i => -i.Position.Y))
@@ -268,15 +266,14 @@ namespace Generator
             {
                 Timing.NumDraws++;
                 Timing.FrameTimes[(int)MathTools.Mod(Timing.NumDraws, Timing.FrameTimes.Length)] = DateTime.Now;
-                spriteBatch.Begin();
                 Drawing.DrawFPS(spriteBatch);
                 Drawing.DrawPlayerCoordinates(spriteBatch);
-                spriteBatch.End();
             }
 
             // Draw the logs
             Drawing.DrawLogs(spriteBatch);
-
+            
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }

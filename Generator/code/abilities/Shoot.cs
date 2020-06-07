@@ -9,7 +9,7 @@ namespace Generator.code.abilities
         public Shoot() : base(
             "Shoot",
             electricityCost: 0,
-            cooldown: .02f,  // TODO: Can't fire faster than this
+            cooldown: .1f,  // TODO: Can't fire faster than this or the bullets hit each other
             keepCasting: true) { }
 
         public override void Start()
@@ -20,22 +20,16 @@ namespace Generator.code.abilities
             var bullet = new GameObject(
                 baseHealth: 1,
                 position: position,
-                size: new Vector3(.05f, .05f, .05f),
+                size: new Vector3(.5f, .5f, .5f),
                 direction: SourceObject.Direction,
                 baseSpeed: 1000,
                 ai: new Cached<Action<GameObject>>("BulletAI"),
                 collisionEffect: new Cached<Action<GameObject, GameObject>>("BulletCollision"),
                 brightness: new Vector3(.5f, .1f, .5f),
                 temporary: true,
-                components: new Dictionary<string, Component>()
+                components: new Dictionary<string, Component>
                 {
-                    {"body", new Component(
-                        id: "Hand",
-                        sprite: Globals.SpriteSheet.GetCopy("MetalBall"),
-                        relativePosition: new Vector3(.5f, .5f, .5f),
-                        relativeSize: 1,
-                        baseRotationPoint: new Vector3(.5f, .5f, .5f))
-                    }
+                    { "body", new Component(Globals.SpriteSheet.GetCopy("MetalBall")) }
                 }
             );
             Globals.GameObjectManager.Set(bullet);

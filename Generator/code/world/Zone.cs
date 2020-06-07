@@ -228,7 +228,7 @@ namespace Generator
                         // building
                         new GameObject(
                             new Vector3(57, 59, 0),
-                            new Vector3(6, 9, 9),
+                            new Vector3(6, 6, 9),
                             id: "building",
                             baseStrength: 10,
                             baseSpeed: 10,
@@ -238,13 +238,7 @@ namespace Generator
                             activationEffect: new Cached<Action<GameObject, GameObject>>("SetZoneBuildings"),
                             components: new Dictionary<string, Component>()
                             {
-                                {"body", new Component(
-                                    id: "building",
-                                    relativePosition: new Vector3(.5f, .5f, .5f),
-                                    relativeSize: .2f,
-                                    baseRotationPoint: new Vector3(.5f, .5f, .5f),
-                                    sprite: Globals.SpriteSheet.GetCopy("NinjaHead"))
-                                }
+                                { "body", new Component(Globals.SpriteSheet.GetCopy("NinjaHead")) }
                             }),
 
                         new GameObject(
@@ -275,7 +269,7 @@ namespace Generator
                         // building
                         new GameObject(
                             new Vector3(65, 65, 0),
-                            new Vector3(6, 9, 9),
+                            new Vector3(6, 6, 9),
                             id: "testBuilding",
                             baseStrength: 10,
                             baseSpeed: 10,
@@ -285,13 +279,7 @@ namespace Generator
                             activationEffect: new Cached<Action<GameObject, GameObject>>("SetZoneTestingZone"),
                             components: new Dictionary<string, Component>()
                             {
-                                {"body", new Component(
-                                    id: "testBuilding",
-                                    relativePosition: new Vector3(.5f, .5f, .5f),
-                                    relativeSize: .2f,
-                                    baseRotationPoint: new Vector3(.5f, .5f, .5f),
-                                    sprite: Globals.SpriteSheet.GetCopy("NinjaHead"))
-                                }
+                                { "body", new Component(Globals.SpriteSheet.GetCopy("NinjaHead")) }
                             })
                     });
                     Globals.TileManager = new TileManager(Globals.DefaultTileSheet);

@@ -56,7 +56,6 @@ namespace Generator
 
         public static void DrawLogs(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
             int y = (int)Globals.Resolution.Y - 25;
             for (int i = Globals.Logs.Count - 1; i >= 0; i--)
             {
@@ -75,7 +74,6 @@ namespace Generator
                     .05f);
                 y -= 15;
             }
-            spriteBatch.End();
         }
 
         public static void DrawRoundedRectangle(
@@ -164,13 +162,11 @@ namespace Generator
 
                 if (drawText)
                 {
-                    spriteBatch.Begin();
                     spriteBatch.DrawString(
                         Globals.Font,
                         _text,
                         new Vector2(_x, _y),
                         color ?? Color.White);
-                    spriteBatch.End();
                 }
             }
 
@@ -314,7 +310,6 @@ namespace Generator
             Color? selectionColor = Color.FromNonPremultiplied(105, 69, 169, 255);
 
             // Draw the background
-            spriteBatch.Begin();
             spriteBatch.Draw(
                 Globals.WhiteDot,
                 new Rectangle(
@@ -368,7 +363,6 @@ namespace Generator
             DrawCharacter(spriteBatch, talkingObject, spriteSize, xOffset, (int)(Globals.Resolution.Y - spriteSize) / 2);
             DrawCharacter(spriteBatch, Globals.CurrentConversation.SourceObject,
                 spriteSize, xOffset + spriteSize + TextWidth + 2 * Margin, (int)(Globals.Resolution.Y - spriteSize) / 2);
-            spriteBatch.End();
 
             // Draw the text itself
             // If we've selected a choice then just draw that choice
@@ -458,7 +452,6 @@ namespace Generator
 
         public static void AddComponentToVertices(
             Component component, 
-            Vector3 size, 
             Vector3 normalizationDirection, 
             Vector3 normalizationOffset,
             List<VertexPositionColorTexture> vertices)
@@ -479,18 +472,17 @@ namespace Generator
             bottomRight.TextureCoordinate = textureCoordinates[2];
             topRight.TextureCoordinate = textureCoordinates[3];
             
-            var componentPosition = component.Position;
-            var rotationPoint = componentPosition + component.RotationPoint * component.SourceObject.Size;
-            var rotationOffsets = MathTools.PointRotatedAroundPoint(
+            var rotationPoint = component.Position + component.RotationPoint * component.Size;
+            var rotationAxis = MathTools.PointRotatedAroundPoint(
                 component.RelativeRotation + component.RotationOffset,
                 Vector3.Zero,
                 new Vector3(0, 0, component.Direction - MathHelper.PiOver2));
 
             // Bottom left
             bottomLeft.Position = MathTools.PointRotatedAroundPoint(
-                componentPosition,
+                component.Position,
                 rotationPoint,
-                rotationOffsets);
+                rotationAxis);
             bottomLeft.Position = MathTools.PointRotatedAroundPoint(
                 bottomLeft.Position,
                 component.SourceObject.Center,
@@ -500,11 +492,11 @@ namespace Generator
             // Top left
             topLeft.Position = MathTools.PointRotatedAroundPoint(
                 new Vector3(
-                    componentPosition.X,
-                    componentPosition.Y,
-                    componentPosition.Z + size.Z),
+                    component.Position.X,
+                    component.Position.Y,
+                    component.Position.Z + component.Size.Z),
                 rotationPoint,
-                rotationOffsets);
+                rotationAxis);
             topLeft.Position = MathTools.PointRotatedAroundPoint(
                 topLeft.Position,
                 component.SourceObject.Center,
@@ -514,11 +506,11 @@ namespace Generator
             // Bottom right
             bottomRight.Position = MathTools.PointRotatedAroundPoint(
                 new Vector3(
-                    componentPosition.X + size.X,
-                    componentPosition.Y,
-                    componentPosition.Z),
+                    component.Position.X + component.Size.X,
+                    component.Position.Y,
+                    component.Position.Z),
                 rotationPoint,
-                rotationOffsets);
+                rotationAxis);
             bottomRight.Position = MathTools.PointRotatedAroundPoint(
                 bottomRight.Position,
                 component.SourceObject.Center,
@@ -528,11 +520,11 @@ namespace Generator
             // Top right
             topRight.Position = MathTools.PointRotatedAroundPoint(
                 new Vector3(
-                    componentPosition.X + size.X,
-                    componentPosition.Y,
-                    componentPosition.Z + size.Z),
+                    component.Position.X + component.Size.X,
+                    component.Position.Y,
+                    component.Position.Z + component.Size.Z),
                 rotationPoint,
-                rotationOffsets);
+                rotationAxis);
             topRight.Position = MathTools.PointRotatedAroundPoint(
                 topRight.Position,
                 component.SourceObject.Center,
@@ -602,11 +594,11 @@ namespace Generator
             // Accumulate the vertices
             foreach (var gameObject in Globals.GameObjectManager.GetVisible().OrderBy(i => -i.Position.Y))
             {
-                foreach (var component in gameObject.Components.OrderBy(i => -i.Value.Position.Y))
+                foreach (var component in gameObject.Components
+                    .OrderBy(i => -i.Value.Position.Y))
                 {
                     AddComponentToVertices(
                         component.Value, 
-                        gameObject.Size * component.Value.Size, 
                         new Vector3(-MathHelper.PiOver2, 0, 0), 
                         Vector3.Zero,
                         vertices);

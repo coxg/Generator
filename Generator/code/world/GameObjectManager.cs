@@ -9,7 +9,7 @@ namespace Generator
 {
     public class GameObjectManager
     {
-        private Dictionary<string, GameObject> ObjectDict = new Dictionary<string, GameObject>();
+        public Dictionary<string, GameObject> ObjectDict = new Dictionary<string, GameObject>();
         [JsonIgnore]
         private ObjectMap ObjectMap;
         public HashSet<string> EnemyIds = new HashSet<string>();

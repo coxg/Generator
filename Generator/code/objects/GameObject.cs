@@ -293,7 +293,7 @@ namespace Generator
         {
             foreach (var component in Components)
             {
-                component.Value.ID = component.Key;
+                component.Value.ID = component.Key;  // Just for debugging purposes
                 component.Value.SourceObject = this;
                 foreach (var animation in component.Value.Animations)
                 {
@@ -344,38 +344,31 @@ namespace Generator
             Dictionary<string, Component> result = new Dictionary<string, Component>()
             {
                 {"Head", new Component(
-                    id: "Head",
                     sprite: Globals.SpriteSheet.GetCopy("NinjaHead"),
-                    directional: true,
-                    relativePosition: new Vector3(.5f, .506f, 1.26f),
-                    relativeSize: .32f,
-                    baseRotationPoint: new Vector3(.16f, 0, .256f),
+                    relativePosition: new Vector3(.5f, .506f, 1.2f),
+                    size: new Vector3(1.5f),
+                    rotationPoint: new Vector3(.16f, 0, .256f),
                     yOffset: -.05f)
                 },
                 {"Face", new Component(
-                    id: "Face",
                     sprite: Globals.SpriteSheet.GetCopy("NormalEyes"),
-                    directional: true,
-                    relativePosition: new Vector3(.5f, .52f, 1f),
-                    relativeSize: .32f,
-                    baseRotationPoint: new Vector3(.2f, 0, .15f),
+                    relativePosition: new Vector3(.5f, .52f, .96f),
+                    size: new Vector3(1.5f),
+                    rotationPoint: new Vector3(.2f, 0, .15f),
                     yOffset: -.05f)
                 },
                 {"Body", new Component(
-                    id: "Body",
                     sprite: Globals.SpriteSheet.GetCopy("NinjaBody"),
-                    directional: true,
                     relativePosition: new Vector3(.5f, .505f, .47f),
-                    relativeSize: .16f,
-                    baseRotationPoint: new Vector3(.08f, 0, .08f))
+                    size: new Vector3(.75f),
+                    rotationPoint: new Vector3(.08f, 0, .08f))
                 },
                 {"Arm/Left", new Component(
-                    id: "Arm/Left",
                     sprite: Globals.SpriteSheet.GetCopy("NinjaArm"),
-                    relativePosition: new Vector3(.29f, .502f, .5075f),
-                    relativeSize: .16f,
+                    relativePosition: new Vector3(-.15f, .502f, .45f),
+                    size: new Vector3(.375f, .375f, .75f),
                     relativeRotation: new Vector3(0, .4f, 0),
-                    baseRotationPoint: new Vector3(.08f, 0, .046f),
+                    rotationPoint: new Vector3(.5f, .0f, .8f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -387,6 +380,14 @@ namespace Generator
                                     new Vector3(.7f, 0, 0),
                                     Vector3.Zero,
                                     new Vector3(-.7f, 0, 0),
+                                    Vector3.Zero
+                                },
+                                baseOffsets: new List<Vector3>
+                                {
+                                    Vector3.Zero,
+                                    new Vector3(.05f, 0, 0),
+                                    Vector3.Zero,
+                                    new Vector3(-.05f, 0, 0),
                                     Vector3.Zero
                                 },
                                 duration: 3
@@ -396,12 +397,11 @@ namespace Generator
                     })
                 },
                 {"Arm/Right", new Component(
-                    id: "Arm/Right",
                     sprite: Globals.SpriteSheet.GetCopy("NinjaArm"),
-                    relativePosition: new Vector3(.71f, .502f, .5075f),
-                    relativeSize: .16f,
+                    relativePosition: new Vector3(1.15f, .502f, .45f),
+                    size: new Vector3(.375f, .375f, .75f),
                     relativeRotation: new Vector3(0, -.4f, 0),
-                    baseRotationPoint: new Vector3(.08f, 0, .046f),
+                    rotationPoint: new Vector3(.5f, .0f, .8f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -415,54 +415,12 @@ namespace Generator
                                     new Vector3(.7f, 0, 0),
                                     Vector3.Zero
                                 },
-                                duration: 3
-                                )
-                            )
-                        }
-                    })
-                },
-                {"Hand/Left", new Component(
-                    id: "Hand/Left",
-                    sprite: Globals.SpriteSheet.GetCopy("Hand"),
-                    relativePosition: new Vector3(.125f, .50225f, .425f),
-                    relativeSize: .16f,
-                    baseRotationPoint: new Vector3(.08f, 0, .064f),
-                    yOffset: .001f,
-                    animations: new Dictionary<string, Animation>()
-                    {
-                        {"Walk", new Animation(
-                            updateFrames: new Frames(
-                                baseRotations: new List<Vector3>
+                                baseOffsets: new List<Vector3>
                                 {
                                     Vector3.Zero,
-                                    new Vector3(.7f, 0, 0),
+                                    new Vector3(-.05f, 0, 0),
                                     Vector3.Zero,
-                                    new Vector3(-.7f, 0, 0),
-                                    Vector3.Zero
-                                },
-                                duration: 3
-                                )
-                            )
-                        }
-                    })
-                },
-                {"Hand/Right", new Component(
-                    id: "Hand/Right",
-                    sprite: Globals.SpriteSheet.GetCopy("Hand"),
-                    relativePosition: new Vector3(.875f, .50225f, .425f),
-                    relativeSize: .16f,
-                    baseRotationPoint: new Vector3(.08f, 0, .064f),
-                    yOffset: .001f,
-                    animations: new Dictionary<string, Animation>()
-                    {
-                        {"Walk", new Animation(
-                            updateFrames: new Frames(
-                                baseRotations: new List<Vector3>
-                                {
-                                    Vector3.Zero,
-                                    new Vector3(-.7f, 0, 0),
-                                    Vector3.Zero,
-                                    new Vector3(.7f, 0, 0),
+                                    new Vector3(.05f, 0, 0),
                                     Vector3.Zero
                                 },
                                 duration: 3
@@ -472,11 +430,10 @@ namespace Generator
                     })
                 },
                 {"Leg/Left", new Component(
-                    id: "Leg/Left",
                     sprite: Globals.SpriteSheet.GetCopy("NinjaLeg"),
-                    relativePosition: new Vector3(.365f, .502f, .07f),
-                    relativeSize: .16f,
-                    baseRotationPoint: new Vector3(.08f, 0, .036f),
+                    relativePosition: new Vector3(.2f, .502f, .1f),
+                    size: new Vector3(.375f),
+                    rotationPoint: new Vector3(.5f, .0f, .9f),
                     yOffset: .15f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -497,11 +454,10 @@ namespace Generator
                     })
                 },
                 {"Leg/Right", new Component(
-                    id: "Leg/Right",
                     sprite: Globals.SpriteSheet.GetCopy("NinjaLeg"),
-                    relativePosition: new Vector3(.635f, .502f, .07f),
-                    relativeSize: .16f,
-                    baseRotationPoint: new Vector3(.08f, 0, .036f),
+                    relativePosition: new Vector3(.8f, .502f, .1f),
+                    size: new Vector3(.375f),
+                    rotationPoint: new Vector3(.5f, .0f, .9f),
                     yOffset: .15f,
                     animations: new Dictionary<string, Animation>()
                     {

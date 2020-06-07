@@ -8,11 +8,11 @@ namespace Generator
 {
     public static class Input
     {
-        // TODO: Refactor, each button should have this ability
         public static GamePadCapabilities Capabilities;
         public static GamePadState ControllerState;
         public static MouseState MouseState;
         public static Vector3 CursorPosition;
+        private static int zoomLevel = 0;
 
         public class KeyBinding
         {
@@ -181,16 +181,18 @@ namespace Generator
                 }
 
                 // Camera controls
-                if (KeyBindings["down"].IsBeingPressed)
+                if (MouseState.ScrollWheelValue < zoomLevel)
                 {
                     GameControl.camera.Height *= 2;
-                    Globals.Log(GameControl.camera.Height);
+                    Globals.Log("Zoom level: " + GameControl.camera.Height);
+                    zoomLevel = MouseState.ScrollWheelValue;
                 }
-                if (KeyBindings["up"].IsBeingPressed)
+                else if (MouseState.ScrollWheelValue > zoomLevel)
                 {
                     GameControl.camera.Height /= 2;
                     GameControl.camera.Height = Math.Max(GameControl.camera.Height, 5);
-                    Globals.Log(GameControl.camera.Height);
+                    Globals.Log("Zoom level: " + GameControl.camera.Height);
+                    zoomLevel = MouseState.ScrollWheelValue;
                 }
             }
         }
