@@ -5,8 +5,8 @@ namespace Generator
 {
     public static class Timing
     {
-        public static int MaxClock = 1000000000;
-        public static float GameClock;
+        public static int MaxClock = int.MaxValue;
+        public static float GameClock;  // TODO: This should be in seconds
         public static Dictionary<int, List<Action>> Events = new Dictionary<int, List<Action>>();
 
         // The speed at which the game time moves relative to IRL time

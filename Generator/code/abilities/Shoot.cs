@@ -31,7 +31,7 @@ namespace Generator.code.abilities
                 {
                     {"body", new Component(
                         id: "Hand",
-                        spriteFile: "Ninja",
+                        sprite: Globals.SpriteSheet.GetCopy("MetalBall"),
                         relativePosition: new Vector3(.5f, .5f, .5f),
                         relativeSize: 1,
                         baseRotationPoint: new Vector3(.5f, .5f, .5f))

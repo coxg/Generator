@@ -7,12 +7,12 @@ namespace Generator
         // Anything which can be in the party's inventory. Potions, quest items, equipments, whatever.
     {
         public int Quantity;
-        public Cached<Texture2D> Sprite;
+        public Sprite Sprite;
         public string Name;
         public Cached<Action<GameObject>> Effect;
 
         // Constructor
-        public Item(string name, Cached<Texture2D> sprite, int quantity=1, Cached<Action<GameObject>> effect=null)
+        public Item(string name, Sprite sprite, int quantity=1, Cached<Action<GameObject>> effect=null)
         {
             Name = name;
             Sprite = sprite;

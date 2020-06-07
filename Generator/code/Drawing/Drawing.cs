@@ -251,7 +251,7 @@ namespace Generator
 
         public static void DrawCharacter(SpriteBatch spriteBatch, GameObject character, int size, int x, int y)
         {
-            // Draw the sprite if they have one
+            /*// Draw the sprite if they have one
             if (character.Sprite != null)
             {
                 spriteBatch.Draw(
@@ -301,7 +301,7 @@ namespace Generator
                     new Vector2(0, 0),
                     SpriteEffects.None,
                     .05f);
-            }
+            }*/
         }
 
         public static void DrawConversation(SpriteBatch spriteBatch)
@@ -463,15 +463,21 @@ namespace Generator
             Vector3 normalizationOffset,
             List<VertexPositionColorTexture> vertices)
         {
+            var textureCoordinates = Globals.SpriteSheet.GetTextureCoordinates(component);
+            if (textureCoordinates.Length == 0)
+            {
+                return;
+            }
+            
             var bottomLeft = new VertexPositionColorTexture();
             var topLeft = new VertexPositionColorTexture();
             var bottomRight = new VertexPositionColorTexture();
             var topRight = new VertexPositionColorTexture();
             
-            bottomLeft.TextureCoordinate = new Vector2(0, 1);
-            topLeft.TextureCoordinate = new Vector2(0, 0);
-            bottomRight.TextureCoordinate = new Vector2(1, 1);
-            topRight.TextureCoordinate = new Vector2(1, 0);
+            bottomLeft.TextureCoordinate = textureCoordinates[0];
+            topLeft.TextureCoordinate = textureCoordinates[1];
+            bottomRight.TextureCoordinate = textureCoordinates[2];
+            topRight.TextureCoordinate = textureCoordinates[3];
             
             var componentPosition = component.Position;
             var rotationPoint = componentPosition + component.RotationPoint * component.SourceObject.Size;
@@ -616,7 +622,7 @@ namespace Generator
             }
             
             // Draw them
-            GameControl.effect.Texture = Globals.Player.Components["Hand/Left"].Sprite;
+            GameControl.effect.Texture = Globals.SpriteSheet.Texture;
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -628,7 +634,7 @@ namespace Generator
         // Draw all tiles for a Zone
         public static void DrawTiles()
         {
-            GameControl.tileEffect.Texture = Globals.TileManager.TileSheet.Sprite;  // No performance impact
+            GameControl.tileEffect.Texture = Globals.TileManager.TileSheet.Texture;  // No performance impact
             foreach (var pass in GameControl.tileEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -707,7 +713,7 @@ namespace Generator
             var tileSheet = Globals.TileManager.TileSheet;
             DrawSprite(
                 spriteBatch,
-                tileSheet.Sprite,
+                tileSheet.Texture,
                 new Vector2(Globals.Resolution.X / 2 - 125, 10),
                 new Vector2(Globals.Resolution.X / 2 - 75, 60),
                 tileSheet.TextureCoordinatesFromId(
@@ -716,7 +722,7 @@ namespace Generator
             // Draw the object in the middle
             DrawSprite(
                 spriteBatch,
-                tileSheet.Sprite,
+                tileSheet.Texture,
                 new Vector2(Globals.Resolution.X / 2 - 50, 10),
                 new Vector2(Globals.Resolution.X / 2 + 50, 100),
                 tileSheet.TextureCoordinatesFromId(Globals.CreativeObjectIndex));
@@ -724,11 +730,11 @@ namespace Generator
             // Draw the object on the right
             DrawSprite(
                 spriteBatch,
-                tileSheet.Sprite,
+                tileSheet.Texture,
                 new Vector2(Globals.Resolution.X / 2 + 75, 10),
                 new Vector2(Globals.Resolution.X / 2 + 125, 60),
                 tileSheet.TextureCoordinatesFromId(
-                    (int)MathTools.Mod(Globals.CreativeObjectIndex - 1, tileSheet.Tiles.Count)));
+                    (int)MathTools.Mod(Globals.CreativeObjectIndex + 1, tileSheet.Tiles.Count)));
         }
     }
 }

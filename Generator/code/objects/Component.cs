@@ -15,7 +15,7 @@ namespace Generator
             float relativeSize,
             Vector3 baseRotationPoint,
             Vector3? relativeRotation = null,
-            string spriteFile = null,
+            Sprite sprite = null,
             bool directional = false,
             GameObject sourceObject = null,
             float yOffset = 0,
@@ -40,12 +40,13 @@ namespace Generator
             SourceObject = sourceObject;
             YOffset = yOffset;
             Animations = animations ?? new Dictionary<String, Animation>();
-            if (spriteFile != null) SpriteFile = spriteFile;
+            Sprite = sprite;
         }
 
         public int CurrentFrame;
         public bool Directional;
         public string Side;
+        new public Sprite Sprite;
         public Vector3 RelativePosition;
         public Vector3 RelativeRotation;
         new public float Size;
@@ -53,77 +54,12 @@ namespace Generator
         public GameObject SourceObject;
         public float YOffset;
         public Dictionary<String, Animation> Animations;
-        public Dictionary<String, Cached<Texture2D>> Sprites = new Dictionary<string, Cached<Texture2D>>();
 
         [JsonIgnore]
         override public float Direction
         {
             set { throw new NotSupportedException("Set the SourceObject Direction instead."); }
             get { return SourceObject.Direction; }
-        }
-
-        [JsonIgnore]
-        public string _spriteFile;
-        [JsonIgnore]
-        public string SpriteFile
-        {
-            get { return _spriteFile; }
-
-            set
-            {
-                // Determine the base path for the component based on the input and what files exists
-                var ComponentPath = "Components/" + ID + "/";
-                if (value != null && Directory.Exists(Globals.ProjectDirectory + "/Content/" + ComponentPath + value))
-                {
-                    ComponentPath += value + "/";
-                }
-                else if (Directory.Exists(Globals.ProjectDirectory + "/Content/" + ComponentPath + "Default"))
-                {
-                    ComponentPath += "Default/";
-                }
-
-                // Components can have different sprites for each side they're on
-                if (Side != null && Directory.Exists(Globals.ProjectDirectory + "/Content/" + ComponentPath + Side))
-                {
-                    ComponentPath += Side + "/";
-                }
-
-                // Load up the sprites for each specified direction
-                if (Directional)
-                {
-                    Sprites["Front"] = new Cached<Texture2D>(ComponentPath + "Front");
-                    Sprites["Back"] = new Cached<Texture2D>(ComponentPath + "Back");
-                    Sprites["Left"] = new Cached<Texture2D>(ComponentPath + "Left");
-                    Sprites["Right"] = new Cached<Texture2D>(ComponentPath + "Right");
-                }
-                else if (File.Exists(Globals.ProjectDirectory + "/Content/" + ComponentPath + ID + ".png"))
-                {
-                    Sprites[""] = new Cached<Texture2D>(ComponentPath + ID);
-                }
-                else if (value != null)
-                {
-                    Sprites[""] = new Cached<Texture2D>(value);
-                }
-                _spriteFile = value;
-            }
-        }
-
-        [JsonIgnore]
-        override public Texture2D Sprite
-        {
-            get
-            {
-                if (Directional)
-                {
-                    return Sprites[MathTools.StringFromRadians(Direction)].Value;
-                }
-                else
-                {
-                    return Sprites[""].Value;
-                }
-            }
-
-            set { throw new NotImplementedException("Cannot set Component Sprite directly; use SpriteFile instead."); }
         }
 
         [JsonIgnore]

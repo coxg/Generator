@@ -8,7 +8,7 @@ namespace Generator
         // Constructor
         public Accessory(
             string name,
-            Cached<Texture2D> sprite,
+            Sprite sprite,
             int quantity = 1,
 
             // Stats

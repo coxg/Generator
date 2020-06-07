@@ -66,7 +66,6 @@ namespace Generator
                             baseStyle: 1,
                             id: "niels",
                             name: "Niels",
-                            componentSpriteFileName: "Ninja",
                             brightness: Vector3.Zero,
                             abilities: new List<Ability> {
                                 new code.abilities.Sprint(),
@@ -85,7 +84,6 @@ namespace Generator
                             baseStyle: 100,
                             id: "farrah",
                             name: "Farrah",
-                            componentSpriteFileName: "Girl",
                             brightness: Vector3.Zero,
                             conversation: new Conversation(
                                 choicesList: new List<Conversation.Choices>()
@@ -147,7 +145,6 @@ namespace Generator
                             baseStrength: 10,
                             baseSpeed: 10,
                             baseSense: 10,
-                            componentSpriteFileName: "Old",
                             activationEffect: new Cached<Action<GameObject, GameObject>>("CreateBigBoy"),
                             conversation: new Conversation(
                                 choicesList: new List<Conversation.Choices>()
@@ -245,7 +242,8 @@ namespace Generator
                                     id: "building",
                                     relativePosition: new Vector3(.5f, .5f, .5f),
                                     relativeSize: .2f,
-                                    baseRotationPoint: new Vector3(.5f, .5f, .5f))
+                                    baseRotationPoint: new Vector3(.5f, .5f, .5f),
+                                    sprite: Globals.SpriteSheet.GetCopy("NinjaHead"))
                                 }
                             }),
 
@@ -259,7 +257,6 @@ namespace Generator
                             baseStyle: 100,
                             id: "bad_guy",
                             name: "Bad Guy",
-                            componentSpriteFileName: "Ninja",
                             brightness: Vector3.Zero,
                             abilities: new List<Ability>() {
                                 new code.abilities.Sprint(),
@@ -293,7 +290,7 @@ namespace Generator
                                     relativePosition: new Vector3(.5f, .5f, .5f),
                                     relativeSize: .2f,
                                     baseRotationPoint: new Vector3(.5f, .5f, .5f),
-                                    spriteFile: "Sprites/building")
+                                    sprite: Globals.SpriteSheet.GetCopy("NinjaHead"))
                                 }
                             })
                     });

@@ -58,7 +58,6 @@ namespace Generator
             // Create common vertices for reuse
 
             // Set up the GraphicsDevice, which is used for all drawing
-            Globals.GraphicsDevice = GraphicsDevice;
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             lightingRenderTarget = new RenderTarget2D(
@@ -87,8 +86,7 @@ namespace Generator
             };
 
             Globals.ContentManager = Content;
-
-            // TODO: This will be replaced once we have an intro screen
+            
             Globals.DefaultTileSheet = new TileSheet(
                 "Tiles/tiles",
                 new List<Tile>
@@ -102,6 +100,33 @@ namespace Generator
                     new Tile("wall", 10,  100, 80),
                     new Tile("snow", 3,  5, 96, 107),
                 });
+            
+            Globals.DefaultSpriteSheet = new SpriteSheet(
+                "Sprites/spriteSheet",
+                new List<Sprite>
+                {
+                    // TODO: Make classes for the different types of sprites
+                    new Sprite("PinkArm", false, 2, 2, 0, 0),
+                    new Sprite("NinjaArm", false, 2, 2, 2, 0),
+                    new Sprite("PurpleArm", false, 2, 2, 4, 0),
+                    new Sprite("PinkBody", true, 2, 2, 0, 2),
+                    new Sprite("NinjaBody", true, 2, 2, 2, 2),
+                    new Sprite("PurpleBody", true, 2, 2, 4, 2),
+                    new Sprite("Hand", false, 2, 2, 0, 10),
+                    new Sprite("MetalBall", false, 2, 2, 2, 10),
+                    new Sprite("PinkLeg", false, 2, 2, 0, 12),
+                    new Sprite("NinjaLeg", false, 2, 2, 2, 12),
+                    new Sprite("PurpleLeg", false, 2, 2, 4, 12),
+                    new Sprite("NormalEyes", true, 4, 4, 0, 14, directions: new List<string>{"Front", "Left", "Right"}),
+                    new Sprite("HurtEyes", true, 4, 4, 4, 14, directions: new List<string>{"Front", "Left", "Right"}),
+                    new Sprite("Goggles", true, 4, 4, 8, 14, directions: new List<string>{"Front", "Left", "Right"}),
+                    new Sprite("GirlHead", true, 4, 4, 0, 26),
+                    new Sprite("NinjaHead", true, 4, 4, 4, 26),
+                    new Sprite("SamuraiHead", true, 5, 4, 8, 26),
+                });
+            Globals.SpriteSheet = Globals.DefaultSpriteSheet;
+            
+            // TODO: This will be replaced once we have an intro screen
             Saving.LoadAreaFromDisk(Globals.ZoneName.Value);
             Saving.PopulateSaveKeywords();
             Timing.AddEvent(300, Saving.Autosave);

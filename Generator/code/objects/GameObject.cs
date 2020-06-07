@@ -28,8 +28,7 @@ namespace Generator
             float? directionOverride = null,
 
             // Animation attributes
-            string componentSpriteFileName = "Ninja",
-            string spriteFile = null,
+            Sprite sprite = null,
             Dictionary<string, Component> components = null,
 
             // Actions
@@ -78,10 +77,9 @@ namespace Generator
         )
         {
             // Animation attributes
-            ComponentSpriteFileName = componentSpriteFileName;
             Components = components ?? GenerateDefaultComponentDict();
             LinkComponents();
-            SpriteFile = spriteFile;
+            Sprite = sprite;
 
             // Actions
             IsWalking = isWalking;
@@ -111,9 +109,9 @@ namespace Generator
             Ailments = ailments ?? new List<code.objects.Ailment>();
 
             // Equipment
-            EquippedArmor = armor ?? new Armor("[No Armor]", new Cached<Texture2D>("Sprites/white_dot"));
-            EquippedGenerator = generator ?? new GeneratorObj("[No Generator]", new Cached<Texture2D>("Sprites/white_dot"));
-            EquippedAccessory = accessory ?? new Accessory("[No Accessory]", new Cached<Texture2D>("Sprites/white_dot"));
+            EquippedArmor = armor ?? new Armor("[No Armor]", null);
+            EquippedGenerator = generator ?? new GeneratorObj("[No Generator]", null);
+            EquippedAccessory = accessory ?? new Accessory("[No Accessory]", null);
 
             // Abilities
             Abilities = abilities ?? new List<Ability>();
@@ -140,27 +138,8 @@ namespace Generator
 
             Globals.Log(ID + " has spawned.");
         }
-
-        // name of component sprite file for this game object
-        private string ComponentSpriteFileName;
-
-        // Sprites
+        
         public Dictionary<string, Component> Components;
-        private string SpriteFile;
-        [JsonIgnore]
-        private Texture2D _Sprite;
-        [JsonIgnore]
-        public override Texture2D Sprite {
-            get
-            {
-                if (_Sprite == null && SpriteFile != null)
-                {
-                    _Sprite = Globals.ContentManager.Load<Texture2D>(SpriteFile);
-                }
-                return _Sprite;
-            }
-            set { throw new NotSupportedException("Set the _Sprite instead."); }
-        }
 
         // Toggleables
         private bool _isWalking;
@@ -281,21 +260,21 @@ namespace Generator
         public Cached<Action<GameObject, GameObject>> CollisionEffect;
         public bool Temporary;
 
-        private Armor _equippedArmor = new Armor("[No Armor]", new Cached<Texture2D>("Sprites/white_dot"));
+        private Armor _equippedArmor = new Armor("[No Armor]", null);
         public Armor EquippedArmor
         {
             get => _equippedArmor;
             set { Equip(value); }
         }
 
-        private GeneratorObj _equippedGenerator = new GeneratorObj("[No Generator]", new Cached<Texture2D>("Sprites/white_dot"));
+        private GeneratorObj _equippedGenerator = new GeneratorObj("[No Generator]", null);
         public GeneratorObj EquippedGenerator
         {
             get => _equippedGenerator;
             set { Equip(value); }
         }
 
-        private Accessory _equippedAccessory = new Accessory("[No Accessory]", new Cached<Texture2D>("Sprites/white_dot"));
+        private Accessory _equippedAccessory = new Accessory("[No Accessory]", null);
         public Accessory EquippedAccessory
         {
             get => _equippedAccessory;
@@ -366,7 +345,7 @@ namespace Generator
             {
                 {"Head", new Component(
                     id: "Head",
-                    spriteFile: ComponentSpriteFileName,
+                    sprite: Globals.SpriteSheet.GetCopy("NinjaHead"),
                     directional: true,
                     relativePosition: new Vector3(.5f, .506f, 1.26f),
                     relativeSize: .32f,
@@ -375,16 +354,16 @@ namespace Generator
                 },
                 {"Face", new Component(
                     id: "Face",
-                    spriteFile: ComponentSpriteFileName,
+                    sprite: Globals.SpriteSheet.GetCopy("NormalEyes"),
                     directional: true,
-                    relativePosition: new Vector3(.5f, .57f, 1),
-                    relativeSize: .14f,
-                    baseRotationPoint: new Vector3(.08f, 0, .066f),
+                    relativePosition: new Vector3(.5f, .52f, 1f),
+                    relativeSize: .32f,
+                    baseRotationPoint: new Vector3(.2f, 0, .15f),
                     yOffset: -.05f)
                 },
                 {"Body", new Component(
                     id: "Body",
-                    spriteFile: ComponentSpriteFileName,
+                    sprite: Globals.SpriteSheet.GetCopy("NinjaBody"),
                     directional: true,
                     relativePosition: new Vector3(.5f, .505f, .47f),
                     relativeSize: .16f,
@@ -392,11 +371,11 @@ namespace Generator
                 },
                 {"Arm/Left", new Component(
                     id: "Arm/Left",
-                    spriteFile: ComponentSpriteFileName,
-                    relativePosition: new Vector3(.08f, .504f, .515f),
-                    relativeSize: .08f,
+                    sprite: Globals.SpriteSheet.GetCopy("NinjaArm"),
+                    relativePosition: new Vector3(.29f, .502f, .5075f),
+                    relativeSize: .16f,
                     relativeRotation: new Vector3(0, .4f, 0),
-                    baseRotationPoint: new Vector3(.04f, 0, .023f),
+                    baseRotationPoint: new Vector3(.08f, 0, .046f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -418,11 +397,11 @@ namespace Generator
                 },
                 {"Arm/Right", new Component(
                     id: "Arm/Right",
-                    spriteFile: ComponentSpriteFileName,
-                    relativePosition: new Vector3(.92f, .504f, .515f),
-                    relativeSize: .08f,
+                    sprite: Globals.SpriteSheet.GetCopy("NinjaArm"),
+                    relativePosition: new Vector3(.71f, .502f, .5075f),
+                    relativeSize: .16f,
                     relativeRotation: new Vector3(0, -.4f, 0),
-                    baseRotationPoint: new Vector3(.04f, 0, .023f),
+                    baseRotationPoint: new Vector3(.08f, 0, .046f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -444,10 +423,10 @@ namespace Generator
                 },
                 {"Hand/Left", new Component(
                     id: "Hand/Left",
-                    spriteFile: ComponentSpriteFileName,
-                    relativePosition: new Vector3(-.25f, .5045f, .35f),
-                    relativeSize: .08f,
-                    baseRotationPoint: new Vector3(.04f, 0, .032f),
+                    sprite: Globals.SpriteSheet.GetCopy("Hand"),
+                    relativePosition: new Vector3(.125f, .50225f, .425f),
+                    relativeSize: .16f,
+                    baseRotationPoint: new Vector3(.08f, 0, .064f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -469,10 +448,10 @@ namespace Generator
                 },
                 {"Hand/Right", new Component(
                     id: "Hand/Right",
-                    spriteFile: ComponentSpriteFileName,
-                    relativePosition: new Vector3(1.25f, .5045f, .35f),
-                    relativeSize: .08f,
-                    baseRotationPoint: new Vector3(.04f, 0, .032f),
+                    sprite: Globals.SpriteSheet.GetCopy("Hand"),
+                    relativePosition: new Vector3(.875f, .50225f, .425f),
+                    relativeSize: .16f,
+                    baseRotationPoint: new Vector3(.08f, 0, .064f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -494,10 +473,10 @@ namespace Generator
                 },
                 {"Leg/Left", new Component(
                     id: "Leg/Left",
-                    spriteFile: ComponentSpriteFileName,
-                    relativePosition: new Vector3(.23f, .504f, .14f),
-                    relativeSize: .08f,
-                    baseRotationPoint: new Vector3(.04f, 0, .018f),
+                    sprite: Globals.SpriteSheet.GetCopy("NinjaLeg"),
+                    relativePosition: new Vector3(.365f, .502f, .07f),
+                    relativeSize: .16f,
+                    baseRotationPoint: new Vector3(.08f, 0, .036f),
                     yOffset: .15f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -519,10 +498,10 @@ namespace Generator
                 },
                 {"Leg/Right", new Component(
                     id: "Leg/Right",
-                    spriteFile: ComponentSpriteFileName,
-                    relativePosition: new Vector3(.77f, .504f, .14f),
-                    relativeSize: .08f,
-                    baseRotationPoint: new Vector3(.04f, 0, .018f),
+                    sprite: Globals.SpriteSheet.GetCopy("NinjaLeg"),
+                    relativePosition: new Vector3(.635f, .502f, .07f),
+                    relativeSize: .16f,
+                    baseRotationPoint: new Vector3(.08f, 0, .036f),
                     yOffset: .15f,
                     animations: new Dictionary<string, Animation>()
                     {

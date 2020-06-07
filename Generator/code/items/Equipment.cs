@@ -24,7 +24,7 @@ namespace Generator
 
         // Constructor
         public Equipment(
-                string name, Cached<Texture2D> sprite, int quantity = 1, Cached<Action<GameObject>> effect = null
+                string name, Sprite sprite, int quantity = 1, Cached<Action<GameObject>> effect = null
             ) : base(name, sprite, quantity, effect) { }
     }
 }

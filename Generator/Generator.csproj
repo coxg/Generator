@@ -66,6 +66,10 @@
     <Compile Include="code\abilities\PlaceObject.cs" />
     <Compile Include="code\abilities\Shoot.cs" />
     <Compile Include="code\actions\Ability.cs" />
+    <Compile Include="code\Drawing\Drawing.cs" />
+    <Compile Include="code\Drawing\Sprite.cs" />
+    <Compile Include="code\Drawing\SpriteSheet.cs" />
+    <Compile Include="code\Drawing\TileSheet.cs" />
     <Compile Include="code\items\Accessory.cs" />
     <Compile Include="code\actions\Animation.cs" />
     <Compile Include="code\actions\Actions.cs" />
@@ -73,7 +77,6 @@
     <Compile Include="code\objects\Conversation.cs" />
     <Compile Include="code\world\GameObjectManager.cs" />
     <Compile Include="code\world\TileManager.cs" />
-    <Compile Include="code\world\TileSheet.cs" />
     <Compile Include="LilyPath\Brush.cs" />
     <Compile Include="LilyPath\Brushes\CheckerBrush.cs" />
     <Compile Include="LilyPath\DrawBatch.cs" />
@@ -106,7 +109,6 @@
     <Compile Include="code\objects\Attribute.cs" />
     <Compile Include="code\control\Camera.cs" />
     <Compile Include="code\objects\Component.cs" />
-    <Compile Include="code\control\Drawing.cs" />
     <Compile Include="code\items\Equipment.cs" />
     <Compile Include="code\control\GameControl.cs" />
     <Compile Include="code\objects\GameObject.cs" />

@@ -76,7 +76,8 @@ namespace Generator
         public static Texture2D WhiteDot;
         public static SpriteFont Font;
         public static TileSheet DefaultTileSheet;
-        public static GraphicsDevice GraphicsDevice;
+        public static SpriteSheet DefaultSpriteSheet;
+        public static SpriteSheet SpriteSheet;
 
         // Data storage
         public static Dictionary<string, Armor> ArmorDict = new Dictionary<string, Armor>();
@@ -128,8 +129,9 @@ namespace Generator
             }
         }
 
-        public static object Copy(object copyObj)
+        public static object Copy(object copyObj) 
             // C# doesn't have a native copy method, so just serialize and deserialize
+            // TODO: Is it possible to do this in memory instead of being IO bound?
         {
             using (StreamWriter file = File.CreateText(ProjectDirectory + "tmp.json"))
             {

@@ -7,27 +7,27 @@ namespace Generator
     public class TileSheet
     {
         public TileSheet(
-            string spriteName,
+            string textureName,
             List<Tile> tiles,
             int tileSize=256
         )
         {
-            SpriteName = spriteName;
-            Sprite = Globals.ContentManager.Load<Texture2D>(SpriteName);
+            TextureName = textureName;
+            Texture = Globals.ContentManager.Load<Texture2D>(TextureName);
             TileSize = tileSize;
-            Height = Sprite.Height / TileSize;
-            Width = Sprite.Width / TileSize;
+            Height = Texture.Height / TileSize;
+            Width = Texture.Width / TileSize;
             Tiles = tiles;
         }
         
-        public string SpriteName;
+        public string TextureName;
         public int TileSize;
         public int Height;  // In tiles
         public int Width;  // In tiles
         public List<Tile> Tiles;  // In the order they appear in the sheet
         
         [Newtonsoft.Json.JsonIgnore]
-        public Texture2D Sprite;
+        public Texture2D Texture;
 
         public Tile TileFromId(int id)
         {

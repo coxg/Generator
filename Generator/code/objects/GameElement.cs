@@ -14,7 +14,8 @@ namespace Generator
         public Vector3 RotationOffset;
         public Vector3 RotationPoint;
         public Vector3 Size;
-        public abstract Texture2D Sprite { get; set; }
+        public Sprite Sprite;
+        
         public abstract float Direction { get; set; }
 
         protected Vector3 _Center;
