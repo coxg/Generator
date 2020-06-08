@@ -29,9 +29,9 @@ namespace Generator
         [Newtonsoft.Json.JsonIgnore]
         public Texture2D Texture;
 
-        public Tile TileFromId(int id)
+        public Tile TileFromId(int? id)
         {
-            return Tiles[id / Width];
+            return id == null ? null : Tiles[(int)id / Width];
         }
 
         public Rectangle TextureCoordinatesFromId(int id)

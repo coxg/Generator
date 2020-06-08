@@ -11,9 +11,9 @@ namespace Generator
     public class TileManager
     // Middle man between Zone and TileSheet
     {
-        public int[,] IdMap;
+        private int?[,] IdMap;
         public TileSheet TileSheet;
-        public int BaseTileId;
+        private int? BaseTileId;
         private bool isPopulatingVertices;
 
         public Tile Get(int x, int y)
@@ -77,7 +77,12 @@ namespace Generator
         private void AppendVertices(int x, int y, List<VertexPositionTexture> vertices, List<int> indices=null, 
             string orientation = "Bottom", int? tileId = null)
         {
-            var textureCoordinates = TileSheet.TextureVerticesFromId(tileId ?? IdMap[x, y], orientation);
+            tileId = tileId ?? IdMap[x, y];
+            if (tileId == null)
+            {
+                return;
+            }
+            var textureCoordinates = TileSheet.TextureVerticesFromId((int)tileId, orientation);
 
             if (indices != null)
             {
@@ -263,30 +268,33 @@ namespace Generator
         private static void PopulateBuffers(int[] indices, VertexPositionTexture[] vertices)
         {
             Globals.Log("Populating buffers");
-            GameControl.IndexBuffer = new IndexBuffer(
+            var indexBuffer = new IndexBuffer(
                 GameControl.graphics.GraphicsDevice, typeof(int), indices.Length, BufferUsage.WriteOnly);
-            GameControl.VertexBuffer = new VertexBuffer(GameControl.graphics.GraphicsDevice, 
+            var vertexBuffer = new VertexBuffer(GameControl.graphics.GraphicsDevice, 
                 typeof(VertexPositionTexture), vertices.Length, BufferUsage.WriteOnly);
-            GameControl.IndexBuffer.SetData(indices);
-            GameControl.VertexBuffer.SetData(vertices);
-            GameControl.graphics.GraphicsDevice.SetVertexBuffer(GameControl.VertexBuffer);
-            GameControl.graphics.GraphicsDevice.Indices = GameControl.IndexBuffer;
+            indexBuffer.SetData(indices);
+            vertexBuffer.SetData(vertices);
+            GameControl.graphics.GraphicsDevice.SetVertexBuffer(vertexBuffer);
+            GameControl.graphics.GraphicsDevice.Indices = indexBuffer;
             Globals.Log("Done populating buffers");
         }
         
-        public TileManager(TileSheet tileSheet, int baseTileId=0)
+        public TileManager(TileSheet tileSheet, int? baseTileId=0)
         {
             TileSheet = tileSheet;
             BaseTileId = baseTileId;
             DynamicVertices = new List<VertexPositionTexture>();
             
             // Populate with random instances of the base tile
-            IdMap = new int[Globals.Zone.Width, Globals.Zone.Height];
-            for (var x = 0; x < Globals.Zone.Width; x++)
+            IdMap = new int?[Globals.Zone.Width, Globals.Zone.Height];
+            if (BaseTileId != null)
             {
-                for (var y = 0; y < Globals.Zone.Height; y++)
+                for (var x = 0; x < Globals.Zone.Width; x++)
                 {
-                    IdMap[x, y] = TileSheet.Tiles[BaseTileId].GetRandomBaseId();
+                    for (var y = 0; y < Globals.Zone.Height; y++)
+                    {
+                        IdMap[x, y] = TileSheet.Tiles[(int)BaseTileId].GetRandomBaseId();
+                    }
                 }
             }
 
@@ -294,7 +302,7 @@ namespace Generator
         }
 
         [JsonConstructor]
-        public TileManager(int[,] idMap, TileSheet tileSheet, int baseTileId)
+        public TileManager(int?[,] idMap, TileSheet tileSheet, int baseTileId)
         {
             TileSheet = tileSheet;
             BaseTileId = baseTileId;

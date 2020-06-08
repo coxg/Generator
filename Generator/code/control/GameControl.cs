@@ -25,8 +25,6 @@ namespace Generator
         public static Rectangle screenSize = new Rectangle(0, 0, (int)Globals.Resolution.X, (int)Globals.Resolution.Y);
         public static SpriteBatch spriteBatch;
         public static LilyPath.DrawBatch drawBatch;
-        public static VertexBuffer VertexBuffer;
-        public static IndexBuffer IndexBuffer;
 
         public GameControl()
         {
@@ -58,7 +56,6 @@ namespace Generator
             Globals.Serializer = new JsonSerializer { Formatting = Globals.IsRelease ? Formatting.None : Formatting.Indented};
 
             // Set up the GraphicsDevice, which is used for all drawing
-            GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             lightingRenderTarget = new RenderTarget2D(
                 GraphicsDevice,
