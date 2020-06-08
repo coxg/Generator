@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Linq;
 using System;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Generator
 {
@@ -54,6 +54,8 @@ namespace Generator
             {
                 Directory.Delete(Saving.TempSaveDirectory, true);
             }
+            
+            Globals.Serializer = new JsonSerializer { Formatting = Globals.IsRelease ? Formatting.None : Formatting.Indented};
 
             // Set up the GraphicsDevice, which is used for all drawing
             GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -222,57 +224,21 @@ namespace Generator
             }
             else
             {
-                // Draw the resource bars
                 drawBatch.Begin();
-                var partyMembers = Globals.Party.Value.GetMembers().ToList();
-                for (int i = 0; i < partyMembers.Count; i++)
-                {
-                    var gameObject = partyMembers[i];
-                    Drawing.DrawResource(gameObject.Health, i);
-                    if (gameObject.Electricity.Max > 0)
-                        Drawing.DrawResource(gameObject.Electricity, i);
-                }
+                Drawing.DrawResourceBars();
                 drawBatch.End();
-
-                // Show which tiles are selected
-                if (Globals.CreativeMode)
-                {
-                    Drawing.DrawCreativeUI(spriteBatch);
-                }
-
-                // Show all text blurbs
-                foreach (var gameObject in Globals.GameObjectManager.GetVisible().OrderBy(i => -i.Position.Y))
-                {
-                    if (gameObject.IsSaying != null)
-                    {
-                        var textBoxCenter = MathTools.PixelsFromPosition(
-                            gameObject.Center + new Vector3(0, 3, 0));
-                        Drawing.DrawTextBox(
-                            spriteBatch,
-                            gameObject.IsSaying,
-                            (int)textBoxCenter.X,
-                            (int)textBoxCenter.Y,
-                            300,
-                            Color.White,
-                            align: "center",
-                            borderThickness: 5,
-                            highlightColor: Color.MediumPurple,
-                            highlightMargin: 16);
-                    }
-                }
+                if (Globals.CreativeMode) Drawing.DrawCreativeUI(spriteBatch);
+                Drawing.DrawTextBoxes(spriteBatch);
             }
-
-            // Draw FPS counter
-            if (Timing.ShowFPS)
+            
+            if (!Globals.IsRelease)
             {
                 Timing.NumDraws++;
                 Timing.FrameTimes[(int)MathTools.Mod(Timing.NumDraws, Timing.FrameTimes.Length)] = DateTime.Now;
                 Drawing.DrawFPS(spriteBatch);
                 Drawing.DrawPlayerCoordinates(spriteBatch);
+                Drawing.DrawLogs(spriteBatch);
             }
-
-            // Draw the logs
-            Drawing.DrawLogs(spriteBatch);
             
             spriteBatch.End();
             base.Draw(gameTime);

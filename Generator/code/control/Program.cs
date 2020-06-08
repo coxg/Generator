@@ -15,7 +15,7 @@ namespace Generator
         private static void Main()
         {
             var KeepLogAfterExit = false;  // TODO: Replace with writing logs to disk
-            if (KeepLogAfterExit && Globals.Logging)
+            if (KeepLogAfterExit && !Globals.IsRelease)
                 try
                 {
                     using (var game = new GameControl())

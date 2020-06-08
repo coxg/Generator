@@ -43,9 +43,6 @@ namespace Generator
             Strength = strength;
             Speed = speed;
             Sense = perception;
-
-            // Populate relevant dictionary
-            Globals.AccessoryDict[Name] = this;
         }
     }
 }

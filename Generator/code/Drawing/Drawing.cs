@@ -734,5 +734,39 @@ namespace Generator
                 tileSheet.TextureCoordinatesFromId(
                     (int)MathTools.Mod(Globals.CreativeObjectIndex + 1, tileSheet.Tiles.Count)));
         }
+        
+        public static void DrawTextBoxes(SpriteBatch spriteBatch) {
+            // Show all text blurbs
+            foreach (var gameObject in Globals.GameObjectManager.GetVisible().OrderBy(i => -i.Position.Y))
+            {
+                if (gameObject.IsSaying != null)
+                {
+                    var textBoxCenter = MathTools.PixelsFromPosition(
+                        gameObject.Center + new Vector3(0, 3, 0));
+                    DrawTextBox(
+                        spriteBatch,
+                        gameObject.IsSaying,
+                        (int)textBoxCenter.X,
+                        (int)textBoxCenter.Y,
+                        300,
+                        Color.White,
+                        align: "center",
+                        borderThickness: 5,
+                        highlightColor: Color.MediumPurple,
+                        highlightMargin: 16);
+                }
+            }
+        }
+
+        public static void DrawResourceBars()
+        {
+            var partyMembers = Globals.Party.Value.GetMembers().ToList();
+            for (int i = 0; i < partyMembers.Count; i++)
+            {
+                var gameObject = partyMembers[i];
+                DrawResource(gameObject.Health, i);
+                if (gameObject.Electricity.Max > 0) DrawResource(gameObject.Electricity, i);
+            }
+        }
     }
 }

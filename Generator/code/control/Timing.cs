@@ -21,7 +21,6 @@ namespace Generator
         // Keeping track of FPS
         public static int NumDraws = 0;
         public static DateTime[] FrameTimes = new DateTime[30];
-        public static bool ShowFPS = true;
         public static float FPS
         {
             get {

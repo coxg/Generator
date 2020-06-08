@@ -41,14 +41,12 @@ namespace Generator
         // Regular old variables
         public static Vector2 Resolution = new Vector2(1600, 900);
         public static ContentManager ContentManager;
-        public static bool Logging = true;
         public static int RefreshRate = 60;
         // TODO: This will definitely break when I move to production
         public static string ProjectDirectory = Path.GetFullPath(@"../../../../");
-        // TODO: Remove formatting before release - this roughly doubles the size of the save files
-        // OR have some kind of dev/release flag, which would control thing (among other things)
-        public static JsonSerializer Serializer = new JsonSerializer { Formatting = Formatting.Indented };
+        public static JsonSerializer Serializer;
         public static bool LightingEnabled = false;
+        public static bool IsRelease = false;
 
         // World management
         public static SavedString ZoneName = new SavedString("zoneName", "testingZone");
@@ -79,18 +77,13 @@ namespace Generator
         public static SpriteSheet DefaultSpriteSheet;
         public static SpriteSheet SpriteSheet;
 
-        // Data storage
-        public static Dictionary<string, Armor> ArmorDict = new Dictionary<string, Armor>();
-        public static Dictionary<string, GeneratorObj> GeneratorDict = new Dictionary<string, GeneratorObj>();
-        public static Dictionary<string, Accessory> AccessoryDict = new Dictionary<string, Accessory>();
-
         public static List<string> Logs = new List<string>();
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void Log(object text = null)
         // Logs to console/screen with debugging information
         {
-            if (Logging)
+            if (!IsRelease)
             {
                 var CallingFrame = new StackTrace(1, true).GetFrame(0);
                 var logLine = DateTime.Now + " "
@@ -112,7 +105,7 @@ namespace Generator
         public static void Warn(object text = null)
         // Intentionally copy/pasted because it's not worth abstracting the CallingFrame stuff
         {
-            if (Logging)
+            if (!IsRelease)
             {
                 var CallingFrame = new StackTrace(1, true).GetFrame(0);
                 var logLine = DateTime.Now + " "

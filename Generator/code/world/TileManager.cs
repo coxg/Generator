@@ -305,7 +305,6 @@ namespace Generator
         }
         
         public void Update() {
-            Globals.Log(DynamicVertices.Count);
             if (!isPopulatingVertices && DynamicVertices.Count > 5000)
             {
                 isPopulatingVertices = true;
