@@ -172,9 +172,10 @@ namespace Generator
 
             // Get input for character
             Input.ProcessInput(Globals.Player);
-
-            // Update the GameObjects
+            
+            // Update the world in response to the above
             Globals.GameObjectManager.Update();
+            Globals.TileManager.Update();
 
             // Keep the camera focused on the player
             camera.Update();

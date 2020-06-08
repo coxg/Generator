@@ -93,7 +93,8 @@ namespace Generator
             if (Logging)
             {
                 var CallingFrame = new StackTrace(1, true).GetFrame(0);
-                var logLine = CallingFrame.GetFileName().Split('\\').Last() + " line "
+                var logLine = DateTime.Now + " "
+                    + CallingFrame.GetFileName().Split('\\').Last() + " line "
                     + CallingFrame.GetFileLineNumber() + ", in "
                     + CallingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First()
                     + ": " + text;
@@ -114,7 +115,8 @@ namespace Generator
             if (Logging)
             {
                 var CallingFrame = new StackTrace(1, true).GetFrame(0);
-                var logLine = CallingFrame.GetFileName().Split('\\').Last() + " line "
+                var logLine = DateTime.Now + " "
+                    + CallingFrame.GetFileName().Split('\\').Last() + " line "
                     + CallingFrame.GetFileLineNumber() + ", in "
                     + CallingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First()
                     + ": [WARNING]" + text;
