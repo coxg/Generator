@@ -25,19 +25,28 @@ namespace Generator
         }
 
         public void Set(int x, int y, int tileId)
-        // setBuffers is expensive - if an ability needs to call Set a bunch of times then only the last call should
-        // do the setBuffers call
         {
             IdMap[x, y] = tileId;
+            for (var _x = x - 1; _x <= x + 1; _x++)
+            {
+                for (var _y = y - 1; _y <= y + 1; _y++)
+                {
+                    AppendTileVertices(_x, _y, DynamicVertices);
+                    AppendAllEdgeVertices(_x, _y, DynamicVertices);
+                }
+            }
         }
 
         [JsonIgnore]
         public VertexPositionTexture[] Vertices;
         
         [JsonIgnore]
+        public List<VertexPositionTexture> DynamicVertices;
+        
+        [JsonIgnore]
         public int[] Indices;
 
-        public void PopulateAllVertices()
+        private void PopulateAllVertices()
         {
             var numBaseVertices = 4 * IdMap.Length;
             var numBaseIndices = 6 * IdMap.Length;
@@ -51,7 +60,7 @@ namespace Generator
                 for (var y = 0; y < Globals.Zone.Height; y++)
                 {
                     UpdateVertices(x, y);
-                    AppendAllEdgeVertices(x, y, edgeIndices, edgeVertices);
+                    AppendAllEdgeVertices(x, y, edgeVertices, edgeIndices);
                 }
             }
             
@@ -95,27 +104,50 @@ namespace Generator
             Vertices[vi].TextureCoordinate = textureCoordinates[3];
         }
 
+        private void AppendTileVertices(int x, int y, List<VertexPositionTexture> vertices, 
+            string orientation = "Bottom", int? tileId = null)
+        {
+            var textureCoordinates = TileSheet.TextureVerticesFromId(tileId ?? IdMap[x, y], orientation);
+            vertices.Add(new VertexPositionTexture(new Vector3(x, y, 0), textureCoordinates[0]));
+            vertices.Add(new VertexPositionTexture(new Vector3(x, y + 1, 0), textureCoordinates[1]));
+            vertices.Add(new VertexPositionTexture(new Vector3(x + 1, y, 0), textureCoordinates[2]));
+            vertices.Add(new VertexPositionTexture(new Vector3(x, y + 1, 0), textureCoordinates[1]));
+            vertices.Add(new VertexPositionTexture(new Vector3(x + 1, y + 1, 0), textureCoordinates[3]));
+            vertices.Add(new VertexPositionTexture(new Vector3(x + 1, y, 0), textureCoordinates[2]));
+        }
+
         private void AppendEdgeVertices(int tileId, int x, int y, List<int> indices, 
             List<VertexPositionTexture> vertices, string orientation)
         {
             var textureCoordinates = TileSheet.TextureVerticesFromId(tileId, orientation);
-            
-            // Just do this first because it's less confusing
-            indices.Add(Vertices.Length + vertices.Count);
-            indices.Add(Vertices.Length + vertices.Count + 1);
-            indices.Add(Vertices.Length + vertices.Count + 2);
-            indices.Add(Vertices.Length + vertices.Count + 1);
-            indices.Add(Vertices.Length + vertices.Count + 3);
-            indices.Add(Vertices.Length + vertices.Count + 2);
-                    
-            // Bottom left
-            vertices.Add(new VertexPositionTexture(new Vector3(x, y, 0), textureCoordinates[0]));
-            vertices.Add(new VertexPositionTexture(new Vector3(x, y + 1, 0), textureCoordinates[1]));
-            vertices.Add(new VertexPositionTexture(new Vector3(x + 1, y, 0), textureCoordinates[2]));
-            vertices.Add(new VertexPositionTexture(new Vector3(x + 1, y + 1, 0), textureCoordinates[3]));
+
+            if (indices != null)
+            {
+                // Just do this first because it's less confusing
+                indices.Add(Vertices.Length + vertices.Count);
+                indices.Add(Vertices.Length + vertices.Count + 1);
+                indices.Add(Vertices.Length + vertices.Count + 2);
+                indices.Add(Vertices.Length + vertices.Count + 1);
+                indices.Add(Vertices.Length + vertices.Count + 3);
+                indices.Add(Vertices.Length + vertices.Count + 2);
+                
+                vertices.Add(new VertexPositionTexture(new Vector3(x, y, 0), textureCoordinates[0]));
+                vertices.Add(new VertexPositionTexture(new Vector3(x, y + 1, 0), textureCoordinates[1]));
+                vertices.Add(new VertexPositionTexture(new Vector3(x + 1, y, 0), textureCoordinates[2]));
+                vertices.Add(new VertexPositionTexture(new Vector3(x + 1, y + 1, 0), textureCoordinates[3]));
+            }
+            else
+            {
+                vertices.Add(new VertexPositionTexture(new Vector3(x, y, 0), textureCoordinates[0]));
+                vertices.Add(new VertexPositionTexture(new Vector3(x, y + 1, 0), textureCoordinates[1]));
+                vertices.Add(new VertexPositionTexture(new Vector3(x + 1, y, 0), textureCoordinates[2]));
+                vertices.Add(new VertexPositionTexture(new Vector3(x, y + 1, 0), textureCoordinates[1]));
+                vertices.Add(new VertexPositionTexture(new Vector3(x + 1, y + 1, 0), textureCoordinates[3]));
+                vertices.Add(new VertexPositionTexture(new Vector3(x + 1, y, 0), textureCoordinates[2]));
+            }
         }
         
-        private void AppendAllEdgeVertices(int x, int y, List<int> indices, List<VertexPositionTexture> vertices)
+        private void AppendAllEdgeVertices(int x, int y, List<VertexPositionTexture> vertices, List<int> indices=null)
         {
             var tile = Get(x, y);
 
@@ -290,6 +322,7 @@ namespace Generator
         {
             TileSheet = tileSheet;
             BaseTileId = baseTileId;
+            DynamicVertices = new List<VertexPositionTexture>();
             
             // Populate with random instances of the base tile
             IdMap = new int[Globals.Zone.Width, Globals.Zone.Height];
@@ -310,6 +343,7 @@ namespace Generator
             TileSheet = tileSheet;
             BaseTileId = baseTileId;
             IdMap = idMap;
+            DynamicVertices = new List<VertexPositionTexture>();
             
             PopulateAllVertices();
         }

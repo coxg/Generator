@@ -626,12 +626,18 @@ namespace Generator
         // Draw all tiles for a Zone
         public static void DrawTiles()
         {
+            var dynamicVertexArray = Globals.TileManager.DynamicVertices.ToArray();
             GameControl.tileEffect.Texture = Globals.TileManager.TileSheet.Texture;  // No performance impact
             foreach (var pass in GameControl.tileEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 GameControl.graphics.GraphicsDevice.DrawIndexedPrimitives(
                     PrimitiveType.TriangleList, 0, 0, Globals.TileManager.Indices.Length / 3);
+                if (dynamicVertexArray.Length > 0)
+                {
+                    GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
+                        PrimitiveType.TriangleList, dynamicVertexArray, 0, dynamicVertexArray.Length / 3);
+                }
             }
         }
 
