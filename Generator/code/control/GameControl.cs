@@ -94,15 +94,14 @@ namespace Generator
                     new Tile("sand", 3,  2, 32, 43),
                     new Tile("ice", 11,  4, 48, 59),
                     new Tile("lava", 8,  3, 64, 75),
-                    new Tile("wall", 10,  100, 80),
-                    new Tile("snow", 3,  5, 96, 107),
+                    new Tile("wall", 10,  80, 80),
+                    new Tile("snow", 3,  5, 96, 107)
                 });
             
             Globals.DefaultSpriteSheet = new SpriteSheet(
                 "Sprites/spriteSheet",
                 new List<Sprite>
                 {
-                    // TODO: Make classes for the different types of sprites
                     new Sprite("PinkArm", false, 1, 2, 0, 0),
                     new Sprite("NinjaArm", false, 1, 2, 1, 0),
                     new Sprite("PurpleArm", false, 1, 2, 2, 0),
@@ -122,6 +121,15 @@ namespace Generator
                     new Sprite("SamuraiHead", true, 5, 4, 8, 26),
                 });
             Globals.SpriteSheet = Globals.DefaultSpriteSheet;
+            Globals.CommonSpriteSheet = new SpriteSheet(
+                "Sprites/light", 
+                new List<Sprite>
+                {
+                    new Sprite("Light", false, 1, 1, 0, 0)
+                },
+                1,
+                1);
+            Globals.LightSprite = Globals.CommonSpriteSheet.GetCopy("Light");
             
             // TODO: This will be replaced once we have an intro screen
             Saving.LoadAreaFromDisk(Globals.ZoneName.Value);
@@ -143,7 +151,6 @@ namespace Generator
             
             // Load in the textures
             Globals.WhiteDot = Content.Load<Texture2D>("Sprites/white_dot");
-            Globals.LightTexture = Content.Load<Texture2D>("Sprites/light");
 
             // Load in the fonts
             Globals.Font = Content.Load<SpriteFont>("Fonts/Score");
@@ -195,7 +202,7 @@ namespace Generator
             if (Globals.LightingEnabled)
             {
                 GraphicsDevice.SetRenderTarget(lightingRenderTarget);
-                GraphicsDevice.Clear(Color.Black);
+                GraphicsDevice.Clear(new Color(50, 50, 100, 255));
                 Drawing.DrawLighting();
             }
 

@@ -25,6 +25,26 @@ namespace Generator
             }
         }
         
+        public SpriteSheet(
+            string textureName,
+            List<Sprite> sprites,
+            int height,
+            int width
+        )
+        {
+            TextureName = textureName;
+            Texture = Globals.ContentManager.Load<Texture2D>(TextureName);
+            Height = height;
+            Width = width;
+            BlockSize = Texture.Width / width;
+            Sprites = sprites;
+
+            foreach (var sprite in Sprites)
+            {
+                SpriteDict[sprite.Name] = sprite;
+            }
+        }
+        
         private string TextureName;
         private int BlockSize;
         private int Height;  // In blocks

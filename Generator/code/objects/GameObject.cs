@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
+using Generator.code.objects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
@@ -30,6 +31,7 @@ namespace Generator
             // Animation attributes
             Sprite sprite = null,
             Dictionary<string, Component> components = null,
+            Dictionary<string, LightComponent> lightComponents = null,
 
             // Actions
             bool isWalking = false,
@@ -54,7 +56,6 @@ namespace Generator
             int level = 1,
             int experience = 0,
             float direction = (float)Math.PI,
-            Vector3? brightness = null,
 
             List<code.objects.Ailment> ailments = null,
 
@@ -78,6 +79,7 @@ namespace Generator
         {
             // Animation attributes
             Components = components ?? GenerateDefaultComponentDict();
+            LightComponents = lightComponents ?? new Dictionary<string, LightComponent>();
             LinkComponents();
             Sprite = sprite;
 
@@ -103,7 +105,6 @@ namespace Generator
             Name = name;
             Level = level;
             Experience = experience;
-            Brightness = brightness ?? Vector3.Zero;
             MovementSpeed = movementSpeed;
 
             Ailments = ailments ?? new List<code.objects.Ailment>();
@@ -134,12 +135,12 @@ namespace Generator
             MovementTarget = movementPosition;
             MovementDirection = movementDirection;
             DirectionOverride = directionOverride;
-            Area = new RectangleF(Position.X, Position.Y, Size.X, Size.Y);
 
             Globals.Log(ID + " has spawned.");
         }
         
         public Dictionary<string, Component> Components;
+        public Dictionary<string, LightComponent> LightComponents;
 
         // Toggleables
         private bool _isWalking;
@@ -207,7 +208,6 @@ namespace Generator
                 {
                     Globals.GameObjectManager?.RemoveFromMap(this);
                     base.Position = value;
-                    Area = targetPosition;
                     Globals.GameObjectManager?.AddToMap(this);
                 }
 
@@ -220,8 +220,6 @@ namespace Generator
                 }
             }
         }
-        [JsonIgnore]
-        public RectangleF Area { get; set; }
 
         // Resources
         public Resource Health;
@@ -237,10 +235,6 @@ namespace Generator
         public Attribute Defense;
 
         public List<code.objects.Ailment> Ailments;
-
-        // Brightness
-        public Vector3 RelativeLightPosition = Vector3.Zero;
-        public Vector3 Brightness;
 
         // Growth
         public int Level;
@@ -302,6 +296,17 @@ namespace Generator
                     animation.Value.SourceObject = this;
                 }
             }
+            foreach (var component in LightComponents)
+            {
+                component.Value.ID = component.Key;  // Just for debugging purposes
+                component.Value.SourceObject = this;
+                foreach (var animation in component.Value.Animations)
+                {
+                    animation.Value.Name = animation.Key;
+                    animation.Value.AnimatedElement = component.Value;
+                    animation.Value.SourceObject = this;
+                }
+            }
         }
 
         // Equip some equipment!
@@ -345,7 +350,7 @@ namespace Generator
             {
                 {"Head", new Component(
                     sprite: Globals.SpriteSheet.GetCopy("NinjaHead"),
-                    relativePosition: new Vector3(.5f, .506f, 1.2f),
+                    relativePosition: new Vector3(.5f, .5f, 1.2f),
                     size: new Vector3(1.5f),
                     rotationPoint: new Vector3(.16f, 0, .256f),
                     yOffset: -.05f)
@@ -355,20 +360,20 @@ namespace Generator
                     relativePosition: new Vector3(.5f, .52f, .96f),
                     size: new Vector3(1.5f),
                     rotationPoint: new Vector3(.2f, 0, .15f),
-                    yOffset: -.05f)
+                    yOffset: -.1f)
                 },
                 {"Body", new Component(
                     sprite: Globals.SpriteSheet.GetCopy("NinjaBody"),
-                    relativePosition: new Vector3(.5f, .505f, .47f),
+                    relativePosition: new Vector3(.5f, .5f, .47f),
                     size: new Vector3(.75f),
                     rotationPoint: new Vector3(.08f, 0, .08f))
                 },
                 {"Arm/Left", new Component(
                     sprite: Globals.SpriteSheet.GetCopy("NinjaArm"),
-                    relativePosition: new Vector3(-.15f, .502f, .45f),
+                    relativePosition: new Vector3(.3f, .5f, .45f),
                     size: new Vector3(.375f, .375f, .75f),
                     relativeRotation: new Vector3(0, .4f, 0),
-                    rotationPoint: new Vector3(.5f, .0f, .8f),
+                    rotationPoint: new Vector3(.5f, 0, .8f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -398,10 +403,10 @@ namespace Generator
                 },
                 {"Arm/Right", new Component(
                     sprite: Globals.SpriteSheet.GetCopy("NinjaArm"),
-                    relativePosition: new Vector3(1.15f, .502f, .45f),
+                    relativePosition: new Vector3(.7f, .5f, .45f),
                     size: new Vector3(.375f, .375f, .75f),
                     relativeRotation: new Vector3(0, -.4f, 0),
-                    rotationPoint: new Vector3(.5f, .0f, .8f),
+                    rotationPoint: new Vector3(.5f, 0, .8f),
                     yOffset: .001f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -431,9 +436,9 @@ namespace Generator
                 },
                 {"Leg/Left", new Component(
                     sprite: Globals.SpriteSheet.GetCopy("NinjaLeg"),
-                    relativePosition: new Vector3(.2f, .502f, .1f),
+                    relativePosition: new Vector3(.375f, .5f, .1f),
                     size: new Vector3(.375f),
-                    rotationPoint: new Vector3(.5f, .0f, .9f),
+                    rotationPoint: new Vector3(.5f, 0, .9f),
                     yOffset: .15f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -455,9 +460,9 @@ namespace Generator
                 },
                 {"Leg/Right", new Component(
                     sprite: Globals.SpriteSheet.GetCopy("NinjaLeg"),
-                    relativePosition: new Vector3(.8f, .502f, .1f),
+                    relativePosition: new Vector3(.625f, .5f, .1f),
                     size: new Vector3(.375f),
-                    rotationPoint: new Vector3(.5f, .0f, .9f),
+                    rotationPoint: new Vector3(.5f, 0, .9f),
                     yOffset: .15f,
                     animations: new Dictionary<string, Animation>()
                     {
@@ -532,6 +537,7 @@ namespace Generator
 
             // Update animation
             foreach (var component in Components) component.Value.Update();
+            foreach (var lightComponent in LightComponents) lightComponent.Value.Update();
 
             // Use abilities
             foreach (var ability in Abilities) ability.Update();

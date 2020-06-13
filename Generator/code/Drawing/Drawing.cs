@@ -328,11 +328,11 @@ namespace Generator
             int maxWidth = (int)Globals.Resolution.X - 4 * Margin - 2 * spriteSize;
             var TextWidth = 0;
             var TextBoxHeight = Margin;
-            for (int i = 0; i < choices.Nodes.Count; i++)
+            foreach (var node in choices.Nodes)
             {
                 var textDimensions = DrawTextBox(
                     spriteBatch,
-                    choices.Nodes[i].Text[0],
+                    node.Text[0],
                     0,
                     0,
                     maxWidth: maxWidth,
@@ -450,171 +450,143 @@ namespace Generator
                 borderWidth: 1);
         }
 
-        public static void AddComponentToVertices(
+        private static void AddComponentToVertices(
             Component component, 
             Vector3 normalizationDirection, 
             Vector3 normalizationOffset,
-            List<VertexPositionColorTexture> vertices)
+            List<VertexPositionColorTexture> vertices,
+            SpriteSheet spriteSheet,
+            Color color)
         {
-            var textureCoordinates = Globals.SpriteSheet.GetTextureCoordinates(component);
+            var textureCoordinates = spriteSheet.GetTextureCoordinates(component);
             if (textureCoordinates.Length == 0)
             {
                 return;
             }
             
-            var bottomLeft = new VertexPositionColorTexture();
-            var topLeft = new VertexPositionColorTexture();
-            var bottomRight = new VertexPositionColorTexture();
-            var topRight = new VertexPositionColorTexture();
-            
-            bottomLeft.TextureCoordinate = textureCoordinates[0];
-            topLeft.TextureCoordinate = textureCoordinates[1];
-            bottomRight.TextureCoordinate = textureCoordinates[2];
-            topRight.TextureCoordinate = textureCoordinates[3];
+            var cornerVertices = new VertexPositionColorTexture[4];
+            cornerVertices[0].Position = component.Position;
+            cornerVertices[1].Position = new Vector3(
+                component.Position.X,
+                component.Position.Y,
+                component.Position.Z + component.Size.Z);
+            cornerVertices[2].Position = new Vector3(
+                component.Position.X + component.Size.X,
+                component.Position.Y,
+                component.Position.Z);
+            cornerVertices[3].Position = new Vector3(
+                component.Position.X + component.Size.X,
+                component.Position.Y,
+                component.Position.Z + component.Size.Z);
             
             var rotationPoint = component.Position + component.RotationPoint * component.Size;
             var rotationAxis = MathTools.PointRotatedAroundPoint(
                 component.RelativeRotation + component.RotationOffset,
                 Vector3.Zero,
                 new Vector3(0, 0, component.Direction - MathHelper.PiOver2));
+            for (var i = 0; i < 4; i++)
+            {
+                cornerVertices[i].Position = MathTools.PointRotatedAroundPoint(
+                    cornerVertices[i].Position,
+                    rotationPoint,
+                    rotationAxis);
+                cornerVertices[i].Position = MathTools.PointRotatedAroundPoint(
+                    cornerVertices[i].Position,
+                    component.SourceObject.Center,
+                    normalizationDirection);
+                cornerVertices[i].Position += normalizationOffset;
+                cornerVertices[i].Position.Z = 0;
+                cornerVertices[i].Color = color;
+                cornerVertices[i].TextureCoordinate = textureCoordinates[i];
+            }
 
-            // Bottom left
-            bottomLeft.Position = MathTools.PointRotatedAroundPoint(
-                component.Position,
-                rotationPoint,
-                rotationAxis);
-            bottomLeft.Position = MathTools.PointRotatedAroundPoint(
-                bottomLeft.Position,
-                component.SourceObject.Center,
-                normalizationDirection);
-            bottomLeft.Position += normalizationOffset;
-
-            // Top left
-            topLeft.Position = MathTools.PointRotatedAroundPoint(
-                new Vector3(
-                    component.Position.X,
-                    component.Position.Y,
-                    component.Position.Z + component.Size.Z),
-                rotationPoint,
-                rotationAxis);
-            topLeft.Position = MathTools.PointRotatedAroundPoint(
-                topLeft.Position,
-                component.SourceObject.Center,
-                normalizationDirection);
-            topLeft.Position += normalizationOffset;
-
-            // Bottom right
-            bottomRight.Position = MathTools.PointRotatedAroundPoint(
-                new Vector3(
-                    component.Position.X + component.Size.X,
-                    component.Position.Y,
-                    component.Position.Z),
-                rotationPoint,
-                rotationAxis);
-            bottomRight.Position = MathTools.PointRotatedAroundPoint(
-                bottomRight.Position,
-                component.SourceObject.Center,
-                normalizationDirection);
-            bottomRight.Position += normalizationOffset;
-
-            // Top right
-            topRight.Position = MathTools.PointRotatedAroundPoint(
-                new Vector3(
-                    component.Position.X + component.Size.X,
-                    component.Position.Y,
-                    component.Position.Z + component.Size.Z),
-                rotationPoint,
-                rotationAxis);
-            topRight.Position = MathTools.PointRotatedAroundPoint(
-                topRight.Position,
-                component.SourceObject.Center,
-                normalizationDirection);
-            topRight.Position += normalizationOffset;
-
-            vertices.Add(bottomLeft);
-            vertices.Add(topLeft);
-            vertices.Add(bottomRight);
-            vertices.Add(topLeft);
-            vertices.Add(topRight);
-            vertices.Add(bottomRight);
+            vertices.Add(cornerVertices[0]);  // bottom left
+            vertices.Add(cornerVertices[1]);  // top left
+            vertices.Add(cornerVertices[2]);  // bottom right
+            vertices.Add(cornerVertices[1]);  // top left
+            vertices.Add(cornerVertices[3]);  // top right
+            vertices.Add(cornerVertices[2]);  // bottom right
         }
         
         public static void DrawShadows()
         // Unused but leaving in for future reference
         {
+            var vertices = new List<VertexPositionColorTexture>();
             foreach (var gameObject in Globals.GameObjectManager.GetVisible().OrderBy(i => -i.Position.Y))
             {
                 // Draw components for the object
-                foreach (var component in gameObject.Components.OrderBy(i => -i.Value.Position.Y))
+                foreach (var component in 
+                    gameObject.Components.Values.OrderBy(i => -i.Position.Y))
                 {
-                    DrawComponentShadow(component.Value, gameObject.Size * component.Value.Size, MathHelper.PiOver4);
+                    var direction = MathHelper.PiOver4;
+                    var normalizationDirection = new Vector3(-MathHelper.PiOver2, 0, direction + MathHelper.PiOver2);
+                    var normalizationOffset = MathTools.PointRotatedAroundPoint(
+                        Vector3.Zero,
+                        new Vector3(component.SourceObject.Size.X / 2, 0, 0),
+                        new Vector3(0, 0, direction));
+                    normalizationOffset += new Vector3(
+                        -component.SourceObject.Size.X / 2,
+                        -component.SourceObject.Size.Z / 2,
+                        0);
+                    AddComponentToVertices(
+                        component, 
+                        normalizationDirection, 
+                        normalizationOffset,
+                        vertices,
+                        Globals.SpriteSheet,
+                        Color.White);
                 }
             }
-        }
-
-        public static void DrawComponentShadow(
-                Component component,
-                Vector3 size,
-                float direction)
-        // This should be used to draw shadows for character components.
-        // TODO: Use the lightSource's position to calculate shadow size/fade/blur/whatever
-        {
-            var normalizationDirection = new Vector3(-MathHelper.PiOver2, 0, direction + MathHelper.PiOver2);
-            var normalizationOffset = MathTools.PointRotatedAroundPoint(
-                Vector3.Zero,
-                new Vector3(component.SourceObject.Size.X / 2, 0, 0),
-                new Vector3(0, 0, direction));
-            normalizationOffset += new Vector3(
-                -component.SourceObject.Size.X / 2,
-                -component.SourceObject.Size.Z / 2,
-                0);
-            /*var vertices = GetComponentVertices(component, size, normalizationDirection, normalizationOffset);
-
-            // Null out color and position
-            for (var vertexIndex = 0; vertexIndex < 6; vertexIndex++)
-            {
-                vertices[vertexIndex].Position.Z = 0;
-                vertices[vertexIndex].Color = Color.Black;
-            }
-
-            // Draw it
-            GameControl.effect.Texture = component.Sprite;
-            foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
-                    PrimitiveType.TriangleList, vertices, 0, 2);
-            }*/
+            DrawVertices(vertices, Globals.SpriteSheet);
         }
 
         public static void DrawGameObjects()
         {
             var vertices = new List<VertexPositionColorTexture>();
-            
-            // Accumulate the vertices
             foreach (var gameObject in Globals.GameObjectManager.GetVisible().OrderBy(i => -i.Position.Y))
             {
                 foreach (var component in gameObject.Components
-                    .OrderBy(i => -i.Value.Position.Y))
+                    .OrderBy(i => -i.Value.Center.Y))
                 {
                     AddComponentToVertices(
                         component.Value, 
                         new Vector3(-MathHelper.PiOver2, 0, 0), 
                         Vector3.Zero,
-                        vertices);
+                        vertices,
+                        Globals.SpriteSheet,
+                        Color.White);
                 }
             }
-            
-            // Null out position
-            var vertexArray = vertices.ToArray();
-            for (var vertexIndex = 0; vertexIndex < vertexArray.Length; vertexIndex++)
+            DrawVertices(vertices, Globals.SpriteSheet);
+        }
+        
+        public static void DrawLighting()
+        {
+            var vertices = new List<VertexPositionColorTexture>();
+            foreach (var gameObject in Globals.GameObjectManager.GetVisible())
             {
-                vertexArray[vertexIndex].Position.Z = 0;
-                vertexArray[vertexIndex].Color = Color.White;
+                foreach (var lightComponent in gameObject.LightComponents)
+                {
+                    AddComponentToVertices(
+                        lightComponent.Value, 
+                        new Vector3(-MathHelper.PiOver2, 0, 0), 
+                        Vector3.Zero,
+                        vertices,
+                        Globals.CommonSpriteSheet,
+                        lightComponent.Value.Color);
+                }
             }
-            
-            // Draw them
-            GameControl.effect.Texture = Globals.SpriteSheet.Texture;
+            DrawVertices(vertices, Globals.CommonSpriteSheet);
+        }
+
+        private static void DrawVertices(List<VertexPositionColorTexture> vertices, SpriteSheet spriteSheet)
+        {
+            var vertexArray = vertices.ToArray();
+            if (vertexArray.Length == 0)
+            {
+                return;
+            }
+            GameControl.effect.Texture = spriteSheet.Texture;
             foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -638,69 +610,6 @@ namespace Generator
                     GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
                         PrimitiveType.TriangleList, dynamicVertexArray, 0, dynamicVertexArray.Length / 3);
                 }
-            }
-        }
-
-        // Draws a light source
-        private static void AddLightSourceToVertices(
-                Vector3 position,
-                float size,
-                Color color,
-                List<VertexPositionColorTexture> vertices)
-        {
-            var lightPosition = position - Vector3.One * size / 2;
-            var bottomLeft = new VertexPositionColorTexture(
-                new Vector3(lightPosition.X, lightPosition.Y, 0),
-                color,
-                new Vector2(0, 1));
-            var topLeft = new VertexPositionColorTexture(
-                new Vector3(lightPosition.X, lightPosition.Y + size, 0),
-                color,
-                new Vector2(0, 0));
-            var bottomRight = new VertexPositionColorTexture(
-                new Vector3(lightPosition.X + size, lightPosition.Y, 0),
-                color,
-                new Vector2(1, 1));
-            var topRight = new VertexPositionColorTexture(
-                new Vector3(lightPosition.X + size, lightPosition.Y + size, 0),
-                color,
-                new Vector2(1, 0));
-            
-            vertices.Add(bottomLeft);
-            vertices.Add(topLeft);
-            vertices.Add(bottomRight);
-            vertices.Add(topLeft);
-            vertices.Add(topRight);
-            vertices.Add(bottomRight);
-        }
-
-        public static void DrawLighting()
-        {
-            // Generate the vertices
-            // TODO: Make light sources objects, make their area equal to lighting area, do a .Where on VisibleArea
-            var vertices = new List<VertexPositionColorTexture>();
-            foreach (var lightSource in Globals.GameObjectManager.GetVisible())
-            {
-                var brightness = 25 * lightSource.Brightness.Length();
-                if (brightness != 0)
-                {
-                    // Draw the light
-                    AddLightSourceToVertices(lightSource.Center, brightness, new Color(lightSource.Brightness), vertices);
-                }
-            }
-            
-            // Draw it
-            var vertexArray = vertices.ToArray();
-            if (vertexArray.Length == 0)
-            {
-                return;
-            }
-            GameControl.effect.Texture = Globals.LightTexture;
-            foreach (var pass in GameControl.effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                GameControl.graphics.GraphicsDevice.DrawUserPrimitives(
-                    PrimitiveType.TriangleList, vertexArray, 0, vertexArray.Length / 3);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Generator.code.objects;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 
@@ -66,7 +67,6 @@ namespace Generator
                             baseStyle: 1,
                             id: "niels",
                             name: "Niels",
-                            brightness: Vector3.Zero,
                             abilities: new List<Ability> {
                                 new code.abilities.Sprint(),
                                 new code.abilities.Shoot(),
@@ -84,7 +84,6 @@ namespace Generator
                             baseStyle: 100,
                             id: "farrah",
                             name: "Farrah",
-                            brightness: Vector3.Zero,
                             conversation: new Conversation(
                                 choicesList: new List<Conversation.Choices>()
                                 {
@@ -141,7 +140,6 @@ namespace Generator
                         new GameObject(
                             new Vector3(55, 55, 0),
                             id: "old man",
-                            brightness: Vector3.Zero,
                             baseStrength: 10,
                             baseSpeed: 10,
                             baseSense: 10,
@@ -234,11 +232,14 @@ namespace Generator
                             baseSpeed: 10,
                             baseSense: 10,
                             baseDefense: 100,
-                            brightness: new Vector3(2, 2, 2),
                             activationEffect: new Cached<Action<GameObject, GameObject>>("SetZoneBuildings"),
-                            components: new Dictionary<string, Component>()
+                            components: new Dictionary<string, Component>
                             {
-                                { "body", new Component(Globals.SpriteSheet.GetCopy("NinjaHead")) }
+                                { "body", new Component(Globals.SpriteSheet.GetCopy("NinjaHead"), new Vector3(6, 6, 9)) }
+                            },
+                            lightComponents: new Dictionary<string, LightComponent>
+                            {
+                                {"light", new LightComponent(new Vector3(30))}
                             }),
 
                         new GameObject(
@@ -251,7 +252,6 @@ namespace Generator
                             baseStyle: 100,
                             id: "bad_guy",
                             name: "Bad Guy",
-                            brightness: Vector3.Zero,
                             abilities: new List<Ability>() {
                                 new code.abilities.Sprint(),
                                 new code.abilities.Shoot(),
@@ -275,11 +275,10 @@ namespace Generator
                             baseSpeed: 10,
                             baseSense: 10,
                             baseDefense: 100,
-                            brightness: new Vector3(2, 2, 2),
                             activationEffect: new Cached<Action<GameObject, GameObject>>("SetZoneTestingZone"),
                             components: new Dictionary<string, Component>()
                             {
-                                { "body", new Component(Globals.SpriteSheet.GetCopy("NinjaHead")) }
+                                { "body", new Component(Globals.SpriteSheet.GetCopy("NinjaHead"), new Vector3(6, 6, 9)) }
                             })
                     });
                     Globals.TileManager = new TileManager(Globals.DefaultTileSheet);

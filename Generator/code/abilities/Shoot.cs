@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Generator.code.objects;
 using Microsoft.Xna.Framework;
 
 namespace Generator.code.abilities
@@ -25,13 +26,15 @@ namespace Generator.code.abilities
                 baseSpeed: 1000,
                 ai: new Cached<Action<GameObject>>("BulletAI"),
                 collisionEffect: new Cached<Action<GameObject, GameObject>>("BulletCollision"),
-                brightness: new Vector3(.5f, .1f, .5f),
                 temporary: true,
                 components: new Dictionary<string, Component>
                 {
-                    { "body", new Component(Globals.SpriteSheet.GetCopy("MetalBall")) }
-                }
-            );
+                    {"body", new Component(Globals.SpriteSheet.GetCopy("MetalBall"), new Vector3(.5f, .5f, .5f))}
+                },
+                lightComponents: new Dictionary<string, LightComponent>
+                {
+                    {"light", new LightComponent(Vector3.One, Color.Red)}
+                });
             Globals.GameObjectManager.Set(bullet);
         }
 

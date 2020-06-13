@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,7 +20,16 @@ namespace Generator
         public abstract float Direction { get; set; }
 
         protected Vector3 _Center;
-        public Vector3 Center { get => _Center; }
+        public Vector3 Center
+        {
+            get => _Center;
+            set
+            {
+                _Center = value;
+                _Position = Center - Size / 2;
+            }
+        }
+        
         protected Vector3 _Position;
         public virtual Vector3 Position
         {
@@ -29,6 +39,11 @@ namespace Generator
                 _Position = value;
                 _Center = Position + Size / 2;
             }
+        }
+
+        public RectangleF Area
+        {
+            get => new RectangleF(Position.X, Position.Y, Size.X, Size.Y);
         }
     }
 }

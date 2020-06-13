@@ -31,6 +31,7 @@ namespace Generator
 
         public Tile TileFromId(int? id)
         {
+            // TODO: This currently assumes one tile per row in order - that's bad!
             return id == null ? null : Tiles[(int)id / Width];
         }
 
