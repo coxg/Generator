@@ -545,8 +545,7 @@ namespace Generator
             var vertices = new List<VertexPositionColorTexture>();
             foreach (var gameObject in Globals.GameObjectManager.GetVisible().OrderBy(i => -i.Position.Y))
             {
-                foreach (var component in gameObject.Components
-                    .OrderBy(i => -i.Value.Center.Y))
+                foreach (var component in gameObject.Components.OrderBy(i => -i.Value.Center.Y))
                 {
                     AddComponentToVertices(
                         component.Value, 

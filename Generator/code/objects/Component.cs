@@ -55,7 +55,7 @@ namespace Generator
 
         public void Update()
         {
-            if (GameControl.camera.VisibleArea.IntersectsWith(SourceObject.Area))
+            if (SourceObject.IsVisible())
             {
                 UpdatePosition();
             }

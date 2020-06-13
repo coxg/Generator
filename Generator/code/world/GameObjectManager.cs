@@ -44,7 +44,7 @@ namespace Generator
         
         public HashSet<GameObject> GetVisible()
         {
-            return Get(GameControl.camera.VisibleArea);
+            return ObjectDict.Values.Where(gameObject => gameObject.IsVisible()).ToHashSet();
         }
 
         public List<GameObject> GetEnemyObjects()

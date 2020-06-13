@@ -550,6 +550,12 @@ namespace Generator
             target.TakeDamage(damage);
         }
 
+        public bool IsVisible()
+        {
+            return Area.IntersectsWith(GameControl.camera.VisibleArea) || LightComponents.Any(
+                lightComponent => lightComponent.Value.Area.IntersectsWith(GameControl.camera.VisibleArea));
+        }
+
         public int DamageToTake(int damage)
         {
             return damage - Defense.CurrentValue;

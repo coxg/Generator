@@ -28,15 +28,17 @@ namespace Generator.code.abilities
             }
 
             // Prevents us from setting the same tile 60 times per second
-            var targetX = (int) targetPosition.X;
-            var targetY = (int) targetPosition.Y;
-            if (lastTargetX != targetX || lastTargetY != targetY)
+            var x = (int) targetPosition.X;
+            var y = (int) targetPosition.Y;
+            if (lastTargetX != x || lastTargetY != y)
             {
-                var randomBaseTile = Globals.TileManager.TileSheet.Tiles[Globals.CreativeObjectIndex].GetRandomBaseId();
-                Globals.TileManager.Set(targetX, targetY, randomBaseTile);
+                var selectedTile = Globals.TileManager.TileSheet.Tiles[Globals.CreativeObjectIndex];
+                var randomBaseTile = selectedTile.GetRandomBaseId();
+                Globals.TileManager.Set(x, y, randomBaseTile);
+                Globals.Log("Placing " + selectedTile.Name + " at " + x + ", " + y);
             }
-            lastTargetX = targetX;
-            lastTargetY = targetY;
+            lastTargetX = x;
+            lastTargetY = y;
         }
     }
 }
