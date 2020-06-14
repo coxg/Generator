@@ -211,6 +211,7 @@ namespace Generator
             GraphicsDevice.Clear(Color.Black);
             Drawing.DrawTiles();
             Drawing.DrawGameObjects();
+            Drawing.DrawBrightLighting();
 
             // Draw the lighting on top of the other layers
             if (Globals.LightingEnabled)

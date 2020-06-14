@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 
 namespace Generator.code.objects
@@ -9,7 +8,7 @@ namespace Generator.code.objects
         public LightComponent(
             Vector3 size,
             Color? color = null,
-            float brightness = 1,
+            int brightness = 2,
             bool flicker = false
         ) : base(
             Globals.LightSprite, 
@@ -51,7 +50,7 @@ namespace Generator.code.objects
         }
 
         public Color Color;
-        public float Brightness;
+        public int Brightness;
         public bool Flicker;
     }
 }

@@ -572,7 +572,29 @@ namespace Generator
                         Vector3.Zero,
                         vertices,
                         Globals.CommonSpriteSheet,
-                        lightComponent.Value.Color);
+                        lightComponent.Value.Brightness == 1 ? lightComponent.Value.Color : Color.White);
+                }
+            }
+            DrawVertices(vertices, Globals.CommonSpriteSheet);
+        }
+        
+        public static void DrawBrightLighting()
+        {
+            var vertices = new List<VertexPositionColorTexture>();
+            foreach (var gameObject in Globals.GameObjectManager.GetVisible())
+            {
+                foreach (var lightComponent in gameObject.LightComponents)
+                {
+                    for (var i = 1; i < lightComponent.Value.Brightness; i++)
+                    {
+                        AddComponentToVertices(
+                            lightComponent.Value, 
+                            new Vector3(-MathHelper.PiOver2, 0, 0), 
+                            Vector3.Zero,
+                            vertices,
+                            Globals.CommonSpriteSheet,
+                            lightComponent.Value.Color);
+                    }
                 }
             }
             DrawVertices(vertices, Globals.CommonSpriteSheet);
