@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.IO;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Generator
@@ -129,9 +130,9 @@ namespace Generator
             CurrentSaveDirectory = BaseSaveDirectory + saveType + "_" + slot;
             Globals.Log("Saving to " + CurrentSaveDirectory);
 
+            // TODO: Why can't I do this as a Task? If not then add blocking
             // Create save slot out of tmp directory
             CopyDirectory(TempSaveDirectory, CurrentSaveDirectory);
-
             SaveAreaToDisk();
             SavedDicts.Save();
             Input.Save();

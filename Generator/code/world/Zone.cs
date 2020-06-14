@@ -239,7 +239,7 @@ namespace Generator
                             },
                             lightComponents: new Dictionary<string, LightComponent>
                             {
-                                {"light", new LightComponent(new Vector3(30))}
+                                {"light", new LightComponent(new Vector3(30), flicker: true)}
                             }),
 
                         new GameObject(

@@ -13,6 +13,7 @@ namespace Generator
                 float duration,  // in seconds
                 List<Vector3> baseOffsets = null,
                 List<Vector3> baseRotations = null,
+                List<Vector3> baseResizes = null,
                 Animation sourceAnimation = null,
                 int smoothing = 100)
             // Constructor
@@ -20,23 +21,26 @@ namespace Generator
             SourceAnimation = sourceAnimation;
             Duration = duration;
             Smoothing = smoothing;  // How many frames to generate per 1 frame under 100% speed
-
-            // Normalize positional and rotational offsets to start and end at 0, 0, 0
+            
             BaseOffsets = baseOffsets ?? new List<Vector3> { Vector3.Zero, Vector3.Zero };
             BaseRotations = baseRotations ?? new List<Vector3> { Vector3.Zero, Vector3.Zero };
-
-            // Derive the termination conditions and smoothed frames
-            Terminators = GetTerminators(BaseOffsets, BaseRotations);
+            BaseResizes = baseResizes ?? new List<Vector3> { Vector3.One, Vector3.One };
+            
+            Terminators = GetTerminators(BaseOffsets, BaseRotations, BaseResizes);
             SmoothedOffsets = GetSmoothedFrames(BaseOffsets);
             SmoothedRotations = GetSmoothedFrames(BaseRotations);
+            SmoothedResizes = GetSmoothedFrames(BaseResizes);
         }
 
         public List<Vector3> BaseOffsets;
         public List<Vector3> BaseRotations;
+        public List<Vector3> BaseResizes;
         [JsonIgnore]
         public List<Vector3> SmoothedOffsets;
         [JsonIgnore]
         public List<Vector3> SmoothedRotations;
+        [JsonIgnore]
+        public List<Vector3> SmoothedResizes;
         public IEnumerable<int> Terminators;
         [JsonIgnore]
         public Animation SourceAnimation;
@@ -67,55 +71,50 @@ namespace Generator
                     SmoothedOffsets[(int)newFrame],
                     Vector3.Zero,
                     new Vector3(0, 0, -SourceAnimation.AnimatedElement.Direction));
-
-                // Move the object in that direction
+                
                 SourceAnimation.AnimatedElement.AnimationOffset = positionDifference;
                 SourceAnimation.AnimatedElement.RotationOffset = SmoothedRotations[(int)newFrame];
-
-                // Update animation logic
+                SourceAnimation.AnimatedElement.ResizeOffset = SmoothedResizes[(int)newFrame];
                 SourceAnimation.TotalOffset = positionDifference;
-                SourceAnimation.TotalRotation = SmoothedRotations[(int)newFrame];
             }
 
             // Update the current frame
             CurrentFrame = newFrame;
         }
 
-        public IEnumerable<int> GetTerminators(List<Vector3> offsets, List<Vector3> rotations)
+        public IEnumerable<int> GetTerminators(List<Vector3> offsets, List<Vector3> rotations, List<Vector3> resizes)
         {
-            // Find all places where there are no offsets
-            var offsetTerminators = new List<int>();
-            for (int i = 0; i < offsets.Count; i++)
+            var potentialTerminators = new List<List<int>>
             {
-                if (offsets[i] == Vector3.Zero)
+                GetBaseTerminaters(offsets, Vector3.Zero), 
+                GetBaseTerminaters(rotations, Vector3.Zero), 
+                GetBaseTerminaters(resizes, Vector3.One)
+            };
+            potentialTerminators = potentialTerminators.Where(x => x.Count > 2).ToList();
+            switch (potentialTerminators.Count)
+            {
+                case 0:
+                    return new[] { 0 };
+                case 1:
+                    return potentialTerminators[0];
+                case 2:
+                    return potentialTerminators[0].Intersect(potentialTerminators[1]);
+                default:
+                    return potentialTerminators[0].Intersect(potentialTerminators[1]).Intersect(potentialTerminators[2]);
+            }
+        }
+
+        private List<int> GetBaseTerminaters(List<Vector3> baseVectors, Vector3 terminator)
+        {
+            var baseTerminators = new List<int>();
+            for (int i = 0; i < baseVectors.Count; i++)
+            {
+                if (baseVectors[i] == terminator)
                 {
-                    offsetTerminators.Add((int)(i * Globals.RefreshRate * Smoothing * Duration / (offsets.Count - 1)));
+                    baseTerminators.Add((int)(i * Globals.RefreshRate * Smoothing * Duration / (baseVectors.Count - 1)));
                 }
             }
-
-            // Find all places where there are no rotations
-            var rotationTerminators = new List<int>();
-            for (int i = 0; i < rotations.Count; i++)
-            {
-                if (rotations[i] == Vector3.Zero)
-                {
-                    rotationTerminators.Add((int)(i * Globals.RefreshRate * Smoothing * Duration / (rotations.Count - 1)));
-                }
-            }
-
-            // Return all places where there are no offsets or rotations
-            if (offsets.Count > 2 && rotations.Count <= 2)
-            {
-                return offsetTerminators;
-            }
-            else if (rotations.Count > 2 && offsets.Count <= 2)
-            {
-                return rotationTerminators;
-            }
-            else
-            {
-                return offsetTerminators.Intersect(rotationTerminators);
-            }
+            return baseTerminators;
         }
 
         public bool CanTerminate()
@@ -208,7 +207,6 @@ namespace Generator
 
             // How it does it
             TotalOffset = Vector3.Zero;
-            TotalRotation = Vector3.Zero;
             IsStarting = false;
             IsUpdating = false;
             IsStopping = false;
@@ -265,7 +263,6 @@ namespace Generator
 
         // How it does it
         public Vector3 TotalOffset;
-        public Vector3 TotalRotation;
         public bool IsStarting;
         public bool IsUpdating;
         public bool IsStopping;

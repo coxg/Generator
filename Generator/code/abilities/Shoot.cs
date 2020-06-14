@@ -29,7 +29,7 @@ namespace Generator.code.abilities
                 temporary: true,
                 components: new Dictionary<string, Component>
                 {
-                    {"body", new Component(Globals.SpriteSheet.GetCopy("MetalBall"), new Vector3(.5f, .5f, .5f))}
+                    {"body", new Component(Globals.SpriteSheet.GetCopy("MetalBall"), new Vector3(.5f))}
                 },
                 lightComponents: new Dictionary<string, LightComponent>
                 {

@@ -11,10 +11,10 @@ namespace Generator
     public class TileManager
     // Middle man between Zone and TileSheet
     {
-        private int?[,] IdMap;
+        public int?[,] IdMap;
         public TileSheet TileSheet;
-        private int? BaseTileId;
-        private bool isPopulatingVertices;
+        public int? BaseTileId;
+        public bool isPopulatingVertices;
 
         public Tile Get(int x, int y)
         {

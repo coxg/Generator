@@ -13,11 +13,21 @@ namespace Generator
         public string Name;
         public Vector3 AnimationOffset;
         public Vector3 RotationOffset;
+        public Vector3 ResizeOffset = Vector3.One;
         public Vector3 RotationPoint;
-        public Vector3 Size;
         public Sprite Sprite;
         
         public abstract float Direction { get; set; }
+
+        private Vector3 _Size;
+        public Vector3 Size
+        {
+            get => _Size * ResizeOffset;
+            set
+            {
+                _Size = value;
+            }
+        }
 
         protected Vector3 _Center;
         public Vector3 Center
