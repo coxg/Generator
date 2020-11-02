@@ -27,17 +27,17 @@ namespace Generator
             float? movementDirection = null,
             float? movementSpeed = null,
             float? directionOverride = null,
+            
+            // Physics
+            float mass = 100,
+            Vector3? velocity = null,
+            Dictionary<String, PhysicsEffect> physicsEffects = null,
 
             // Animation attributes
             Sprite sprite = null,
             Dictionary<string, Component> components = null,
             Dictionary<string, LightComponent> lightComponents = null,
-
-            // Actions
             bool isWalking = false,
-            bool isSwinging = false,
-            bool isShooting = false,
-            bool isHurting = false,
 
             // Resources
             int baseHealth = 3,
@@ -57,7 +57,7 @@ namespace Generator
             int experience = 0,
             float direction = (float)Math.PI,
 
-            List<code.objects.Ailment> ailments = null,
+            List<Ailment> ailments = null,
 
             // Abilities
             List<Ability> abilities = null,
@@ -82,12 +82,7 @@ namespace Generator
             LightComponents = lightComponents ?? new Dictionary<string, LightComponent>();
             LinkComponents();
             Sprite = sprite;
-
-            // Actions
             IsWalking = isWalking;
-            IsSwinging = isSwinging;
-            IsShooting = isShooting;
-            IsHurting = isHurting;
 
             // Resources
             Health = new Resource("Health", baseHealth);
@@ -128,13 +123,16 @@ namespace Generator
             CollisionEffect = collisionEffect; // Run when attempting to move into another object - arguments are this, other
             Temporary = temporary; // If true, destroy this object as soon as it's no longer being updated
 
-            // Grid logic
+            // Physics logic
             Size = size ?? Vector3.One;
             base.Position = position;
             Direction = direction;
             MovementTarget = movementPosition;
             MovementDirection = movementDirection;
             DirectionOverride = directionOverride;
+            Mass = mass;
+            Velocity = velocity ?? Vector3.Zero;
+            PhysicsEffects = physicsEffects ?? new Dictionary<string, PhysicsEffect>();
 
             Globals.Log(ID + " has spawned.");
         }
@@ -172,21 +170,27 @@ namespace Generator
                 _isWalking = value;
             }
         }
-        public bool IsSwinging;
-        public bool IsShooting;
-        public bool IsHurting;
 
         // Location
         override public float Direction { get; set; }
         public Vector3? MovementTarget;
+        public Dictionary<String, PhysicsEffect> PhysicsEffects;
         public float? MovementDirection;
-        public float? DirectionOverride;  // This is a hack for ability targeting
+        public Vector3 Velocity;
+        public float? DirectionOverride;  // This is a hack for ability targeting TODO: Should this be in Direction's get?
         public float? MovementSpeed;  // 1 = running, .5 = walking, etc
+        public float Mass;
         override public Vector3 Position
         {
             get => _Position + AnimationOffset;
             set
             {
+                if (value.Z < 0)
+                {
+                    value.Z = 0;
+                    Velocity.Z = 0;
+                }
+                
                 // If it's outside the zone and we're temporary then kill yourself
                 if (value.X < 0 || value.Y < 0 || value.X > Globals.Zone.Width || value.Y > Globals.Zone.Height || value.Z < 0)
                 {
@@ -196,7 +200,7 @@ namespace Generator
                     }
                     else
                     {
-                        Globals.Warn(Name ?? ID + " can't move to " + value);
+                        Globals.Warn((Name ?? ID) + " can't move to " + value);
                     }
                     return;
                 }
@@ -234,7 +238,7 @@ namespace Generator
         // Secondary attributes
         public Attribute Defense;
 
-        public List<code.objects.Ailment> Ailments;
+        public List<Ailment> Ailments;
 
         // Growth
         public int Level;
@@ -490,7 +494,6 @@ namespace Generator
         // What to do on each frame
         public void Update()
         {
-            // Do whatever the object wants to do
             AI?.Value(this);
             if (MovementTarget != null || MovementDirection != null)
             {
@@ -528,6 +531,8 @@ namespace Generator
                 DirectionOverride = null;  // This is a hack; will need to set this every update
             }
 
+            ApplyPhysics();
+
             // Update resources
             Health.Update();
             Electricity.Update();
@@ -541,6 +546,35 @@ namespace Generator
 
             // Use abilities
             foreach (var ability in Abilities) ability.Update();
+        }
+
+        private void ApplyPhysics()
+        {
+            var forces = Vector3.Zero;
+            foreach (var physicsEffects in PhysicsEffects.Values)
+            {
+                forces += physicsEffects.Force;
+                physicsEffects.Update();  // This order to let duration 0 still apply force
+            }
+            forces.Z -= Globals.Zone.Gravity;
+
+            var acceleration = forces; // / Mass;
+            Velocity += acceleration * Timing.SecondsPassed;
+            if (Position.Z == 0)
+            {
+                var friction = Globals.TileManager.Get((int) Center.X, (int) Center.Y).Friction 
+                               * Mass * Globals.Zone.Gravity / 1000;
+                Velocity.X = Velocity.X > 0 ? Math.Max(Velocity.X - friction, 0) : Math.Min(Velocity.X + friction, 0);
+                Velocity.Y = Velocity.Y > 0 ? Math.Max(Velocity.Y - friction, 0) : Math.Min(Velocity.Y + friction, 0);
+            }
+
+            if (ID == "niels")
+            {
+                Globals.Log("Forces:   " + forces);
+                Globals.Log("Velocity: " + Velocity);
+                Globals.Log("Position: " + Position);
+            }
+            Position += Velocity * Timing.SecondsPassed;
         }
 
         // Deal damage to a target
@@ -576,8 +610,7 @@ namespace Generator
                 {
                     Globals.GameObjectManager.EnemyIds.Add(ID);
                 }
-
-                IsHurting = true;
+                
                 // TODO: We can't hardcode "Face"
                 // Components["Face"].SpriteFile = componentSpriteFileName + "/Face04";
                 Health.Current -= damage;

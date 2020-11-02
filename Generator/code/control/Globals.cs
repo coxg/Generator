@@ -41,6 +41,7 @@ namespace Generator
         // Regular old variables
         public static Vector2 Resolution = new Vector2(1600, 900);
         public static ContentManager ContentManager;
+        // TODO: Things break if I try to change this mid-game
         public static int RefreshRate = 60;
         // TODO: This will definitely break when I move to production
         public static string ProjectDirectory = Path.GetFullPath(@"../../../../");
@@ -113,7 +114,7 @@ namespace Generator
                     + CallingFrame.GetFileName().Split('\\').Last() + " line "
                     + CallingFrame.GetFileLineNumber() + ", in "
                     + CallingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First()
-                    + ": [WARNING]" + text;
+                    + ": [WARNING] " + text;
                 logLine = logLine.Replace(ProjectDirectory + "code/", "");
 
                 Console.WriteLine(logLine);

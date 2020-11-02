@@ -1,26 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using Generator.code.objects;
 using Microsoft.Xna.Framework;
 
 namespace Generator.code.abilities
 {
     public class Jump : Ability
     {
-        public Jump() : base(
-            "Jump",
-            animation: new Animation(
-                startFrames: new Frames(
-                    baseOffsets: new List<Vector3>
-                    {
-                        Vector3.Zero,
-                        new Vector3(0, 0, 10f),
-                        Vector3.Zero
-                    },
-                    duration: 30f))) { }
+        public Jump() : base("Jump") { }
 
         public override void Start()
         {
-            SourceObject.Say("Wahoo!");
+            if (SourceObject.Position.Z == 0)
+            {
+                SourceObject.Say("Wahoo!");
+                SourceObject.PhysicsEffects["jump"] = new PhysicsEffect(new Vector3(0, 0, 200), .1f);
+            }
         }
     }
 }

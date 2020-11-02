@@ -14,8 +14,6 @@ namespace Generator.code.abilities
 
         public override void Start()
         {
-            SourceObject.IsSwinging = true;
-
             // Figure out which one you hit
             var target = SourceObject.GetClosest(SourceObject.GetTargetsInRange());
 

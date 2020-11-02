@@ -15,7 +15,6 @@ namespace Generator.code.abilities
 
         public override void Start()
         {
-            SourceObject.IsShooting = true;
             var position = SourceObject.GetTargetCoordinates(1.5f);
             position.Z += SourceObject.Size.Z / 2;
             var bullet = new GameObject(

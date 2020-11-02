@@ -12,7 +12,8 @@ namespace Generator
             int numBaseTiles,
             float layer,
             int firstBaseId,
-            int? firstEdgeId=null
+            int? firstEdgeId=null,
+            float friction=.5f
         )
         {
             Name = name;
@@ -20,6 +21,7 @@ namespace Generator
             Layer = layer;
             FirstBaseId = firstBaseId;
             FirstEdgeId = firstEdgeId;
+            Friction = friction;
         }
 
         // Attributes
@@ -28,6 +30,7 @@ namespace Generator
         public float Layer;  // Order to draw them - higher is drawn on top of lower
         public int FirstBaseId;
         public int? FirstEdgeId;  // If null then it has no corners
+        public float Friction;
 
         public int GetRandomBaseId()
         {

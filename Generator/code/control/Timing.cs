@@ -15,8 +15,11 @@ namespace Generator
         public static float GameSpeed
         {
             set { GameSpeedOverride = value; }
-            get { return gameSpeed; }
+            get { return GameSpeedOverride ?? gameSpeed; }
         }
+
+        // Seconds passed since the last update
+        public static float SecondsPassed => GameSpeed / Globals.RefreshRate;
 
         // Keeping track of FPS
         public static int NumDraws = 0;
@@ -58,7 +61,7 @@ namespace Generator
             var newClock = MathTools.Mod(GameClock + GameSpeed, MaxClock);
 
             // Launch any events scheduled to happen between the last time and the new time
-            // TODO: Handle the case when exceeding MaxClock... if we expect people to exceed 482 days of game time
+            // Bugs will happen when clock resets... at 482 days of game time
             for (int i = (int)GameClock; i < (int)newClock; i++)
             {
                 if (Events.ContainsKey(i))

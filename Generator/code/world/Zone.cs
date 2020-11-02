@@ -12,12 +12,14 @@ namespace Generator
         public string Name;
         public int Width;
         public int Height;
+        public float Gravity;
 
-        public Zone(string name, int width, int height)
+        public Zone(string name, int width, int height, float gravity = 9.8f)
         {
             Name = name;
             Width = width;
             Height = height;
+            Gravity = gravity;
         }
 
         public static void Enter(string name)

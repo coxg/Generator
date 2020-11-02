@@ -52,7 +52,7 @@ namespace Generator
             // How many animation frames should actually be played per update of the game clock
         {
             float frames = (float)Math.Sqrt(SourceAnimation.SourceObject.Speed.CurrentValue) * Timing.GameSpeed * Smoothing;
-            if (SourceAnimation.Name == "Walk")
+            if (SourceAnimation.Name == "Walk")  // TODO: this
             {
                 frames *= SourceAnimation.SourceObject.MovementSpeed ?? 1;
             }

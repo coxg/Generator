@@ -495,7 +495,7 @@ namespace Generator
                     component.SourceObject.Center,
                     normalizationDirection);
                 cornerVertices[i].Position += normalizationOffset;
-                cornerVertices[i].Position.Z = 0;
+                cornerVertices[i].Position.Z = component.SourceObject.Position.Z;
                 cornerVertices[i].Color = color;
                 cornerVertices[i].TextureCoordinate = textureCoordinates[i];
             }
