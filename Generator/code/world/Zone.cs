@@ -70,7 +70,7 @@ namespace Generator
                             id: "niels",
                             name: "Niels",
                             abilities: new List<Ability> {
-                                new code.abilities.Sprint(),
+                                new code.abilities.Dash(),
                                 new code.abilities.Shoot(),
                                 new code.abilities.Jump(),
                                 new code.abilities.PlaceObject()

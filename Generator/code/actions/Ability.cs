@@ -273,8 +273,14 @@ namespace Generator
                 case "Jump":
                     Globals.CopyTo(ability, out code.abilities.Jump jump);
                     return jump;
+                case "Dash":
+                    Globals.CopyTo(ability, out code.abilities.Dash dash);
+                    return dash;
+                case "Blink":
+                    Globals.CopyTo(ability, out code.abilities.Blink blink);
+                    return blink;
                 default:
-                    throw new InvalidCastException(ability.Name + " not recognized.");
+                    throw new InvalidCastException(ability.Name + " must be added to Ability.GetTyped");
             }
         }
     }

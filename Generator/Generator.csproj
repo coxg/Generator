@@ -61,6 +61,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="code\abilities\Attack.cs" />
+    <Compile Include="code\abilities\Blink.cs" />
+    <Compile Include="code\abilities\Dash.cs" />
     <Compile Include="code\abilities\Jump.cs" />
     <Compile Include="code\abilities\Sprint.cs" />
     <Compile Include="code\abilities\PlaceObject.cs" />

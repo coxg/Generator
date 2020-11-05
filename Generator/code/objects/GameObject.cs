@@ -614,7 +614,7 @@ namespace Generator
             Velocity += forces * Timing.SecondsPassed;
             if (Position.Z == 0)
             {
-                var friction = GetFriction();
+                var friction = GetFriction() * 10;
                 Velocity.X = Velocity.X > 0 ? Math.Max(Velocity.X - friction, 0) : Math.Min(Velocity.X + friction, 0);
                 Velocity.Y = Velocity.Y > 0 ? Math.Max(Velocity.Y - friction, 0) : Math.Min(Velocity.Y + friction, 0);
             }

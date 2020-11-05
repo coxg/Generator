@@ -15,9 +15,9 @@ namespace Generator.code.abilities
 
         public override void Start()
         {
-            var position = SourceObject.GetTargetCoordinates(1.5f);
+            var position = SourceObject.GetTargetCoordinates();
             position.Z += SourceObject.Size.Z / 2;
-            var direction = position - SourceObject.Position;
+            var direction = position - SourceObject.Center;
             direction.Z = 0;
             direction.Normalize();
             
