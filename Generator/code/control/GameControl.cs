@@ -92,10 +92,10 @@ namespace Generator
                     new Tile("clay", 7,  0, 0, 11),
                     new Tile("grass", 5,  1, 16, 27),
                     new Tile("sand", 3,  2, 32, 43),
-                    new Tile("ice", 11,  4, 48, 59),
+                    new Tile("ice", 11,  4, 48, 59, .01f),
                     new Tile("lava", 8,  3, 64, 75),
                     new Tile("wall", 10,  80, 80),
-                    new Tile("snow", 3,  5, 96, 107)
+                    new Tile("snow", 3,  5, 96, 107, .1f)
                 });
             
             Globals.DefaultSpriteSheet = new SpriteSheet(

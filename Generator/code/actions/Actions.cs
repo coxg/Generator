@@ -79,13 +79,6 @@ namespace Generator
             {
                 "WalkInStraightLine",
                 self => { self.MovementDirection = self.Direction; }
-            },
-            {
-                "BulletAI",
-                self =>
-                {
-                    self.MovementDirection = self.Direction;
-                }
             }
         };
 
@@ -143,8 +136,6 @@ namespace Generator
                 (self, other) =>
                 {
                     self.DealDamage(other, 1);
-                    other.Ailments.Add(
-                        new code.objects.Poisoned("Bullet Poison", "bullet_poison", self, other, 3));
                     Globals.GameObjectManager.Kill(self);
                 }
             }

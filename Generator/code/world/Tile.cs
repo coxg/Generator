@@ -13,7 +13,7 @@ namespace Generator
             float layer,
             int firstBaseId,
             int? firstEdgeId=null,
-            float friction=.5f
+            float friction=1f
         )
         {
             Name = name;

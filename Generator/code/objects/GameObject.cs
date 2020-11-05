@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Generator.code.objects;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json;
 
 namespace Generator
 {
@@ -25,9 +23,11 @@ namespace Generator
             // Movement logic
             Vector3? movementPosition = null,
             float? movementDirection = null,
-            float? movementSpeed = null,
+            float baseMovementSpeed = 20,
+            float? movementSpeedMultiplier = null,
+            Vector3? movementVelocity = null,
             float? directionOverride = null,
-            
+
             // Physics
             float mass = 100,
             Vector3? velocity = null,
@@ -100,7 +100,8 @@ namespace Generator
             Name = name;
             Level = level;
             Experience = experience;
-            MovementSpeed = movementSpeed;
+            BaseMovementSpeed = baseMovementSpeed;
+            MovementSpeedMultiplier = movementSpeedMultiplier;
 
             Ailments = ailments ?? new List<code.objects.Ailment>();
 
@@ -112,7 +113,8 @@ namespace Generator
             // Abilities
             Abilities = abilities ?? new List<Ability>();
             foreach (var ability in Abilities) ability.SourceObject = this;
-            Strategies = strategies ?? (Dictionary<string, code.actions.Strategy>)Globals.Copy(code.actions.Strategy.Strategies);
+            Strategies = strategies ??
+                         (Dictionary<string, code.actions.Strategy>) Globals.Copy(code.actions.Strategy.Strategies);
             StrategyName = strategyName ?? "Whatevs";
 
             // Interaction
@@ -120,7 +122,8 @@ namespace Generator
             if (Conversation != null) Conversation.SourceObject = this;
             ActivationEffect = activationEffect;
             AI = ai ?? new Cached<Action<GameObject>>("DefaultAI"); // Run on each Update - argument is this
-            CollisionEffect = collisionEffect; // Run when attempting to move into another object - arguments are this, other
+            CollisionEffect =
+                collisionEffect; // Run when attempting to move into another object - arguments are this, other
             Temporary = temporary; // If true, destroy this object as soon as it's no longer being updated
 
             // Physics logic
@@ -129,6 +132,7 @@ namespace Generator
             Direction = direction;
             MovementTarget = movementPosition;
             MovementDirection = movementDirection;
+            MovementVelocity = movementVelocity ?? Vector3.Zero;
             DirectionOverride = directionOverride;
             Mass = mass;
             Velocity = velocity ?? Vector3.Zero;
@@ -136,12 +140,13 @@ namespace Generator
 
             Globals.Log(ID + " has spawned.");
         }
-        
+
         public Dictionary<string, Component> Components;
         public Dictionary<string, LightComponent> LightComponents;
 
         // Toggleables
         private bool _isWalking;
+
         public bool IsWalking
         {
             get => _isWalking;
@@ -167,6 +172,7 @@ namespace Generator
                         }
                     }
                 }
+
                 _isWalking = value;
             }
         }
@@ -177,9 +183,15 @@ namespace Generator
         public Dictionary<String, PhysicsEffect> PhysicsEffects;
         public float? MovementDirection;
         public Vector3 Velocity;
-        public float? DirectionOverride;  // This is a hack for ability targeting TODO: Should this be in Direction's get?
-        public float? MovementSpeed;  // 1 = running, .5 = walking, etc
+
+        public float?
+            DirectionOverride; // This is a hack for ability targeting TODO: Should this be in Direction's get?
+
+        public float BaseMovementSpeed;
+        public float? MovementSpeedMultiplier; // 1 = running, .5 = walking, etc
+        public Vector3 MovementVelocity;
         public float Mass;
+
         override public Vector3 Position
         {
             get => _Position + AnimationOffset;
@@ -190,9 +202,10 @@ namespace Generator
                     value.Z = 0;
                     Velocity.Z = 0;
                 }
-                
+
                 // If it's outside the zone and we're temporary then kill yourself
-                if (value.X < 0 || value.Y < 0 || value.X > Globals.Zone.Width || value.Y > Globals.Zone.Height || value.Z < 0)
+                if (value.X < 0 || value.Y < 0 || value.X > Globals.Zone.Width || value.Y > Globals.Zone.Height ||
+                    value.Z < 0)
                 {
                     if (Temporary)
                     {
@@ -202,6 +215,7 @@ namespace Generator
                     {
                         Globals.Warn((Name ?? ID) + " can't move to " + value);
                     }
+
                     return;
                 }
 
@@ -233,7 +247,7 @@ namespace Generator
         public Attribute Strength;
         public Attribute Smarts;
         public Attribute Speed;
-        public Attribute Style;  // Right???
+        public Attribute Style; // Right???
 
         // Secondary attributes
         public Attribute Defense;
@@ -259,6 +273,7 @@ namespace Generator
         public bool Temporary;
 
         private Armor _equippedArmor = new Armor("[No Armor]", null);
+
         public Armor EquippedArmor
         {
             get => _equippedArmor;
@@ -266,6 +281,7 @@ namespace Generator
         }
 
         private GeneratorObj _equippedGenerator = new GeneratorObj("[No Generator]", null);
+
         public GeneratorObj EquippedGenerator
         {
             get => _equippedGenerator;
@@ -273,6 +289,7 @@ namespace Generator
         }
 
         private Accessory _equippedAccessory = new Accessory("[No Accessory]", null);
+
         public Accessory EquippedAccessory
         {
             get => _equippedAccessory;
@@ -291,7 +308,7 @@ namespace Generator
         {
             foreach (var component in Components)
             {
-                component.Value.ID = component.Key;  // Just for debugging purposes
+                component.Value.ID = component.Key; // Just for debugging purposes
                 component.Value.SourceObject = this;
                 foreach (var animation in component.Value.Animations)
                 {
@@ -300,9 +317,10 @@ namespace Generator
                     animation.Value.SourceObject = this;
                 }
             }
+
             foreach (var component in LightComponents)
             {
-                component.Value.ID = component.Key;  // Just for debugging purposes
+                component.Value.ID = component.Key; // Just for debugging purposes
                 component.Value.SourceObject = this;
                 foreach (var animation in component.Value.Animations)
                 {
@@ -321,15 +339,15 @@ namespace Generator
             {
                 case "Armor":
                     equippedEquipment = _equippedArmor;
-                    _equippedArmor = (Armor)equipmentToEquip;
+                    _equippedArmor = (Armor) equipmentToEquip;
                     break;
                 case "Generator":
                     equippedEquipment = _equippedGenerator;
-                    _equippedGenerator = (GeneratorObj)equipmentToEquip;
+                    _equippedGenerator = (GeneratorObj) equipmentToEquip;
                     break;
                 case "Accessory":
                     equippedEquipment = _equippedAccessory;
-                    _equippedAccessory = (Accessory)equipmentToEquip;
+                    _equippedAccessory = (Accessory) equipmentToEquip;
                     break;
                 default:
                     throw new ArgumentException("Unknown equipment slot: " + equipmentToEquip.Slot);
@@ -352,139 +370,150 @@ namespace Generator
         {
             Dictionary<string, Component> result = new Dictionary<string, Component>()
             {
-                {"Head", new Component(
-                    sprite: Globals.SpriteSheet.GetCopy("NinjaHead"),
-                    relativePosition: new Vector3(.5f, .5f, 1.2f),
-                    size: new Vector3(1.5f),
-                    rotationPoint: new Vector3(.16f, 0, .256f),
-                    yOffset: -.05f)
+                {
+                    "Head", new Component(
+                        sprite: Globals.SpriteSheet.GetCopy("NinjaHead"),
+                        relativePosition: new Vector3(.5f, .5f, 1.2f),
+                        size: new Vector3(1.5f),
+                        rotationPoint: new Vector3(.16f, 0, .256f),
+                        yOffset: -.05f)
                 },
-                {"Face", new Component(
-                    sprite: Globals.SpriteSheet.GetCopy("NormalEyes"),
-                    relativePosition: new Vector3(.5f, .52f, .96f),
-                    size: new Vector3(1.5f),
-                    rotationPoint: new Vector3(.2f, 0, .15f),
-                    yOffset: -.1f)
+                {
+                    "Face", new Component(
+                        sprite: Globals.SpriteSheet.GetCopy("NormalEyes"),
+                        relativePosition: new Vector3(.5f, .52f, .96f),
+                        size: new Vector3(1.5f),
+                        rotationPoint: new Vector3(.2f, 0, .15f),
+                        yOffset: -.1f)
                 },
-                {"Body", new Component(
-                    sprite: Globals.SpriteSheet.GetCopy("NinjaBody"),
-                    relativePosition: new Vector3(.5f, .5f, .47f),
-                    size: new Vector3(.75f),
-                    rotationPoint: new Vector3(.08f, 0, .08f))
+                {
+                    "Body", new Component(
+                        sprite: Globals.SpriteSheet.GetCopy("NinjaBody"),
+                        relativePosition: new Vector3(.5f, .5f, .47f),
+                        size: new Vector3(.75f),
+                        rotationPoint: new Vector3(.08f, 0, .08f))
                 },
-                {"Arm/Left", new Component(
-                    sprite: Globals.SpriteSheet.GetCopy("NinjaArm"),
-                    relativePosition: new Vector3(.3f, .5f, .45f),
-                    size: new Vector3(.375f, .375f, .75f),
-                    relativeRotation: new Vector3(0, .4f, 0),
-                    rotationPoint: new Vector3(.5f, 0, .8f),
-                    yOffset: .001f,
-                    animations: new Dictionary<string, Animation>()
-                    {
-                        {"Walk", new Animation(
-                            updateFrames: new Frames(
-                                baseRotations: new List<Vector3>
-                                {
-                                    Vector3.Zero,
-                                    new Vector3(.7f, 0, 0),
-                                    Vector3.Zero,
-                                    new Vector3(-.7f, 0, 0),
-                                    Vector3.Zero
-                                },
-                                baseOffsets: new List<Vector3>
-                                {
-                                    Vector3.Zero,
-                                    new Vector3(.05f, 0, 0),
-                                    Vector3.Zero,
-                                    new Vector3(-.05f, 0, 0),
-                                    Vector3.Zero
-                                },
-                                duration: 3
+                {
+                    "Arm/Left", new Component(
+                        sprite: Globals.SpriteSheet.GetCopy("NinjaArm"),
+                        relativePosition: new Vector3(.3f, .5f, .45f),
+                        size: new Vector3(.375f, .375f, .75f),
+                        relativeRotation: new Vector3(0, .4f, 0),
+                        rotationPoint: new Vector3(.5f, 0, .8f),
+                        yOffset: .001f,
+                        animations: new Dictionary<string, Animation>()
+                        {
+                            {
+                                "Walk", new Animation(
+                                    updateFrames: new Frames(
+                                        baseRotations: new List<Vector3>
+                                        {
+                                            Vector3.Zero,
+                                            new Vector3(.7f, 0, 0),
+                                            Vector3.Zero,
+                                            new Vector3(-.7f, 0, 0),
+                                            Vector3.Zero
+                                        },
+                                        baseOffsets: new List<Vector3>
+                                        {
+                                            Vector3.Zero,
+                                            new Vector3(.05f, 0, 0),
+                                            Vector3.Zero,
+                                            new Vector3(-.05f, 0, 0),
+                                            Vector3.Zero
+                                        },
+                                        duration: 3
+                                    )
                                 )
-                            )
-                        }
-                    })
+                            }
+                        })
                 },
-                {"Arm/Right", new Component(
-                    sprite: Globals.SpriteSheet.GetCopy("NinjaArm"),
-                    relativePosition: new Vector3(.7f, .5f, .45f),
-                    size: new Vector3(.375f, .375f, .75f),
-                    relativeRotation: new Vector3(0, -.4f, 0),
-                    rotationPoint: new Vector3(.5f, 0, .8f),
-                    yOffset: .001f,
-                    animations: new Dictionary<string, Animation>()
-                    {
-                        {"Walk", new Animation(
-                            updateFrames: new Frames(
-                                baseRotations: new List<Vector3>
-                                {
-                                    Vector3.Zero,
-                                    new Vector3(-.7f, 0, 0),
-                                    Vector3.Zero,
-                                    new Vector3(.7f, 0, 0),
-                                    Vector3.Zero
-                                },
-                                baseOffsets: new List<Vector3>
-                                {
-                                    Vector3.Zero,
-                                    new Vector3(-.05f, 0, 0),
-                                    Vector3.Zero,
-                                    new Vector3(.05f, 0, 0),
-                                    Vector3.Zero
-                                },
-                                duration: 3
+                {
+                    "Arm/Right", new Component(
+                        sprite: Globals.SpriteSheet.GetCopy("NinjaArm"),
+                        relativePosition: new Vector3(.7f, .5f, .45f),
+                        size: new Vector3(.375f, .375f, .75f),
+                        relativeRotation: new Vector3(0, -.4f, 0),
+                        rotationPoint: new Vector3(.5f, 0, .8f),
+                        yOffset: .001f,
+                        animations: new Dictionary<string, Animation>()
+                        {
+                            {
+                                "Walk", new Animation(
+                                    updateFrames: new Frames(
+                                        baseRotations: new List<Vector3>
+                                        {
+                                            Vector3.Zero,
+                                            new Vector3(-.7f, 0, 0),
+                                            Vector3.Zero,
+                                            new Vector3(.7f, 0, 0),
+                                            Vector3.Zero
+                                        },
+                                        baseOffsets: new List<Vector3>
+                                        {
+                                            Vector3.Zero,
+                                            new Vector3(-.05f, 0, 0),
+                                            Vector3.Zero,
+                                            new Vector3(.05f, 0, 0),
+                                            Vector3.Zero
+                                        },
+                                        duration: 3
+                                    )
                                 )
-                            )
-                        }
-                    })
+                            }
+                        })
                 },
-                {"Leg/Left", new Component(
-                    sprite: Globals.SpriteSheet.GetCopy("NinjaLeg"),
-                    relativePosition: new Vector3(.375f, .5f, .1f),
-                    size: new Vector3(.375f),
-                    rotationPoint: new Vector3(.5f, 0, .9f),
-                    yOffset: .15f,
-                    animations: new Dictionary<string, Animation>()
-                    {
-                        {"Walk", new Animation(
-                            updateFrames: new Frames(
-                                baseRotations: new List<Vector3>
-                                {
-                                    Vector3.Zero,
-                                    new Vector3(-.7f, 0, 0),
-                                    Vector3.Zero,
-                                    new Vector3(.7f, 0, 0),
-                                    Vector3.Zero
-                                },
-                                duration: 3
+                {
+                    "Leg/Left", new Component(
+                        sprite: Globals.SpriteSheet.GetCopy("NinjaLeg"),
+                        relativePosition: new Vector3(.375f, .5f, .1f),
+                        size: new Vector3(.375f),
+                        rotationPoint: new Vector3(.5f, 0, .9f),
+                        yOffset: .15f,
+                        animations: new Dictionary<string, Animation>()
+                        {
+                            {
+                                "Walk", new Animation(
+                                    updateFrames: new Frames(
+                                        baseRotations: new List<Vector3>
+                                        {
+                                            Vector3.Zero,
+                                            new Vector3(-.7f, 0, 0),
+                                            Vector3.Zero,
+                                            new Vector3(.7f, 0, 0),
+                                            Vector3.Zero
+                                        },
+                                        duration: 3
+                                    )
                                 )
-                            )
-                        }
-                    })
+                            }
+                        })
                 },
-                {"Leg/Right", new Component(
-                    sprite: Globals.SpriteSheet.GetCopy("NinjaLeg"),
-                    relativePosition: new Vector3(.625f, .5f, .1f),
-                    size: new Vector3(.375f),
-                    rotationPoint: new Vector3(.5f, 0, .9f),
-                    yOffset: .15f,
-                    animations: new Dictionary<string, Animation>()
-                    {
-                        {"Walk", new Animation(
-                            updateFrames: new Frames(
-                                baseRotations: new List<Vector3>
-                                {
-                                    Vector3.Zero,
-                                    new Vector3(.7f, 0, 0),
-                                    Vector3.Zero,
-                                    new Vector3(-.7f, 0, 0),
-                                    Vector3.Zero
-                                },
-                                duration: 3
+                {
+                    "Leg/Right", new Component(
+                        sprite: Globals.SpriteSheet.GetCopy("NinjaLeg"),
+                        relativePosition: new Vector3(.625f, .5f, .1f),
+                        size: new Vector3(.375f),
+                        rotationPoint: new Vector3(.5f, 0, .9f),
+                        yOffset: .15f,
+                        animations: new Dictionary<string, Animation>()
+                        {
+                            {
+                                "Walk", new Animation(
+                                    updateFrames: new Frames(
+                                        baseRotations: new List<Vector3>
+                                        {
+                                            Vector3.Zero,
+                                            new Vector3(.7f, 0, 0),
+                                            Vector3.Zero,
+                                            new Vector3(-.7f, 0, 0),
+                                            Vector3.Zero
+                                        },
+                                        duration: 3
+                                    )
                                 )
-                            )
-                        }
-                    })
+                            }
+                        })
                 }
             };
 
@@ -495,41 +524,8 @@ namespace Generator
         public void Update()
         {
             AI?.Value(this);
-            if (MovementTarget != null || MovementDirection != null)
-            {
-                if (MovementTarget != null)
-                {
-                    // TODO: Pathfinding
-                    var distanceToMove = Vector3.Distance(MovementTarget.Value, Position);
-                    MovementSpeed = Math.Min(distanceToMove / 3, 1);
-                    if (distanceToMove < .001f || distanceToMove <= GetMovementDistance())
-                    {
-                        IsWalking = true;
-                        Position = MovementTarget.Value;
-                        MovementTarget = null;
-                        MovementDirection = null;
-                    }
-                    else
-                    {
-                        MoveInDirection((float)MathTools.Angle(Position, MovementTarget.Value));
-                    }
-                }
-                else
-                {
-                    MovementSpeed = MovementSpeed ?? 1;
-                    MoveInDirection(MovementDirection.Value);
-                }
-            }
-            else
-            {
-                MovementSpeed = null;
-                IsWalking = false;
-            }
-            if (DirectionOverride != null)
-            {
-                Direction = (float)DirectionOverride;
-                DirectionOverride = null;  // This is a hack; will need to set this every update
-            }
+
+            ApplyMovement();
 
             ApplyPhysics();
 
@@ -538,14 +534,71 @@ namespace Generator
             Electricity.Update();
 
             // Update ailments
-            foreach (var ailment in Ailments) { ailment.Update(); }
+            foreach (var ailment in Ailments)
+            {
+                ailment.Update();
+            }
 
             // Update animation
             foreach (var component in Components) component.Value.Update();
             foreach (var lightComponent in LightComponents) lightComponent.Value.Update();
 
             // Use abilities
+            // TODO: Why isn't this before animations are updated?
             foreach (var ability in Abilities) ability.Update();
+        }
+
+        private void ApplyMovement()
+        {
+            // Try to slow down when close to target
+            if (MovementTarget != null)
+            {
+                var distanceToMove = Vector3.Distance(MovementTarget.Value, new Vector3(Position.X, Position.Y, 0));
+                if (distanceToMove < GetMovementDistance() * Timing.SecondsPassed)
+                {
+                    IsWalking = true;
+                    MovementTarget = null;
+                    MovementDirection = null;
+                    return;
+                }
+                if (Position.Z == 0)
+                {
+                    MovementSpeedMultiplier = Math.Min(distanceToMove / 3, 1);
+                }
+            }
+
+            // In the air
+            if (Position.Z > 0)
+            {
+                return;
+            }
+            
+            // Click to target place to move
+            if (MovementTarget != null)
+            {
+                MoveInDirection((float) MathTools.Angle(Position, MovementTarget.Value));
+            }
+
+            // Controller
+            else if (MovementDirection != null)
+            {
+                MovementSpeedMultiplier = MovementSpeedMultiplier ?? 1;
+                MoveInDirection(MovementDirection.Value);
+            }
+            
+            // No input
+            else
+            {
+                MovementVelocity = Vector3.Zero;
+                MovementSpeedMultiplier = null;
+                IsWalking = false;
+            }
+
+            if (DirectionOverride != null)
+            {
+                Direction = (float) DirectionOverride;
+                DirectionOverride = null; // This is a hack; will need to set this every update
+            }
         }
 
         private void ApplyPhysics()
@@ -554,27 +607,19 @@ namespace Generator
             foreach (var physicsEffects in PhysicsEffects.Values)
             {
                 forces += physicsEffects.Force;
-                physicsEffects.Update();  // This order to let duration 0 still apply force
+                physicsEffects.Update(); // This order to let duration 0 still apply force
             }
-            forces.Z -= Globals.Zone.Gravity;
-
-            var acceleration = forces; // / Mass;
-            Velocity += acceleration * Timing.SecondsPassed;
+            forces.Z -= Globals.Zone.Gravity * Mass / 10;  // why?
+            
+            Velocity += forces * Timing.SecondsPassed;
             if (Position.Z == 0)
             {
-                var friction = Globals.TileManager.Get((int) Center.X, (int) Center.Y).Friction 
-                               * Mass * Globals.Zone.Gravity / 1000;
+                var friction = GetFriction();
                 Velocity.X = Velocity.X > 0 ? Math.Max(Velocity.X - friction, 0) : Math.Min(Velocity.X + friction, 0);
                 Velocity.Y = Velocity.Y > 0 ? Math.Max(Velocity.Y - friction, 0) : Math.Min(Velocity.Y + friction, 0);
             }
-
-            if (ID == "niels")
-            {
-                Globals.Log("Forces:   " + forces);
-                Globals.Log("Velocity: " + Velocity);
-                Globals.Log("Position: " + Position);
-            }
-            Position += Velocity * Timing.SecondsPassed;
+            
+            Position += (Velocity + MovementVelocity) * Timing.SecondsPassed;
         }
 
         // Deal damage to a target
@@ -603,14 +648,14 @@ namespace Generator
             if (damage > 0)
             {
                 Globals.Log(this + " takes " + damage + " damage. "
-                        + Health.Current + " -> " + (Health.Current - damage));
+                            + Health.Current + " -> " + (Health.Current - damage));
 
                 // Add this to the set of enemies
                 if (!Globals.Party.Value.MemberIDs.Contains(ID))
                 {
                     Globals.GameObjectManager.EnemyIds.Add(ID);
                 }
-                
+
                 // TODO: We can't hardcode "Face"
                 // Components["Face"].SpriteFile = componentSpriteFileName + "/Face04";
                 Health.Current -= damage;
@@ -656,12 +701,8 @@ namespace Generator
             {
                 returnObjects.UnionWith(GetTargets(i));
             }
-            return returnObjects;
-        }
 
-        public float GetMovementDistance()
-        {
-            return (MovementSpeed ?? 0) * 2 * (float)Math.Sqrt(Speed.CurrentValue) * Timing.GameSpeed / Globals.RefreshRate;
+            return returnObjects;
         }
 
         // Attempts to move the object in a direction (radians).
@@ -674,13 +715,19 @@ namespace Generator
             // Get distance
             var distance = GetMovementDistance();
             var offsets = MathTools.OffsetFromRadians(radians);
-            var newPosition = new Vector3(
-                _Position.X + distance * offsets.X,
-                _Position.Y + distance * offsets.Y,
-                _Position.Z);
+            var friction = GetFriction();
+            MovementVelocity.X += (distance * offsets.X - MovementVelocity.X) * friction;
+            MovementVelocity.Y += (distance * offsets.Y - MovementVelocity.Y) * friction;
+        }
 
-            // See if you can move to the location
-            Position = newPosition;
+        private float GetMovementDistance()
+        {
+            return (MovementSpeedMultiplier ?? 0) * BaseMovementSpeed;  // per second
+        }
+
+    private float GetFriction()
+        {
+            return Globals.TileManager.Get((int) Center.X, (int) Center.Y)?.Friction ?? 0;
         }
 
         // Submit message to the screen with icon

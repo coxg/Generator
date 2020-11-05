@@ -167,7 +167,7 @@ namespace Generator
                 / (GameControl.camera.VisibleArea.Right - GameControl.camera.VisibleArea.Left);
             pixels.Y =
                 Globals.Resolution.Y
-                * (position.Y - GameControl.camera.VisibleArea.Bottom)
+                * (position.Y + position.Z - GameControl.camera.VisibleArea.Bottom)
                 / (GameControl.camera.VisibleArea.Top - GameControl.camera.VisibleArea.Bottom);
             return pixels;
         }

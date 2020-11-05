@@ -303,7 +303,7 @@ namespace Generator
                 directionVerticalOffset = ControllerState.ThumbSticks.Right.Y;
                 moveHorizontalOffset = ControllerState.ThumbSticks.Left.X;
                 moveVerticalOffset = ControllerState.ThumbSticks.Left.Y;
-                player.MovementSpeed = (float)Math.Min(1, Math.Sqrt(
+                player.MovementSpeedMultiplier = (float)Math.Min(1, Math.Sqrt(
                     Math.Pow(ControllerState.ThumbSticks.Left.X, 2)
                     + Math.Pow(ControllerState.ThumbSticks.Left.Y, 2)));
 
@@ -324,7 +324,7 @@ namespace Generator
                     if (keyboardState.IsKeyDown(Keys.A)) moveHorizontalOffset -= 1;
                     if (keyboardState.IsKeyDown(Keys.D)) moveHorizontalOffset += 1;
                     player.MovementTarget = null;
-                    player.MovementSpeed = 1;
+                    player.MovementSpeedMultiplier = 1;
                 }
 
                 // If the mouse is pressed then start moving to its position

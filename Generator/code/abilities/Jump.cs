@@ -14,7 +14,7 @@ namespace Generator.code.abilities
             if (SourceObject.Position.Z == 0)
             {
                 SourceObject.Say("Wahoo!");
-                SourceObject.PhysicsEffects["jump"] = new PhysicsEffect(new Vector3(0, 0, 200), .1f);
+                SourceObject.Velocity.Z += 20;
             }
         }
     }

@@ -54,7 +54,7 @@ namespace Generator
             float frames = (float)Math.Sqrt(SourceAnimation.SourceObject.Speed.CurrentValue) * Timing.GameSpeed * Smoothing;
             if (SourceAnimation.Name == "Walk")  // TODO: this
             {
-                frames *= SourceAnimation.SourceObject.MovementSpeed ?? 1;
+                frames *= SourceAnimation.SourceObject.MovementSpeedMultiplier ?? 1;
             }
             return frames;
         }

@@ -17,13 +17,17 @@ namespace Generator.code.abilities
         {
             var position = SourceObject.GetTargetCoordinates(1.5f);
             position.Z += SourceObject.Size.Z / 2;
+            var direction = position - SourceObject.Position;
+            direction.Z = 0;
+            direction.Normalize();
+            
             var bullet = new GameObject(
                 baseHealth: 1,
                 position: position,
                 size: new Vector3(.01f),
                 direction: SourceObject.Direction,
-                baseSpeed: 1000,
-                ai: new Cached<Action<GameObject>>("BulletAI"),
+                velocity: direction * 50 + SourceObject.Velocity,
+                mass: 0,
                 collisionEffect: new Cached<Action<GameObject, GameObject>>("BulletCollision"),
                 temporary: true,
                 components: new Dictionary<string, Component>{},

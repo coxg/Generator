@@ -46,7 +46,7 @@ namespace Generator
             }
             else if (Globals.Party.Value.InCombat)
             {
-                gameSpeed = 1 - ((1 - Globals.Player.MovementSpeed ?? 1) * (float)Math.Sqrt(Globals.Player.Smarts.CurrentValue / 100f));
+                gameSpeed = 1 - ((1 - Globals.Player.MovementSpeedMultiplier ?? 1) * (float)Math.Sqrt(Globals.Player.Smarts.CurrentValue / 100f));
             }
             else
             {
