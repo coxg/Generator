@@ -609,14 +609,19 @@ namespace Generator
                 forces += physicsEffects.Force;
                 physicsEffects.Update(); // This order to let duration 0 still apply force
             }
-            forces.Z -= Globals.Zone.Gravity * Mass / 10;  // why?
+            forces.Z -= Globals.Zone.Gravity * Mass / 10;  // why 10?
+            forces += Globals.Zone.Wind;
             
             Velocity += forces * Timing.SecondsPassed;
             if (Position.Z == 0)
             {
-                var friction = GetFriction() * 10;
+                var friction = GetFriction() * 300 * Timing.SecondsPassed;  // why 300?
                 Velocity.X = Velocity.X > 0 ? Math.Max(Velocity.X - friction, 0) : Math.Min(Velocity.X + friction, 0);
                 Velocity.Y = Velocity.Y > 0 ? Math.Max(Velocity.Y - friction, 0) : Math.Min(Velocity.Y + friction, 0);
+                if (MovementVelocity != Vector3.Zero)
+                {
+                    MovementVelocity += Globals.Zone.Wind;
+                }
             }
             
             Position += (Velocity + MovementVelocity) * Timing.SecondsPassed;

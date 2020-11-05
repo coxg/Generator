@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using Generator.code.objects;
 using Microsoft.Xna.Framework;
-using Newtonsoft.Json;
 
 namespace Generator
 {
@@ -13,13 +12,15 @@ namespace Generator
         public int Width;
         public int Height;
         public float Gravity;
+        public Vector3 Wind;
 
-        public Zone(string name, int width, int height, float gravity = 9.8f)
+        public Zone(string name, int width, int height, float gravity = 9.8f, Vector3? wind = null)
         {
             Name = name;
             Width = width;
             Height = height;
             Gravity = gravity;
+            Wind = wind ?? Vector3.UnitX * 10;
         }
 
         public static void Enter(string name)
