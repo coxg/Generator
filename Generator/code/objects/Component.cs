@@ -9,7 +9,7 @@ namespace Generator
     {
         public Component(
             Sprite sprite,  // Can be null, but should be explicit when it is
-            Vector3 size,
+            Vector3? size = null,
             Vector3? relativePosition = null,
             Vector3? rotationPoint = null,
             Vector3? relativeRotation = null,
@@ -22,7 +22,7 @@ namespace Generator
             RelativePosition = relativePosition ?? new Vector3(.5f);
             RelativeRotation = relativeRotation ?? Vector3.Zero;
             SourceObject = sourceObject;
-            Size = size;
+            Size = size ?? Vector3.One;
             YOffset = yOffset;
             Animations = animations ?? new Dictionary<String, Animation>();
             Sprite = sprite;

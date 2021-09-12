@@ -15,15 +15,13 @@ namespace Generator.code.abilities
 
         public override void Start()
         {
-            var position = SourceObject.GetTargetCoordinates();
-            position.Z += SourceObject.Size.Z / 2;
-            var direction = position - SourceObject.Center;
-            direction.Z = 0;
+            var target = SourceObject.GetTargetCoordinates();
+            var direction = target - SourceObject.Center;
             direction.Normalize();
             
             var bullet = new GameObject(
                 baseHealth: 1,
-                position: position,
+                position: target,
                 size: new Vector3(.01f),
                 direction: SourceObject.Direction,
                 velocity: direction * 50 + SourceObject.Velocity,
