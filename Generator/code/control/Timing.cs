@@ -10,13 +10,7 @@ namespace Generator
         public static Dictionary<int, List<Action>> Events = new Dictionary<int, List<Action>>();
 
         // The speed at which the game time moves relative to IRL time
-        public static float? GameSpeedOverride;
-        private static float gameSpeed = 1;
-        public static float GameSpeed
-        {
-            set { GameSpeedOverride = value; }
-            get { return GameSpeedOverride ?? gameSpeed; }
-        }
+        public static float GameSpeed = 1;
 
         // Seconds passed since the last update
         public static float SecondsPassed => GameSpeed / Globals.RefreshRate;
@@ -34,23 +28,19 @@ namespace Generator
         }
 
         public static void UpdateGameSpeed()
-        // Update the game speed based on any overrides, whether or not we're in combat, and the player's Sense
         {
             if (Globals.CurrentConversation != null)
             {
-                gameSpeed = 0;
-            }
-            else if (GameSpeedOverride != null)
-            {
-                gameSpeed = (float)GameSpeedOverride;
+                GameSpeed = 0;
             }
             else if (Globals.Party.Value.InCombat)
             {
-                gameSpeed = 1 - ((1 - Globals.Player.MovementSpeedMultiplier ?? 1) * (float)Math.Sqrt(Globals.Player.Smarts.CurrentValue / 100f));
+                // TODO
+                GameSpeed = 1;
             }
             else
             {
-                gameSpeed = 1;
+                GameSpeed = 1;
             }
         }
 
