@@ -60,7 +60,6 @@ namespace Generator
 
             // Abilities
             List<Ability> abilities = null,
-            Dictionary<string, code.actions.Strategy> strategies = null,
             string strategyName = null,
 
             // Interaction
@@ -111,9 +110,6 @@ namespace Generator
             // Abilities
             Abilities = abilities ?? new List<Ability>();
             foreach (var ability in Abilities) ability.SourceObject = this;
-            Strategies = strategies ??
-                         (Dictionary<string, code.actions.Strategy>) Globals.Copy(code.actions.Strategy.Strategies);
-            StrategyName = strategyName ?? "Whatevs";
 
             // Interaction
             Conversation = conversation;
@@ -259,8 +255,6 @@ namespace Generator
         // TODO: Function to add new ability, should not be able to add it directly
         // This would make a copy and set the sourceObject
         public List<Ability> Abilities = new List<Ability>();
-        public Dictionary<string, code.actions.Strategy> Strategies;
-        public string StrategyName;
 
         // Interaction
         public Conversation Conversation;

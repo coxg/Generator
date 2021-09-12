@@ -46,7 +46,6 @@ namespace Generator
         // TODO: This will definitely break when I move to production
         public static string ProjectDirectory = Path.GetFullPath(@"../../../../");
         public static JsonSerializer Serializer;
-        public static bool LightingEnabled = true;
         public static bool IsRelease = false;
 
         // World management
@@ -72,7 +71,6 @@ namespace Generator
         // Loading assets
         public static Dictionary<string, Texture2D> Textures = new Dictionary<string, Texture2D>();
         public static SpriteSheet CommonSpriteSheet;
-        public static Sprite LightSprite;
         public static Texture2D WhiteDot;
         public static SpriteFont Font;
         public static TileSheet DefaultTileSheet;

@@ -14,21 +14,13 @@ namespace Generator
                 "DefaultAI",
                 self =>
                 {
-                    // The player is controlled directly
-                    if (Globals.Player.ID == self.ID)
-                    {
-                        return;
-                    }
-
                     // Party members
                     if (Globals.Party.Value.MemberIDs.Contains(self.ID))
                     {
-                        // During combat they fight your enemies
+                        // In combat wait until it's your turn
                         if (Globals.Party.Value.InCombat)
                         {
-                            // TODO: Add projectiles
-                            self.Strategies[self.StrategyName].Follow(
-                                self, Globals.Party.Value.GetMembers(), Globals.GameObjectManager.GetEnemyObjects(), new List<GameObject>());
+                            // TODO
                         }
 
                         // Out of combat they follow you around
@@ -51,9 +43,7 @@ namespace Generator
                         // If they're fighting you
                         if (Globals.GameObjectManager.EnemyIds.Contains(self.ID))
                         {
-                            // TODO: Add projectiles
-                            self.Strategies[self.StrategyName].Follow(
-                                self, Globals.GameObjectManager.GetEnemyObjects(), Globals.Party.Value.GetMembers(), new List<GameObject>());
+                            // TODO
                         }
                     }
                 }

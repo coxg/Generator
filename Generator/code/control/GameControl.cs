@@ -19,8 +19,6 @@ namespace Generator
         public static Camera camera;
         public static BasicEffect effect;
         public static BasicEffect tileEffect;
-        public static RenderTarget2D lightingRenderTarget;
-        public static BlendState lightingBlendState;
         // TODO: Add setters to Resolution to change this during runtime
         public static Rectangle screenSize = new Rectangle(0, 0, (int)Globals.Resolution.X, (int)Globals.Resolution.Y);
         public static SpriteBatch spriteBatch;
@@ -57,14 +55,6 @@ namespace Generator
 
             // Set up the GraphicsDevice, which is used for all drawing
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            lightingRenderTarget = new RenderTarget2D(
-                GraphicsDevice,
-                GraphicsDevice.PresentationParameters.BackBufferWidth,
-                GraphicsDevice.PresentationParameters.BackBufferHeight,
-                false,
-                GraphicsDevice.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
-            lightingBlendState = new BlendState { ColorSourceBlend = Blend.DestinationColor };
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -121,15 +111,6 @@ namespace Generator
                     new Sprite("SamuraiHead", true, 5, 4, 8, 26),
                 });
             Globals.SpriteSheet = Globals.DefaultSpriteSheet;
-            Globals.CommonSpriteSheet = new SpriteSheet(
-                "Sprites/light", 
-                new List<Sprite>
-                {
-                    new Sprite("Light", false, 1, 1, 0, 0)
-                },
-                1,
-                1);
-            Globals.LightSprite = Globals.CommonSpriteSheet.GetCopy("Light");
             
             // TODO: This will be replaced once we have an intro screen
             Saving.LoadAreaFromDisk(Globals.ZoneName.Value);
