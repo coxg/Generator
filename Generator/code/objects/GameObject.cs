@@ -609,7 +609,7 @@ namespace Generator
                 forces += physicsEffects.Force;
                 physicsEffects.Update(); // This order to let duration 0 still apply force
             }
-            forces.Z -= Globals.Zone.Gravity * Mass / 10;  // why 10?
+            forces.Z -= Globals.Zone.Gravity * Mass / 10;  // 10 because gravity and squares are in meters
             forces += Globals.Zone.Wind;
             
             Velocity += forces * Timing.SecondsPassed;

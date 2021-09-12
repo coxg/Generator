@@ -20,7 +20,7 @@ namespace Generator
             Width = width;
             Height = height;
             Gravity = gravity;
-            Wind = wind ?? Vector3.UnitX * 10;
+            Wind = wind ?? Vector3.Zero;
         }
 
         public static void Enter(string name)
