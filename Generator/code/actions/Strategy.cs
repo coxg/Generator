@@ -35,11 +35,11 @@ namespace Generator.code.actions
             // Weight by efficiency - right now this means "at what threshold do I start doing the calculation?"
             // At some point we could get more advanced:
             // - Change it to be 0 --> go all out, 1 --> do straight calculation, .5 --> maintain (cost ~= regen)
-            // - Or should it be something like .5 --> "Willing to spend some extra electricity for some more output"?
-            if (ability.SourceObject.Electricity.Current > 0
-                && ability.SourceObject.Electricity.Current / ability.SourceObject.Electricity.Max <= PriorityWeights["Efficiency"])
+            // - Or should it be something like .5 --> "Willing to spend some extra mana for some more output"?
+            if (ability.SourceObject.Mana.Current > 0
+                && ability.SourceObject.Mana.Current / ability.SourceObject.Mana.Max <= PriorityWeights["Efficiency"])
             {
-                var cost = Math.Max(ability.ElectricityCost, 1);
+                var cost = Math.Max(ability.ManaCost, 1);
                 abilityPriority /= PriorityWeights["Efficiency"] * cost;
             }
 

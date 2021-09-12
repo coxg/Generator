@@ -9,7 +9,7 @@ namespace Generator.code.abilities
     {
         public Shoot() : base(
             "Shoot",
-            electricityCost: 0,
+            manaCost: 0,
             cooldown: .01f,
             keepCasting: true) { }
 
@@ -28,10 +28,9 @@ namespace Generator.code.abilities
                 mass: 0,
                 collisionEffect: new Cached<Action<GameObject, GameObject>>("BulletCollision"),
                 temporary: true,
-                components: new Dictionary<string, Component>{},
-                lightComponents: new Dictionary<string, LightComponent>
+                components: new Dictionary<string, Component>
                 {
-                    {"light", new LightComponent(new Vector3(2), Color.LightPink, 3)}
+                    {"body", new Component(Globals.SpriteSheet.GetCopy("MetalBall"), new Vector3(.5f))}
                 });
             Globals.GameObjectManager.Set(bullet);
         }

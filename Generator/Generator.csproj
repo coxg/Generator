@@ -77,7 +77,6 @@
     <Compile Include="code\actions\Actions.cs" />
     <Compile Include="code\items\GeneratorObj.cs" />
     <Compile Include="code\objects\Conversation.cs" />
-    <Compile Include="code\objects\LightComponent.cs" />
     <Compile Include="code\objects\PhysicsEffect.cs" />
     <Compile Include="code\world\GameObjectManager.cs" />
     <Compile Include="code\world\TileManager.cs" />

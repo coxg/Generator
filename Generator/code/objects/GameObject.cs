@@ -36,12 +36,11 @@ namespace Generator
             // Animation attributes
             Sprite sprite = null,
             Dictionary<string, Component> components = null,
-            Dictionary<string, LightComponent> lightComponents = null,
             bool isWalking = false,
 
             // Resources
             int baseHealth = 3,
-            int baseElectricity = 0,
+            int baseMana = 0,
 
             // Primary Attributes
             int baseStrength = 0,
@@ -79,14 +78,13 @@ namespace Generator
         {
             // Animation attributes
             Components = components ?? GenerateDefaultComponentDict();
-            LightComponents = lightComponents ?? new Dictionary<string, LightComponent>();
             LinkComponents();
             Sprite = sprite;
             IsWalking = isWalking;
 
             // Resources
             Health = new Resource("Health", baseHealth);
-            Electricity = new Resource("Electricity", baseElectricity, regeneration: 10);
+            Mana = new Resource("Mana", baseMana, 10);
 
             // Primary Attributes
             Strength = new Attribute(baseStrength);
@@ -142,7 +140,6 @@ namespace Generator
         }
 
         public Dictionary<string, Component> Components;
-        public Dictionary<string, LightComponent> LightComponents;
 
         // Toggleables
         private bool _isWalking;
@@ -241,7 +238,7 @@ namespace Generator
 
         // Resources
         public Resource Health;
-        public Resource Electricity;
+        public Resource Mana;
 
         // Primary attributes
         public Attribute Strength;
@@ -317,18 +314,6 @@ namespace Generator
                     animation.Value.SourceObject = this;
                 }
             }
-
-            foreach (var component in LightComponents)
-            {
-                component.Value.ID = component.Key; // Just for debugging purposes
-                component.Value.SourceObject = this;
-                foreach (var animation in component.Value.Animations)
-                {
-                    animation.Value.Name = animation.Key;
-                    animation.Value.AnimatedElement = component.Value;
-                    animation.Value.SourceObject = this;
-                }
-            }
         }
 
         // Equip some equipment!
@@ -355,7 +340,7 @@ namespace Generator
 
             // Resources
             Health.Max += equipmentToEquip.Health - equippedEquipment.Health;
-            Electricity.Max += equipmentToEquip.Capacity - equippedEquipment.Capacity;
+            Mana.Max += equipmentToEquip.Capacity - equippedEquipment.Capacity;
 
             // Attributes
             Strength.Modifier += equipmentToEquip.Strength - equippedEquipment.Strength;
@@ -531,7 +516,7 @@ namespace Generator
 
             // Update resources
             Health.Update();
-            Electricity.Update();
+            Mana.Update();
 
             // Update ailments
             foreach (var ailment in Ailments)
@@ -541,7 +526,6 @@ namespace Generator
 
             // Update animation
             foreach (var component in Components) component.Value.Update();
-            foreach (var lightComponent in LightComponents) lightComponent.Value.Update();
 
             // Use abilities
             // TODO: Why isn't this before animations are updated?
@@ -636,8 +620,7 @@ namespace Generator
 
         public bool IsVisible()
         {
-            return Area.IntersectsWith(GameControl.camera.VisibleArea) || LightComponents.Any(
-                lightComponent => lightComponent.Value.Area.IntersectsWith(GameControl.camera.VisibleArea));
+            return Area.IntersectsWith(GameControl.camera.VisibleArea);
         }
 
         public int DamageToTake(int damage)

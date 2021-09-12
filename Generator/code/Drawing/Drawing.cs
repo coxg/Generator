@@ -423,7 +423,7 @@ namespace Generator
                 case "Health":
                     barColor = new Vector3(255, 0, 0);
                     break;
-                case "Electricity":
+                case "Mana":
                     barColor = new Vector3(0, 0, 255);
                     height += barHeight;
                     break;
@@ -510,35 +510,8 @@ namespace Generator
         }
         
         public static void DrawShadows()
-        // Unused but leaving in for future reference
         {
-            var vertices = new List<VertexPositionColorTexture>();
-            foreach (var gameObject in Globals.GameObjectManager.GetVisible().OrderBy(i => -i.Position.Y))
-            {
-                // Draw components for the object
-                foreach (var component in 
-                    gameObject.Components.Values.OrderBy(i => -i.Position.Y))
-                {
-                    var direction = MathHelper.PiOver4;
-                    var normalizationDirection = new Vector3(-MathHelper.PiOver2, 0, direction + MathHelper.PiOver2);
-                    var normalizationOffset = MathTools.PointRotatedAroundPoint(
-                        Vector3.Zero,
-                        new Vector3(component.SourceObject.Size.X / 2, 0, 0),
-                        new Vector3(0, 0, direction));
-                    normalizationOffset += new Vector3(
-                        -component.SourceObject.Size.X / 2,
-                        -component.SourceObject.Size.Z / 2,
-                        0);
-                    AddComponentToVertices(
-                        component, 
-                        normalizationDirection, 
-                        normalizationOffset,
-                        vertices,
-                        Globals.SpriteSheet,
-                        Color.White);
-                }
-            }
-            DrawVertices(vertices, Globals.SpriteSheet);
+            // TODO: Just draw little shadow circles under each character
         }
 
         public static void DrawGameObjects()
@@ -558,47 +531,6 @@ namespace Generator
                 }
             }
             DrawVertices(vertices, Globals.SpriteSheet);
-        }
-        
-        public static void DrawLighting()
-        {
-            var vertices = new List<VertexPositionColorTexture>();
-            foreach (var gameObject in Globals.GameObjectManager.GetVisible())
-            {
-                foreach (var lightComponent in gameObject.LightComponents)
-                {
-                    AddComponentToVertices(
-                        lightComponent.Value, 
-                        new Vector3(-MathHelper.PiOver2, 0, 0), 
-                        Vector3.Zero,
-                        vertices,
-                        Globals.CommonSpriteSheet,
-                        lightComponent.Value.Brightness == 1 ? lightComponent.Value.Color : Color.White);
-                }
-            }
-            DrawVertices(vertices, Globals.CommonSpriteSheet);
-        }
-        
-        public static void DrawBrightLighting()
-        {
-            var vertices = new List<VertexPositionColorTexture>();
-            foreach (var gameObject in Globals.GameObjectManager.GetVisible())
-            {
-                foreach (var lightComponent in gameObject.LightComponents)
-                {
-                    for (var i = 1; i < lightComponent.Value.Brightness; i++)
-                    {
-                        AddComponentToVertices(
-                            lightComponent.Value, 
-                            new Vector3(-MathHelper.PiOver2, 0, 0), 
-                            Vector3.Zero,
-                            vertices,
-                            Globals.CommonSpriteSheet,
-                            lightComponent.Value.Color);
-                    }
-                }
-            }
-            DrawVertices(vertices, Globals.CommonSpriteSheet);
         }
 
         private static void DrawVertices(List<VertexPositionColorTexture> vertices, SpriteSheet spriteSheet)
@@ -696,7 +628,7 @@ namespace Generator
             {
                 var gameObject = partyMembers[i];
                 DrawResource(gameObject.Health, i);
-                if (gameObject.Electricity.Max > 0) DrawResource(gameObject.Electricity, i);
+                if (gameObject.Mana.Max > 0) DrawResource(gameObject.Mana, i);
             }
         }
     }

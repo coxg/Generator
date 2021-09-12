@@ -23,7 +23,7 @@
             Regeneration = regeneration;
         }
 
-        // One of "Health", "Stamina", "Electricity"
+        // Either Health or Mana
         public string Name { get; set; }
 
         public int BaseValue

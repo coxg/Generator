@@ -15,7 +15,7 @@ namespace Generator
 
             // Resource costs
             int healthCost = 0,
-            int electricityCost = 0,
+            int manaCost = 0,
 
             // How it works
             bool keepCasting = false,
@@ -31,7 +31,7 @@ namespace Generator
 
             // Resource costs
             HealthCost = healthCost;
-            ElectricityCost = electricityCost;
+            ManaCost = manaCost;
 
             // How the ability works
             KeepCasting = keepCasting;
@@ -73,7 +73,7 @@ namespace Generator
 
         // Resource costs
         public int HealthCost;
-        public int ElectricityCost;
+        public int ManaCost;
 
         // How it works
         public bool OffCooldown = true;
@@ -159,7 +159,7 @@ namespace Generator
         {
             return OffCooldown
                    && SourceObject.Health.Current >= HealthCost
-                   && SourceObject.Electricity.Current >= ElectricityCost
+                   && SourceObject.Mana.Current >= ManaCost
                    && (SourceObject.IsWalking || !RequiresWalking);
         }
 
@@ -246,7 +246,7 @@ namespace Generator
             if (IsActive)
             {
                 SourceObject.TakeDamage(HealthCost);
-                SourceObject.Electricity.Current -= ElectricityCost;
+                SourceObject.Mana.Current -= ManaCost;
             }
 
             // Play the animation

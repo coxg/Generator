@@ -198,28 +198,11 @@ namespace Generator
             effect.View = camera.View;
             tileEffect.View = camera.View;
 
-            // Pre-compute the lighting layer
-            if (Globals.LightingEnabled)
-            {
-                GraphicsDevice.SetRenderTarget(lightingRenderTarget);
-                GraphicsDevice.Clear(new Color(50, 50, 100, 255));
-                Drawing.DrawLighting();
-            }
-
             // Draw all game elements
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.Black);
             Drawing.DrawTiles();
             Drawing.DrawGameObjects();
-            Drawing.DrawBrightLighting();
-
-            // Draw the lighting on top of the other layers
-            if (Globals.LightingEnabled)
-            {
-                spriteBatch.Begin(blendState: lightingBlendState);
-                spriteBatch.Draw(lightingRenderTarget, screenSize, Color.White);
-                spriteBatch.End();
-            }
 
             // Draw the UI layer
             spriteBatch.Begin();

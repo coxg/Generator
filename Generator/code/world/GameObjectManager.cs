@@ -130,15 +130,6 @@ namespace Generator
                             animation.SetSource(gameObject);
                         }
                     }
-                    foreach (var lightComponent in gameObject.LightComponents.Values)
-                    {
-                        lightComponent.SourceObject = gameObject;
-                        foreach (var animation in lightComponent.Animations.Values)
-                        {
-                            animation.AnimatedElement = lightComponent;
-                            animation.SetSource(gameObject);
-                        }
-                    }
                     var abilities = new List<Ability>();
                     foreach (var ability in gameObject.Abilities)
                     {

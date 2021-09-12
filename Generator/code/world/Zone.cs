@@ -63,7 +63,7 @@ namespace Generator
                         // niels
                         new GameObject(
                             new Vector3(50, 50, 0),
-                            baseElectricity: 100,
+                            baseMana: 100,
                             baseStrength: 1,
                             baseSpeed: 100,
                             baseSense: 90,
@@ -80,7 +80,7 @@ namespace Generator
                         // farrah
                         new GameObject(
                             new Vector3(50, 55, 0),
-                            baseElectricity: 100,
+                            baseMana: 100,
                             baseStrength: 10,
                             baseSpeed: 20,
                             baseSense: 90,
@@ -239,16 +239,12 @@ namespace Generator
                             components: new Dictionary<string, Component>
                             {
                                 { "body", new Component(Globals.SpriteSheet.GetCopy("NinjaHead"), new Vector3(6, 6, 9)) }
-                            },
-                            lightComponents: new Dictionary<string, LightComponent>
-                            {
-                                {"light", new LightComponent(new Vector3(30), flicker: true)}
                             }),
 
                         new GameObject(
                             new Vector3(50, 62, 0),
                             baseHealth: 100,
-                            baseElectricity: 100,
+                            baseMana: 100,
                             baseStrength: 1,
                             baseSpeed: 10,
                             baseSense: 90,
