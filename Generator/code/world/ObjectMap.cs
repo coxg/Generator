@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 
 namespace Generator.code.world
@@ -58,6 +59,28 @@ namespace Generator.code.world
             }
         }
 
+        public GameObject GetOne(int x, int y)
+        {
+            if (InBounds(x, y))
+            {
+                var values = Values[x, y] ?? new HashSet<GameObject>();
+                var possibleObjects = values.Where(value => value.Area.Contains(x, y));
+                if (!possibleObjects.Any())
+                {
+                    return null;
+                }
+
+                if (possibleObjects.Count() > 1)
+                {
+                    // TODO: What if they're right next to each other and you query the point where they touch?
+                    throw new InvalidDataException("Oops! Objects shouldn't overlap!");
+                }
+
+                return possibleObjects.First();
+            }
+            return null;
+        }
+        
         public IEnumerable<GameObject> Get(float x, float y)
         {
             if (InBounds(x, y))

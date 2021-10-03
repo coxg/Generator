@@ -125,7 +125,7 @@ namespace Generator
                 "BulletCollision",
                 (self, other) =>
                 {
-                    self.DealDamage(other, 1);
+                    self.DealDamage(other, 1, Type.Physical);
                     Globals.GameObjectManager.Kill(self);
                 }
             }

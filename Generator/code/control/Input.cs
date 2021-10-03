@@ -113,10 +113,13 @@ namespace Generator
                 if (KeyBindings["a"].IsBeingPressed)
                 {
                     var target = player.GetClosest(player.GetTargets());
-                    target?.Activate(player);
+                    if (target != null)
+                    {
+                        player.Activate(target);
+                    }
                 }
 
-                bool anyAbilitiesBeingUsed = ProcessAbilityInput(player);
+                bool anyAbilitiesBeingUsed = false; // TODO: ProcessAbilityInput(player);
 
                 ProcessMovementInput(player, anyAbilitiesBeingUsed);
 
@@ -244,46 +247,6 @@ namespace Generator
             }
         }
 
-        private static bool ProcessAbilityInput(GameObject player)
-        {
-            // Abilities
-            bool anyAbilitiesBeingUsed = false;
-            if (player.Abilities.Count > 0)
-            {
-                player.Abilities[0].IsTryingToUse = KeyBindings["l"].IsPressed;
-                if (player.Abilities[0].IsTryingToUse)
-                {
-                    anyAbilitiesBeingUsed = true;
-                }
-            }
-            if (player.Abilities.Count > 1)
-            {
-                player.Abilities[1].IsTryingToUse = KeyBindings["r"].IsPressed;
-                if (player.Abilities[1].IsTryingToUse)
-                {
-                    anyAbilitiesBeingUsed = true;
-                }
-            }
-            if (player.Abilities.Count > 2)
-            {
-                player.Abilities[2].IsTryingToUse = KeyBindings["lb"].IsPressed;
-                if (player.Abilities[2].IsTryingToUse)
-                {
-                    anyAbilitiesBeingUsed = true;
-                }
-            }
-            if (player.Abilities.Count > 3)
-            {
-                player.Abilities[3].IsTryingToUse = KeyBindings["rb"].IsPressed;
-                if (player.Abilities[3].IsTryingToUse)
-                {
-                    anyAbilitiesBeingUsed = true;
-                }
-            }
-
-            return anyAbilitiesBeingUsed;
-        }
-
         private static void ProcessMovementInput(GameObject player, bool anyAbilitiesBeingUsed)
         {
             // Convert from actual movement input to direction offsets
@@ -346,13 +309,12 @@ namespace Generator
             if (moveHorizontalOffset != 0 || moveVerticalOffset != 0)
             {
                 // Convert from offsets to radians
-
                 var radianDirection = (float)MathTools.Angle(
                     Vector3.Zero, new Vector3((float)moveHorizontalOffset, (float)moveVerticalOffset, 0));
 
                 // Apply offset from map rotation
                 radianDirection -= GameControl.camera.Rotation;
-                radianDirection = MathTools.Mod(radianDirection, 2f * (float)Math.PI);
+                radianDirection = MathTools.Mod(radianDirection, MathHelper.TwoPi);
 
                 // Move in that direction
                 player.MovementDirection = radianDirection;

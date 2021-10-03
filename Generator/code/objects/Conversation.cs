@@ -140,6 +140,7 @@ namespace Generator
 
         public void Start()
         {
+            Globals.Log(this + " starts talking");
             Globals.CurrentConversation = this;
         }
 

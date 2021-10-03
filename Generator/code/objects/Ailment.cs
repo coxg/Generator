@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 namespace Generator.code.objects
 {
+    // TODO: This whole thing needs to be rewritten
     public class Ailment
     {
         public Ailment(
@@ -42,7 +43,8 @@ namespace Generator.code.objects
         {
             if (MathTools.Mod(ElapsedDuration, Frequency) + Timing.GameSpeed / Globals.RefreshRate >= Frequency)
             {
-                SourceObject.DealDamage(TargetObject, GetDamage());
+                // TODO: Different ability damage types?
+                SourceObject.DealDamage(TargetObject, GetDamage(), Type.Untyped);
                 ApplyEffects();
             }
             ElapsedDuration += Timing.GameSpeed / Globals.RefreshRate;

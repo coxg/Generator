@@ -71,10 +71,11 @@ namespace Generator
                             id: "niels",
                             name: "Niels",
                             abilities: new List<Ability> {
-                                new code.abilities.Dash(),
-                                new code.abilities.Shoot(),
-                                new code.abilities.Jump(),
-                                new code.abilities.PlaceObject()
+                                Abilities.Move,
+                                Abilities.Blink,
+                                Abilities.Shoot,
+                                Abilities.Thwack,
+                                Abilities.PlaceObject
                             }),
 
                         // farrah
@@ -250,13 +251,7 @@ namespace Generator
                             baseSense: 90,
                             baseStyle: 100,
                             id: "bad_guy",
-                            name: "Bad Guy",
-                            abilities: new List<Ability>() {
-                                new code.abilities.Sprint(),
-                                new code.abilities.Shoot(),
-                                new code.abilities.PlaceObject(),
-                                new code.abilities.Attack()
-                            })
+                            name: "Bad Guy")
                     });
                     Globals.TileManager = new TileManager(Globals.DefaultTileSheet, 1);
                     break;

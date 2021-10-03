@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using System.Linq;
-using System;
 using Newtonsoft.Json;
 
 namespace Generator
@@ -14,13 +13,10 @@ namespace Generator
                 List<Vector3> baseOffsets = null,
                 List<Vector3> baseRotations = null,
                 List<Vector3> baseResizes = null,
-                Animation sourceAnimation = null,
-                int smoothing = 100)
-            // Constructor
+                Animation sourceAnimation = null)
         {
             SourceAnimation = sourceAnimation;
             Duration = duration;
-            Smoothing = smoothing;  // How many frames to generate per 1 frame under 100% speed
             
             BaseOffsets = baseOffsets ?? new List<Vector3> { Vector3.Zero, Vector3.Zero };
             BaseRotations = baseRotations ?? new List<Vector3> { Vector3.Zero, Vector3.Zero };
@@ -45,41 +41,24 @@ namespace Generator
         [JsonIgnore]
         public Animation SourceAnimation;
         public float Duration;
-        public float CurrentFrame;
-        public int Smoothing;
-
-        public float FramesPerUpdate()
-            // How many animation frames should actually be played per update of the game clock
-        {
-            float frames = (float)Math.Sqrt(SourceAnimation.SourceObject.Speed.CurrentValue) * Timing.GameSpeed * Smoothing;
-            if (SourceAnimation.Name == "Walk")  // TODO: this
-            {
-                frames *= SourceAnimation.SourceObject.MovementSpeedMultiplier ?? 1;
-            }
-            return frames;
-        }
+        public int CurrentFrame;
 
         public void Play()
         // Plays a frame of the animation
         {
             // See if there are any new animation frames to play
-            var newFrame = MathTools.Mod(CurrentFrame + FramesPerUpdate(), SmoothedOffsets.Count);
-            if ((int)newFrame != (int)CurrentFrame)
-            {
-                // Rotate the difference between the last frame and this one
-                var positionDifference = MathTools.PointRotatedAroundPoint(
-                    SmoothedOffsets[(int)newFrame],
-                    Vector3.Zero,
-                    new Vector3(0, 0, -SourceAnimation.AnimatedElement.Direction));
-                
-                SourceAnimation.AnimatedElement.AnimationOffset = positionDifference;
-                SourceAnimation.AnimatedElement.RotationOffset = SmoothedRotations[(int)newFrame];
-                SourceAnimation.AnimatedElement.ResizeOffset = SmoothedResizes[(int)newFrame];
-                SourceAnimation.TotalOffset = positionDifference;
-            }
+            CurrentFrame = (int)MathTools.Mod(CurrentFrame + 1, SmoothedOffsets.Count);
 
-            // Update the current frame
-            CurrentFrame = newFrame;
+            // Rotate the difference between the last frame and this one
+            var positionDifference = MathTools.PointRotatedAroundPoint(
+                SmoothedOffsets[CurrentFrame],
+                Vector3.Zero,
+                new Vector3(0, 0, -SourceAnimation.AnimatedElement.Direction));
+                
+            SourceAnimation.AnimatedElement.AnimationOffset = positionDifference;
+            SourceAnimation.AnimatedElement.RotationOffset = SmoothedRotations[CurrentFrame];
+            SourceAnimation.AnimatedElement.ResizeOffset = SmoothedResizes[CurrentFrame];
+            SourceAnimation.TotalOffset = positionDifference;
         }
 
         public IEnumerable<int> GetTerminators(List<Vector3> offsets, List<Vector3> rotations, List<Vector3> resizes)
@@ -111,7 +90,7 @@ namespace Generator
             {
                 if (baseVectors[i] == terminator)
                 {
-                    baseTerminators.Add((int)(i * Globals.RefreshRate * Smoothing * Duration / (baseVectors.Count - 1)));
+                    baseTerminators.Add((int)(i * Globals.RefreshRate * Duration / (baseVectors.Count - 1)));
                 }
             }
             return baseTerminators;
@@ -126,7 +105,8 @@ namespace Generator
                 {
                     return false;
                 }
-                else if (terminator <= CurrentFrame && CurrentFrame < terminator + FramesPerUpdate())
+
+                if (terminator <= CurrentFrame && CurrentFrame < terminator + 1)
                 {
                     return true;
                 }
@@ -144,7 +124,7 @@ namespace Generator
             var zValues = new List<float>();
 
             // But wait - time is also a dimension! We're in 4D, people!
-            var numberOfFrames = (int) (Duration * Globals.RefreshRate * Smoothing);
+            var numberOfFrames = (int) (Duration * Globals.RefreshRate);
             var timeInputs = MathTools.FloatRange(frames.Count);
             for (var frameIndex = 0; frameIndex < frames.Count; frameIndex++)
                 timeInputs[frameIndex] *= (float) numberOfFrames / (frames.Count - 1);
@@ -192,7 +172,6 @@ namespace Generator
 
             // What's being animated
             GameElement animatedElement = null,
-            GameObject sourceObject = null,
 
             // What it does
             Frames startFrames = null,
@@ -215,7 +194,7 @@ namespace Generator
             StartFrames = startFrames;
             UpdateFrames = updateFrames;
             StopFrames = stopFrames;
-            SetSource(sourceObject);
+            SetSource();
         }
 
         // Animation name
@@ -224,8 +203,6 @@ namespace Generator
         // What's being animated
         [JsonIgnore]
         public GameElement AnimatedElement;  // This is the element that's actually moving
-        [JsonIgnore]
-        public GameObject SourceObject;  // Can be the same as the AnimatedElement, controls animation speed
 
         // What it does
         private Frames _startFrames;
@@ -347,9 +324,9 @@ namespace Generator
             }
         }
 
-        public void SetSource(GameObject sourceObject)
+        public void SetSource()
         {
-            SourceObject = sourceObject;
+            
             if (StartFrames != null) StartFrames.SourceAnimation = this;
             if (UpdateFrames != null) UpdateFrames.SourceAnimation = this;
             if (StopFrames != null) StopFrames.SourceAnimation = this;

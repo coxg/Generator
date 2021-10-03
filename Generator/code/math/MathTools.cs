@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 
@@ -13,11 +14,11 @@ namespace Generator
             return random.Next(value);
         }
 
-        public static float Mod(float Number, float Modulo)
+        public static float Mod(float number, float modulo)
         // Because % is remainder, not mod
         {
-            var Remainder = Number % Modulo;
-            return Remainder < 0 ? Remainder + Modulo : Remainder;
+            var remainder = number % modulo;
+            return remainder < 0 ? remainder + modulo : remainder;
         }
 
         public static int[] Range(int first, int? second = null)
@@ -170,6 +171,11 @@ namespace Generator
                 * (position.Y + position.Z - GameControl.camera.VisibleArea.Bottom)
                 / (GameControl.camera.VisibleArea.Top - GameControl.camera.VisibleArea.Bottom);
             return pixels;
+        }
+
+        public static List<Vector3> GetCoordinatesInCircle(int x, int y, int radius)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -21,11 +21,6 @@ namespace Generator
             return gameObject;
         }
 
-        public void Set(GameObject gameObject)
-        {
-            ObjectDict[gameObject.ID] = gameObject;
-        }
-
         public IEnumerable<GameObject> Get(float x, float y)
         {
             return ObjectMap.Get(x, y);
@@ -40,6 +35,11 @@ namespace Generator
                 return ObjectDict.Values.Where(x => x.Area.IntersectsWith(area)).ToHashSet();
             }
             return ObjectMap.Get(area);
+        }
+
+        public void Set(GameObject gameObject)
+        {
+            ObjectDict[gameObject.ID] = gameObject;
         }
         
         public HashSet<GameObject> GetVisible()
@@ -127,23 +127,10 @@ namespace Generator
                         foreach (var animation in component.Animations.Values)
                         {
                             animation.AnimatedElement = component;
-                            animation.SetSource(gameObject);
+                            animation.SetSource();
                         }
                     }
-                    var abilities = new List<Ability>();
-                    foreach (var ability in gameObject.Abilities)
-                    {
-                        var newAbility = Ability.GetTyped(ability);
-                        newAbility.SourceObject = gameObject;
-                        var animation = newAbility.Animation;
-                        if (animation != null)
-                        {
-                            animation.AnimatedElement = gameObject;
-                            animation.SetSource(gameObject);
-                        }
-                        abilities.Add(newAbility);
-                    }
-                    gameObject.Abilities = abilities;
+                    // TODO: abilities
                 }
             }
         }

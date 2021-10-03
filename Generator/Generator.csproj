@@ -60,14 +60,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="code\abilities\Attack.cs" />
-    <Compile Include="code\abilities\Blink.cs" />
-    <Compile Include="code\abilities\Dash.cs" />
-    <Compile Include="code\abilities\Jump.cs" />
-    <Compile Include="code\abilities\Sprint.cs" />
-    <Compile Include="code\abilities\PlaceObject.cs" />
-    <Compile Include="code\abilities\Shoot.cs" />
+    <Compile Include="code\actions\Abilities.cs" />
     <Compile Include="code\actions\Ability.cs" />
+    <Compile Include="code\actions\AbilityInstance.cs" />
     <Compile Include="code\Drawing\Drawing.cs" />
     <Compile Include="code\Drawing\Sprite.cs" />
     <Compile Include="code\Drawing\SpriteSheet.cs" />
@@ -75,7 +70,6 @@
     <Compile Include="code\items\Accessory.cs" />
     <Compile Include="code\actions\Animation.cs" />
     <Compile Include="code\actions\Actions.cs" />
-    <Compile Include="code\items\GeneratorObj.cs" />
     <Compile Include="code\objects\Conversation.cs" />
     <Compile Include="code\objects\PhysicsEffect.cs" />
     <Compile Include="code\world\GameObjectManager.cs" />

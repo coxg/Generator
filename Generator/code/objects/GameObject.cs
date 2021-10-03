@@ -56,7 +56,7 @@ namespace Generator
             int experience = 0,
             float direction = (float)Math.PI,
 
-            List<Ailment> ailments = null,
+            HashSet<Ailment> ailments = null,
 
             // Abilities
             List<Ability> abilities = null,
@@ -71,7 +71,6 @@ namespace Generator
 
             // Equipment
             Armor armor = null,
-            GeneratorObj generator = null,
             Accessory accessory = null
         )
         {
@@ -100,16 +99,14 @@ namespace Generator
             BaseMovementSpeed = baseMovementSpeed;
             MovementSpeedMultiplier = movementSpeedMultiplier;
 
-            Ailments = ailments ?? new List<code.objects.Ailment>();
+            Ailments = ailments ?? new HashSet<Ailment>();
 
             // Equipment
             EquippedArmor = armor ?? new Armor("[No Armor]", null);
-            EquippedGenerator = generator ?? new GeneratorObj("[No Generator]", null);
             EquippedAccessory = accessory ?? new Accessory("[No Accessory]", null);
 
             // Abilities
             Abilities = abilities ?? new List<Ability>();
-            foreach (var ability in Abilities) ability.SourceObject = this;
 
             // Interaction
             Conversation = conversation;
@@ -240,14 +237,16 @@ namespace Generator
         public Attribute Strength;
         public Attribute Smarts;
         public Attribute Speed;
-        public Attribute Style; // Right???
+        public Attribute Style;
 
         // Secondary attributes
         public Attribute Defense;
+        public Attribute MagicDefense;
 
-        public List<Ailment> Ailments;
+        public HashSet<Ailment> Ailments;
 
         // Growth
+        // TODO: these should probably have getters and setters and logic and whatnot
         public int Level;
         public int Experience;
 
@@ -255,6 +254,8 @@ namespace Generator
         // TODO: Function to add new ability, should not be able to add it directly
         // This would make a copy and set the sourceObject
         public List<Ability> Abilities = new List<Ability>();
+        
+        public Queue<AbilityInstance> QueuedAbilities = new Queue<AbilityInstance>();
 
         // Interaction
         public Conversation Conversation;
@@ -271,14 +272,6 @@ namespace Generator
             set { Equip(value); }
         }
 
-        private GeneratorObj _equippedGenerator = new GeneratorObj("[No Generator]", null);
-
-        public GeneratorObj EquippedGenerator
-        {
-            get => _equippedGenerator;
-            set { Equip(value); }
-        }
-
         private Accessory _equippedAccessory = new Accessory("[No Accessory]", null);
 
         public Accessory EquippedAccessory
@@ -290,8 +283,9 @@ namespace Generator
         // When activating, say each thing in the ActivationText and perform the ActivationFunction
         public void Activate(GameObject other)
         {
-            ActivationEffect?.Value(this, other);
-            Conversation?.Start();
+            Globals.Log(this + " activates " + other);
+            other.ActivationEffect?.Value(other, this);
+            other.Conversation?.Start();
         }
 
         // Establish a two-way link between the components and this GameObject
@@ -305,7 +299,6 @@ namespace Generator
                 {
                     animation.Value.Name = animation.Key;
                     animation.Value.AnimatedElement = component.Value;
-                    animation.Value.SourceObject = this;
                 }
             }
         }
@@ -319,10 +312,6 @@ namespace Generator
                 case "Armor":
                     equippedEquipment = _equippedArmor;
                     _equippedArmor = (Armor) equipmentToEquip;
-                    break;
-                case "Generator":
-                    equippedEquipment = _equippedGenerator;
-                    _equippedGenerator = (GeneratorObj) equipmentToEquip;
                     break;
                 case "Accessory":
                     equippedEquipment = _equippedAccessory;
@@ -401,7 +390,7 @@ namespace Generator
                                             new Vector3(-.05f, 0, 0),
                                             Vector3.Zero
                                         },
-                                        duration: 3
+                                        duration: .4f
                                     )
                                 )
                             }
@@ -436,7 +425,7 @@ namespace Generator
                                             new Vector3(.05f, 0, 0),
                                             Vector3.Zero
                                         },
-                                        duration: 3
+                                        duration: .4f
                                     )
                                 )
                             }
@@ -462,7 +451,7 @@ namespace Generator
                                             new Vector3(.7f, 0, 0),
                                             Vector3.Zero
                                         },
-                                        duration: 3
+                                        duration: .4f
                                     )
                                 )
                             }
@@ -488,7 +477,7 @@ namespace Generator
                                             new Vector3(-.7f, 0, 0),
                                             Vector3.Zero
                                         },
-                                        duration: 3
+                                        duration: .4f
                                     )
                                 )
                             }
@@ -523,7 +512,7 @@ namespace Generator
 
             // Use abilities
             // TODO: Why isn't this before animations are updated?
-            foreach (var ability in Abilities) ability.Update();
+            foreach (var ability in QueuedAbilities) ability.Update();
         }
 
         private void ApplyMovement()
@@ -606,10 +595,11 @@ namespace Generator
         }
 
         // Deal damage to a target
-        public void DealDamage(GameObject target, int damage)
+        public void DealDamage(GameObject target, int damage, Type abilityType)
         {
-            Globals.Log(this + " attacks for " + damage + " damage.");
-            target.TakeDamage(damage);
+            // TODO: Take damage type into account
+            Globals.Log(this + " attacks for " + damage + " " + abilityType + " damage.");
+            target.TakeDamage(damage, abilityType);
         }
 
         public bool IsVisible()
@@ -617,15 +607,25 @@ namespace Generator
             return Area.IntersectsWith(GameControl.camera.VisibleArea);
         }
 
-        public int DamageToTake(int damage)
+        public void Heal(int healing)
         {
-            return damage - Defense.CurrentValue;
+            if (healing > 0)
+            {
+                Globals.Log(this + " heals for " + healing);
+                Health.Current += healing;
+            }
         }
 
-        // Take damage
-        public void TakeDamage(int damage)
+        public int DamageToTake(int damage, Type abilityType)
         {
-            damage = DamageToTake(damage);
+            // TODO: Take type into account
+            return damage;
+        }
+
+        // null isPhysical means "true damage"
+        public void TakeDamage(int damage, Type abilityType)
+        {
+            damage = DamageToTake(damage, abilityType);
 
             if (damage > 0)
             {
@@ -638,8 +638,7 @@ namespace Generator
                     Globals.GameObjectManager.EnemyIds.Add(ID);
                 }
 
-                // TODO: We can't hardcode "Face"
-                // Components["Face"].SpriteFile = componentSpriteFileName + "/Face04";
+                // TODO: Taking damage animation
                 Health.Current -= damage;
 
                 if (Health.Current <= 0)
@@ -654,8 +653,7 @@ namespace Generator
         {
             var offsets = MathTools.OffsetFromRadians(direction ?? Direction) * range;
             var center = Center;
-            var target = new Vector3(center.X + offsets.X, center.Y + offsets.Y, center.Z);
-            return target;
+            return new Vector3(center.X + offsets.X, center.Y + offsets.Y, center.Z);
         }
 
         // Gets whichever object is exactly [distance] away in the current direction
@@ -685,6 +683,20 @@ namespace Generator
             }
 
             return returnObjects;
+        }
+        
+        public GameObject GetFirstTargetInRange(float range = 1)
+        {
+            for (var i = 1; i <= range; i++)
+            {
+                var targets = GetTargetsInRange(i);
+                if (targets.Count > 0)
+                {
+                    return targets.OrderBy(target => (Center - target.Center).Length()).First();
+                }
+            }
+
+            return null;
         }
 
         // Attempts to move the object in a direction (radians).
