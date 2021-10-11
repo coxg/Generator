@@ -14,26 +14,16 @@ namespace Generator
                 "DefaultAI",
                 self =>
                 {
-                    // Party members
+                    // Party members follow you around
                     if (Globals.Party.Value.MemberIDs.Contains(self.ID))
                     {
-                        // In combat wait until it's your turn
-                        if (Globals.Party.Value.InCombat)
+                        if (MathTools.Distance(Globals.Player.Position, self.Position) > 5)
                         {
-                            // TODO
+                            self.MovementTarget = Globals.Player.Position;
                         }
-
-                        // Out of combat they follow you around
                         else
                         {
-                            if (MathTools.Distance(Globals.Player.Position, self.Position) > 5)
-                            {
-                                self.MovementTarget = Globals.Player.Position;
-                            }
-                            else
-                            {
-                                self.MovementTarget = null;
-                            }
+                            self.MovementTarget = null;
                         }
                     }
 

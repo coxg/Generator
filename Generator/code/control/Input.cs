@@ -54,6 +54,7 @@ namespace Generator
             }
         }
 
+        // TODO: Change this to an enum thing (like abilities) such that each button controls itself and can be mapped
         public static Dictionary<string, KeyBinding> KeyBindings = new Dictionary<string, KeyBinding>()
         {
             { "a",      new KeyBinding(Buttons.A,               Keys.Q) },

@@ -27,32 +27,30 @@ namespace Generator
             }
         }
 
-        public static void UpdateGameSpeed()
+        public static float CalculateGameSpeed()
         {
             if (Globals.CurrentConversation != null)
             {
-                GameSpeed = 0;
+                return 0;
             }
-            else if (Globals.Party.Value.InCombat)
+
+            if (Globals.Party.Value.GetReady() != null)
             {
-                // TODO
-                GameSpeed = 1;
+                return 0;
             }
-            else
-            {
-                GameSpeed = 1;
-            }
+
+            return 1;
         }
 
         public static void Update()
         {
             // Recompute the in-game time
-            UpdateGameSpeed();
+            GameSpeed = CalculateGameSpeed();
             var newClock = MathTools.Mod(GameClock + GameSpeed, MaxClock);
 
             // Launch any events scheduled to happen between the last time and the new time
             // Bugs will happen when clock resets... at 482 days of game time
-            for (int i = (int)GameClock; i < (int)newClock; i++)
+            for (int i = (int)GameClock + 1; i <= (int)newClock; i++)
             {
                 if (Events.ContainsKey(i))
                 {

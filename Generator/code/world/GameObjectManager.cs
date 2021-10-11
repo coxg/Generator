@@ -47,7 +47,7 @@ namespace Generator
             return ObjectDict.Values.Where(gameObject => gameObject.IsVisible()).ToHashSet();
         }
 
-        public List<GameObject> GetEnemyObjects()
+        public List<GameObject> GetEnemies()
         {
             var enemyObjects = new List<GameObject>();
             foreach (string enemy in EnemyIds)
@@ -55,6 +55,19 @@ namespace Generator
                 enemyObjects.Add(ObjectDict[enemy]);
             }
             return enemyObjects;
+        }
+
+        public GameObject GetReadyEnemy()
+        {
+            foreach (var enemy in GetEnemies())
+            {
+                if (enemy.IsReady)
+                {
+                    return enemy;
+                }
+            }
+
+            return null;
         }
         
         public GameObjectManager(List<GameObject> objects)

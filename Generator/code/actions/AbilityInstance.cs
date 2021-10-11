@@ -32,7 +32,6 @@ namespace Generator
         
         public float RemainingCastTime;
         public float RemainingRecharge;
-        public float RemainingCooldown;
 
         [JsonIgnore] 
         private Ability _ability;
@@ -41,43 +40,21 @@ namespace Generator
             get => _ability;
         }
 
-        public bool CanUse()
-        {
-            return RemainingCooldown <= 0
-                   && SourceObject.Health.Current > Ability.HealthCost
-                   && SourceObject.Mana.Current >= Ability.ManaCost;
-        }
-
-        public void Start()
+        public void StartCasting()
         {
             Globals.Log(SourceObject + " starts casting " + this);
             SourceObject.TakeDamage(Ability.HealthCost, Type.Untyped);
             SourceObject.Mana.Current -= Ability.ManaCost;
             Ability.Animation?.Start();
-
-            RemainingRecharge = Ability.Recharge;
             RemainingCastTime = Ability.CastTime;
-            RemainingCooldown = Ability.Cooldown;
         }
 
-        public void Update()
-        {
-            Ability.Animation?.Update();
-
-            if (Timing.SecondsPassed > RemainingCooldown && RemainingCooldown > 0)
-            {
-                Stop();
-            }
-            
-            RemainingRecharge = Math.Min(0, RemainingRecharge - Timing.SecondsPassed);
-            RemainingCastTime = Math.Min(0, RemainingCastTime - Timing.SecondsPassed);
-            RemainingCooldown = Math.Min(0, RemainingCooldown - Timing.SecondsPassed);
-        }
-
-        public void Stop()
+        public void FinishCasting()
         {
             Globals.Log(SourceObject + " casts " + this);
             Ability.Animation?.Stop();
+            SourceObject.AbilityCooldowns[Name] = Ability.Cooldown;
+            RemainingRecharge = Ability.Recharge;
 
             var targetPosition = SourceObject.Position += TargetOffset;
             if (Ability.Collision)

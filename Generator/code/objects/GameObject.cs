@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
@@ -107,6 +108,10 @@ namespace Generator
 
             // Abilities
             Abilities = abilities ?? new List<Ability>();
+            foreach (var ability in Abilities)
+            {
+                AbilityCooldowns[ability.Name] = 0;
+            }
 
             // Interaction
             Conversation = conversation;
@@ -254,8 +259,11 @@ namespace Generator
         // TODO: Function to add new ability, should not be able to add it directly
         // This would make a copy and set the sourceObject
         public List<Ability> Abilities = new List<Ability>();
-        
+        public Dictionary<String, float> AbilityCooldowns = new Dictionary<String, float>();
+        public AbilityInstance CastingAbility;
+        public AbilityInstance RechargingAbility;
         public Queue<AbilityInstance> QueuedAbilities = new Queue<AbilityInstance>();
+        public bool IsReady => !QueuedAbilities.Any();
 
         // Interaction
         public Conversation Conversation;
@@ -494,25 +502,53 @@ namespace Generator
             AI?.Value(this);
 
             ApplyMovement();
-
             ApplyPhysics();
 
-            // Update resources
             Health.Update();
             Mana.Update();
 
-            // Update ailments
-            foreach (var ailment in Ailments)
+            UpdateAbilities();
+
+            foreach (var ailment in Ailments) ailment.Update();
+            foreach (var component in Components) component.Value.Update();
+        }
+
+        private void UpdateAbilities()
+        {
+            foreach (var abilityName in new List<string>(AbilityCooldowns.Keys))
             {
-                ailment.Update();
+                AbilityCooldowns[abilityName] = Math.Min(0, AbilityCooldowns[abilityName] - Timing.SecondsPassed);
             }
 
-            // Update animation
-            foreach (var component in Components) component.Value.Update();
+            if (RechargingAbility != null)
+            {
+                // TODO: Play recharging animation
+                RechargingAbility.RemainingRecharge = Math.Min(0, RechargingAbility.RemainingRecharge - Timing.SecondsPassed);
+                if (RechargingAbility.RemainingRecharge == 0)
+                {
+                    RechargingAbility = null;
+                }
+            }
+            
+            if (CastingAbility != null)
+            {
+                CastingAbility.Ability.Animation?.Update();
+                CastingAbility.RemainingCastTime = Math.Min(0, CastingAbility.RemainingCastTime - Timing.SecondsPassed);
+                if (CastingAbility.RemainingCastTime == 0)
+                {
+                    CastingAbility.FinishCasting();
+                    CastingAbility = null;
+                    if (CastingAbility.RemainingRecharge != 0)
+                    {
+                        RechargingAbility = CastingAbility;
+                    }
+                }
 
-            // Use abilities
-            // TODO: Why isn't this before animations are updated?
-            foreach (var ability in QueuedAbilities) ability.Update();
+                if (CastingAbility == null && RechargingAbility == null)
+                {
+                    CastingAbility = QueuedAbilities.Dequeue();
+                }
+            }
         }
 
         private void ApplyMovement()

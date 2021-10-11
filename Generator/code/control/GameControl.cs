@@ -154,11 +154,11 @@ namespace Generator
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Launch any scheduled events
-            Timing.Update();
-
             // Get input for character
             Input.ProcessInput(Globals.Player);
+
+            // Launch any scheduled events
+            Timing.Update();
             
             // Update the world in response to the above
             Globals.GameObjectManager.Update();

@@ -7,8 +7,7 @@ namespace Generator
     {
         public List<string> MemberIDs;
         public List<Item> Inventory;
-        public bool InCombat { get { return Globals.GameObjectManager.EnemyIds.Count != 0; } }
-        public int Junk = 0;
+        public int Gold;
 
         // Constructor
         public Party(List<string> memberNames = null)
@@ -19,6 +18,19 @@ namespace Generator
         public IEnumerable<GameObject> GetMembers()
         {
             return MemberIDs.Select((member) => Globals.GameObjectManager.Get(member));
+        }
+
+        public GameObject GetReady()
+        {
+            foreach (var partyMember in GetMembers())
+            {
+                if (partyMember.IsReady)
+                {
+                    return partyMember;
+                }
+            }
+
+            return null;
         }
 
         public void Say(string text)
@@ -46,11 +58,11 @@ namespace Generator
             }
         }
 
-        public void AddJunk(int junk)
+        public void AddGold(int gold)
             // Gives junk to the party
         {
-            Globals.Log("The party gains " + junk + " junk!");
-            Junk += junk;
+            Globals.Log("The party gains " + gold + " gold!");
+            Gold += gold;
         }
 
         public void AddItem(Item item)

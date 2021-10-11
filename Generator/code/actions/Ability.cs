@@ -78,5 +78,13 @@ namespace Generator
         {
             return Name;
         }
+
+        public bool CanUse(GameObject gameObject)
+        {
+            return gameObject.AbilityCooldowns.ContainsKey(Name) 
+                   && gameObject.AbilityCooldowns[Name] <= 0
+                   && gameObject.Health.Current > HealthCost
+                   && gameObject.Mana.Current >= ManaCost;
+        }
     }
 }
