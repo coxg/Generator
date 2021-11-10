@@ -47,7 +47,7 @@ namespace Generator
         // Plays a frame of the animation
         {
             // See if there are any new animation frames to play
-            CurrentFrame = (int)MathTools.Mod(CurrentFrame + 1, SmoothedOffsets.Count);
+            CurrentFrame = MathTools.Mod(CurrentFrame + 1, SmoothedOffsets.Count);
 
             // Rotate the difference between the last frame and this one
             var positionDifference = MathTools.PointRotatedAroundPoint(

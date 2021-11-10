@@ -270,7 +270,7 @@ namespace Generator
                             baseSense: 10,
                             baseDefense: 100,
                             activationEffect: new Cached<Action<GameObject, GameObject>>("SetZoneTestingZone"),
-                            components: new Dictionary<string, Component>()
+                            components: new Dictionary<string, Component>
                             {
                                 { "body", new Component(Globals.SpriteSheet.GetCopy("NinjaHead"), new Vector3(6, 6, 9)) }
                             })

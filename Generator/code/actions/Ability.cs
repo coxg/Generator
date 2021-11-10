@@ -29,7 +29,6 @@ namespace Generator
             Action<GameObject, Vector3> locationEffect = null,
             Action<GameObject, GameObject> objectEffect = null)
         {
-            Name = GetType().Name;
             Description = description;
             Type = type;
 
@@ -51,8 +50,6 @@ namespace Generator
             LocationEffect = locationEffect;
             ObjectEffect = objectEffect;
             Animation = animation;
-
-            Abilities.set(this);
         }
 
         public string Name;

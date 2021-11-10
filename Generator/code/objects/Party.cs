@@ -6,31 +6,25 @@ namespace Generator
     public class Party
     {
         public List<string> MemberIDs;
+        public string LeaderID;
         public List<Item> Inventory;
         public int Gold;
 
         // Constructor
-        public Party(List<string> memberNames = null)
+        public Party(List<string> memberIDs, string leaderID = null)
         {
-            MemberIDs = memberNames ?? new List<string>();
+            MemberIDs = memberIDs;
+            LeaderID = leaderID ?? MemberIDs[0];
         }
 
         public IEnumerable<GameObject> GetMembers()
         {
-            return MemberIDs.Select((member) => Globals.GameObjectManager.Get(member));
+            return MemberIDs.Select(member => Globals.GameObjectManager.Get(member));
         }
 
-        public GameObject GetReady()
+        public GameObject GetLeader()
         {
-            foreach (var partyMember in GetMembers())
-            {
-                if (partyMember.IsReady)
-                {
-                    return partyMember;
-                }
-            }
-
-            return null;
+            return Globals.GameObjectManager.Get(LeaderID);
         }
 
         public void Say(string text)

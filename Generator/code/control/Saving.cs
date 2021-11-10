@@ -135,7 +135,6 @@ namespace Generator
             CopyDirectory(TempSaveDirectory, CurrentSaveDirectory);
             SaveAreaToDisk();
             SavedDicts.Save();
-            Input.Save();
         }
 
         public static void SaveAreaToDisk()
@@ -194,7 +193,6 @@ namespace Generator
 
                 // Load the game from the save file
                 SavedDicts.Load();
-                Input.Load();
                 LoadAreaFromDisk(Globals.ZoneName.Value);
 
                 // Recreate the tmp directory based on the save we're loading
@@ -208,7 +206,7 @@ namespace Generator
 
         public static void Quicksave()
         {
-            QuicksaveSlot = (int)MathTools.Mod(QuicksaveSlot + 1, numSaves["quick"]);
+            QuicksaveSlot = MathTools.Mod(QuicksaveSlot + 1, numSaves["quick"]);
             Save("quick", QuicksaveSlot);
         }
 
@@ -220,7 +218,7 @@ namespace Generator
 
         public static void Autosave()
         {
-            AutosaveSlot = (int)MathTools.Mod(AutosaveSlot + 1, numSaves["auto"]);
+            AutosaveSlot = MathTools.Mod(AutosaveSlot + 1, numSaves["auto"]);
             Save("auto", AutosaveSlot);
             Timing.AddEvent(300, Autosave);
         }

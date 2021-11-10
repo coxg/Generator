@@ -11,24 +11,18 @@ namespace Generator
         public AbilityInstance(
             String name,
             GameObject sourceObject,
-            GameObject initialTargetObject,
-            Vector3 targetOffset)
+            Vector3 target)
         {
             Name = name;
             _ability = Abilities.get(Name);
 
             SourceObject = sourceObject;
-            InitialTargetObject = initialTargetObject;
-            TargetOffset = targetOffset;
+            Target = target;
         }
 
         public String Name;
-        
         public GameObject SourceObject;
-        public GameObject InitialTargetObject;
-        
-        public Vector3 InitialTargetPos;
-        public Vector3 TargetOffset;
+        public Vector3 Target;
         
         public float RemainingCastTime;
         public float RemainingRecharge;
@@ -56,10 +50,11 @@ namespace Generator
             SourceObject.AbilityCooldowns[Name] = Ability.Cooldown;
             RemainingRecharge = Ability.Recharge;
 
-            var targetPosition = SourceObject.Position += TargetOffset;
+            var targetPosition = Target;
             if (Ability.Collision)
             {
-                targetPosition = SourceObject.GetFirstTargetInRange(TargetOffset.Length())?.Position ?? targetPosition;
+                var targetOffset = Target - SourceObject.Position;
+                targetPosition = SourceObject.GetFirstTargetInRange(targetOffset.Length())?.Position ?? targetPosition;
             }
             
             var targetPositions = MathTools.GetCoordinatesInCircle(

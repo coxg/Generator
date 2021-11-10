@@ -31,7 +31,7 @@ namespace Generator
                     else
                     {
                         // If they're fighting you
-                        if (Globals.GameObjectManager.EnemyIds.Contains(self.ID))
+                        if (CombatManager.Enemies.Contains(self))
                         {
                             // TODO
                         }

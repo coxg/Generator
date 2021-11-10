@@ -27,7 +27,6 @@ namespace Generator
             float baseMovementSpeed = 20,
             float? movementSpeedMultiplier = null,
             Vector3? movementVelocity = null,
-            float? directionOverride = null,
 
             // Physics
             float mass = 100,
@@ -129,7 +128,6 @@ namespace Generator
             MovementTarget = movementPosition;
             MovementDirection = movementDirection;
             MovementVelocity = movementVelocity ?? Vector3.Zero;
-            DirectionOverride = directionOverride;
             Mass = mass;
             Velocity = velocity ?? Vector3.Zero;
             PhysicsEffects = physicsEffects ?? new Dictionary<string, PhysicsEffect>();
@@ -178,9 +176,6 @@ namespace Generator
         public Dictionary<String, PhysicsEffect> PhysicsEffects;
         public float? MovementDirection;
         public Vector3 Velocity;
-
-        public float?
-            DirectionOverride; // This is a hack for ability targeting TODO: Should this be in Direction's get?
 
         public float BaseMovementSpeed;
         public float? MovementSpeedMultiplier; // 1 = running, .5 = walking, etc
@@ -547,6 +542,7 @@ namespace Generator
                 if (CastingAbility == null && RechargingAbility == null)
                 {
                     CastingAbility = QueuedAbilities.Dequeue();
+                    CastingAbility.StartCasting();
                 }
             }
         }
@@ -595,12 +591,6 @@ namespace Generator
                 MovementVelocity = Vector3.Zero;
                 MovementSpeedMultiplier = null;
                 IsWalking = false;
-            }
-
-            if (DirectionOverride != null)
-            {
-                Direction = (float) DirectionOverride;
-                DirectionOverride = null; // This is a hack; will need to set this every update
             }
         }
 
@@ -667,12 +657,6 @@ namespace Generator
             {
                 Globals.Log(this + " takes " + damage + " damage. "
                             + Health.Current + " -> " + (Health.Current - damage));
-
-                // Add this to the set of enemies
-                if (!Globals.Party.Value.MemberIDs.Contains(ID))
-                {
-                    Globals.GameObjectManager.EnemyIds.Add(ID);
-                }
 
                 // TODO: Taking damage animation
                 Health.Current -= damage;

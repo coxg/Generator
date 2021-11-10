@@ -12,7 +12,6 @@ namespace Generator
         public Dictionary<string, GameObject> ObjectDict = new Dictionary<string, GameObject>();
         [JsonIgnore]
         private ObjectMap ObjectMap;
-        public HashSet<string> EnemyIds = new HashSet<string>();
 
         public GameObject Get(string objectId)
         {
@@ -46,29 +45,6 @@ namespace Generator
         {
             return ObjectDict.Values.Where(gameObject => gameObject.IsVisible()).ToHashSet();
         }
-
-        public List<GameObject> GetEnemies()
-        {
-            var enemyObjects = new List<GameObject>();
-            foreach (string enemy in EnemyIds)
-            {
-                enemyObjects.Add(ObjectDict[enemy]);
-            }
-            return enemyObjects;
-        }
-
-        public GameObject GetReadyEnemy()
-        {
-            foreach (var enemy in GetEnemies())
-            {
-                if (enemy.IsReady)
-                {
-                    return enemy;
-                }
-            }
-
-            return null;
-        }
         
         public GameObjectManager(List<GameObject> objects)
         {
@@ -84,13 +60,12 @@ namespace Generator
         {
             ObjectDict = objectDict;
             ObjectMap = new ObjectMap(Globals.Zone.Width, Globals.Zone.Height, ObjectDict.Values);
-            EnemyIds = enemyIds;
         }
         
         public void Remove(GameObject gameObject)
         {
             ObjectDict.Remove(gameObject.ID);
-            EnemyIds.Remove(gameObject.ID);
+            CombatManager.Enemies.Remove(gameObject);
             ObjectMap.Remove(gameObject);
         }
         

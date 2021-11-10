@@ -14,8 +14,15 @@ namespace Generator
             return random.Next(value);
         }
 
+        public static int Mod(int number, int modulo) 
+            // Because % is remainder, not mod
+        {
+            var remainder = number % modulo;
+            return remainder < 0 ? remainder + modulo : remainder;
+        }
+
         public static float Mod(float number, float modulo)
-        // Because % is remainder, not mod
+            // Because % is remainder, not mod
         {
             var remainder = number % modulo;
             return remainder < 0 ? remainder + modulo : remainder;

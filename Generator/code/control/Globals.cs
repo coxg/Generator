@@ -16,24 +16,19 @@ namespace Generator
     {
         // The player's party
         public static SavedParty Party = new SavedParty("party", new Party(new List<string> { "niels", "farrah", "old man"}));
-        public static SavedInt PlayerPartyNumber = new SavedInt("playerPartyNumber", 0);
         public static GameObject Player
         {
-            get { return GameObjectManager.Get(Party.Value.MemberIDs[PlayerPartyNumber.Value]); }
-            set { PlayerPartyNumber.Value = Party.Value.MemberIDs.IndexOf(value.ID); }
+            get => Party.Value.GetLeader();
         }
 
         // The current conversation - there can be only one
         private static Conversation currentConversation;
         public static Conversation CurrentConversation
         {
-            get { return currentConversation; }
+            get => currentConversation;
             set
             {
-                if (value != null)
-                {
-                    value.Reset();
-                }
+                value?.Reset();
                 currentConversation = value;
             }
         }
@@ -46,27 +41,26 @@ namespace Generator
         // TODO: This will definitely break when I move to production
         public static string ProjectDirectory = Path.GetFullPath(@"../../../../");
         public static JsonSerializer Serializer;
-        public static bool IsRelease = false;
+        public const bool IsRelease = false;
 
         // World management
         public static SavedString ZoneName = new SavedString("zoneName", "testingZone");
         public static GameObjectManager GameObjectManager;
         public static TileManager TileManager;
-        private static Zone zone;
+        private static Zone _zone;
         public static Zone Zone
         {
-            get { return zone; }
+            get => _zone;
             set
             {
                 // Set the new zone
-                zone = value;
+                _zone = value;
                 ZoneName.Value = value.Name;
             }
         }
 
         // Configure the world building mode
         public static bool CreativeMode = true;
-        public static int CreativeObjectIndex;
 
         // Loading assets
         public static Dictionary<string, Texture2D> Textures = new Dictionary<string, Texture2D>();
@@ -85,11 +79,11 @@ namespace Generator
         {
             if (!IsRelease)
             {
-                var CallingFrame = new StackTrace(1, true).GetFrame(0);
+                var callingFrame = new StackTrace(1, true).GetFrame(0);
                 var logLine = DateTime.Now + " "
-                    + CallingFrame.GetFileName().Split('\\').Last() + " line "
-                    + CallingFrame.GetFileLineNumber() + ", in "
-                    + CallingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First()
+                    + callingFrame.GetFileName().Split('\\').Last() + " line "
+                    + callingFrame.GetFileLineNumber() + ", in "
+                    + callingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First()
                     + ": " + text;
                 logLine = logLine.Replace(ProjectDirectory + "code/", "");
 
@@ -107,11 +101,11 @@ namespace Generator
         {
             if (!IsRelease)
             {
-                var CallingFrame = new StackTrace(1, true).GetFrame(0);
+                var callingFrame = new StackTrace(1, true).GetFrame(0);
                 var logLine = DateTime.Now + " "
-                    + CallingFrame.GetFileName().Split('\\').Last() + " line "
-                    + CallingFrame.GetFileLineNumber() + ", in "
-                    + CallingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First()
+                    + callingFrame.GetFileName().Split('\\').Last() + " line "
+                    + callingFrame.GetFileLineNumber() + ", in "
+                    + callingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First()
                     + ": [WARNING] " + text;
                 logLine = logLine.Replace(ProjectDirectory + "code/", "");
 

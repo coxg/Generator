@@ -155,7 +155,7 @@ namespace Generator
         protected override void Update(GameTime gameTime)
         {
             // Get input for character
-            Input.ProcessInput(Globals.Player);
+            Input.Update();
 
             // Launch any scheduled events
             Timing.Update();
@@ -203,7 +203,7 @@ namespace Generator
             if (!Globals.IsRelease)
             {
                 Timing.NumDraws++;
-                Timing.FrameTimes[(int)MathTools.Mod(Timing.NumDraws, Timing.FrameTimes.Length)] = DateTime.Now;
+                Timing.FrameTimes[MathTools.Mod(Timing.NumDraws, Timing.FrameTimes.Length)] = DateTime.Now;
                 Drawing.DrawFPS(spriteBatch);
                 Drawing.DrawPlayerCoordinates(spriteBatch);
                 Drawing.DrawLogs(spriteBatch);

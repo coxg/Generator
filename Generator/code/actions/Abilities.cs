@@ -1,20 +1,30 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Generator
 {
     public static class Abilities
     {
-        private static Dictionary<String, Ability> AbilityMap = new Dictionary<String, Ability>();
+        public static Dictionary<string, Ability> AbilityMap = new Dictionary<string, Ability>();
+
+        static Abilities()
+        {
+            FieldInfo[] fields = typeof(Abilities).GetFields();
+            foreach (FieldInfo field in fields)
+            {
+                if (field.FieldType == typeof(Ability))
+                {
+                    Ability ability = (Ability) field.GetValue(null);
+                    ability.Name = field.Name;
+                    AbilityMap[field.Name] = ability;
+                }
+            }
+        }
 
         public static Ability get(String Name)
         {
             return AbilityMap[Name];
-        }
-
-        public static void set(Ability ability)
-        {
-            AbilityMap[ability.Name] = ability;
         }
         
         public static Ability Move = new Ability(
@@ -50,7 +60,7 @@ namespace Generator
             {
                 var x = (int) targetPos.X;
                 var y = (int) targetPos.Y;
-                var selectedTile = Globals.TileManager.TileSheet.Tiles[Globals.CreativeObjectIndex];
+                var selectedTile = Input.CreativeTileSelector.GetSelection();
                 var randomBaseTile = selectedTile.GetRandomBaseId();
                 Globals.TileManager.Set(x, y, randomBaseTile);
                 Globals.Log("Placing " + selectedTile.Name + " at " + x + ", " + y);

@@ -36,9 +36,10 @@ namespace Generator
         }
 
         public Rectangle TextureCoordinatesFromId(int id)
+        // TODO: Can I just get the coordinates from the tile?
         {
             var row = id / Width;
-            var col = (int)MathTools.Mod(id, Width);
+            var col = MathTools.Mod(id, Width);
             return new Rectangle(
                 row * TileSize,
                 col * TileSize,
@@ -50,7 +51,7 @@ namespace Generator
         {
             // Get the coordinates of the texture on the sheet
             var row = id / Width;
-            var col = (int)MathTools.Mod(id, Width);
+            var col = MathTools.Mod(id, Width);
             
             // TODO: Without this you see graphical bugs, but there's no reason to think this works for all sheet sizes
             var roundingOffset = .001f;

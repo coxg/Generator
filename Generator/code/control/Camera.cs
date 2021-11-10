@@ -20,7 +20,7 @@ namespace Generator
         public Vector3 Position;
         public Vector3 Target;
         public RectangleF VisibleArea;
-        public float Height = 25;
+        public float Height = 25;  // If I update this I also need to update the ZoomSelector
 
         public float Rotation
         {

@@ -570,15 +570,17 @@ namespace Generator
         // Draws the creative mode UI, including tile previews
         public static void DrawCreativeUI(SpriteBatch spriteBatch)
         {
-            // Draw the object on the left
             var tileSheet = Globals.TileManager.TileSheet;
+            var tileIndex = tileSheet.Tiles.IndexOf(Input.CreativeTileSelector.GetSelection());
+
+            // Draw the object on the left
             DrawSprite(
                 spriteBatch,
                 tileSheet.Texture,
                 new Vector2(Globals.Resolution.X / 2 - 125, 10),
                 new Vector2(Globals.Resolution.X / 2 - 75, 60),
                 tileSheet.TextureCoordinatesFromId(
-                    (int)MathTools.Mod(Globals.CreativeObjectIndex - 1, tileSheet.Tiles.Count)));
+                    MathTools.Mod(tileIndex - 1, tileSheet.Tiles.Count)));
 
             // Draw the object in the middle
             DrawSprite(
@@ -586,7 +588,7 @@ namespace Generator
                 tileSheet.Texture,
                 new Vector2(Globals.Resolution.X / 2 - 50, 10),
                 new Vector2(Globals.Resolution.X / 2 + 50, 100),
-                tileSheet.TextureCoordinatesFromId(Globals.CreativeObjectIndex));
+                tileSheet.TextureCoordinatesFromId(tileIndex));
 
             // Draw the object on the right
             DrawSprite(
@@ -595,7 +597,7 @@ namespace Generator
                 new Vector2(Globals.Resolution.X / 2 + 75, 10),
                 new Vector2(Globals.Resolution.X / 2 + 125, 60),
                 tileSheet.TextureCoordinatesFromId(
-                    (int)MathTools.Mod(Globals.CreativeObjectIndex + 1, tileSheet.Tiles.Count)));
+                    MathTools.Mod(tileIndex + 1, tileSheet.Tiles.Count)));
         }
         
         public static void DrawTextBoxes(SpriteBatch spriteBatch) {

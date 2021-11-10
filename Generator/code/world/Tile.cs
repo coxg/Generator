@@ -31,6 +31,11 @@ namespace Generator
         public int FirstBaseId;
         public int? FirstEdgeId;  // If null then it has no corners
         public float Friction;
+        
+        public override string ToString()
+        {
+            return Name;
+        }
 
         public int GetRandomBaseId()
         {

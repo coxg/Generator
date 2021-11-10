@@ -21,8 +21,8 @@ namespace Generator
         public static float FPS
         {
             get {
-                DateTime priorTime = FrameTimes[(int)MathTools.Mod(NumDraws + 1, FrameTimes.Length)];
-                DateTime currentTime = FrameTimes[(int)MathTools.Mod(NumDraws, FrameTimes.Length)];
+                DateTime priorTime = FrameTimes[MathTools.Mod(NumDraws + 1, FrameTimes.Length)];
+                DateTime currentTime = FrameTimes[MathTools.Mod(NumDraws, FrameTimes.Length)];
                 return FrameTimes.Length / (float)(currentTime - priorTime).TotalSeconds;
             }
         }
@@ -34,7 +34,7 @@ namespace Generator
                 return 0;
             }
 
-            if (Globals.Party.Value.GetReady() != null)
+            if (CombatManager.GetReadyPartyMember() != null)
             {
                 return 0;
             }
