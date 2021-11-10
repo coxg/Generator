@@ -571,7 +571,7 @@ namespace Generator
         public static void DrawCreativeUI(SpriteBatch spriteBatch)
         {
             var tileSheet = Globals.TileManager.TileSheet;
-            var tileIndex = tileSheet.Tiles.IndexOf(Input.CreativeTileSelector.GetSelection());
+            var tileIndex = tileSheet.Tiles.IndexOf(Selectors.CreativeTileSelector.GetSelection());
 
             // Draw the object on the left
             DrawSprite(

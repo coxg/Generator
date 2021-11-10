@@ -60,7 +60,7 @@ namespace Generator
             {
                 var x = (int) targetPos.X;
                 var y = (int) targetPos.Y;
-                var selectedTile = Input.CreativeTileSelector.GetSelection();
+                var selectedTile = Selectors.CreativeTileSelector.GetSelection();
                 var randomBaseTile = selectedTile.GetRandomBaseId();
                 Globals.TileManager.Set(x, y, randomBaseTile);
                 Globals.Log("Placing " + selectedTile.Name + " at " + x + ", " + y);

@@ -14,6 +14,7 @@ namespace Generator
         }
 
         public static float ControllerTolerance = .05f;
+        public static Targeter EverythingTargeter = new Targeter();
         
         public static GamePadCapabilities Capabilities;
         public static GamePadState ControllerState;
@@ -21,68 +22,6 @@ namespace Generator
         public static MouseState MouseState;
         public static Vector3 CursorPosition;
         public static InputMode Mode;
-
-        private static Selector<int> ZoomSelector = new Selector<int>(
-            new List<int> { 5, 10, 25, 50, 100, 200, 500 }, // If I update this I also need to update the default
-            KeyBindings.LB,
-            KeyBindings.RB,
-            () => GameControl.camera.Height = ZoomSelector.GetSelection(),
-            startIndex: 2);
-        
-        private static Selector<CombatManager.CombatScreen> CombatScreenSelector = new Selector<CombatManager.CombatScreen>(
-            new List<CombatManager.CombatScreen>
-            {
-                CombatManager.CombatScreen.AbilityScreen,
-                CombatManager.CombatScreen.ItemScreen,
-                CombatManager.CombatScreen.MovementScreen
-            }, 
-            KeyBindings.Down, 
-            KeyBindings.Up,
-            activationAction: new BoundAction(
-                KeyBindings.A, 
-                () => CombatManager.SelectedScreen = CombatScreenSelector.GetSelection()),
-            cancelAction: new BoundAction(
-                KeyBindings.B, 
-                () => CombatManager.SelectedScreen = CombatManager.CombatScreen.TargetingScreen));
-        
-        private static Targeter EverythingTargeter = new Targeter();
-        
-        private static Selector<Ability> AbilitySelector = new Selector<Ability>(
-            Globals.Player.Abilities,
-            KeyBindings.Down,
-            KeyBindings.Up,
-            activationAction: new BoundAction(
-                KeyBindings.A, 
-                () => Globals.Player.QueuedAbilities.Enqueue(
-                    new AbilityInstance(
-                        AbilitySelector.GetSelection().Name,
-                        Globals.Player,
-                        EverythingTargeter.GetTarget()))),
-            cancelAction: new BoundAction(
-                KeyBindings.B, 
-                () => CombatManager.SelectedScreen = CombatManager.CombatScreen.SelectionScreen));
-                
-        private static Selector<Item> ItemSelector = new Selector<Item>(
-            Globals.Party.Value.Inventory,
-            KeyBindings.Down,
-            KeyBindings.Up,
-            activationAction: new BoundAction(
-                KeyBindings.A, 
-                () => ItemSelector.GetSelection().Use(Globals.Player)),
-            cancelAction: new BoundAction(
-                KeyBindings.B, 
-                () => CombatManager.SelectedScreen = CombatManager.CombatScreen.SelectionScreen));
-        
-        public static Selector<Tile> CreativeTileSelector = new Selector<Tile>(
-            Globals.TileManager.TileSheet.Tiles,
-            KeyBindings.Left,
-            KeyBindings.Right);
-        
-        private static Selector<String> PlayerSelector = new Selector<string>(
-            Globals.Party.Value.MemberIDs,
-            KeyBindings.Left,
-            KeyBindings.Right,
-            () => Globals.Party.Value.LeaderID = PlayerSelector.GetSelection());
 
         public static void Update()
         {
@@ -122,13 +61,13 @@ namespace Generator
             switch (CombatManager.SelectedScreen)
             {
                 case CombatManager.CombatScreen.SelectionScreen:
-                    CombatScreenSelector.Update();
+                    Selectors.CombatScreenSelector.Update();
                     break;
                 case CombatManager.CombatScreen.AbilityScreen:
-                    AbilitySelector.Update();
+                    Selectors.AbilitySelector.Update();
                     break;
                 case CombatManager.CombatScreen.ItemScreen:
-                    ItemSelector.Update();
+                    Selectors.ItemSelector.Update();
                     break;
                 case CombatManager.CombatScreen.MovementScreen:
                     // TODO: This
@@ -182,17 +121,17 @@ namespace Generator
             // Creative mode controls
             if (Globals.CreativeMode)
             {
-                CreativeTileSelector.Update();
+                Selectors.CreativeTileSelector.Update();
             }
 
             // If not in creative mode then use these key bindings to switch characters
             else
             {
-                PlayerSelector.Update();
+                Selectors.PlayerSelector.Update();
             }
 
             // Camera controls
-            ZoomSelector.Update();
+            Selectors.ZoomSelector.Update();
         }
 
         private static void ProcessConversationInput()

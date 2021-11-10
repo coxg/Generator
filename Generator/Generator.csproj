@@ -73,6 +73,7 @@
     <Compile Include="code\input\KeyBinding.cs" />
     <Compile Include="code\input\KeyBindings.cs" />
     <Compile Include="code\input\Selector.cs" />
+    <Compile Include="code\input\Selectors.cs" />
     <Compile Include="code\input\Targeter.cs" />
     <Compile Include="code\items\Accessory.cs" />
     <Compile Include="code\actions\Animation.cs" />
