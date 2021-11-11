@@ -206,7 +206,10 @@ namespace Generator
                 player.MovementTarget = CursorPosition - new Vector3(player.Size.X / 2, player.Size.Y / 2, 0);
             }
             
-            else
+            else if (KeyboardState.IsKeyDown(Keys.W) 
+                     || KeyboardState.IsKeyDown(Keys.S) 
+                     || KeyboardState.IsKeyDown(Keys.A) 
+                     || KeyboardState.IsKeyDown(Keys.D))
             {
                 if (KeyboardState.IsKeyDown(Keys.W)) moveVerticalOffset += 1;
                 if (KeyboardState.IsKeyDown(Keys.S)) moveVerticalOffset -= 1;

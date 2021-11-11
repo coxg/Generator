@@ -60,7 +60,6 @@ namespace Generator
 
             // Abilities
             List<Ability> abilities = null,
-            string strategyName = null,
 
             // Interaction
             Conversation conversation = null,
@@ -494,7 +493,10 @@ namespace Generator
         // What to do on each frame
         public void Update()
         {
-            AI?.Value(this);
+            if (this != Globals.Player)
+            {
+                AI?.Value(this);
+            }
 
             ApplyMovement();
             ApplyPhysics();

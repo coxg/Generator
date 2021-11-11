@@ -34,7 +34,7 @@ namespace Generator
                 return 0;
             }
 
-            if (CombatManager.GetReadyPartyMember() != null)
+            if (CombatManager.InCombat && CombatManager.GetReadyPartyMember() != null)
             {
                 return 0;
             }

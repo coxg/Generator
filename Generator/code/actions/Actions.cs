@@ -27,14 +27,10 @@ namespace Generator
                         }
                     }
 
-                    // NPCs
-                    else
+                    // If they're fighting you
+                    else if (CombatManager.Enemies.Contains(self))
                     {
-                        // If they're fighting you
-                        if (CombatManager.Enemies.Contains(self))
-                        {
-                            // TODO
-                        }
+                        // TODO
                     }
                 }
             },
@@ -118,7 +114,11 @@ namespace Generator
                     self.DealDamage(other, 1, Type.Physical);
                     Globals.GameObjectManager.Kill(self);
                 }
-            }
+            },
+            {
+                "EnterCombat",
+                (self, other) => { CombatManager.StartCombat(new HashSet<GameObject> { self } ); }
+            },
         };
     }
 }

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using Generator.code.objects;
 using Microsoft.Xna.Framework;
 
 namespace Generator
@@ -149,21 +147,21 @@ namespace Generator
                             baseSense: 10,
                             activationEffect: new Cached<Action<GameObject, GameObject>>("CreateBigBoy"),
                             conversation: new Conversation(
-                                choicesList: new List<Conversation.Choices>()
+                                choicesList: new List<Conversation.Choices>
                                 {
                                     new Conversation.Choices(
                                         index: 0,
-                                        nodes: new List<Conversation.Choices.Node>()
+                                        nodes: new List<Conversation.Choices.Node>
                                         {
                                             new Conversation.Choices.Node(
-                                                text: new List<string>()
+                                                text: new List<string>
                                                 {
                                                     "niels: Toggle creativeMode.",
                                                     "creativeMode is now {wasCreativeMode}."
                                                 },
                                                 effects: () => { Globals.CreativeMode = !Globals.CreativeMode; }),
                                             new Conversation.Choices.Node(
-                                                text: new List<string>()
+                                                text: new List<string>
                                                 {
                                                     "niels: I'm done changing settings.",
                                                     "Roger."
@@ -251,7 +249,8 @@ namespace Generator
                             baseSense: 90,
                             baseStyle: 100,
                             id: "bad_guy",
-                            name: "Bad Guy")
+                            name: "Bad Guy",
+                            activationEffect: new Cached<Action<GameObject, GameObject>>("EnterCombat"))
                     });
                     Globals.TileManager = new TileManager(Globals.DefaultTileSheet, 1);
                     break;
