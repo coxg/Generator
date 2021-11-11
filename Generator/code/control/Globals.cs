@@ -15,7 +15,7 @@ namespace Generator
     public static class Globals
     {
         // The player's party
-        public static SavedParty Party = new SavedParty("party", new Party(new List<string> { "niels", "farrah", "old man"}));
+        public static SavedParty Party = new SavedParty("party", new Party(new List<string> { "Niels", "Farrah", "OldMan"}));
         public static GameObject Player
         {
             get => Party.Value.GetLeader();

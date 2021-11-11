@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using Generator.code.objects;
 
 namespace Generator
 {
@@ -102,7 +103,7 @@ namespace Generator
             else if (KeyBindings.Start.IsPressed && KeyBindings.Start.PressedDuration >= .5f)
             {
                 // TODO: Replace this with a menu
-                Globals.CurrentConversation = Globals.GameObjectManager.Get("old man").Conversation;
+                Globals.CurrentConversation = GameObjects.OldMan.Conversation;
                 Globals.CurrentConversation.CurrentChoicesIndex = 5;
             }
 
@@ -114,7 +115,7 @@ namespace Generator
             else if (KeyBindings.Select.IsPressed && KeyBindings.Select.PressedDuration >= .5f)
             {
                 // TODO: Replace this with a menu
-                Globals.CurrentConversation = Globals.GameObjectManager.Get("old man").Conversation;
+                Globals.CurrentConversation = GameObjects.OldMan.Conversation;
                 Globals.CurrentConversation.CurrentChoicesIndex = 1;
             }
 
