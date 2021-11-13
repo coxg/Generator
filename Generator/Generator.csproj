@@ -75,6 +75,7 @@
     <Compile Include="code\input\Selector.cs" />
     <Compile Include="code\input\Selectors.cs" />
     <Compile Include="code\input\Targeter.cs" />
+    <Compile Include="code\input\Targeters.cs" />
     <Compile Include="code\items\Accessory.cs" />
     <Compile Include="code\actions\Animation.cs" />
     <Compile Include="code\actions\Actions.cs" />

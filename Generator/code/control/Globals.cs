@@ -71,51 +71,40 @@ namespace Generator
         public static SpriteSheet DefaultSpriteSheet;
         public static SpriteSheet SpriteSheet;
 
-        public static List<string> Logs = new List<string>();
+        public static List<string> RecentLogs = new List<string>();
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void Log(object text = null)
-        // Logs to console/screen with debugging information
+        private static string getLogPrefix()
         {
-            if (!IsRelease)
-            {
-                var callingFrame = new StackTrace(1, true).GetFrame(0);
-                var logLine = DateTime.Now + " "
-                    + callingFrame.GetFileName().Split('\\').Last() + " line "
-                    + callingFrame.GetFileLineNumber() + ", in "
-                    + callingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First()
-                    + ": " + text;
-                logLine = logLine.Replace(ProjectDirectory + "code/", "");
+            var callingFrame = new StackTrace(1, true).GetFrame(2);
+            var time = DateTime.Now.ToString(@"h\:mm\:ss.fff");
+            var file = callingFrame.GetFileName().Split(Path.DirectorySeparatorChar).Last().Split('.').First();
+            var line = callingFrame.GetFileLineNumber();
+            var method = callingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First();
+            return $"{time} {file}#{method}:{line}: ";
+        }
 
-                Console.WriteLine(logLine);
-                Logs.Add(logLine);
-                if (Logs.Count > 10)
-                {
-                    Logs.RemoveAt(0);
-                }
+        private static void writeLogLine(object text)
+        {
+            var logLine = getLogPrefix() + text;
+            Console.WriteLine(logLine);
+            RecentLogs.Add(logLine);
+            if (RecentLogs.Count > 10)
+            {
+                RecentLogs.RemoveAt(0);
             }
         }
 
-        public static void Warn(object text = null)
-        // Intentionally copy/pasted because it's not worth abstracting the CallingFrame stuff
+        public static void Log(object text = null)
+        // Logs to console/screen with debugging information
         {
-            if (!IsRelease)
-            {
-                var callingFrame = new StackTrace(1, true).GetFrame(0);
-                var logLine = DateTime.Now + " "
-                    + callingFrame.GetFileName().Split('\\').Last() + " line "
-                    + callingFrame.GetFileLineNumber() + ", in "
-                    + callingFrame.GetMethod().ToString().Split(" ".ToCharArray())[1].Split("(".ToCharArray()).First()
-                    + ": [WARNING] " + text;
-                logLine = logLine.Replace(ProjectDirectory + "code/", "");
+            if (IsRelease) return;
+            writeLogLine(text);
+        }
 
-                Console.WriteLine(logLine);
-                Logs.Add(logLine);
-                if (Logs.Count > 10)
-                {
-                    Logs.RemoveAt(0);
-                }
-            }
+        public static void Warn(object text = null)
+        {
+            if (IsRelease) return;
+            writeLogLine("[WARNING] " + text);
         }
 
         public static object Copy(object copyObj) 

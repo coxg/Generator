@@ -6,6 +6,14 @@ namespace Generator
     public class Targeter
     {
         private Vector3 Target = Globals.Player.Position;
+        private BoundAction ActivationAction;
+        private BoundAction CancelAction;
+
+        public Targeter(BoundAction activationAction, BoundAction cancelAction)
+        {
+            ActivationAction = activationAction;
+            CancelAction = cancelAction;
+        }
 
         public void Update()
         {
@@ -20,6 +28,8 @@ namespace Generator
                 default:
                     throw new Exception("Uh oh!");
             }
+            ActivationAction?.Update();
+            CancelAction?.Update();
         }
 
         public void Reset()

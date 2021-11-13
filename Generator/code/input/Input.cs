@@ -15,7 +15,6 @@ namespace Generator
         }
 
         public static float ControllerTolerance = .05f;
-        public static Targeter EverythingTargeter = new Targeter();
         
         public static GamePadCapabilities Capabilities;
         public static GamePadState ControllerState;
@@ -64,17 +63,23 @@ namespace Generator
                 case CombatManager.CombatScreen.SelectionScreen:
                     Selectors.CombatScreenSelector.Update();
                     break;
-                case CombatManager.CombatScreen.AbilityScreen:
+                case CombatManager.CombatScreen.AbilitySelectionScreen:
                     Selectors.AbilitySelector.Update();
                     break;
-                case CombatManager.CombatScreen.ItemScreen:
+                case CombatManager.CombatScreen.AbilityTargetingScreen:
+                    Targeters.AbilityTargeter.Update();
+                    break;
+                case CombatManager.CombatScreen.ItemSelectionScreen:
                     Selectors.ItemSelector.Update();
                     break;
-                case CombatManager.CombatScreen.MovementScreen:
-                    // TODO: This
+                case CombatManager.CombatScreen.ItemTargetingScreen:
+                    Targeters.ItemTargeter.Update();
                     break;
-                case CombatManager.CombatScreen.TargetingScreen:
-                    // TODO: This
+                case CombatManager.CombatScreen.MovementScreen:
+                    Targeters.MovementTargeter.Update();
+                    break;
+                case CombatManager.CombatScreen.LookAroundScreen:
+                    Targeters.LookAroundTargeter.Update();
                     break;
                 default:
                     throw new Exception("Uh oh! You shouldn't be here!");

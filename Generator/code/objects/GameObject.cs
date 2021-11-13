@@ -256,8 +256,8 @@ namespace Generator
         public Dictionary<String, float> AbilityCooldowns = new Dictionary<String, float>();
         public AbilityInstance CastingAbility;
         public AbilityInstance RechargingAbility;
-        public Queue<AbilityInstance> QueuedAbilities = new Queue<AbilityInstance>();
-        public bool IsReady => !QueuedAbilities.Any();
+        private Queue<AbilityInstance> queuedAbilities = new Queue<AbilityInstance>();
+        public bool IsReady => !queuedAbilities.Any();
 
         // Interaction
         public Conversation Conversation;
@@ -510,6 +510,13 @@ namespace Generator
             foreach (var component in Components) component.Value.Update();
         }
 
+        public void Cast(AbilityInstance abilityInstance)
+        {
+            Globals.Log(this + " is preparing to cast " + abilityInstance.Name + " at " 
+                        + abilityInstance.Target.X + ", " + abilityInstance.Target.Y);
+            queuedAbilities.Enqueue(abilityInstance);
+        }
+
         private void UpdateAbilities()
         {
             foreach (var abilityName in new List<string>(AbilityCooldowns.Keys))
@@ -534,16 +541,16 @@ namespace Generator
                 if (CastingAbility.RemainingCastTime == 0)
                 {
                     CastingAbility.FinishCasting();
-                    CastingAbility = null;
                     if (CastingAbility.RemainingRecharge != 0)
                     {
                         RechargingAbility = CastingAbility;
                     }
+                    CastingAbility = null;
                 }
 
                 if (CastingAbility == null && RechargingAbility == null)
                 {
-                    CastingAbility = QueuedAbilities.Dequeue();
+                    CastingAbility = queuedAbilities.Dequeue();
                     CastingAbility.StartCasting();
                 }
             }

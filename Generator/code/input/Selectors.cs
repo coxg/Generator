@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,9 +15,10 @@ namespace Generator
         public static Selector<CombatManager.CombatScreen> CombatScreenSelector = new Selector<CombatManager.CombatScreen>(
             new List<CombatManager.CombatScreen>
             {
-                CombatManager.CombatScreen.AbilityScreen,
-                CombatManager.CombatScreen.ItemScreen,
-                CombatManager.CombatScreen.MovementScreen
+                CombatManager.CombatScreen.AbilitySelectionScreen,
+                CombatManager.CombatScreen.ItemSelectionScreen,
+                CombatManager.CombatScreen.MovementScreen,
+                CombatManager.CombatScreen.LookAroundScreen
             }, 
             KeyBindings.Down, 
             KeyBindings.Up,
@@ -27,19 +27,15 @@ namespace Generator
                 () => CombatManager.SelectedScreen = CombatScreenSelector.GetSelection()),
             cancelAction: new BoundAction(
                 KeyBindings.B, 
-                () => CombatManager.SelectedScreen = CombatManager.CombatScreen.TargetingScreen));
+                () => CombatManager.SelectedScreen = CombatManager.CombatScreen.LookAroundScreen));
 
         public static Selector<Ability> AbilitySelector = new Selector<Ability>(
             Globals.Player.Abilities,
             KeyBindings.Down,
             KeyBindings.Up,
             activationAction: new BoundAction(
-                KeyBindings.A, 
-                () => Globals.Player.QueuedAbilities.Enqueue(
-                    new AbilityInstance(
-                        AbilitySelector.GetSelection().Name,
-                        Globals.Player,
-                        Input.EverythingTargeter.GetTarget()))),
+                KeyBindings.A,
+                () => CombatManager.SelectedScreen = CombatManager.CombatScreen.AbilityTargetingScreen),
             cancelAction: new BoundAction(
                 KeyBindings.B, 
                 () => CombatManager.SelectedScreen = CombatManager.CombatScreen.SelectionScreen));

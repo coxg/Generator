@@ -11,10 +11,12 @@ namespace Generator
         public enum CombatScreen
         {
             SelectionScreen,
-            AbilityScreen,
-            ItemScreen,
+            AbilitySelectionScreen,
+            AbilityTargetingScreen,
+            ItemSelectionScreen,
+            ItemTargetingScreen,
             MovementScreen,
-            TargetingScreen
+            LookAroundScreen
         }
 
         public static CombatScreen SelectedScreen = SelectedScreen;
@@ -52,7 +54,7 @@ namespace Generator
             // TODO: How do we want to do the initial queueing?
             foreach (var enemy in Enemies)
             {
-                // enemy.QueuedAbilities.Enqueue();
+                // enemy.Cast();
             }
         }
     }

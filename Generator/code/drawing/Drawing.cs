@@ -57,9 +57,9 @@ namespace Generator
         public static void DrawLogs(SpriteBatch spriteBatch)
         {
             int y = (int)Globals.Resolution.Y - 25;
-            for (int i = Globals.Logs.Count - 1; i >= 0; i--)
+            for (int i = Globals.RecentLogs.Count - 1; i >= 0; i--)
             {
-                var logLine = Globals.Logs[i];
+                var logLine = Globals.RecentLogs[i];
                 var color = Color.White;
                 if (logLine.StartsWith("[WARNING]", StringComparison.Ordinal)) color = Color.Yellow;
                 spriteBatch.DrawString(
