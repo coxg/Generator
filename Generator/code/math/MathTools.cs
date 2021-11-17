@@ -182,6 +182,10 @@ namespace Generator
 
         public static List<Vector3> GetCoordinatesInCircle(int x, int y, int radius)
         {
+            if (radius == 0)
+            {
+                return new List<Vector3>{ new Vector3(x, y, 0) };
+            }
             throw new NotImplementedException();
         }
     }

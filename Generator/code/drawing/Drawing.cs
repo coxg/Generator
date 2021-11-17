@@ -335,6 +335,25 @@ namespace Generator
                 choices.GetCurrentNode().GetCurrentSpeaker() == Globals.CurrentConversation.SourceObject ? "right" : "left");
         }
 
+        public static void DrawTargeter(SpriteBatch spriteBatch, Targeter targeter)
+        {
+            var bottomLeft = MathTools.PixelsFromPosition(targeter.GetTarget());
+            var targetColor = Color.FromNonPremultiplied(255, 0, 0, 150);
+            spriteBatch.Draw(
+                Globals.WhiteDot, 
+                new Rectangle(
+                    (int)bottomLeft.X, 
+                    (int)bottomLeft.Y, 
+                    (int)GameControl.camera.SquareSize, 
+                    (int)GameControl.camera.SquareSize), 
+                null, 
+                targetColor, 
+                0f, 
+                new Vector2(0, 0), 
+                SpriteEffects.None, 
+                .05f);
+        }
+
         public static void DrawSelector<T>(SpriteBatch spriteBatch, Selector<T> selector)
         {
             DrawOptions(spriteBatch, selector.Options.Select(x => x.ToString()), selector.GetSelection().ToString(),

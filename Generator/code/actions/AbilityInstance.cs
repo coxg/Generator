@@ -33,6 +33,11 @@ namespace Generator
         {
             get => _ability;
         }
+        
+        public override string ToString()
+        {
+            return Name;
+        }
 
         public void StartCasting()
         {
@@ -45,7 +50,7 @@ namespace Generator
 
         public void FinishCasting()
         {
-            Globals.Log(SourceObject + " casts " + this);
+            Globals.Log(SourceObject + " casts " + this + " targeting " + Target.X + ", " + Target.Y);
             Ability.Animation?.Stop();
             SourceObject.AbilityCooldowns[Name] = Ability.Cooldown;
             RemainingRecharge = Ability.Recharge;
@@ -67,8 +72,14 @@ namespace Generator
                 targetObjects.Union(Globals.GameObjectManager.Get(eachTargetPosition.X, eachTargetPosition.Y));
             }
 
+            if (!targetObjects.Any())
+            {
+                Globals.Log(SourceObject + " misses everything!");
+            }
+
             foreach (var targetObject in targetObjects)
             {
+                Globals.Log(SourceObject + " hits " + targetObject + "!");
                 Ability.ObjectEffect?.Invoke(SourceObject, targetObject);
                 SourceObject.DealDamage(targetObject, Ability.Damage, Ability.Type);
                 targetObject.Heal(Ability.Healing);

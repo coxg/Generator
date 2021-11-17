@@ -39,7 +39,8 @@ namespace Generator
 
         public Vector3 GetTarget()
         {
-            return new Vector3((float)Math.Round(Target.X), (float)Math.Round(Target.X), Target.Z);
+            return new Vector3(
+                (float)Math.Floor(Target.X), (float)Math.Ceiling(Target.Y), Target.Z);
         }
 
         private void ProcessControllerInput()

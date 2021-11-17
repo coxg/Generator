@@ -8,6 +8,7 @@ namespace Generator
     public class Camera
     {
         // Rotation stuff
+        public float SquareSize;
         private float rotation;
 
         public Camera()
@@ -62,9 +63,9 @@ namespace Generator
             Position = new Vector3(center.X, center.Y - .00001f, Height);
             Target = new Vector3(center.X, center.Y, 0);
 
-            var squareSize = Math.Max(Globals.Resolution.X, Globals.Resolution.Y) / (Height * 1.5f);
-            var screenWidth = Globals.Resolution.X / squareSize;
-            var screenHeight = Globals.Resolution.Y / squareSize;
+            SquareSize = Math.Max(Globals.Resolution.X, Globals.Resolution.Y) / (Height * 1.5f);
+            var screenWidth = Globals.Resolution.X / SquareSize;
+            var screenHeight = Globals.Resolution.Y / SquareSize;
             VisibleArea = new RectangleF(
                 Position.X - screenWidth / 2, 
                 Position.Y - screenHeight / 2,

@@ -232,15 +232,19 @@ namespace Generator
                     Drawing.DrawSelector(spriteBatch, Selectors.AbilitySelector);
                     break;
                 case GameScreen.AbilityTargeter:
+                    Drawing.DrawTargeter(spriteBatch, Targeters.AbilityTargeter);
                     break;
                 case GameScreen.ItemSelector:
                     Drawing.DrawSelector(spriteBatch, Selectors.ItemSelector);
                     break;
                 case GameScreen.ItemTargeter:
+                    Drawing.DrawTargeter(spriteBatch, Targeters.ItemTargeter);
                     break;
                 case GameScreen.CombatMovement:
+                    Drawing.DrawTargeter(spriteBatch, Targeters.MovementTargeter);
                     break;
                 case GameScreen.CombatLookAround:
+                    Drawing.DrawTargeter(spriteBatch, Targeters.LookAroundTargeter);
                     break;
                 case GameScreen.CombatPlayEvents:
                     // this line is intentionally left blank

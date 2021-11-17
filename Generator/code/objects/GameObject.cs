@@ -535,7 +535,7 @@ namespace Generator
                 }
             }
             
-            if (CastingAbility != null)
+            else if (CastingAbility != null)
             {
                 CastingAbility.Ability.Animation?.Update();
                 CastingAbility.RemainingCastTime = Math.Min(0, CastingAbility.RemainingCastTime - Timing.SecondsPassed);
@@ -548,12 +548,12 @@ namespace Generator
                     }
                     CastingAbility = null;
                 }
+            }
 
-                if (CastingAbility == null && RechargingAbility == null)
-                {
-                    CastingAbility = queuedAbilities.Dequeue();
-                    CastingAbility.StartCasting();
-                }
+            else if (queuedAbilities.Any())
+            {
+                CastingAbility = queuedAbilities.Dequeue();
+                CastingAbility.StartCasting();
             }
         }
 
