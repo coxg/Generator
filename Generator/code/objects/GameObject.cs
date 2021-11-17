@@ -515,6 +515,7 @@ namespace Generator
             Globals.Log(this + " is preparing to cast " + abilityInstance.Name + " at " 
                         + abilityInstance.Target.X + ", " + abilityInstance.Target.Y);
             queuedAbilities.Enqueue(abilityInstance);
+            GameControl.CurrentScreen = GameControl.GameScreen.CombatPlayEvents;
         }
 
         private void UpdateAbilities()

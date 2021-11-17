@@ -12,7 +12,7 @@ namespace Generator
                         AbilityTargeter.GetTarget()))),
             new BoundAction(
                 KeyBindings.B, 
-                () => CombatManager.SelectedScreen = CombatManager.CombatScreen.AbilitySelectionScreen));
+                () => GameControl.CurrentScreen = GameControl.GameScreen.AbilitySelector));
         
         public static Targeter ItemTargeter = new Targeter(
             new BoundAction(
@@ -20,7 +20,7 @@ namespace Generator
                 () => Selectors.ItemSelector.GetSelection().Use(Globals.Player)),
             new BoundAction(
                 KeyBindings.B, 
-                () => CombatManager.SelectedScreen = CombatManager.CombatScreen.ItemSelectionScreen));
+                () => GameControl.CurrentScreen = GameControl.GameScreen.ItemSelector));
         
         public static Targeter MovementTargeter = new Targeter(
             new BoundAction(
@@ -28,12 +28,12 @@ namespace Generator
                 () => Globals.Player.MovementTarget = MovementTargeter.GetTarget()),
             new BoundAction(
                 KeyBindings.B, 
-                () => CombatManager.SelectedScreen = CombatManager.CombatScreen.SelectionScreen));
+                () => GameControl.CurrentScreen = GameControl.GameScreen.CombatOptionSelector));
         
         public static Targeter LookAroundTargeter = new Targeter(
             null,  // TODO: What happens when you select a dude? Let you select an action in range?
             new BoundAction(
                 KeyBindings.B, 
-                () => CombatManager.SelectedScreen = CombatManager.CombatScreen.SelectionScreen));
+                () => GameControl.CurrentScreen = GameControl.GameScreen.CombatOptionSelector));
     }
 }

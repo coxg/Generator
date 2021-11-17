@@ -29,12 +29,12 @@ namespace Generator
 
         public static float CalculateGameSpeed()
         {
-            if (Globals.CurrentConversation != null)
+            if (GameControl.CurrentScreen == GameControl.GameScreen.Conversation)
             {
                 return 0;
             }
 
-            if (CombatManager.InCombat && CombatManager.GetReadyPartyMember() != null)
+            if (CombatManager.InCombat && GameControl.CurrentScreen != GameControl.GameScreen.CombatPlayEvents)
             {
                 return 0;
             }

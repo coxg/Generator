@@ -12,44 +12,44 @@ namespace Generator
             () => GameControl.camera.Height = ZoomSelector.GetSelection(),
             startIndex: 2);
         
-        public static Selector<CombatManager.CombatScreen> CombatScreenSelector = new Selector<CombatManager.CombatScreen>(
-            new List<CombatManager.CombatScreen>
+        public static Selector<GameControl.GameScreen> CombatScreenSelector = new Selector<GameControl.GameScreen>(
+            new List<GameControl.GameScreen>
             {
-                CombatManager.CombatScreen.AbilitySelectionScreen,
-                CombatManager.CombatScreen.ItemSelectionScreen,
-                CombatManager.CombatScreen.MovementScreen,
-                CombatManager.CombatScreen.LookAroundScreen
+                GameControl.GameScreen.AbilitySelector,
+                GameControl.GameScreen.ItemSelector,
+                GameControl.GameScreen.CombatMovement,
+                GameControl.GameScreen.CombatLookAround
             }, 
-            KeyBindings.Down, 
             KeyBindings.Up,
+            KeyBindings.Down, 
             activationAction: new BoundAction(
                 KeyBindings.A, 
-                () => CombatManager.SelectedScreen = CombatScreenSelector.GetSelection()),
+                () => GameControl.CurrentScreen = CombatScreenSelector.GetSelection()),
             cancelAction: new BoundAction(
                 KeyBindings.B, 
-                () => CombatManager.SelectedScreen = CombatManager.CombatScreen.LookAroundScreen));
+                () => GameControl.CurrentScreen = GameControl.GameScreen.CombatLookAround));
 
         public static Selector<Ability> AbilitySelector = new Selector<Ability>(
             Globals.Player.Abilities,
-            KeyBindings.Down,
             KeyBindings.Up,
+            KeyBindings.Down,
             activationAction: new BoundAction(
                 KeyBindings.A,
-                () => CombatManager.SelectedScreen = CombatManager.CombatScreen.AbilityTargetingScreen),
+                () => GameControl.CurrentScreen = GameControl.GameScreen.AbilityTargeter),
             cancelAction: new BoundAction(
                 KeyBindings.B, 
-                () => CombatManager.SelectedScreen = CombatManager.CombatScreen.SelectionScreen));
+                () => GameControl.CurrentScreen = GameControl.GameScreen.CombatOptionSelector));
                 
         public static Selector<Item> ItemSelector = new Selector<Item>(
             Globals.Party.Value.Inventory,
-            KeyBindings.Down,
             KeyBindings.Up,
+            KeyBindings.Down,
             activationAction: new BoundAction(
                 KeyBindings.A, 
                 () => ItemSelector.GetSelection().Use(Globals.Player)),
             cancelAction: new BoundAction(
                 KeyBindings.B, 
-                () => CombatManager.SelectedScreen = CombatManager.CombatScreen.SelectionScreen));
+                () => GameControl.CurrentScreen = GameControl.GameScreen.CombatOptionSelector));
         
         public static Selector<Tile> CreativeTileSelector = new Selector<Tile>(
             Globals.TileManager.TileSheet.Tiles,

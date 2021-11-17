@@ -8,6 +8,9 @@ namespace Generator
 {
     public static class Drawing
     {
+        private const int Margin = 16;
+        private const int SpriteSize = 256;
+
         public static void DrawSprite(SpriteBatch spriteBatch, Texture2D texture, Vector2 bottomLeft, Vector2 topRight, 
                 Rectangle? textureCoordinates=null)
         // Draw a single sprite
@@ -128,17 +131,18 @@ namespace Generator
             }
         }
 
-        public static Vector2 DrawTextBox(
-            SpriteBatch spriteBatch, string text, int x, int y, int maxWidth, Color? color=null, 
-            bool drawText=true, string align="left", Color? highlightColor=null, int highlightMargin = 0, int borderThickness = 0)
+        private static Vector2 DrawTextBox(
+            SpriteBatch spriteBatch, string text, int x, int y, int maxWidth, Color? color=null, bool drawText=true, 
+            string align="left", Color? highlightColor=null, int highlightMargin = 0, int borderThickness = 0)
         // Use this to draw any text boxes.
         // This is super overloaded - also draws speech bubbles, for example. Should this be split up? Or renamed?
         {
-            void _draw(string _text, int _x, int _y, Vector2 _dimensions)
+            void DrawText(
+                string _text, int _x, int _y, Vector2 _dimensions)
             {
                 if (align == "right")
                 {
-                    _x = _x + (int)(maxWidth - _dimensions.X);
+                    _x += (int)(maxWidth - _dimensions.X);
                 }
                 else if (align == "center")
                 {
@@ -177,22 +181,22 @@ namespace Generator
                     highlightMargin: highlightMargin, borderThickness: borderThickness);
                 DrawTextBox(spriteBatch, text, x, y, maxWidth, drawText: false, align: align, 
                     highlightColor: highlightColor, highlightMargin: highlightMargin);
-                return DrawTextBox(spriteBatch, text, x, y, maxWidth, color, drawText: drawText, align: align, 
+                return DrawTextBox(spriteBatch, text, x, y, maxWidth, color, true, align, 
                     highlightMargin: highlightMargin);
             }
 
             GameControl.drawBatch.Begin();
 
             // Get the dimensions of the text
-            Vector2 dimensions = Globals.Font.MeasureString(text);
+            var dimensions = Globals.Font.MeasureString(text);
 
             // If we are too large then walk through the words one by one, appending as we go
             if (dimensions.X > maxWidth)
             {
-                int maxX = 0;
-                int totalY = 0;
+                var maxX = 0;
+                var totalY = 0;
                 var words = text.Split(' ');
-                string currentLine = "";
+                var currentLine = "";
                 foreach (var word in words)
                 {
                     var newLine = currentLine + " " + word;
@@ -205,7 +209,7 @@ namespace Generator
                     if (Globals.Font.MeasureString(newLine).X > maxWidth)
                     {
                         var currentLineDimensions = Globals.Font.MeasureString(currentLine);
-                        _draw(currentLine, x, y + totalY, currentLineDimensions);
+                        DrawText(currentLine, x, y + totalY, currentLineDimensions);
                         totalY += (int)currentLineDimensions.Y;
                         if (currentLineDimensions.X > maxX)
                         {
@@ -225,7 +229,7 @@ namespace Generator
                 if (currentLine != "")
                 {
                     var finalLineDimensions = Globals.Font.MeasureString(currentLine);
-                    _draw(currentLine, x, y + totalY, finalLineDimensions);
+                    DrawText(currentLine, x, y + totalY, finalLineDimensions);
                     totalY += (int)finalLineDimensions.Y;
                     if (finalLineDimensions.X > maxX)
                     {
@@ -238,14 +242,14 @@ namespace Generator
             // If we fit then just go ahead and write it
             else
             {
-                _draw(text, x, y, dimensions);
+                DrawText(text, x, y, dimensions);
             }
 
             GameControl.drawBatch.End();
             return dimensions;
         }
 
-        public static void DrawCharacter(SpriteBatch spriteBatch, GameObject character, int size, int x, int y)
+        private static void DrawCharacter(SpriteBatch spriteBatch, GameObject character, int size, int x, int y)
         {
             /*// Draw the sprite if they have one
             if (character.Sprite != null)
@@ -300,53 +304,24 @@ namespace Generator
             }*/
         }
 
-        public static void DrawConversation(SpriteBatch spriteBatch)
-            // Use this for text displayed at the bottom of the screen
+        private static Vector2 GetOptionsDimensions(IEnumerable<string> options, int maxWidth)
         {
-            var Margin = 16;
-            var spriteSize = 256;
-            var choices = Globals.CurrentConversation.CurrentChoices;
-            var backGroundColor = Color.FromNonPremultiplied(0, 0, 0, 150);
-            Color? selectionColor = Color.FromNonPremultiplied(105, 69, 169, 255);
-
-            // Draw the background
-            spriteBatch.Draw(
-                Globals.WhiteDot,
-                new Rectangle(
-                    0,
-                    0,
-                    (int)Globals.Resolution.X,
-                    (int)Globals.Resolution.Y),
-                null,
-                backGroundColor,
-                0f,
-                new Vector2(0, 0),
-                SpriteEffects.None,
-                .05f);
-
-            // Get dimensions for the different conversation options
-            int maxWidth = (int)Globals.Resolution.X - 4 * Margin - 2 * spriteSize;
-            var TextWidth = 0;
-            var TextBoxHeight = Margin;
-            foreach (var node in choices.Nodes)
+            float width = 0;
+            float height = -Margin;
+            foreach (var option in options)
             {
-                var textDimensions = DrawTextBox(
-                    spriteBatch,
-                    node.Text[0],
-                    0,
-                    0,
-                    maxWidth: maxWidth,
-                    drawText: false);
-
-                TextWidth = Math.Max(TextWidth, (int)textDimensions.X);
-                TextBoxHeight += (int)textDimensions.Y + 2 * Margin;
+                var (x, y) = DrawTextBox(null, option, 0, 0, maxWidth, drawText: false);
+                width = Math.Max(width, x);
+                height += y + Margin;
             }
-            int xOffset = (maxWidth - TextWidth) / 2 + Margin;
-            int yOffset = (int)(Globals.Resolution.Y - TextBoxHeight) / 2;
+            return new Vector2(width, height);
+        }
 
-            // Figure out who from the party is talking
+        public static void DrawConversation(SpriteBatch spriteBatch)
+        {
+            var choices = Globals.CurrentConversation.CurrentChoices;
             GameObject talkingObject = null;
-            for (int i = 0; i <= choices.CurrentNodeIndex; i++)
+            for (var i = 0; i <= choices.CurrentNodeIndex; i++)
             {
                 var currentTalkingObject = choices.Nodes[i].GetCurrentSpeaker();
                 if (currentTalkingObject != Globals.CurrentConversation.SourceObject)
@@ -354,63 +329,74 @@ namespace Generator
                     talkingObject = currentTalkingObject;
                 }
             }
-            if (talkingObject == null)
-            {
-                talkingObject = Globals.Player;
-            }
+            
+            DrawOptions(spriteBatch, choices.Nodes.Select(x => x.Text[0]), choices.GetCurrentNode().Text[0], 
+                talkingObject ?? Globals.Player, Globals.CurrentConversation.SourceObject, choices.ChoiceSelected,
+                choices.GetCurrentNode().GetCurrentSpeaker() == Globals.CurrentConversation.SourceObject ? "right" : "left");
+        }
+
+        public static void DrawSelector<T>(SpriteBatch spriteBatch, Selector<T> selector)
+        {
+            DrawOptions(spriteBatch, selector.Options.Select(x => x.ToString()), selector.GetSelection().ToString(),
+                Globals.Player, null, false);
+        }
+
+        private static void DrawOptions(SpriteBatch spriteBatch, IEnumerable<string> options, string selection,
+            GameObject leftObject, GameObject rightObject, bool responseOverride, string alignment = null)
+        {
+            // Draw the background
+            var backGroundColor = Color.FromNonPremultiplied(0, 0, 0, 150);
+            spriteBatch.Draw(
+                Globals.WhiteDot, new Rectangle(
+                    0, 0, (int)Globals.Resolution.X, (int)Globals.Resolution.Y),
+                null, backGroundColor, 0f, new Vector2(0, 0), SpriteEffects.None, .05f);
+
+            // Get dimensions for the different conversation options
+            var maxWidth = (int) Globals.Resolution.X - 4 * Margin - 2 * SpriteSize;
+            var optionsDimensions = GetOptionsDimensions(options, maxWidth);
+            var textWidth = (int) optionsDimensions.X;
+            var textBoxHeight = (int) optionsDimensions.Y + 2 * Margin;
 
             // Draw the characters who are talking
-            DrawCharacter(spriteBatch, talkingObject, spriteSize, xOffset, (int)(Globals.Resolution.Y - spriteSize) / 2);
-            DrawCharacter(spriteBatch, Globals.CurrentConversation.SourceObject,
-                spriteSize, xOffset + spriteSize + TextWidth + 2 * Margin, (int)(Globals.Resolution.Y - spriteSize) / 2);
-
-            // Draw the text itself
-            // If we've selected a choice then just draw that choice
-            if (choices.ChoiceSelected)
+            var xOffset = (maxWidth - textWidth) / 2 + Margin;
+            if (leftObject != null)
             {
-                var currentNode = choices.GetCurrentNode();
-                var currentMessage = currentNode.GetCurrentMessage();
-                var textDimensions = DrawTextBox(
-                    spriteBatch,
-                    currentMessage,
-                    0,
-                    0,
-                    TextWidth,
-                    drawText: false);
-                DrawTextBox(
-                    spriteBatch, 
-                    currentMessage,
-                    xOffset + spriteSize + Margin,
-                    (int)(Globals.Resolution.Y - textDimensions.Y) / 2,
-                    TextWidth,
-                    align: currentNode.GetCurrentSpeaker() == Globals.CurrentConversation.SourceObject ? "right" : "left",
-                    highlightColor: selectionColor,
-                    highlightMargin: Margin,
-                    borderThickness: 5);
+                DrawCharacter(spriteBatch, leftObject, 
+                    SpriteSize, xOffset, (int)(Globals.Resolution.Y - SpriteSize) / 2);
+            }
+            if (rightObject != null)
+            {
+                DrawCharacter(spriteBatch, rightObject, SpriteSize, xOffset + SpriteSize + textWidth + 2 * Margin, 
+                    (int)(Globals.Resolution.Y - SpriteSize) / 2);
             }
 
-            // If we haven't selected a choice yet then show all available choices
+            // Draw the text itself
+            Color? selectionColor = Color.FromNonPremultiplied(105, 69, 169, 255);
+            if (responseOverride)
+            {
+                // If we've selected a choice then just draw that choice
+                var textDimensions = DrawTextBox(spriteBatch, selection, 0, 0, textWidth, drawText: false);
+                DrawTextBox(spriteBatch, selection, xOffset + SpriteSize + Margin,
+                    (int)(Globals.Resolution.Y - textDimensions.Y) / 2, textWidth, align: alignment,
+                    highlightColor: selectionColor, highlightMargin: Margin, borderThickness: 5);
+            }
+
             else
             {
-                yOffset += Margin;
-                foreach (Conversation.Choices.Node node in choices.Nodes)
+                // If we haven't selected a choice yet then show all available choices
+                var yOffset = (int)(Globals.Resolution.Y - textBoxHeight) / 2 + Margin;
+                foreach (var option in options)
                 {
                     // Draw the choice
-                    Vector2 textDimensions = DrawTextBox(
-                        spriteBatch,
-                        node.GetCurrentMessage(),
-                        xOffset + spriteSize + Margin,
-                        yOffset,
-                        TextWidth,
-                        highlightColor: node == choices.GetCurrentNode() ? selectionColor : null,
-                        highlightMargin: Margin,
-                        borderThickness: node == choices.GetCurrentNode() ? 5 : 0);
+                    var textDimensions = DrawTextBox(spriteBatch, option, xOffset + SpriteSize + Margin, yOffset,
+                        textWidth, highlightColor: option == selection ? selectionColor : null, highlightMargin: Margin,
+                        borderThickness: option == selection ? 5 : 0);
                     yOffset += (int)textDimensions.Y + 2 * Margin;
                 }
             }
         }
 
-        public static void DrawResource(Resource resource, int partyNumber)
+        private static void DrawResource(Resource resource, int partyNumber)
             // Draw a single resource bar
         {
             // Figure out the resource specific information
@@ -433,19 +419,11 @@ namespace Generator
             var radius = 0;
             var barWidth = 256;
             DrawRoundedRectangle(
-                new Rectangle(
-                    margin,
-                    height,
-                    (int)(barWidth * resource.Current / resource.Max),
-                    barHeight),
+                new Rectangle(margin, height, (int)(barWidth * resource.Current / resource.Max), barHeight),
                 radius,
                 new Color((int)barColor.X, (int)barColor.Y, (int)barColor.Z, 75));
             DrawRoundedRectangle(
-                new Rectangle(
-                    margin,
-                    height,
-                    barWidth,
-                    barHeight),
+                new Rectangle(margin, height, barWidth, barHeight),
                 radius,
                 borderWidth: 1);
         }

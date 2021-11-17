@@ -30,6 +30,8 @@ namespace Generator
             {
                 value?.Reset();
                 currentConversation = value;
+                GameControl.CurrentScreen = value == null ? 
+                    GameControl.GameScreen.WalkingAround : GameControl.GameScreen.Conversation;
             }
         }
 

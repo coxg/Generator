@@ -7,7 +7,7 @@ namespace Generator
     {
         public List<string> MemberIDs;
         public string LeaderID;
-        public List<Item> Inventory;
+        public List<Item> Inventory = new List<Item>();
         public int Gold;
 
         // Constructor

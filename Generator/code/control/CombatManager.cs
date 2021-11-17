@@ -8,19 +8,6 @@ namespace Generator
         public static bool InCombat => Enemies.Count > 0;
         public static HashSet<GameObject> Enemies = new HashSet<GameObject>();
         
-        public enum CombatScreen
-        {
-            SelectionScreen,
-            AbilitySelectionScreen,
-            AbilityTargetingScreen,
-            ItemSelectionScreen,
-            ItemTargetingScreen,
-            MovementScreen,
-            LookAroundScreen
-        }
-
-        public static CombatScreen SelectedScreen = SelectedScreen;
-        
         public static GameObject GetReadyPartyMember()
         {
             foreach (var partyMember in Globals.Party.Value.GetMembers())
@@ -49,6 +36,7 @@ namespace Generator
 
         public static void StartCombat(HashSet<GameObject> enemies)
         {
+            GameControl.CurrentScreen = GameControl.GameScreen.CombatOptionSelector;
             Enemies = enemies;
             
             // TODO: How do we want to do the initial queueing?

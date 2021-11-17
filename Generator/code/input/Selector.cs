@@ -5,9 +5,10 @@ namespace Generator
 {
     public class Selector<T>
     {
+        public List<T> Options;
+
         private int StartIndex;
         private int Index;
-        private List<T> Options;
         private KeyBinding Incrementor;
         private KeyBinding Decrementor;
         private BoundAction ActivationAction;

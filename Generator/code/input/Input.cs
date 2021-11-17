@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
 using Generator.code.objects;
 
 namespace Generator
@@ -35,54 +34,46 @@ namespace Generator
             {
                 keyBinding.Update();
             }
+
             if (MouseState.LeftButton == ButtonState.Pressed)
             {
                 Mode = InputMode.MouseKeyboard;
             }
-
-            if (Globals.CurrentConversation != null)
-            {
-                ProcessConversationInput();
-            }
             
-            else if (CombatManager.InCombat)
+            switch (GameControl.CurrentScreen)
             {
-                ProcessCombatInput();
-            }
-
-            else
-            {
-                ProcessNonCombatInput();
-            }
-        }
-
-        private static void ProcessCombatInput()
-        {
-            switch (CombatManager.SelectedScreen)
-            {
-                case CombatManager.CombatScreen.SelectionScreen:
+                case GameControl.GameScreen.WalkingAround:
+                    ProcessNonCombatInput();
+                    break;
+                case GameControl.GameScreen.Conversation:
+                    ProcessConversationInput();
+                    break;
+                case GameControl.GameScreen.CombatOptionSelector:
                     Selectors.CombatScreenSelector.Update();
                     break;
-                case CombatManager.CombatScreen.AbilitySelectionScreen:
+                case GameControl.GameScreen.AbilitySelector:
                     Selectors.AbilitySelector.Update();
                     break;
-                case CombatManager.CombatScreen.AbilityTargetingScreen:
+                case GameControl.GameScreen.AbilityTargeter:
                     Targeters.AbilityTargeter.Update();
                     break;
-                case CombatManager.CombatScreen.ItemSelectionScreen:
+                case GameControl.GameScreen.ItemSelector:
                     Selectors.ItemSelector.Update();
                     break;
-                case CombatManager.CombatScreen.ItemTargetingScreen:
+                case GameControl.GameScreen.ItemTargeter:
                     Targeters.ItemTargeter.Update();
                     break;
-                case CombatManager.CombatScreen.MovementScreen:
+                case GameControl.GameScreen.CombatMovement:
                     Targeters.MovementTargeter.Update();
                     break;
-                case CombatManager.CombatScreen.LookAroundScreen:
+                case GameControl.GameScreen.CombatLookAround:
                     Targeters.LookAroundTargeter.Update();
                     break;
+                case GameControl.GameScreen.CombatPlayEvents:
+                    // this line is intentionally left blank
+                    break;
                 default:
-                    throw new Exception("Uh oh! You shouldn't be here!");
+                    throw new Exception("uh oh!");
             }
         }
 

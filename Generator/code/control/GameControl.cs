@@ -21,8 +21,33 @@ namespace Generator
         public static BasicEffect tileEffect;
         // TODO: Add setters to Resolution to change this during runtime
         public static Rectangle screenSize = new Rectangle(0, 0, (int)Globals.Resolution.X, (int)Globals.Resolution.Y);
-        public static SpriteBatch spriteBatch;
+        private static SpriteBatch spriteBatch;
         public static LilyPath.DrawBatch drawBatch;
+
+        private static GameScreen currentScreen = GameScreen.WalkingAround;
+        public static GameScreen CurrentScreen
+        {
+            get => currentScreen;
+            set
+            {
+                Globals.Log("Now on the " + value + " screen");
+                currentScreen = value;
+            }
+        }
+
+        public enum GameScreen
+        {
+            WalkingAround,
+            Conversation,
+            CombatOptionSelector,
+            AbilitySelector,
+            AbilityTargeter,
+            ItemSelector,
+            ItemTargeter,
+            CombatMovement,
+            CombatLookAround,
+            CombatPlayEvents
+        }
 
         public GameControl()
         {
@@ -184,20 +209,44 @@ namespace Generator
             GraphicsDevice.Clear(Color.Black);
             Drawing.DrawTiles();
             Drawing.DrawGameObjects();
-
-            // Draw the UI layer
+            
             spriteBatch.Begin();
-            if (Globals.CurrentConversation != null)
+            drawBatch.Begin();
+            Drawing.DrawResourceBars();
+            drawBatch.End();
+            if (Globals.CreativeMode) Drawing.DrawCreativeUI(spriteBatch);
+            Drawing.DrawTextBoxes(spriteBatch);
+
+            switch (CurrentScreen)
             {
-                Drawing.DrawConversation(spriteBatch);
-            }
-            else
-            {
-                drawBatch.Begin();
-                Drawing.DrawResourceBars();
-                drawBatch.End();
-                if (Globals.CreativeMode) Drawing.DrawCreativeUI(spriteBatch);
-                Drawing.DrawTextBoxes(spriteBatch);
+                case GameScreen.WalkingAround:
+                    // this line is intentionally left blank
+                    break;
+                case GameScreen.Conversation:
+                    Drawing.DrawConversation(spriteBatch);
+                    break;
+                case GameScreen.CombatOptionSelector:
+                    Drawing.DrawSelector(spriteBatch, Selectors.CombatScreenSelector);
+                    break;
+                case GameScreen.AbilitySelector:
+                    Drawing.DrawSelector(spriteBatch, Selectors.AbilitySelector);
+                    break;
+                case GameScreen.AbilityTargeter:
+                    break;
+                case GameScreen.ItemSelector:
+                    Drawing.DrawSelector(spriteBatch, Selectors.ItemSelector);
+                    break;
+                case GameScreen.ItemTargeter:
+                    break;
+                case GameScreen.CombatMovement:
+                    break;
+                case GameScreen.CombatLookAround:
+                    break;
+                case GameScreen.CombatPlayEvents:
+                    // this line is intentionally left blank
+                    break;
+                default:
+                    throw new Exception("uh oh!");
             }
             
             if (!Globals.IsRelease)
