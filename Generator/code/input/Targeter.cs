@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace Generator
@@ -8,11 +9,14 @@ namespace Generator
         private Vector3 Target = Globals.Player.Position;
         private BoundAction ActivationAction;
         private BoundAction CancelAction;
+        private Func<Vector3, List<Vector3>> GetTargetsMethod;
 
-        public Targeter(BoundAction activationAction, BoundAction cancelAction)
+        public Targeter(BoundAction activationAction, BoundAction cancelAction, 
+            Func<Vector3, List<Vector3>> getTargetsMethod = null)
         {
             ActivationAction = activationAction;
             CancelAction = cancelAction;
+            GetTargetsMethod = getTargetsMethod;
         }
 
         public void Update()
@@ -41,6 +45,12 @@ namespace Generator
         {
             return new Vector3(
                 (float)Math.Floor(Target.X), (float)Math.Ceiling(Target.Y), Target.Z);
+        }
+
+        public List<Vector3> GetTargets()
+        {
+            var target = GetTarget();
+            return GetTargetsMethod != null ? GetTargetsMethod.Invoke(target) : new List<Vector3> { target };
         }
 
         private void ProcessControllerInput()

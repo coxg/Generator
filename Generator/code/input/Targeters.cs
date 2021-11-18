@@ -12,7 +12,11 @@ namespace Generator
                         AbilityTargeter.GetTarget()))),
             new BoundAction(
                 KeyBindings.B, 
-                () => GameControl.CurrentScreen = GameControl.GameScreen.AbilitySelector));
+                () => GameControl.CurrentScreen = GameControl.GameScreen.AbilitySelector),
+            target => new AbilityInstance(
+                Selectors.AbilitySelector.GetSelection().Name,
+                Globals.Player,
+                AbilityTargeter.GetTarget()).GetTargetPositions());
         
         public static Targeter ItemTargeter = new Targeter(
             new BoundAction(

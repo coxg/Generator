@@ -71,6 +71,7 @@ namespace Generator
             Type.Physical,
             damage: 1,
             range: 10,
+            radius: 3,
             castTime: 1);
     }
 }

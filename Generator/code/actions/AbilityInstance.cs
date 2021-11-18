@@ -48,13 +48,8 @@ namespace Generator
             RemainingCastTime = Ability.CastTime;
         }
 
-        public void FinishCasting()
+        public List<Vector3> GetTargetPositions()
         {
-            Globals.Log(SourceObject + " casts " + this + " at " + Target.X + ", " + Target.Y);
-            Ability.Animation?.Stop();
-            SourceObject.AbilityCooldowns[Name] = Ability.Cooldown;
-            RemainingRecharge = Ability.Recharge;
-
             var targetPosition = Target;
             if (Ability.Collision)
             {
@@ -62,8 +57,17 @@ namespace Generator
                 targetPosition = SourceObject.GetFirstTargetInRange(targetOffset.Length())?.Position ?? targetPosition;
             }
             
-            var targetPositions = MathTools.GetCoordinatesInCircle(targetPosition, Ability.Radius);
+            return MathTools.GetCoordinatesInCircle(targetPosition, Ability.Radius);
+        }
 
+        public void FinishCasting()
+        {
+            Globals.Log(SourceObject + " casts " + this + " at " + Target.X + ", " + Target.Y);
+            Ability.Animation?.Stop();
+            SourceObject.AbilityCooldowns[Name] = Ability.Cooldown;
+            RemainingRecharge = Ability.Recharge;
+
+            var targetPositions = GetTargetPositions();
             var targetObjects = new HashSet<GameObject>();
             foreach (var eachTargetPosition in targetPositions)
             {
