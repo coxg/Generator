@@ -718,7 +718,7 @@ namespace Generator
                 var targets = GetTargetsInRange(i);
                 if (targets.Count > 0)
                 {
-                    return targets.OrderBy(target => (Center - target.Center).Length()).First();
+                    return targets.OrderBy(target => Vector3.Distance(Center, target.Center)).First();
                 }
             }
 

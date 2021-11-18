@@ -62,8 +62,7 @@ namespace Generator
                 targetPosition = SourceObject.GetFirstTargetInRange(targetOffset.Length())?.Position ?? targetPosition;
             }
             
-            var targetPositions = MathTools.GetCoordinatesInCircle(
-                (int)targetPosition.X, (int)targetPosition.Y, Ability.Radius);
+            var targetPositions = MathTools.GetCoordinatesInCircle(targetPosition, Ability.Radius);
 
             var targetObjects = new HashSet<GameObject>();
             foreach (var eachTargetPosition in targetPositions)

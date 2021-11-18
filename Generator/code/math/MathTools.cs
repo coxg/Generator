@@ -180,13 +180,31 @@ namespace Generator
             return pixels;
         }
 
-        public static List<Vector3> GetCoordinatesInCircle(int x, int y, int radius)
+        public static List<Vector3> GetCoordinatesInCircle(Vector3 target, int radius)
         {
+            var x = (int) Math.Round(target.X);
+            var y = (int) Math.Round(target.Y);
+            var roundedTarget = new Vector3(x, y, 0);
+            
             if (radius == 0)
             {
-                return new List<Vector3>{ new Vector3(x, y, 0) };
+                return new List<Vector3>{ roundedTarget };
             }
-            throw new NotImplementedException();
+
+            var coordinates = new List<Vector3>();
+            for (var curX = x - radius ; curX <= x + radius; curX++)
+            {
+                for (var curY = y - radius ; curY <= y + radius; curY++)
+                {
+                    var coordinate = new Vector3(curX, curY, 0);
+                    if (Vector3.Distance(coordinate, roundedTarget) < radius + .5f)
+                    {
+                        coordinates.Add(coordinate);
+                    }
+                }
+            }
+
+            return coordinates.OrderBy(coordinate => Vector3.Distance(coordinate, target)).ToList();
         }
     }
 }
