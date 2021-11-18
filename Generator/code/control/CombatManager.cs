@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+using System.Linq;
 
 namespace Generator
 {
@@ -7,43 +7,58 @@ namespace Generator
     {
         public static bool InCombat => Enemies.Count > 0;
         public static HashSet<GameObject> Enemies = new HashSet<GameObject>();
-        
-        public static GameObject GetReadyPartyMember()
+        private static GameObject preBattleLeader;
+
+        public static void Update()
         {
-            foreach (var partyMember in Globals.Party.Value.GetMembers())
+            if (!Enemies.Any())
             {
-                if (partyMember.IsReady)
-                {
-                    return partyMember;
-                }
+                EndCombat();
+                return;
             }
 
-            return null;
+            var readyMember = GetReadyPartyMember();
+            if (readyMember != null)
+            {
+                Globals.Log(readyMember + "'s turn");
+                GameControl.CurrentScreen = GameControl.GameScreen.CombatOptionSelector;
+                Globals.Party.Value.LeaderID = readyMember.ID;
+                return;
+            }
+
+            var readyEnemy = GetReadyEnemy();
+            if (readyEnemy != null)
+            {
+                Globals.Log(readyEnemy + "'s turn");
+                // TODO: Perform some combat AI
+            }
         }
 
-        public static GameObject GetReadyEnemy()
+        private static GameObject GetReadyPartyMember()
         {
-            foreach (var enemy in Enemies)
-            {
-                if (enemy.IsReady)
-                {
-                    return enemy;
-                }
-            }
+            return Globals.Party.Value.GetMembers().FirstOrDefault(partyMember => partyMember.IsReady);
+        }
 
-            return null;
+        private static GameObject GetReadyEnemy()
+        {
+            return Enemies.FirstOrDefault(enemy => enemy.IsReady);
         }
 
         public static void StartCombat(HashSet<GameObject> enemies)
         {
-            GameControl.CurrentScreen = GameControl.GameScreen.CombatOptionSelector;
             Enemies = enemies;
-            
-            // TODO: How do we want to do the initial queueing?
-            foreach (var enemy in Enemies)
-            {
-                // enemy.Cast();
-            }
+            preBattleLeader = Globals.Player;
+            GameControl.CurrentScreen = GameControl.GameScreen.CombatPlayEvents;
+
+            // TODO: Move everyone to nearest square
+
+            // TODO: Initial combat queueing
+        }
+
+        private static void EndCombat()
+        {
+            // TODO: Award gold, experience, etc
+            Globals.Party.Value.LeaderID = preBattleLeader.ID;
         }
     }
 }

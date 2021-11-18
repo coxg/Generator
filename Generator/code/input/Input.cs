@@ -14,7 +14,7 @@ namespace Generator
         }
 
         public static float ControllerTolerance = .05f;
-        
+
         public static GamePadCapabilities Capabilities;
         public static GamePadState ControllerState;
         public static KeyboardState KeyboardState;
@@ -24,6 +24,13 @@ namespace Generator
 
         public static void Update()
         {
+            if (GameControl.CurrentScreen == GameControl.GameScreen.CombatPlayEvents)
+            {
+                // If I allow for any input during combat animations (pausing etc) this will need to change
+                CombatManager.Update();
+                return;
+            }
+
             ControllerState = GamePad.GetState(PlayerIndex.One);
             Capabilities = GamePad.GetCapabilities(PlayerIndex.One);
             KeyboardState = Keyboard.GetState();
@@ -68,9 +75,6 @@ namespace Generator
                     break;
                 case GameControl.GameScreen.CombatLookAround:
                     Targeters.LookAroundTargeter.Update();
-                    break;
-                case GameControl.GameScreen.CombatPlayEvents:
-                    // this line is intentionally left blank
                     break;
                 default:
                     throw new Exception("uh oh!");

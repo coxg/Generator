@@ -46,7 +46,7 @@ namespace Generator
             Recharge = recharge;
             Cooldown = cooldown;
 
-            Ailments = ailments;
+            Ailments = ailments ?? new List<Ailment>();
             LocationEffect = locationEffect;
             ObjectEffect = objectEffect;
             Animation = animation;

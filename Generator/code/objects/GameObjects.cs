@@ -35,10 +35,9 @@ namespace Generator.code.objects
             name: "Niels",
             abilities: new List<Ability>
             {
-                Abilities.Move,
+                Abilities.Thwack,
                 Abilities.Blink,
                 Abilities.Shoot,
-                Abilities.Thwack,
                 Abilities.PlaceObject
             });
 

@@ -50,7 +50,7 @@ namespace Generator
 
         public void FinishCasting()
         {
-            Globals.Log(SourceObject + " casts " + this + " targeting " + Target.X + ", " + Target.Y);
+            Globals.Log(SourceObject + " casts " + this + " at " + Target.X + ", " + Target.Y);
             Ability.Animation?.Stop();
             SourceObject.AbilityCooldowns[Name] = Ability.Cooldown;
             RemainingRecharge = Ability.Recharge;
@@ -65,11 +65,11 @@ namespace Generator
             var targetPositions = MathTools.GetCoordinatesInCircle(
                 (int)targetPosition.X, (int)targetPosition.Y, Ability.Radius);
 
-            var targetObjects = new List<GameObject>();
+            var targetObjects = new HashSet<GameObject>();
             foreach (var eachTargetPosition in targetPositions)
             {
                 Ability.LocationEffect?.Invoke(SourceObject, eachTargetPosition);
-                targetObjects.Union(Globals.GameObjectManager.Get(eachTargetPosition.X, eachTargetPosition.Y));
+                targetObjects.UnionWith(Globals.GameObjectManager.Get(eachTargetPosition.X, eachTargetPosition.Y));
             }
 
             if (!targetObjects.Any())

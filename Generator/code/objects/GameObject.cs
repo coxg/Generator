@@ -202,7 +202,7 @@ namespace Generator
                     }
                     else
                     {
-                        Globals.Warn((Name ?? ID) + " can't move to " + value);
+                        Globals.Warn(this + " can't move to " + value);
                     }
 
                     return;
@@ -220,6 +220,7 @@ namespace Generator
 
                 // If not then we collide with the object and it collides with us
                 // TODO: In the current implementation this will trigger twice per update if both are moving
+                // TODO: In the current implementstion this also applies to teleportation, which is probably wrong
                 else
                 {
                     CollisionEffect?.Value(this, targetAtPosition);
@@ -257,7 +258,7 @@ namespace Generator
         public AbilityInstance CastingAbility;
         public AbilityInstance RechargingAbility;
         private Queue<AbilityInstance> queuedAbilities = new Queue<AbilityInstance>();
-        public bool IsReady => !queuedAbilities.Any();
+        public bool IsReady => !queuedAbilities.Any() && CastingAbility == null && RechargingAbility == null;
 
         // Interaction
         public Conversation Conversation;
@@ -522,13 +523,13 @@ namespace Generator
         {
             foreach (var abilityName in new List<string>(AbilityCooldowns.Keys))
             {
-                AbilityCooldowns[abilityName] = Math.Min(0, AbilityCooldowns[abilityName] - Timing.SecondsPassed);
+                AbilityCooldowns[abilityName] = Math.Max(0, AbilityCooldowns[abilityName] - Timing.SecondsPassed);
             }
 
             if (RechargingAbility != null)
             {
                 // TODO: Play recharging animation
-                RechargingAbility.RemainingRecharge = Math.Min(0, RechargingAbility.RemainingRecharge - Timing.SecondsPassed);
+                RechargingAbility.RemainingRecharge = Math.Max(0, RechargingAbility.RemainingRecharge - Timing.SecondsPassed);
                 if (RechargingAbility.RemainingRecharge == 0)
                 {
                     RechargingAbility = null;
@@ -538,7 +539,7 @@ namespace Generator
             else if (CastingAbility != null)
             {
                 CastingAbility.Ability.Animation?.Update();
-                CastingAbility.RemainingCastTime = Math.Min(0, CastingAbility.RemainingCastTime - Timing.SecondsPassed);
+                CastingAbility.RemainingCastTime = Math.Max(0, CastingAbility.RemainingCastTime - Timing.SecondsPassed);
                 if (CastingAbility.RemainingCastTime == 0)
                 {
                     CastingAbility.FinishCasting();
@@ -663,18 +664,13 @@ namespace Generator
         {
             damage = DamageToTake(damage, abilityType);
 
-            if (damage > 0)
+            if (damage <= 0) return;
+
+            Health.Current -= damage;
+            Globals.Log(this + " takes " + damage + " damage, and is left with " + Health.Current + " HP");
+            if (Health.Current <= 0)
             {
-                Globals.Log(this + " takes " + damage + " damage. "
-                            + Health.Current + " -> " + (Health.Current - damage));
-
-                // TODO: Taking damage animation
-                Health.Current -= damage;
-
-                if (Health.Current <= 0)
-                {
-                    Globals.GameObjectManager.Kill(this);
-                }
+                Globals.GameObjectManager.Kill(this);
             }
         }
 

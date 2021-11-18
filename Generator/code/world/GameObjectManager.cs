@@ -84,6 +84,7 @@ namespace Generator
             // TODO: Don't remove - set to dead, play death animation, and leave on the ground
         {
             Globals.Party.Value.MemberIDs.Remove(gameObject.ID);
+            CombatManager.Enemies.Remove(gameObject);
             Remove(gameObject);
             Globals.Log(gameObject + " has passed away. RIP.");
         }
