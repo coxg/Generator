@@ -17,14 +17,7 @@ namespace Generator
                     // Party members follow you around
                     if (Globals.Party.Value.MemberIDs.Contains(self.ID))
                     {
-                        if (MathTools.Distance(Globals.Player.Position, self.Position) > 5)
-                        {
-                            self.MovementTarget = Globals.Player.Position;
-                        }
-                        else
-                        {
-                            self.MovementTarget = null;
-                        }
+                        // TODO
                     }
 
                     // If they're fighting you
@@ -37,24 +30,6 @@ namespace Generator
             {
                 "DoNothing",
                 self => { }
-            },
-            {
-                "WalkToPlayer",
-                self =>
-                {
-                    self.MovementTarget = Globals.Player.Position;
-                }
-            },
-            {
-                "WalkAwayFromPlayer",
-                self =>
-                {
-                    self.MovementDirection = (float)MathTools.Angle(self.Position, Globals.Player.Position) + MathHelper.Pi;
-                }
-            },
-            {
-                "WalkInStraightLine",
-                self => { self.MovementDirection = self.Direction; }
             }
         };
 

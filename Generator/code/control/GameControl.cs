@@ -240,9 +240,6 @@ namespace Generator
                 case GameScreen.ItemTargeter:
                     Drawing.DrawTargeter(spriteBatch, Targeters.ItemTargeter);
                     break;
-                case GameScreen.CombatMovement:
-                    Drawing.DrawTargeter(spriteBatch, Targeters.MovementTargeter);
-                    break;
                 case GameScreen.CombatLookAround:
                     Drawing.DrawTargeter(spriteBatch, Targeters.LookAroundTargeter);
                     break;

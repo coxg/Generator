@@ -20,7 +20,7 @@ namespace Generator
             return gameObject;
         }
 
-        public IEnumerable<GameObject> Get(float x, float y)
+        public GameObject Get(int x, int y)
         {
             return ObjectMap.Get(x, y);
         }

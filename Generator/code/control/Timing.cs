@@ -12,9 +12,6 @@ namespace Generator
         // The speed at which the game time moves relative to IRL time
         public static float GameSpeed = 1;
 
-        // Seconds passed since the last update
-        public static float SecondsPassed => GameSpeed / Globals.RefreshRate;
-
         // Keeping track of FPS
         public static int NumDraws = 0;
         public static DateTime[] FrameTimes = new DateTime[30];

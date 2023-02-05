@@ -62,7 +62,7 @@ namespace Generator
         }
 
         // Configure the world building mode
-        public static bool CreativeMode = true;
+        public static bool CreativeMode = false;
 
         // Loading assets
         public static Dictionary<string, Texture2D> Textures = new Dictionary<string, Texture2D>();

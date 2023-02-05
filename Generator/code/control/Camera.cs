@@ -9,33 +9,12 @@ namespace Generator
     {
         // Rotation stuff
         public float SquareSize;
-        private float rotation;
-
-        public Camera()
-        // Constructor
-        {
-            Rotation = 0f;
-        }
 
         // Fields 
         public Vector3 Position;
         public Vector3 Target;
         public RectangleF VisibleArea;
         public float Height = 25;  // If I update this I also need to update the ZoomSelector
-
-        public float Rotation
-        {
-            get => rotation;
-
-            set
-            {
-                Position = Vector3.Transform(
-                               Position - Target,
-                               Matrix.CreateFromAxisAngle(Vector3.Backward, value)
-                           ) + Target;
-                rotation = value;
-            }
-        }
 
         public Matrix View
             // Get the look at vector

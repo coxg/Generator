@@ -47,7 +47,7 @@ namespace Generator
             {
                 if (member.Health.Current > 0)
                 {
-                    member.Experience += experience;
+                    // TODO
                 }
             }
         }

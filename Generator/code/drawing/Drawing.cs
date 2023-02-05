@@ -249,61 +249,6 @@ namespace Generator
             return dimensions;
         }
 
-        private static void DrawCharacter(SpriteBatch spriteBatch, GameObject character, int size, int x, int y)
-        {
-            /*// Draw the sprite if they have one
-            if (character.Sprite != null)
-            {
-                spriteBatch.Draw(
-                    character.Sprite,
-                    new Rectangle(
-                        x,
-                        y,
-                        size,
-                        size),
-                    null,
-                    Color.White,
-                    0,
-                    new Vector2(0, 0),
-                    SpriteEffects.None,
-                    .04f);
-            }
-
-            // If they don't have a sprite then piece together their components
-            else if (character.Components.ContainsKey("Head") && character.Components.ContainsKey("Face"))
-            {
-                var head = character.Components["Head"];
-                var face = character.Components["Face"];
-                var faceSize = (int)(size * face.Size / head.Size);
-                spriteBatch.Draw(
-                    head.Sprites["Front"].Value,
-                    new Rectangle(
-                        x,
-                        y,
-                        size,
-                        size),
-                    null,
-                    Color.White,
-                    0,
-                    new Vector2(0, 0),
-                    SpriteEffects.None,
-                    .04f);
-                spriteBatch.Draw(
-                    face.Sprites["Front"].Value,
-                    new Rectangle(
-                        x + size / 2 - faceSize / 2,
-                        y + 5 * size / 8 - faceSize / 2,
-                        faceSize,
-                        faceSize),
-                    null,
-                    Color.White,
-                    0,
-                    new Vector2(0, 0),
-                    SpriteEffects.None,
-                    .05f);
-            }*/
-        }
-
         private static Vector2 GetOptionsDimensions(IEnumerable<string> options, int maxWidth)
         {
             float width = 0;
@@ -320,18 +265,8 @@ namespace Generator
         public static void DrawConversation(SpriteBatch spriteBatch)
         {
             var choices = Globals.CurrentConversation.CurrentChoices;
-            GameObject talkingObject = null;
-            for (var i = 0; i <= choices.CurrentNodeIndex; i++)
-            {
-                var currentTalkingObject = choices.Nodes[i].GetCurrentSpeaker();
-                if (currentTalkingObject != Globals.CurrentConversation.SourceObject)
-                {
-                    talkingObject = currentTalkingObject;
-                }
-            }
-            
-            DrawOptions(spriteBatch, choices.Nodes.Select(x => x.Text[0]), choices.GetCurrentNode().Text[0], 
-                talkingObject ?? Globals.Player, Globals.CurrentConversation.SourceObject, choices.ChoiceSelected,
+            DrawOptions(
+                spriteBatch, choices.Nodes.Select(x => x.Text[0]), choices.GetCurrentNode().Text[0], choices.ChoiceSelected, 
                 choices.GetCurrentNode().GetCurrentSpeaker() == Globals.CurrentConversation.SourceObject ? "right" : "left");
         }
 
@@ -359,12 +294,11 @@ namespace Generator
 
         public static void DrawSelector<T>(SpriteBatch spriteBatch, Selector<T> selector)
         {
-            DrawOptions(spriteBatch, selector.Options.Select(x => x.ToString()), selector.GetSelection().ToString(),
-                Globals.Player, null, false);
+            DrawOptions(spriteBatch, selector.Options.Select(x => x.ToString()), selector.GetSelection().ToString(), false);
         }
 
         private static void DrawOptions(SpriteBatch spriteBatch, IEnumerable<string> options, string selection,
-            GameObject leftObject, GameObject rightObject, bool responseOverride, string alignment = null)
+            bool responseOverride, string alignment = null)
         {
             // Draw the background
             var backGroundColor = Color.FromNonPremultiplied(0, 0, 0, 150);
@@ -379,20 +313,8 @@ namespace Generator
             var textWidth = (int) optionsDimensions.X;
             var textBoxHeight = (int) optionsDimensions.Y + 2 * Margin;
 
-            // Draw the characters who are talking
-            var xOffset = (maxWidth - textWidth) / 2 + Margin;
-            if (leftObject != null)
-            {
-                DrawCharacter(spriteBatch, leftObject, 
-                    SpriteSize, xOffset, (int)(Globals.Resolution.Y - SpriteSize) / 2);
-            }
-            if (rightObject != null)
-            {
-                DrawCharacter(spriteBatch, rightObject, SpriteSize, xOffset + SpriteSize + textWidth + 2 * Margin, 
-                    (int)(Globals.Resolution.Y - SpriteSize) / 2);
-            }
-
             // Draw the text itself
+            var xOffset = (maxWidth - textWidth) / 2 + Margin;
             Color? selectionColor = Color.FromNonPremultiplied(105, 69, 169, 255);
             if (responseOverride)
             {

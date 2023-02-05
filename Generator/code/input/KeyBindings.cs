@@ -20,14 +20,15 @@ namespace Generator
             }
         }
             
+        // TODO: Should I rename to Confirm/Cancel/whatever? More flexibility is not yet necessary
         public static KeyBinding A = new KeyBinding(Buttons.A, Keys.Q);
         public static KeyBinding B = new KeyBinding(Buttons.B, Keys.E);
-        public static KeyBinding X = new KeyBinding(Buttons.X, Keys.E);
-        public static KeyBinding Y = new KeyBinding(Buttons.Y, Keys.R);
-        public static KeyBinding Up = new KeyBinding(Buttons.DPadUp, Keys.Up);
-        public static KeyBinding Down = new KeyBinding(Buttons.DPadDown, Keys.Down);
-        public static KeyBinding Left = new KeyBinding(Buttons.DPadLeft, Keys.Left);
-        public static KeyBinding Right = new KeyBinding(Buttons.DPadRight, Keys.Right);
+        public static KeyBinding X = new KeyBinding(Buttons.X, Keys.R);
+        public static KeyBinding Y = new KeyBinding(Buttons.Y, Keys.F);
+        public static KeyBinding Up = new KeyBinding(Buttons.DPadUp, Keys.W);
+        public static KeyBinding Down = new KeyBinding(Buttons.DPadDown, Keys.S);
+        public static KeyBinding Left = new KeyBinding(Buttons.DPadLeft, Keys.A);
+        public static KeyBinding Right = new KeyBinding(Buttons.DPadRight, Keys.D);
         public static KeyBinding L = new KeyBinding(Buttons.LeftTrigger, Keys.D1);
         public static KeyBinding R = new KeyBinding(Buttons.RightTrigger, Keys.D2);
         public static KeyBinding LB = new KeyBinding(Buttons.LeftShoulder, Keys.D3);
