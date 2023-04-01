@@ -21,7 +21,6 @@ namespace Generator
         public static MouseState MouseState;
         public static Vector3 CursorPosition;
         public static InputMode Mode;
-        private static bool leftClickIsPressed;
 
         public static void Update()
         {
@@ -46,15 +45,6 @@ namespace Generator
             if (MouseState.LeftButton == ButtonState.Pressed)
             {
                 Mode = InputMode.MouseKeyboard;
-                if (!leftClickIsPressed)
-                {
-                    Globals.Log("Clicking on (" + Math.Round(CursorPosition.X) + ", " + Math.Round(CursorPosition.Y) + ")");
-                }
-                leftClickIsPressed = true;
-            }
-            else
-            {
-                leftClickIsPressed = false;
             }
             
             switch (GameControl.CurrentScreen)
@@ -80,6 +70,9 @@ namespace Generator
                 case GameControl.GameScreen.ItemTargeter:
                     Targeters.ItemTargeter.Update();
                     break;
+                case GameControl.GameScreen.CombatMovement:
+                    Targeters.MovementTargeter.Update();
+                    break;
                 case GameControl.GameScreen.CombatLookAround:
                     Targeters.LookAroundTargeter.Update();
                     break;
@@ -93,8 +86,11 @@ namespace Generator
             // The "Activate" button
             if (KeyBindings.A.IsBeingPressed)
             {
-                var target = Globals.Player.GetTarget();
-                Globals.Player?.Activate(target);
+                var target = Globals.Player.GetClosest(Globals.Player.GetTargets());
+                if (target != null)
+                {
+                    Globals.Player.Activate(target);
+                }
             }
 
             ProcessMovementInput(Globals.Player);
@@ -132,7 +128,7 @@ namespace Generator
             // If not in creative mode then use these key bindings to switch characters
             else
             {
-                // Selectors.PlayerSelector.Update();
+                Selectors.PlayerSelector.Update();
             }
 
             // Camera controls
@@ -187,27 +183,56 @@ namespace Generator
             }
         }
 
-        private static Vector2 GetLeftStickInput()
+        private static void ProcessMovementInput(GameObject player)
         {
+            // Convert from actual movement input to direction offsets
+            var moveVerticalOffset = 0.0;
+            var moveHorizontalOffset = 0.0;
+
+            player.MovementDirection = null;
             if (Mode == InputMode.Controller)
             {
-                // TODO
+                moveHorizontalOffset = ControllerState.ThumbSticks.Left.X;
+                moveVerticalOffset = ControllerState.ThumbSticks.Left.Y;
+                player.MovementSpeedMultiplier = (float)Math.Min(1, Math.Sqrt(
+                    Math.Pow(ControllerState.ThumbSticks.Left.X, 2)
+                    + Math.Pow(ControllerState.ThumbSticks.Left.Y, 2)));
+
+                // We're not using the mouse for input so null this out
+                player.MovementTarget = null;
             }
 
-            return new Vector2(
-                Convert.ToSingle(KeyBindings.Right.IsBeingPressed) - Convert.ToSingle(KeyBindings.Left.IsBeingPressed), 
-                Convert.ToSingle(KeyBindings.Up.IsBeingPressed) - Convert.ToSingle(KeyBindings.Down.IsBeingPressed));
-        }
-
-        private static void ProcessMovementInput(GameObject gameObject)
-        {
-            if (KeyBindings.Right.IsBeingPressed || KeyBindings.Left.IsBeingPressed || 
-                KeyBindings.Up.IsBeingPressed || KeyBindings.Down.IsBeingPressed)
+            else if (MouseState.LeftButton == ButtonState.Pressed)
             {
-                var movementInput = GetLeftStickInput();
-                gameObject.MoveInDirection(
-                    (float)MathTools.Angle(Vector3.Zero, new Vector3(movementInput.X, movementInput.Y, 0)));
-                Globals.Log(gameObject + " moves to " + gameObject.Position);
+                player.MovementTarget = CursorPosition - new Vector3(player.Size.X / 2, player.Size.Y / 2, 0);
+            }
+            
+            else if (KeyboardState.IsKeyDown(Keys.W) 
+                     || KeyboardState.IsKeyDown(Keys.S) 
+                     || KeyboardState.IsKeyDown(Keys.A) 
+                     || KeyboardState.IsKeyDown(Keys.D))
+            {
+                if (KeyboardState.IsKeyDown(Keys.W)) moveVerticalOffset += 1;
+                if (KeyboardState.IsKeyDown(Keys.S)) moveVerticalOffset -= 1;
+                if (KeyboardState.IsKeyDown(Keys.A)) moveHorizontalOffset -= 1;
+                if (KeyboardState.IsKeyDown(Keys.D)) moveHorizontalOffset += 1;
+                player.MovementTarget = null;
+                player.MovementSpeedMultiplier = 1;
+            }
+
+            if (Math.Abs(moveHorizontalOffset) > ControllerTolerance 
+                || Math.Abs(moveVerticalOffset) > ControllerTolerance)
+            {
+                // Convert from offsets to radians
+                var radianDirection = (float)MathTools.Angle(
+                    Vector3.Zero, new Vector3((float)moveHorizontalOffset, (float)moveVerticalOffset, 0));
+
+                // Apply offset from map rotation
+                radianDirection -= GameControl.camera.Rotation;
+                radianDirection = MathTools.Mod(radianDirection, MathHelper.TwoPi);
+
+                // Move in that direction
+                player.MovementDirection = radianDirection;
             }
         }
     }

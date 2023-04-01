@@ -21,6 +21,18 @@ namespace Generator
             Vector3 position,
             Vector3? size = null,
 
+            // Movement logic
+            Vector3? movementPosition = null,
+            float? movementDirection = null,
+            float baseMovementSpeed = 20,
+            float? movementSpeedMultiplier = null,
+            Vector3? movementVelocity = null,
+
+            // Physics
+            float mass = 100,
+            Vector3? velocity = null,
+            Dictionary<String, PhysicsEffect> physicsEffects = null,
+
             // Animation attributes
             Sprite sprite = null,
             Dictionary<string, Component> components = null,
@@ -81,6 +93,10 @@ namespace Generator
             // ...Other Attributes
             ID = id ?? Guid.NewGuid().ToString();
             Name = name;
+            Level = level;
+            Experience = experience;
+            BaseMovementSpeed = baseMovementSpeed;
+            MovementSpeedMultiplier = movementSpeedMultiplier;
 
             Ailments = ailments ?? new HashSet<Ailment>();
 
@@ -100,12 +116,20 @@ namespace Generator
             if (Conversation != null) Conversation.SourceObject = this;
             ActivationEffect = activationEffect;
             AI = ai ?? new Cached<Action<GameObject>>("DefaultAI"); // Run on each Update - argument is this
+            CollisionEffect =
+                collisionEffect; // Run when attempting to move into another object - arguments are this, other
             Temporary = temporary; // If true, destroy this object as soon as it's no longer being updated
 
-            // Location
+            // Physics logic
             Size = size ?? Vector3.One;
             base.Position = position;
             Direction = direction;
+            MovementTarget = movementPosition;
+            MovementDirection = movementDirection;
+            MovementVelocity = movementVelocity ?? Vector3.Zero;
+            Mass = mass;
+            Velocity = velocity ?? Vector3.Zero;
+            PhysicsEffects = physicsEffects ?? new Dictionary<string, PhysicsEffect>();
 
             Globals.Log(ID + " has spawned.");
         }
@@ -147,12 +171,27 @@ namespace Generator
 
         // Location
         override public float Direction { get; set; }
+        public Vector3? MovementTarget;
+        public Dictionary<String, PhysicsEffect> PhysicsEffects;
+        public float? MovementDirection;
+        public Vector3 Velocity;
+
+        public float BaseMovementSpeed;
+        public float? MovementSpeedMultiplier; // 1 = running, .5 = walking, etc
+        public Vector3 MovementVelocity;
+        public float Mass;
 
         override public Vector3 Position
         {
             get => _Position + AnimationOffset;
             set
             {
+                if (value.Z < 0)
+                {
+                    value.Z = 0;
+                    Velocity.Z = 0;
+                }
+
                 // If it's outside the zone and we're temporary then kill yourself
                 if (value.X < 0 || value.Y < 0 || value.X > Globals.Zone.Width || value.Y > Globals.Zone.Height ||
                     value.Z < 0)
@@ -178,6 +217,15 @@ namespace Generator
                     base.Position = value;
                     Globals.GameObjectManager?.AddToMap(this);
                 }
+
+                // If not then we collide with the object and it collides with us
+                // TODO: In the current implementation this will trigger twice per update if both are moving
+                // TODO: In the current implementstion this also applies to teleportation, which is probably wrong
+                else
+                {
+                    CollisionEffect?.Value(this, targetAtPosition);
+                    targetAtPosition.CollisionEffect?.Value(targetAtPosition, this);
+                }
             }
         }
 
@@ -197,16 +245,26 @@ namespace Generator
 
         public HashSet<Ailment> Ailments;
 
+        // Growth
+        // TODO: these should probably have getters and setters and logic and whatnot
+        public int Level;
+        public int Experience;
+
         // Abilities
         // TODO: Function to add new ability, should not be able to add it directly
         // This would make a copy and set the sourceObject
         public List<Ability> Abilities = new List<Ability>();
         public Dictionary<String, float> AbilityCooldowns = new Dictionary<String, float>();
+        public AbilityInstance CastingAbility;
+        public AbilityInstance RechargingAbility;
+        private Queue<AbilityInstance> queuedAbilities = new Queue<AbilityInstance>();
+        public bool IsReady => !queuedAbilities.Any() && CastingAbility == null && RechargingAbility == null;
 
         // Interaction
         public Conversation Conversation;
         public Cached<Action<GameObject, GameObject>> ActivationEffect;
         public Cached<Action<GameObject>> AI;
+        public Cached<Action<GameObject, GameObject>> CollisionEffect;
         public bool Temporary;
 
         private Armor _equippedArmor = new Armor("[No Armor]", null);
@@ -285,7 +343,7 @@ namespace Generator
             {
                 {
                     "Head", new Component(
-                        Globals.SpriteSheet.GetCopy("NinjaHead"),
+                        sprite: Globals.SpriteSheet.GetCopy("NinjaHead"),
                         relativePosition: new Vector3(.5f, .5f, 1.2f),
                         size: new Vector3(1.5f),
                         rotationPoint: new Vector3(.16f, 0, .256f),
@@ -293,7 +351,7 @@ namespace Generator
                 },
                 {
                     "Face", new Component(
-                        Globals.SpriteSheet.GetCopy("NormalEyes"),
+                        sprite: Globals.SpriteSheet.GetCopy("NormalEyes"),
                         relativePosition: new Vector3(.5f, .52f, .96f),
                         size: new Vector3(1.5f),
                         rotationPoint: new Vector3(.2f, 0, .15f),
@@ -301,14 +359,14 @@ namespace Generator
                 },
                 {
                     "Body", new Component(
-                        Globals.SpriteSheet.GetCopy("NinjaBody"),
+                        sprite: Globals.SpriteSheet.GetCopy("NinjaBody"),
                         relativePosition: new Vector3(.5f, .5f, .47f),
                         size: new Vector3(.75f),
                         rotationPoint: new Vector3(.08f, 0, .08f))
                 },
                 {
                     "Arm/Left", new Component(
-                        Globals.SpriteSheet.GetCopy("NinjaArm"),
+                        sprite: Globals.SpriteSheet.GetCopy("NinjaArm"),
                         relativePosition: new Vector3(.3f, .5f, .45f),
                         size: new Vector3(.375f, .375f, .75f),
                         relativeRotation: new Vector3(0, .4f, 0),
@@ -343,7 +401,7 @@ namespace Generator
                 },
                 {
                     "Arm/Right", new Component(
-                        Globals.SpriteSheet.GetCopy("NinjaArm"),
+                        sprite: Globals.SpriteSheet.GetCopy("NinjaArm"),
                         relativePosition: new Vector3(.7f, .5f, .45f),
                         size: new Vector3(.375f, .375f, .75f),
                         relativeRotation: new Vector3(0, -.4f, 0),
@@ -378,7 +436,7 @@ namespace Generator
                 },
                 {
                     "Leg/Left", new Component(
-                        Globals.SpriteSheet.GetCopy("NinjaLeg"),
+                        sprite: Globals.SpriteSheet.GetCopy("NinjaLeg"),
                         relativePosition: new Vector3(.375f, .5f, .1f),
                         size: new Vector3(.375f),
                         rotationPoint: new Vector3(.5f, 0, .9f),
@@ -404,7 +462,7 @@ namespace Generator
                 },
                 {
                     "Leg/Right", new Component(
-                        Globals.SpriteSheet.GetCopy("NinjaLeg"),
+                        sprite: Globals.SpriteSheet.GetCopy("NinjaLeg"),
                         relativePosition: new Vector3(.625f, .5f, .1f),
                         size: new Vector3(.375f),
                         rotationPoint: new Vector3(.5f, 0, .9f),
@@ -442,6 +500,7 @@ namespace Generator
             }
 
             ApplyMovement();
+            ApplyPhysics();
 
             Health.Update();
             Mana.Update();
@@ -454,21 +513,122 @@ namespace Generator
 
         public void Cast(AbilityInstance abilityInstance)
         {
-            // TODO
-            Globals.Log(this + " casts " + abilityInstance.Name + " at " 
+            Globals.Log(this + " is preparing to cast " + abilityInstance.Name + " at " 
                         + abilityInstance.Target.X + ", " + abilityInstance.Target.Y);
+            queuedAbilities.Enqueue(abilityInstance);
             GameControl.CurrentScreen = GameControl.GameScreen.CombatPlayEvents;
         }
 
         private void UpdateAbilities()
         {
-            // TODO
+            foreach (var abilityName in new List<string>(AbilityCooldowns.Keys))
+            {
+                AbilityCooldowns[abilityName] = Math.Max(0, AbilityCooldowns[abilityName] - Timing.SecondsPassed);
+            }
+
+            if (RechargingAbility != null)
+            {
+                // TODO: Play recharging animation
+                RechargingAbility.RemainingRecharge = Math.Max(0, RechargingAbility.RemainingRecharge - Timing.SecondsPassed);
+                if (RechargingAbility.RemainingRecharge == 0)
+                {
+                    RechargingAbility = null;
+                }
+            }
+            
+            else if (CastingAbility != null)
+            {
+                CastingAbility.Ability.Animation?.Update();
+                CastingAbility.RemainingCastTime = Math.Max(0, CastingAbility.RemainingCastTime - Timing.SecondsPassed);
+                if (CastingAbility.RemainingCastTime == 0)
+                {
+                    CastingAbility.FinishCasting();
+                    if (CastingAbility.RemainingRecharge != 0)
+                    {
+                        RechargingAbility = CastingAbility;
+                    }
+                    CastingAbility = null;
+                }
+            }
+
+            else if (queuedAbilities.Any())
+            {
+                CastingAbility = queuedAbilities.Dequeue();
+                CastingAbility.StartCasting();
+            }
         }
 
         private void ApplyMovement()
         {
-            // TODO
-            _isWalking = false;
+            // Try to slow down when close to target
+            if (MovementTarget != null)
+            {
+                var distanceToMove = Vector3.Distance(MovementTarget.Value, new Vector3(Position.X, Position.Y, 0));
+                if (distanceToMove < GetMovementDistance() * Timing.SecondsPassed)
+                {
+                    IsWalking = true;
+                    MovementTarget = null;
+                    MovementDirection = null;
+                    return;
+                }
+                if (Position.Z == 0)
+                {
+                    MovementSpeedMultiplier = Math.Min(distanceToMove / 3, 1);
+                }
+            }
+
+            // In the air
+            if (Position.Z > 0)
+            {
+                return;
+            }
+            
+            // Click to target place to move
+            if (MovementTarget != null)
+            {
+                MoveInDirection((float) MathTools.Angle(Position, MovementTarget.Value));
+            }
+
+            // Controller
+            else if (MovementDirection != null)
+            {
+                MovementSpeedMultiplier = MovementSpeedMultiplier ?? 1;
+                MoveInDirection(MovementDirection.Value);
+            }
+            
+            // No input
+            else
+            {
+                MovementVelocity = Vector3.Zero;
+                MovementSpeedMultiplier = null;
+                IsWalking = false;
+            }
+        }
+
+        private void ApplyPhysics()
+        {
+            var forces = Vector3.Zero;
+            foreach (var physicsEffects in PhysicsEffects.Values)
+            {
+                forces += physicsEffects.Force;
+                physicsEffects.Update(); // This order to let duration 0 still apply force
+            }
+            forces.Z -= Globals.Zone.Gravity * Mass / 10;  // 10 because gravity and squares are in meters
+            forces += Globals.Zone.Wind;
+            
+            Velocity += forces * Timing.SecondsPassed;
+            if (Position.Z == 0)
+            {
+                var friction = GetFriction() * 300 * Timing.SecondsPassed;  // why 300?
+                Velocity.X = Velocity.X > 0 ? Math.Max(Velocity.X - friction, 0) : Math.Min(Velocity.X + friction, 0);
+                Velocity.Y = Velocity.Y > 0 ? Math.Max(Velocity.Y - friction, 0) : Math.Min(Velocity.Y + friction, 0);
+                if (MovementVelocity != Vector3.Zero)
+                {
+                    MovementVelocity += Globals.Zone.Wind;
+                }
+            }
+            
+            Position += (Velocity + MovementVelocity) * Timing.SecondsPassed;
         }
 
         // Deal damage to a target
@@ -523,11 +683,12 @@ namespace Generator
         }
 
         // Gets whichever object is exactly [distance] away in the current direction
-        public GameObject GetTarget(float range = 1, float? direction = null)
+        public HashSet<GameObject> GetTargets(float range = 1, float? direction = null)
         {
             // See if we would overlap with any other objects
             var targetPosition = GetTargetCoordinates(range, direction);
-            return Globals.GameObjectManager.Get((int)targetPosition.X, (int)targetPosition.Y);
+            var targetObjects = Globals.GameObjectManager.Get(targetPosition.X, targetPosition.Y);
+            return targetObjects.Where(x => x != this).ToHashSet();
         }
 
         // See if we can move to a location
@@ -544,7 +705,7 @@ namespace Generator
             HashSet<GameObject> returnObjects = new HashSet<GameObject>();
             for (var i = 1; i <= range; i++)
             {
-                returnObjects.Add(GetTarget(i));
+                returnObjects.UnionWith(GetTargets(i));
             }
 
             return returnObjects;
@@ -565,15 +726,28 @@ namespace Generator
         }
 
         // Attempts to move the object in a direction (radians).
-        public void MoveInDirection(float radians = 0)
+        private void MoveInDirection(float radians = 0)
         {
             // Update sprite visuals
-            IsWalking = false; // TODO
+            IsWalking = true;
             Direction = radians;
 
             // Get distance
+            var distance = GetMovementDistance();
             var offsets = MathTools.OffsetFromRadians(radians);
-            Position = new Vector3(Position.X + offsets.X, Position.Y + offsets.Y, 0);
+            var friction = GetFriction();
+            MovementVelocity.X += (distance * offsets.X - MovementVelocity.X) * friction;
+            MovementVelocity.Y += (distance * offsets.Y - MovementVelocity.Y) * friction;
+        }
+
+        private float GetMovementDistance()
+        {
+            return (MovementSpeedMultiplier ?? 0) * BaseMovementSpeed;  // per second
+        }
+
+    private float GetFriction()
+        {
+            return Globals.TileManager.Get((int) Center.X, (int) Center.Y)?.Friction ?? 0;
         }
 
         // Submit message to the screen with icon

@@ -39,9 +39,55 @@ namespace Generator
             return Name;
         }
 
+        public void StartCasting()
+        {
+            Globals.Log(SourceObject + " starts casting " + this);
+            SourceObject.TakeDamage(Ability.HealthCost, Type.Untyped);
+            SourceObject.Mana.Current -= Ability.ManaCost;
+            Ability.Animation?.Start();
+            RemainingCastTime = Ability.CastTime;
+        }
+
         public List<Vector3> GetTargetPositions()
         {
-            return MathTools.GetCoordinatesInCircle(Target, Ability.Radius);
+            var targetPosition = Target;
+            if (Ability.Collision)
+            {
+                var targetOffset = Target - SourceObject.Position;
+                targetPosition = SourceObject.GetFirstTargetInRange(targetOffset.Length())?.Position ?? targetPosition;
+            }
+            
+            return MathTools.GetCoordinatesInCircle(targetPosition, Ability.Radius);
+        }
+
+        public void FinishCasting()
+        {
+            Globals.Log(SourceObject + " casts " + this + " at " + Target.X + ", " + Target.Y);
+            Ability.Animation?.Stop();
+            SourceObject.AbilityCooldowns[Name] = Ability.Cooldown;
+            RemainingRecharge = Ability.Recharge;
+
+            var targetPositions = GetTargetPositions();
+            var targetObjects = new HashSet<GameObject>();
+            foreach (var eachTargetPosition in targetPositions)
+            {
+                Ability.LocationEffect?.Invoke(SourceObject, eachTargetPosition);
+                targetObjects.UnionWith(Globals.GameObjectManager.Get(eachTargetPosition.X, eachTargetPosition.Y));
+            }
+
+            if (!targetObjects.Any())
+            {
+                Globals.Log(SourceObject + " misses everything!");
+            }
+
+            foreach (var targetObject in targetObjects)
+            {
+                Globals.Log(SourceObject + " hits " + targetObject + "!");
+                Ability.ObjectEffect?.Invoke(SourceObject, targetObject);
+                SourceObject.DealDamage(targetObject, Ability.Damage, Ability.Type);
+                targetObject.Heal(Ability.Healing);
+                targetObject.Ailments.UnionWith(Ability.Ailments);  // TODO: Ailments need their own getter/setter logic
+            }
         }
     }
 }

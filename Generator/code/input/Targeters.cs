@@ -14,10 +14,9 @@ namespace Generator
                 KeyBindings.B, 
                 () => GameControl.CurrentScreen = GameControl.GameScreen.AbilitySelector),
             target => new AbilityInstance(
-                    Selectors.AbilitySelector.GetSelection().Name,
-                    Globals.Player,
-                    AbilityTargeter.GetTarget()
-                ).GetTargetPositions()); 
+                Selectors.AbilitySelector.GetSelection().Name,
+                Globals.Player,
+                AbilityTargeter.GetTarget()).GetTargetPositions());
         
         public static Targeter ItemTargeter = new Targeter(
             new BoundAction(
@@ -26,6 +25,14 @@ namespace Generator
             new BoundAction(
                 KeyBindings.B, 
                 () => GameControl.CurrentScreen = GameControl.GameScreen.ItemSelector));
+        
+        public static Targeter MovementTargeter = new Targeter(
+            new BoundAction(
+                KeyBindings.A, 
+                () => Globals.Player.MovementTarget = MovementTargeter.GetTarget()),
+            new BoundAction(
+                KeyBindings.B, 
+                () => GameControl.CurrentScreen = GameControl.GameScreen.CombatOptionSelector));
         
         public static Targeter LookAroundTargeter = new Targeter(
             null,  // TODO: What happens when you select a dude? Let you select an action in range?
